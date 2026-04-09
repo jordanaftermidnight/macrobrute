@@ -1,0 +1,151 @@
+(kicad_sch
+  (version 20231120)
+  (generator "macrobrute")
+  (generator_version "8.0")
+  (uuid "b2c3d4e5-f6a7-8901-bcde-f01234567890")
+  (paper "A2")
+  (title_block
+    (title "MACROBRUTE Expander Module — 42HP Eurorack")
+    (date "2026-04-09")
+    (rev "1.0")
+    (comment 1 "Utility circuits: noise, LFO, clock div, S&H, slew, attenuverts, mult")
+    (comment 2 "All circuits powered from +/-12V via DB-9 B")
+  )
+
+  (lib_symbols)
+
+  ;; ============================================================
+  ;; NOISE GENERATOR (Thomas Henry white noise)
+  ;; ============================================================
+
+  (text "NOISE GENERATOR"
+    (exclude_from_sim no)
+    (at 25 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Q1: 2N3904 reverse-biased (E-B junction avalanche)\n+12V -[100k]- Q1(E) = noise source (~10-50mV)\nQ1(B) -[10k]- GND, Q1(C) = GND\nU1A: TL072 non-inverting amp\nnoise -[1k]- U1A(+in)\nRf=47k, Rg=1k -> Gain = 48x (~±2.4V output)\n100nF AC coupling on output\nDecoupling: 100nF on +/-12V"
+    (exclude_from_sim no)
+    (at 25 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; TRIANGLE / SQUARE LFO
+  ;; ============================================================
+
+  (text "TRIANGLE / SQUARE LFO"
+    (exclude_from_sim no)
+    (at 25 85 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U1B: TL072 integrator (triangle output)\nU2A: TL072 Schmitt trigger (square output)\n\nIntegrator: C=100nF, R=RATE pot (10k-1M) -> 0.04-40Hz\nSchmitt: 100k feedback, 47k/100k divider sets hysteresis\n\nSquare output divider: 3.3k + 3.3k -> +/-5.25V (Eurorack safe)\nTriangle output: direct from integrator (~+/-8V)\n\nRATE: 1M pot (A-taper) for frequency control\nSHAPE: optional pot to skew triangle (add to integrator path)"
+    (exclude_from_sim no)
+    (at 25 95 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; CLOCK DIVIDER (CD4024)
+  ;; ============================================================
+
+  (text "CLOCK DIVIDER (U3: CD4024)"
+    (exclude_from_sim no)
+    (at 25 155 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Input: LFO square output (or external clock)\nU4: 78L05 (5V regulator for CD4024)\n+12V -> 78L05 -> +5V_LOGIC, 100nF in/out\n\nCD4024 (7-stage binary counter):\nPin 1 (CLK): square wave input via Schmitt buffer\nPin 2 (RST): 10k pull-down + 100nF debounce, optional reset button\nPin 12 (Q1): /2 output\nPin 11 (Q2): /4 output\nPin 9 (Q3): /8 output\nPin 14: +5V_LOGIC, Pin 7: GND\n\nOutputs buffered with 1k series resistors to jacks"
+    (exclude_from_sim no)
+    (at 25 165 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; SAMPLE & HOLD (LF398)
+  ;; ============================================================
+
+  (text "SAMPLE & HOLD (U5: LF398)"
+    (exclude_from_sim no)
+    (at 25 225 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Signal input: any CV -> U5 pin 3 (analog in)\nClock input: gate/clock -> U5 pin 8 (logic in) via Schmitt\nHold capacitor: 1nF polystyrene (pin 6 to GND)\nOutput: U5 pin 5 -> buffered output jack\n\nDroop rate: ~0.5mV/ms with 1nF polystyrene\n(adequate for audio-rate S&H, ~30 seconds to droop 1 octave)\n\nPower: +/-12V (pins 7, 4), 100nF decoupling"
+    (exclude_from_sim no)
+    (at 25 235 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; SLEW LIMITER (Diode-steered RC)
+  ;; ============================================================
+
+  (text "SLEW LIMITER"
+    (exclude_from_sim no)
+    (at 200 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U2B: TL072 voltage follower (output buffer)\n\nInput -[10k]- node -[1N4148 anode-cathode]- RISE pot (1M) -|\n                    |                                      |\n                    +[1N4148 cathode-anode]- FALL pot (1M) -+- C (10uF) - GND\n                                                            |\n                                                       U2B(+in) -> out\n\nRise: 1M pot sets portamento up rate\nFall: 1M pot sets portamento down rate\nDiodes steer current direction through separate pots\nNote: TL072 common-mode range limits input to ~+/-8V"
+    (exclude_from_sim no)
+    (at 200 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; ATTENUVERTER (2 channels)
+  ;; ============================================================
+
+  (text "ATTENUVERTERS (2x, U6: TL072)"
+    (exclude_from_sim no)
+    (at 200 95 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Per channel (U6A, U6B):\nInput -[100k]- U6x(-in)\nCenter-detent pot (100k B-taper): wiper -> U6x(-in)\nPot CW end: input, CCW end: GND\nFeedback: 100k from output to -in\nU6x(+in): GND via 100k (bias)\n\nFull CW: gain = -1 (inverted)\nCenter: gain = 0 (muted)\nFull CCW: gain = +1 (unity)\n\nUseful for: CV inversion, level control, offset mixing"
+    (exclude_from_sim no)
+    (at 200 105 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; BUFFERED MULTIPLE (1 in -> 3 out)
+  ;; ============================================================
+
+  (text "BUFFERED MULTIPLE (U7: TL074)"
+    (exclude_from_sim no)
+    (at 200 165 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Input -> U7A(+in) -> follower -> Output 1\n      -> U7B(+in) -> follower -> Output 2\n      -> U7C(+in) -> follower -> Output 3\nU7D: spare (unused, +in tied to GND)\n\nAll outputs are independent, isolated copies of input\nNo loading effects between destinations\nPower: +/-12V, 100nF decoupling"
+    (exclude_from_sim no)
+    (at 200 175 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; MANUAL GATE BUTTON
+  ;; ============================================================
+
+  (text "MANUAL GATE BUTTON"
+    (exclude_from_sim no)
+    (at 200 215 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Momentary pushbutton (SPST-NO)\n+5V_LOGIC -[10k]- output node -[button]- GND\nOutput: +5V when released, 0V when pressed\nInvert with CD40106 spare gate for active-high gate\n\nAlternative: use Pico GP12 (tap button) -> DB-9 path"
+    (exclude_from_sim no)
+    (at 200 225 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; COMPONENT SUMMARY
+  ;; ============================================================
+
+  (text "EXPANDER COMPONENT SUMMARY"
+    (exclude_from_sim no)
+    (at 200 265 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U1: TL072CP - Noise amp + LFO integrator\nU2: TL072CP - LFO Schmitt + Slew buffer\nU3: CD4024BE - Clock divider\nU4: 78L05 - 5V regulator for CD4024\nU5: LF398N - Sample & Hold\nU6: TL072CP - Attenuverters (2ch)\nU7: TL074CN - Buffered mult (3 out)\nQ1: 2N3904 - Noise source\nD1-D2: 1N4148 - Slew steering\nPots: 1M x3 (rate, rise, fall), 100k x2 (attenuvert)\nJacks: 3.5mm mono x ~18\nPanel: 42HP (213.36mm x 128.5mm)"
+    (exclude_from_sim no)
+    (at 200 275 0)
+    (effects (font (size 1.5 1.5)))
+  )
+)

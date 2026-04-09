@@ -1,0 +1,75 @@
+(kicad_sch
+  (version 20231120)
+  (generator "macrobrute")
+  (generator_version "8.0")
+  (uuid "d4e5f6a7-b8c9-0123-def0-123456789012")
+  (paper "A4")
+  (title_block
+    (title "DSO138 Input Protection & CD4051 Signal Multiplexer")
+    (date "2026-04-09")
+    (rev "1.0")
+    (comment 1 "Maps +/-10V Eurorack signals to 0-3.3V DSO138 input range")
+  )
+
+  (lib_symbols)
+
+  ;; ============================================================
+  ;; INPUT PROTECTION & SCALING
+  ;; ============================================================
+
+  (text "INPUT PROTECTION & SCALING"
+    (exclude_from_sim no)
+    (at 25 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Per channel:\nInput (+-10V) -[1k]- BAT54S clamp (to +/-12V)\n              |-> U1(TL072) scaling amplifier\n\nScaling amp:\n  Maps +/-10V to 0-3.3V (with 1.65V offset)\n  Input -[100k]- U1(-in)\n  1.65V ref -[100k]- U1(-in)\n  Feedback: 100k\n  U1(+in): 1.65V reference (voltage divider 3.3V)\n\n  Output: 0V at -10V input, 1.65V at 0V, 3.3V at +10V"
+    (exclude_from_sim no)
+    (at 25 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; CD4051 SIGNAL MULTIPLEXER
+  ;; ============================================================
+
+  (text "SIGNAL MULTIPLEXER (U2: CD4051)"
+    (exclude_from_sim no)
+    (at 25 105 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "CD4051: 8:1 analog multiplexer\nInputs (Y0-Y5): 6 scaled signals from protection circuits\n  Y0: Saw, Y1: Square, Y2: Triangle\n  Y3: VCF out, Y4: VCO Mix, Y5: Gate\n  Y6-Y7: spare\n\nSelect: A(pin 11), B(pin 10), C(pin 9)\n  From: rotary switch (manual) or Pico GPIO (automated)\n\nCommon (Z, pin 3): -> DSO138 input\n\nPower: VDD=+5V (pin 16), VEE=GND (pin 7), VSS=GND (pin 8)\nINH (pin 6): GND (always enabled)\n\nDecoupling: 100nF on VDD"
+    (exclude_from_sim no)
+    (at 25 115 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; POWER
+  ;; ============================================================
+
+  (text "POWER"
+    (exclude_from_sim no)
+    (at 25 195 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "+12V (Eurorack) -> 7809 -> +9V -> DSO138 power\n100uF + 100nF on output\nDSO138 internal 3.3V regulator handles STM32\nTotal draw: ~120mA from +12V rail\n\n3.3V reference from DSO138 3.3V rail\n  -> voltage divider (10k+10k) -> 1.65V offset ref\n  -> 100nF bypass on divider output"
+    (exclude_from_sim no)
+    (at 25 205 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; COMPONENT SUMMARY
+  ;; ============================================================
+
+  (text "DSO INPUT COMPONENT SUMMARY"
+    (exclude_from_sim no)
+    (at 25 245 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U1: TL072CP - Input scaling amplifier (2 channels)\nU2: CD4051BE - 8:1 analog multiplexer\nVR1: 7809 - 9V regulator for DSO138\nD1-D6: BAT54S (SOT-23) - Input clamps\nR: 1k x6, 100k x12, 10k x2\nC: 100nF x4, 100uF x1\nSW1: Rotary switch (optional, or use Pico GPIO)"
+    (exclude_from_sim no)
+    (at 25 255 0)
+    (effects (font (size 1.5 1.5)))
+  )
+)

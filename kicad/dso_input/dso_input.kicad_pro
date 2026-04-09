@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "filename": "dso_input.kicad_pro",
+    "version": 1
+  },
+  "sheets": [
+    ["dso_input.kicad_sch", ""]
+  ],
+  "text_variables": {
+    "PROJECT": "DSO138 Input Protection & Signal Multiplexer",
+    "REVISION": "1.0"
+  }
+}

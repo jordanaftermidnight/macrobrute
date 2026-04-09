@@ -1,0 +1,227 @@
+(kicad_sch
+  (version 20231120)
+  (generator "macrobrute")
+  (generator_version "8.0")
+  (uuid "a1b2c3d4-e5f6-7890-abcd-ef0123456789")
+  (paper "A3")
+  (title_block
+    (title "MACROBRUTE Internal Breakout PCB")
+    (date "2026-04-09")
+    (rev "1.0")
+    (comment 1 "Mounts inside MicroBrute")
+    (comment 2 "Houses Pico H, output buffers, gate buffer, LED drivers")
+  )
+
+  (lib_symbols)
+
+  ;; ============================================================
+  ;; POWER SUPPLY SECTION
+  ;; ============================================================
+  ;; MicroBrute +12V (TP70) -> 1N5817 -> 100R ferrite -> +12V_BRK
+  ;;                                   |
+  ;;                                 100uF + 100nF
+  ;;                                   |
+  ;;                                  GND
+  ;;
+  ;; MicroBrute -12V (TP71) -> 1N5817 -> 100R ferrite -> -12V_BRK
+  ;;                                   |
+  ;;                                 100uF + 100nF
+  ;;                                   |
+  ;;                                  GND
+  ;;
+  ;; MicroBrute +5V -> 1N5817 -> Pico VSYS (pin 39)
+  ;;                           |
+  ;;                         100nF
+  ;;                           |
+  ;;                          GND
+  ;;
+  ;; Pico 3V3_OUT (pin 36) -> 3V3 rail for OLED, encoder
+  ;; ============================================================
+
+  (text "POWER SUPPLY"
+    (exclude_from_sim no)
+    (at 25 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "+12V: TP70 -> D1(1N5817) -> FB1(100R) -> +12V_BRK\n-12V: TP71 -> D2(1N5817) -> FB2(100R) -> -12V_BRK\n+5V: -> D3(1N5817) -> Pico VSYS\nDecoupling: 100uF + 100nF on each rail"
+    (exclude_from_sim no)
+    (at 25 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; OUTPUT BUFFERS (TL074 #1 - 4 channels)
+  ;; ============================================================
+  ;; TP94 (Saw)  -> 1kR -> TL074A (+in) -> unity follower -> 1kR -> DB9-A pin 7
+  ;; TP93 (Sqr)  -> 1kR -> TL074B (+in) -> unity follower -> 1kR -> DB9-A pin 8
+  ;; TP30 (Mix)  -> 1kR -> TL074C (+in) -> unity follower -> 1kR -> DB9-A pin 5
+  ;; TP19 (VCF)  -> 1kR -> TL074D (+in) -> unity follower -> 1kR -> DB9-A pin 6
+  ;; Each channel: 10MR bias to GND on input
+  ;; Power: +12V_BRK / -12V_BRK, 100nF decoupling per supply pin
+
+  (text "OUTPUT BUFFERS (U1: TL074)"
+    (exclude_from_sim no)
+    (at 25 65 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Ch A: TP94(Saw) -[1k]- U1A(+in), out -[1k]- DB9A.7\nCh B: TP93(Sqr) -[1k]- U1B(+in), out -[1k]- DB9A.8\nCh C: TP30(Mix) -[1k]- U1C(+in), out -[1k]- DB9A.5\nCh D: TP19(VCF) -[1k]- U1D(+in), out -[1k]- DB9A.6\nAll: 10M bias to GND, feedback: out -> -in"
+    (exclude_from_sim no)
+    (at 25 75 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; TRIANGLE BUFFER (TL072 #2 section D - 2x gain)
+  ;; ============================================================
+  ;; TP124 (Tri) -> 1kR -> TL072D (+in) -> non-inv amp (Rf=100k, Rg=100k)
+  ;; Gain = 1 + 100k/100k = 2x
+  ;; 10MR bias to GND on input, 1kR output isolation
+
+  (text "TRIANGLE BUFFER (U2D: TL072, 2x GAIN)"
+    (exclude_from_sim no)
+    (at 25 105 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "TP124(Tri) -[1k]- U2D(+in)\n-in: [100k to GND] + [100k feedback from out]\nGain = 1 + 100k/100k = 2x\nOut -[1k]- DB9A or body jack"
+    (exclude_from_sim no)
+    (at 25 115 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; GATE BUFFER (CD40106 Schmitt Trigger)
+  ;; ============================================================
+  ;; TP83 (Gate) -> 10kR -> CD40106 input A (pin 1)
+  ;; 10kR pull-up to +5V, 100nF noise filter to GND
+  ;; CD40106 output A (pin 2) -> DB9-A pin 1
+  ;; Power: +5V (pin 14), GND (pin 7), 100nF decoupling
+
+  (text "GATE BUFFER (U3: CD40106)"
+    (exclude_from_sim no)
+    (at 25 145 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "TP83(Gate) -[10k]- U3A.in (pin1)\n10k pull-up to +5V, 100nF to GND\nU3A.out (pin2) -> DB9A.1\nOutput: clean 0/5V gate"
+    (exclude_from_sim no)
+    (at 25 155 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; ENVELOPE & LFO BUFFERS (TL074 #2 spare sections)
+  ;; ============================================================
+
+  (text "ENV/LFO BUFFERS (U2A, U2B: TL072)"
+    (exclude_from_sim no)
+    (at 25 185 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Envelope (mod matrix) -[10k]- U2A(+in) -> follower -> DB9A.3\nLFO (mod matrix) -[10k]- U2B(+in) -> follower -> DB9A.4"
+    (exclude_from_sim no)
+    (at 25 195 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; LED DRIVERS (3x 2N3904 NPN)
+  ;; ============================================================
+
+  (text "LED DRIVERS (Q1-Q3: 2N3904)"
+    (exclude_from_sim no)
+    (at 25 215 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Per LED: +3.3V -[220R]- LED(A) - LED(K) - Q(C)\nPico GPIO -[1k]- Q(B)\nQ(E) - GND\nQ1: GP8 (Clock), Q2: GP9 (Gate), Q3: GP10 (Mode)"
+    (exclude_from_sim no)
+    (at 25 225 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; VACTROL DRIVER (Resonance CV)
+  ;; ============================================================
+
+  (text "VACTROL DRIVER (U2C: TL072 + Q4: 2N3904)"
+    (exclude_from_sim no)
+    (at 25 255 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "DB9B.3 -[1k]- U2C(+in) -> follower -> [1k] -> Q4(B)\nQ4(C) -> Vactrol LED(+)\nVactrol LED(-) -[1k]- GND\nVactrol LDR parallels RP13 (resonance JFET)"
+    (exclude_from_sim no)
+    (at 25 265 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; CV INPUT PROTECTION (BAT54S clamps)
+  ;; ============================================================
+
+  (text "CV INPUT PROTECTION"
+    (exclude_from_sim no)
+    (at 25 295 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Each DB9-B input: [1k series] + BAT54S clamp to +/-12V\nProtects MicroBrute circuits from overvoltage\nDB9B.1 (Filter CV), DB9B.2 (VCA CV), DB9B.3 (Res CV)"
+    (exclude_from_sim no)
+    (at 25 305 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; PICO H CONNECTIONS
+  ;; ============================================================
+
+  (text "PICO H CONNECTIONS"
+    (exclude_from_sim no)
+    (at 200 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "SPI0: GP16(DC) GP17(CS) GP18(SCK) GP19(MOSI) GP20(RST) -> OLED\nUART1: GP4(TX) GP5(RX) -> MIDI I/O\nUART0: GP0(TX) GP1(RX) -> LPC2361 (future)\nGPIO: GP12(Tap) GP13(EncSW) GP14(EncCLK) GP15(EncDT)\nPWM: GP8(LED_CLK) GP9(LED_GATE) GP10(LED_MODE)\nPIO: GP22(CLK_OUT)\nGPIO: GP21(CLK_IN)\nPower: VSYS=+5V via 1N5817, 3V3_OUT -> OLED/encoder"
+    (exclude_from_sim no)
+    (at 200 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; DB-9 CONNECTOR PINOUTS
+  ;; ============================================================
+
+  (text "DB-9 A: OUTPUTS (MicroBrute -> Expander)"
+    (exclude_from_sim no)
+    (at 200 85 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Pin 1: Gate Out (TP83 via CD40106)\nPin 2: Pitch CV Out (rear panel, direct)\nPin 3: Envelope Out (mod matrix via TL072)\nPin 4: LFO Out (mod matrix via TL072)\nPin 5: VCO Mix Out (TP30 via TL074)\nPin 6: VCF Out (TP19 via TL074)\nPin 7: Saw Out (TP94 via TL074)\nPin 8: Square Out (TP93 via TL074)\nPin 9: GND (TP72)"
+    (exclude_from_sim no)
+    (at 200 95 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  (text "DB-9 B: INPUTS + POWER (Expander -> MicroBrute)"
+    (exclude_from_sim no)
+    (at 200 145 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Pin 1: Filter CV In (220k to U8A summing node)\nPin 2: VCA CV In (direct to TP10/11)\nPin 3: Resonance CV In (via vactrol driver)\nPin 4: Sync In (direct to VCO sync point)\nPin 5: Gate In (1N4148 protect to gate circuit)\nPin 6: Ext Audio In (direct to mixer)\nPin 7: +12V (from Eurorack via 1N5817+fuse)\nPin 8: -12V (from Eurorack via 1N5817+fuse)\nPin 9: GND"
+    (exclude_from_sim no)
+    (at 200 155 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; COMPONENT SUMMARY
+  ;; ============================================================
+
+  (text "COMPONENT SUMMARY"
+    (exclude_from_sim no)
+    (at 200 215 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U1: TL074CN (DIP-14) - Output buffers\nU2: TL072CP (DIP-8) - Tri buffer, Env/LFO, Vactrol\nU3: CD40106 (DIP-14) - Gate Schmitt trigger\nQ1-Q3: 2N3904 (TO-92) - LED drivers\nQ4: 2N3904 (TO-92) - Vactrol driver\nD1-D3: 1N5817 (DO-41) - Power protection\nD4-D6: BAT54S (SOT-23) - CV input clamps\nFB1-FB2: 100R ferrite beads\nR: 1k x12, 10k x3, 10M x4, 100k x2, 220R x3, 470R x3\nC: 100nF x6, 100uF/25V x2\nJ1-J2: DB-9 solder-cup connectors\nPico H: mounted via pin headers"
+    (exclude_from_sim no)
+    (at 200 225 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; PCB SIZE: ~60mm x 40mm, single-sided perfboard OK
+)

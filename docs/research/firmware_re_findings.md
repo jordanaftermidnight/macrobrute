@@ -84,3 +84,21 @@ Compiled 2026-04-09 from web research.
 - https://hackabrute.yusynth.net/MICROBRUTE/schematics_en.html
 - https://firmwaresecurity.com/
 - https://www.modwiggler.com/forum/viewtopic.php?t=152071
+
+---
+
+## Additional Tools & Resources (from research)
+
+### Open Source MicroBrute Tools
+- **microbrust** (Rust): https://github.com/jmatraszek/microbrust — Linux SysEx interface
+- **Elektroid** (C): https://github.com/dagargo/elektroid — Modern device manager supporting MicroBrute (372 stars, active)
+- **microdude** (Python): https://github.com/dagargo/microdude — Deprecated, use Elektroid instead
+- **avril firmware tools**: https://github.com/pichenettes/avril-firmware_tools — .mid/.syx conversion (Mutable Instruments)
+
+### MicroBrute Connection App Analysis
+- Binary: Mach-O i386, C++ with JUCE framework
+- Class `LPC23XXUpdater` handles firmware updates
+- String: `"This file is not a MicroBrute crypted firmware file."` — confirms encryption
+- Magic header: `MBFD` (MicroBrute Firmware Data?)
+- Firmware embedded inside app, not downloaded separately
+- **Disassembly target:** Focus on `LPC23XXUpdater` methods for decrypt routines

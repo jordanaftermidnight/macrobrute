@@ -22,9 +22,58 @@
 | Document | Covers |
 |----------|--------|
 | `MACROBRUTE_COMPLETE_EXPANSION_MAP.md` | All signal taps, CV injection points, circuit bending locations |
-| `MACROBRUTE_FIRMWARE_PROJECT.md` | LPC2361 reverse engineering, CRP bypass, ISP procedures |
+| `MACROBRUTE_FIRMWARE_PROJECT.md` | LPC2361 firmware project structure + code snippets |
 | `MACROBRUTE_BOM.md` | Bill of materials with part numbers |
 | `MACROBRUTE_SHOPPING_LIST.md` | What to buy, what's already owned |
+
+### SCHEMATICS (`../schematics/`)
+
+| Document | Covers |
+|----------|--------|
+| `breakout_pcb.md` | Internal PCB: buffers, gate, LEDs, vactrol, CV protection |
+| `expander_circuits.md` | Noise, LFO, clock divider, S&H, slew, attenuverter, mult |
+| `jf33_cv_control.md` | PT2399 anti-latch-up, delay time CV, feedback CV, level matching |
+| `dso130_input_protection.md` | Input protection, CD4051 mux, power |
+| `wiring_diagram.md` | Complete signal flow: test points → DB-9 → expander |
+| `pico_pinout.md` | Pico H GPIO assignments and peripheral allocation |
+| `touch_plates.md` | Resistive, capacitive, MPR121 touch interfaces |
+| `CIRCUIT_REVIEW.md` | Systematic review of all 13 circuit sections |
+
+### RESEARCH (`research/`)
+
+| Document | Covers |
+|----------|--------|
+| `firmware_re_findings.md` | CRP bypass methods, tools, KeyStep RE reference, open source tools |
+| `mbf_analysis.md` | .mbf file encryption analysis: 360-byte block structure, differential, binary strings |
+| `pt2399_dso138_findings.md` | Bergman BMC 83, CD2399 clone, DLO-138 firmware, serial export |
+| `additional_mods_findings.md` | Soft sync broken, triangle 2x gain, VCA offset, through-zero PWM |
+
+### MODS (`mods/`)
+
+| Document | Covers |
+|----------|--------|
+| `microbrute_mods_guide.md` | Standard mods: test point breakouts, oscillator, filter, portamento |
+| `microbrute_circuit_bending_guide.md` | Body contacts, touch points, creative short circuits |
+| `deep_circuit_bending.md` | Advanced: PT2399 deep bends, DSO138 exploitation, cross-device |
+| `ultimate_microbrute_project.md` | Comprehensive project overview |
+
+### FIRMWARE
+
+| Location | Covers |
+|----------|--------|
+| `firmware/lpc2361_investigation_guide.md` | Step-by-step ISP connection, CRP detection, Ghidra setup |
+| `firmware/MACROBRUTE_FIRMWARE_PROJECT.md` | LPC2361 C firmware reference (code in `firmware/lpc2361/`) |
+| `../firmware/pico/` | 8 MicroPython modules: display, encoder, clock, menu, midi, leds, main, config |
+| `../firmware/lpc2361/` | 48 C files: drivers, synth, midi, Pico comm, ARM startup, Makefile |
+
+### KICAD (`../kicad/`)
+
+| Project | Covers |
+|---------|--------|
+| `breakout/` | Internal breakout PCB schematic |
+| `expander/` | 42HP Eurorack expander module |
+| `jf33/` | JF-33 delay CV control & level matching |
+| `dso_input/` | DSO138 input protection & CD4051 multiplexer |
 
 ### LEGACY/REFERENCE (May Have Outdated Info)
 

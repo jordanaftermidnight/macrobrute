@@ -21,16 +21,28 @@ Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM 
 
 ```
 macrobrute/
-├── docs/                    # Project documentation
+├── docs/
 │   ├── architecture/        # System design, signal maps, research
 │   ├── hardware/            # BOM, shopping list, pinouts
-│   ├── firmware/            # LPC2361 firmware project docs
-│   ├── mods/                # Modification guides, circuit bending
+│   ├── firmware/            # LPC2361 investigation guide, firmware project docs
+│   ├── mods/                # Modification guides, circuit bending (4 docs)
+│   ├── research/            # Firmware RE findings, .mbf analysis, PT2399/DSO138
 │   └── legacy/              # Earlier spec revisions
 ├── firmware/
-│   ├── pico/                # Pico H MicroPython firmware
-│   └── lpc2361/             # LPC2361 C firmware (if CRP bypassed)
-├── schematics/              # Circuit designs (ASCII + KiCad)
+│   ├── pico/                # Pico H MicroPython firmware (8 modules)
+│   ├── lpc2361/             # LPC2361 ARM7 C firmware skeleton (48 files)
+│   │   ├── src/             #   core, drivers, synth, midi, ui, utils
+│   │   ├── include/         #   LPC2361 register definitions
+│   │   ├── startup/         #   ARM vector table, syscalls
+│   │   ├── linker/          #   Memory layout (128KB flash, 34KB SRAM)
+│   │   └── tools/           #   flash.sh, monitor.sh
+│   └── *.mbf                # Arturia firmware files (encrypted, under analysis)
+├── schematics/              # Circuit designs — ASCII schematics (7 docs)
+├── kicad/                   # KiCad 8 schematic projects
+│   ├── breakout/            #   Internal breakout PCB
+│   ├── expander/            #   42HP Eurorack expander module
+│   ├── jf33/                #   JF-33 CV control & level matching
+│   └── dso_input/           #   DSO138 input protection & mux
 ├── panel/                   # Panel templates (SVG)
 └── tools/                   # Flash scripts, utilities
 ```
@@ -50,6 +62,19 @@ MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 1.3" OLED, HW040 encoder, 2x
 | Power | Separate supplies, signal ground only via DB-9 |
 | Nano | Parked — Pico handles everything |
 
+## Current Status
+
+| Area | Status | Files |
+|------|--------|-------|
+| Pico firmware | Complete — 8 MicroPython modules | `firmware/pico/` |
+| LPC2361 firmware | Skeleton — 48 C files, needs ARM toolchain | `firmware/lpc2361/` |
+| Schematics | Complete — 7 ASCII docs + 4 KiCad projects | `schematics/`, `kicad/` |
+| Panel templates | Complete — MB panel + 42HP expander SVGs | `panel/` |
+| Circuit review | Complete — 13 sections reviewed, 5 corrections | `schematics/CIRCUIT_REVIEW.md` |
+| Firmware RE | In progress — .mbf encryption identified, block structure decoded | `docs/research/` |
+| Mods & bending | Complete — 4 guides covering all techniques | `docs/mods/` |
+| Touch plates | Complete — resistive + capacitive + MPR121 designs | `schematics/touch_plates.md` |
+
 ## Resources
 
 - [Hackabrute Schematics](https://hackabrute.yusynth.net/MICROBRUTE/schematics_en.html)
@@ -58,7 +83,9 @@ MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 1.3" OLED, HW040 encoder, 2x
 - [MKNielsen2000 Add-ons](https://github.com/MKNielsen2000/MicroBrute-Add-ons)
 - [PT2399 Analysis](https://www.electrosmash.com/pt2399-analysis)
 - [DLO-138 Firmware](https://github.com/ardyesp/DLO-138)
+- [Elektroid](https://github.com/dagargo/elektroid) — Open source MicroBrute device manager
 - [EuroPi](https://github.com/Allen-Synthesis/EuroPi)
+- [PicoEMP](https://github.com/newaetech/chipshouter-picoemp) — EMFI tool for CRP bypass
 
 ## License
 

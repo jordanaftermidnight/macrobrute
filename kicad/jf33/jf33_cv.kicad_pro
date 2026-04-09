@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "filename": "jf33_cv.kicad_pro",
+    "version": 1
+  },
+  "sheets": [
+    ["jf33_cv.kicad_sch", ""]
+  ],
+  "text_variables": {
+    "PROJECT": "JF-33 Delay CV Control & Eurorack Integration",
+    "REVISION": "1.0"
+  }
+}

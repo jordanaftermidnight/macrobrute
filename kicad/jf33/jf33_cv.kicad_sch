@@ -1,0 +1,120 @@
+(kicad_sch
+  (version 20231120)
+  (generator "macrobrute")
+  (generator_version "8.0")
+  (uuid "c3d4e5f6-a7b8-9012-cdef-012345678901")
+  (paper "A3")
+  (title_block
+    (title "JF-33 Analog Delay — CV Control & Eurorack Integration")
+    (date "2026-04-09")
+    (rev "1.0")
+    (comment 1 "PT2399 CV delay time, CV feedback, level matching, anti-latch-up")
+  )
+
+  (lib_symbols)
+
+  ;; ============================================================
+  ;; ANTI-LATCH-UP PROTECTION (BUILD FIRST!)
+  ;; ============================================================
+
+  (text "ANTI-LATCH-UP PROTECTION"
+    (exclude_from_sim no)
+    (at 25 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "CRITICAL: PT2399 pin 6 latches if < 2kR to GND at power-on!\n\n+5V (78L05) -[100k]- PT2399.pin6\nQ1: BC337 (NPN switch)\n  Collector -> CV control circuit\n  Base -[100k]- +5V, with 1uF timing cap to GND\n  Emitter -> GND\n\nStartup: 1uF charges through 100k (tau=100ms)\n  t=0: BC337 OFF, pin 6 sees only 100k pull-up -> SAFE\n  t~300ms: BC337 saturates, CV circuit connected\n  t~1s: Fully operational"
+    (exclude_from_sim no)
+    (at 25 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; DELAY TIME CV (NPN Current Sink)
+  ;; ============================================================
+
+  (text "DELAY TIME CV CONTROL"
+    (exclude_from_sim no)
+    (at 25 105 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "CV In (0-5V) -[100k]- pot(100k) -> U1A(TL072, +in) buffer\nU1A out -[1k]- Q2(2N3904) base\nQ2 collector -> PT2399 pin 6 (via anti-latch-up BC337)\nQ2 emitter -[1k]- GND (CORRECTED: max I = 5mA, safe for PT2399)\n\n1N4148: cathode -> pin 6, anode -> GND (reverse current protection)\n\nDelay equation: Delay(ms) = 11.46 * R(kohm) + 29.70\nAt 0V CV: delay set by original timing R (~600ms)\nAt 5V CV: max 5mA sink -> ~35ms delay (shortest)"
+    (exclude_from_sim no)
+    (at 25 115 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; FEEDBACK CV (Vactrol option)
+  ;; ============================================================
+
+  (text "FEEDBACK CV CONTROL"
+    (exclude_from_sim no)
+    (at 25 185 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Option A: Vactrol (simple)\n  Replace feedback pot with vactrol LDR\n  CV -[1k]- vactrol LED(A) - LED(K) -[1k]- GND\n  Pro: isolated. Con: slow (~50ms), nonlinear\n\nOption B: SSI2164 VCA (pro quality)\n  Delay out -[10k]- SSI2164 ch1 sig in\n  CV -[33k]- SSI2164 ch1 CV in (-33mV/dB)\n  SSI2164 ch1 out -[10k]- feedback input\n  4 channels available: feedback, wet/dry, spare x2"
+    (exclude_from_sim no)
+    (at 25 195 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; EURORACK LEVEL MATCHING
+  ;; ============================================================
+
+  (text "EURORACK LEVEL MATCHING"
+    (exclude_from_sim no)
+    (at 200 25 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "INPUT ATTENUATION (~21dB):\n  Eurorack audio (10Vpp) -[100k]- node -[10k]- GND\n  node -> JF-33 input\n  Output: ~0.9Vpp (within PT2399 limit)\n\nOUTPUT AMPLIFICATION (~21dB):\n  JF-33 out -[1uF AC couple]- U1B(TL072, +in)\n  Rf=100k, Rg=10k -> Gain = 11x\n  Output: ~5.5Vpp from 0.5Vpp input\n  Power: +12V from Eurorack"
+    (exclude_from_sim no)
+    (at 200 35 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; PT2399 GLITCH/BEND POINTS
+  ;; ============================================================
+
+  (text "PT2399 GLITCH/BEND POINTS"
+    (exclude_from_sim no)
+    (at 200 105 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "Pin 6 -[1M]- Pin 8: gentle warble / spatial effect\nPin 6 -[pot 0-1M]- Pin 7: variable glitch intensity\nPin 7 -[LED to GND]: soft input limiter at ~2V\n\nHAVOC SWITCH (momentary):\n  Feedback pot wiper -[SPST momentary]- Delay output\n  Effect: instant 100% feedback -> self-oscillation\n  CV: replace SPST with 2N7000 MOSFET gate\n  Gate driven by Eurorack gate input via voltage divider\n\nFREEZE (experimental):\n  Inject clock into pin 5 (VCO out) to lock delay buffer\n  Use 555 timer or Pico GPIO at ~10-50kHz\n  CAUTION: can damage PT2399 if overdone"
+    (exclude_from_sim no)
+    (at 200 115 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; POWER SUPPLY
+  ;; ============================================================
+
+  (text "POWER SUPPLY"
+    (exclude_from_sim no)
+    (at 200 205 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "+12V (Eurorack) -> 7809 -> +9V -> JF-33 power input\n100uF + 100nF on 9V output\nDissipation: (12-9) * 0.06A = 0.18W (no heatsink)\n\nJF-33 internal 78L05 handles PT2399 5V regulation\nTotal current: ~40-60mA from +12V rail"
+    (exclude_from_sim no)
+    (at 200 215 0)
+    (effects (font (size 1.5 1.5)))
+  )
+
+  ;; ============================================================
+  ;; COMPONENT SUMMARY
+  ;; ============================================================
+
+  (text "JF-33 CV COMPONENT SUMMARY"
+    (exclude_from_sim no)
+    (at 200 265 0)
+    (effects (font (size 3 3) (thickness 0.5) bold))
+  )
+  (text "U1: TL072CP - CV buffer + output amp\nU2: SSI2164 - VCA for feedback/mix (optional)\nQ1: BC337 - Anti-latch-up switch\nQ2: 2N3904 - Current sink\nD1: 1N4148 - Reverse current protection\nD2: 1N4148 - Reverse current protection\nVR1: 7809 - 9V regulator\nPots: 100k x1 (CV atten)\nR: 100k x4, 10k x3, 1k x4\nC: 1uF x2, 100uF x1, 100nF x3"
+    (exclude_from_sim no)
+    (at 200 275 0)
+    (effects (font (size 1.5 1.5)))
+  )
+)
