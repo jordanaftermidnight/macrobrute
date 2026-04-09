@@ -2,7 +2,27 @@
 
 ## Context
 
-The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. Three sessions of work have produced 101 files: Pico MicroPython firmware (8 modules), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), panel SVGs, 4 mod/bending guides, .mbf encryption analysis, and research docs. All documentation and design work is complete. **Nothing has been built yet.** This plan covers the full physical build, firmware bring-up, and firmware RE investigation.
+The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. Four sessions of work have produced 105+ files: Pico MicroPython firmware (8 modules, reviewed), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs. All documentation and design work is complete. **Nothing has been built yet.**
+
+### Phase Reorder (2026-04-09)
+
+Original order assumed physical access to MicroBrute throughout. Revised order front-loads software work:
+
+| Priority | Phase | Status |
+|----------|-------|--------|
+| 1 | Phase 0: Toolchain setup | **Audited** — install commands ready |
+| 2 | Phase 6A: .mbf decrypt / firmware RE | **DONE** — cipher cracked, firmware decrypted |
+| 3 | Phase 1: Pico firmware bring-up | **Code reviewed** — 5 bugs fixed, ready for hardware |
+| 4 | Phase 0: Hardware validation | Needs physical access |
+| 5 | Phase 2: Internal wiring | Needs physical access |
+| 6 | Phase 3: Panel mods | Needs physical access |
+| 7 | Phase 4: Expander build | Needs IC inventory check |
+| 8 | Phase 5: System integration | After all above |
+
+### IC Inventory Check Needed
+
+Before ordering, verify which of these are already in the IC kit:
+TL074×4, TL072×3, CD4024×2, CD4051×1, CD40106×2, LF398×1, 2N3904×15, BC337×1, 1N4148×20, 1N5817×6, BAT54S×6, 78L05×1, 7809×1
 
 ---
 
@@ -185,14 +205,24 @@ LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C drive
 
 ## Phase 6: Advanced / Optional (Week 12+)
 
-### 6A: LPC2361 Firmware RE
-Progressive investigation — each step independent:
+### 6A: LPC2361 Firmware RE — PARTIALLY COMPLETE
 
-1. **Connect PL2303HX** to LPC2361 UART0 (P0.2/P0.3), detect CRP level
-2. **If no CRP:** dump 128KB flash with `lpc21isp -readdump`
-3. **Analyze .mbf:** disassemble `MicroBrute Connection.app` with Ghidra, find `LPC23XXUpdater` class decrypt routine
-4. **If CRP:** build PicoEMP (~$50), attempt EMFI glitch bypass
-5. **Ghidra analysis:** load dump as ARM:LE:32:v4t, install SVD-Loader for peripherals
+**.mbf decryption is DONE** (2026-04-09). Firmware binary extracted and ready for analysis.
+
+Completed:
+- [x] Cracked .mbf XOR cipher (key: `ArturiaminiBruteFirmware`, start index 4)
+- [x] Extracted Intel HEX → 52.6KB ARM binary (v1.0.4.114)
+- [x] Decryption tool: `tools/mbf_decrypt.py`
+- [x] Peripheral usage map, function count (~327 Thumb), entry point 0x2184
+- [x] Identified C++ runtime (Keil/IAR toolchain)
+
+Remaining:
+1. **Install Ghidra** (`brew install --cask ghidra`)
+2. **Load firmware binary**: `ARM:LE:32:v4t`, base `0x2000`, entry `0x2184`
+3. **Install SVD-Loader**, load LPC23xx SVD for peripheral labels
+4. **Map key functions**: MIDI SysEx handler, DAC output, sequencer, parameter tables
+5. **Optional:** Connect PL2303HX to UART0, check for debug output
+6. **Optional:** PicoEMP EMFI — only needed for bootloader area access
 
 ### 6B: JF-33 Delay CV Integration
 Build per `schematics/jf33_cv_control.md`:

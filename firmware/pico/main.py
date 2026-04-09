@@ -21,14 +21,10 @@ from leds import LEDManager
 VERSION = "0.1.0"
 
 display = Display()
-clock = Clock()
 midi = MIDIBridge()
 leds = LEDManager()
 
-# Gate output (directly from button)
-gate_out = Pin(config.LED_GATE, Pin.OUT, value=0)
 btn_tap = Pin(config.BTN_TAP, Pin.IN, Pin.PULL_UP)
-btn_tap_last = 1
 
 
 # ---- Clock callbacks ----
@@ -38,7 +34,7 @@ def on_clock_tick(count):
     midi.send_clock()
 
 
-clock._on_tick = on_clock_tick
+clock = Clock(on_tick=on_clock_tick)
 
 
 # ---- Menu Construction ----
@@ -54,7 +50,7 @@ def build_menus():
         MenuItem("Run/Stop", action=clock.toggle),
         MenuItem("Tap Tempo", action=clock.tap),
         MenuItem("Ext Sync",
-                 value_fn=lambda: "ON" if clock._ext_sync else "OFF",
+                 value_fn=lambda: "ON" if clock.ext_sync else "OFF",
                  adjust_fn=lambda d: (clock.enable_ext_sync() if d > 0 else clock.disable_ext_sync())),
     ])
 
@@ -121,7 +117,7 @@ def draw_home(oled):
     oled.text(bpm_str, 40, 16)
 
     # Clock status
-    status = "EXT" if clock._ext_sync else ("RUN" if clock._running else "STOP")
+    status = "EXT" if clock.ext_sync else ("RUN" if clock.running else "STOP")
     oled.text(status, 88, 16)
 
     # Tick counter
@@ -177,7 +173,7 @@ def main():
         nonlocal in_menu
         if in_menu:
             menu_sys.on_back()
-            if len(menu_sys._stack) == 1 and not menu_sys.editing:
+            if menu_sys.at_root and not menu_sys.editing:
                 in_menu = False
         display.invalidate()
 

@@ -1,14 +1,34 @@
 # LPC2361 Firmware Reverse Engineering — Research Findings
 
-Compiled 2026-04-09 from web research.
+Compiled 2026-04-09 from web research + binary analysis.
 
 ---
 
-## Key New Discoveries
+## BREAKTHROUGH: .mbf Encryption Cracked
 
-### 1. No Public MicroBrute Firmware Dumps Exist
+**The .mbf firmware format has been fully decoded.** See `docs/research/mbf_analysis.md` for complete details.
+
+- **Algorithm:** Repeating XOR cipher with key `ArturiaminiBruteFirmware` (24 bytes)
+- **Key start index:** 4 (not 0)
+- **Payload:** Intel HEX format containing ARM binary (loads at 0x2000)
+- **Validation:** First 24 decrypted bytes must equal the key string
+- **Tool:** `tools/mbf_decrypt.py` — decrypts .mbf → .hex → .bin
+- **CRP is irrelevant for firmware analysis** — the .mbf gives us the full application code
+
+### Firmware Binary Summary (v1.0.4.114)
+- 52,664 bytes (51.4 KB), base address 0x2000, entry 0x2184
+- ARM7TDMI with Thumb interworking, C++ runtime (Keil/IAR toolchain)
+- 40.2% flash usage — significant room for custom firmware
+- Ready for Ghidra analysis: `ARM:LE:32:v4t`, base `0x2000`
+
+---
+
+## Key Discoveries
+
+### 1. No Public MicroBrute Firmware Dumps Exist (But We Have One Now)
 - No community reports of successful firmware extraction on ModWiggler, Reddit, or EEVblog
 - Hardware mod community focuses entirely on analog modifications
+- **We decrypted the .mbf file directly — no hardware access needed**
 
 ### 2. Crystal Frequency Confirmed: 12MHz
 - Confirmed from hackabrute.yusynth.net schematics (SF17002 ARM Board PDF)
@@ -37,11 +57,12 @@ Compiled 2026-04-09 from web research.
 - Walkthrough: https://dsgruss.github.io/notes/2020/10/02/keystep1.html
 - Covers: file metadata, memory structure, Ghidra workflow
 
-### 5. .mbf File Format — Uncracked
-- No public RE of .mbf format found
-- 144.73KB exceeds 128KB flash — suggests encoding, compression, or multi-section
-- .mbpz (preset) files were reverse-engineered (legacy Arturia forums) but not .mbf
-- Arturia MiniLab 3 firmware analysis by Fenugrec (YouTube 2024) — different MCU but methodology applicable
+### 5. .mbf File Format — CRACKED
+- **Repeating XOR cipher, key = `ArturiaminiBruteFirmware`**
+- 148KB .mbf → 148KB Intel HEX → 52KB ARM binary
+- Size exceeds flash because Intel HEX is ~2.8x larger than binary
+- Preset files (.mbpz) likely use key `ArturiaminiBrutePresetFile` (also found in binary)
+- No public RE of .mbf existed prior to this analysis
 
 ### 6. MCP4728 DAC
 - Default I2C address: **0x60** (configurable via EEPROM)
@@ -59,13 +80,14 @@ Compiled 2026-04-09 from web research.
 
 ---
 
-## Recommended RE Approach
+## Recommended RE Approach (Updated)
 
-1. **Phase 1:** Use Matraszek SysEx protocol + Gruss KeyStep methodology
-2. **Phase 2:** Connect PL2303HX to UART0, detect CRP level
-3. **Phase 3 (if CRP):** PicoEMP for EMFI — cheapest viable bypass (~$50 vs $300 ChipWhisperer)
-4. **Phase 4:** Analyze .mbf file with binwalk, strings, entropy analysis
-5. **Phase 5:** Load into Ghidra with SVD-Loader for peripheral labeling
+1. **DONE:** Decrypt .mbf using `tools/mbf_decrypt.py`
+2. **Next:** Load .bin into Ghidra (`ARM:LE:32:v4t`, base `0x2000`, SVD-Loader for peripherals)
+3. **Next:** Map MIDI SysEx handlers, DAC output code, sequencer, parameter tables
+4. **Optional:** Connect PL2303HX to UART0, check for debug output while running
+5. **Optional:** PicoEMP for EMFI — only needed for bootloader area or factory calibration
+6. **Optional:** Capture live SysEx during firmware update to map protocol details
 
 ---
 
@@ -95,10 +117,12 @@ Compiled 2026-04-09 from web research.
 - **microdude** (Python): https://github.com/dagargo/microdude — Deprecated, use Elektroid instead
 - **avril firmware tools**: https://github.com/pichenettes/avril-firmware_tools — .mid/.syx conversion (Mutable Instruments)
 
-### MicroBrute Connection App Analysis
+### MicroBrute Connection App Analysis (COMPLETE)
 - Binary: Mach-O i386, C++ with JUCE framework
-- Class `LPC23XXUpdater` handles firmware updates
-- String: `"This file is not a MicroBrute crypted firmware file."` — confirms encryption
-- Magic header: `MBFD` (MicroBrute Firmware Data?)
-- Firmware embedded inside app, not downloaded separately
-- **Disassembly target:** Focus on `LPC23XXUpdater` methods for decrypt routines
+- **`LPC23XXCrypter`** class: repeating XOR cipher (encrypt/decrypt are same function)
+  - `setKey()`, `cypherData()`, `uncypherData()` (jmp to cypherData), `resetKeyIndex()`, `skipKeyIndex()`
+- **`CryptedFile`** class: reads file, creates crypter, decrypts, validates header = key
+- **`LPC23XXUpdater`** class: MIDI SysEx update protocol (28-byte packets, ACK-based)
+- Key strings: `ArturiaminiBruteFirmware` (firmware), `ArturiaminiBrutePresetFile` (presets)
+- Magic header `MBFD` is actually a reference, not the key — the key IS the header after decryption
+- Firmware is NOT embedded in app — `.mbf` file is loaded from disk

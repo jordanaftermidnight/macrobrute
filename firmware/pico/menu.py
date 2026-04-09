@@ -59,6 +59,10 @@ class MenuSystem:
     def editing(self):
         return self._editing
 
+    @property
+    def at_root(self):
+        return len(self._stack) == 1
+
     def on_rotate(self, delta):
         if self._editing and self._edit_item and self._edit_item.adjust_fn:
             self._edit_item.adjust_fn(delta)

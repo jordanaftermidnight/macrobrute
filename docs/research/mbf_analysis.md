@@ -1,203 +1,229 @@
-# MicroBrute .mbf Firmware File Analysis
+# MicroBrute .mbf Firmware File — Decryption & Analysis
 
-File: `MicroBrute_Firmware_Update_1_0_4_114.mbf`
+## Encryption: CRACKED
 
-## File Properties
+The .mbf format uses a **repeating XOR cipher** with the key `ArturiaminiBruteFirmware` (24 bytes).
+
+### Cipher Details
 
 | Property | Value |
 |----------|-------|
-| Size | 148,200 bytes (144.73 KB) |
-| Byte range | 0x00-0x7F only (100% 7-bit MIDI-safe) |
-| Shannon entropy | 5.79 bits/byte (72.4%) |
-| SysEx markers (0xF0/0xF7) | None |
-| Arturia manufacturer ID | Not found (encoded) |
+| Algorithm | Repeating XOR (symmetric — encrypt = decrypt) |
+| Key | `ArturiaminiBruteFirmware` (24 bytes, ASCII) |
+| Key start index | 4 (constructor does `keyIndex = 4 % keyLen`) |
+| Header | First 24 bytes of decrypted file = the key itself (validation) |
+| Separator | Null byte (0x00) after header — key is null-terminated C string |
+| Payload | Intel HEX format (ASCII text) |
 
-## Key Finding: 360-Byte Block Structure
+### How It Was Found
 
-The file consists of **411 full blocks of 360 bytes** + 240-byte remainder.
+Disassembly of `MicroBrute Connection.app` (Mach-O i386, JUCE C++) using `otool -tV` and `nm`.
 
-### Intra-Block Structure
+**Two C++ classes handle the firmware:**
 
-Each 360-byte block contains **8 fixed 5-byte signatures** at regular 45-byte intervals:
-
-| Block Offset | Signature (hex) | ASCII |
-|-------------|-----------------|-------|
-| +0x028 (40) | `7A 6B 48 54 71` | `zkHTq` |
-| +0x055 (85) | `64 78 57 46 51` | `dxWFQ` |
-| +0x082 (130) | `79 6F 7C 58 42` | `yo\|XB` |
-| +0x0AF (175) | `4F 78 4F 45 55` | `OxOEU` |
-| +0x0DC (220) | `64 64 53 73 42` | `ddSsB` |
-| +0x109 (265) | `64 6B 57 58 5E` | `dkWX^` |
-| +0x136 (310) | `79 7F 48 58 51` | `y.HXQ` |
-| +0x163 (355) | `68 4B 48 45 45` | `hKHEE` |
-
-These signatures are **identical across all 411+ blocks** — they mark sub-block boundaries.
-
-### Sub-Block Layout (45 bytes each)
-
+`LPC23XXCrypter` — encryption engine:
 ```
-  +0x00: [40 bytes encoded data] [5 bytes signature]
-  +0x2D: [40 bytes encoded data] [5 bytes signature]
-  +0x5A: [40 bytes encoded data] [5 bytes signature]
-  ...
-  Total: 8 sub-blocks × 45 bytes = 360 bytes per block
-  Data per block: 8 × 40 = 320 bytes
-  Overhead: 8 × 5 = 40 bytes (12.5%)
+struct LPC23XXCrypter {
+    char* key;       // +0x00: strdup'd key bytes
+    int   keyLen;    // +0x04: key length (24)
+    int   keyIndex;  // +0x08: current position, wraps at keyLen
+};
+
+// Methods:
+setKey(char*, int)      — sets key (strdup + store length)
+resetKeyIndex()         — keyIndex = 4 % keyLen
+skipKeyIndex(int n)     — keyIndex = (keyIndex + n) % keyLen
+cypherData(char*, int)  — XOR each byte with key[keyIndex++], wrap at keyLen
+uncypherData(char*, int)— IDENTICAL to cypherData (just a jmp — symmetric cipher)
 ```
 
-### Additional Fixed Bytes
-
-Many single-byte positions are constant across all blocks, suggesting the
-encoding maps specific byte patterns (likely 0x00 or 0xFF from erased flash)
-to fixed encoded values.
-
-Notable fixed positions beyond signatures:
-- +0x030: always `0x42 0x59 0x51`
-- +0x05D-05F: always `0x42 0x44 0x45`
-- +0x08A-08C: always `0x42 0x55 0x71`
-- +0x0B7-0B9: always `0x5D 0x47 0x51`
-- +0x0E4-0E6: always `0x76 0x59 0x42`
-- +0x111-113: always `0x45 0x44 0x55`
-- +0x13E-140: always `0x59 0x72 0x42`
-
-## MicroBrute Connection App Binary Analysis
-
-The `MicroBrute Connection.app` (Mach-O i386, JUCE C++ framework) contains
-the firmware update logic. Key strings extracted:
-
-| String | Significance |
-|--------|-------------|
-| `"This file is not a MicroBrute crypted firmware file."` | Confirms .mbf is **encrypted** |
-| `"14LPC23XXUpdater"` | C++ class handling LPC23XX firmware updates |
-| `"MBFD"` | Probable magic header (MicroBrute Firmware Data?) |
-| `"Downloading the firmware, do not unplug..."` | Update progress message |
-| `"Firmware update: complete"` | Success message |
-
-**Next step:** Disassemble `MicroBrute Connection` binary with Ghidra or Hopper.
-Focus on `LPC23XXUpdater` class methods — the decrypt/encode routines will be
-in methods that read the .mbf file and check for the "MBFD" magic header.
-
-## Encoding Analysis
-
-### Not Simple XOR
-Adjacent block XOR does not produce recognizable plaintext. The encoding is
-more complex than single-byte XOR.
-
-### Not Standard MIDI 7-bit Packing
-Standard MIDI 7-bit unpacking (MSB byte first or last) does not produce
-ARM vector table signatures at offset 0.
-
-### Characteristics of the Encoding
-1. **Strictly 7-bit** — designed for MIDI SysEx transport
-2. **Block-structured** — 360-byte blocks with internal signatures
-3. **Fixed overhead** — 12.5% (40 of 360 bytes are signatures)
-4. **Position-dependent** — same plaintext byte at same block position
-   always produces same encoded byte (not stream cipher)
-5. **No visible ARM code** — vector table, CRP word not recognizable
-
-### Possible Encoding Schemes
-1. **Custom substitution + bit manipulation** — Arturia proprietary
-2. **Scrambled byte ordering** within each 40-byte data section
-3. **Lookup table encoding** (like base64 but 7-bit custom)
-4. **Multi-pass encoding** — 7-bit pack + scramble + signature insert
-
-## Size Mathematics
-
+`CryptedFile` — file wrapper:
 ```
-  File size:                148,200 bytes
-  Full blocks:              411 × 360 = 147,960 bytes
-  Remainder:                240 bytes
-  Data per block:           320 bytes (8 × 40)
-  Total data:               411 × 320 + ? = 131,520+ bytes
-  LPC2361 flash:            131,072 bytes (128 KB)
-  Ratio:                    ~1.004× (very close!)
+CryptedFile(juce::String& path, juce::String& key):
+    1. Read entire file into memory
+    2. Create LPC23XXCrypter(key.toUTF8(), strlen(key))
+    3. uncypherData(buffer, fileSize)
+    4. strncmp(buffer, key, keyLen) — validate header matches key
+    5. If mismatch: "This file is not a MicroBrute crypted firmware file."
 ```
 
-The 131,520 bytes of encoded data closely matches the 131,072-byte flash,
-with ~448 bytes for metadata/checksums.
+`LPC23XXUpdater` — MIDI update protocol:
+```
+StartUpdate(MidiOutput*, InputStream*)  — begins update via SysEx
+SendNextPacket()    — sends 0x1C (28) byte packets via SysEx
+AckReceived()       — handles ACK from device
+ResendLastPacket()  — retransmit on timeout
+SendEndOfUpdateMsg()— finalize update
+Reboot(MidiOutput*) — reboot device after flash
+```
 
-## Attack Vectors for Decoding
+The key string `ArturiaminiBruteFirmware` and preset key `ArturiaminiBrutePresetFile` are both present in the binary.
 
-### 1. Known Plaintext Attack
-ARM7TDMI vector table at address 0x0 is partially predictable:
-- Word 0 (reset): `LDR PC, [PC, ...]` = `0xE59FFxxx`
-- Words 1-6: exception vectors (also LDR PC patterns)
-- Word 7 (reserved): checksum
+### Decryption Tool
 
-Map these known bytes to the first block's encoded bytes to derive
-the encoding scheme.
+```
+python3 tools/mbf_decrypt.py firmware.mbf              # → firmware.hex
+python3 tools/mbf_decrypt.py firmware.mbf -b            # → firmware.hex + firmware.bin
+```
 
-### 2. Flash Erase Pattern
-Large sections of unused flash = `0xFF`. The highly repetitive
-patterns in later blocks (near block 400+) likely represent erased
-flash. Use these to determine how `0xFF` is encoded.
+---
 
-### 3. CRP Word
-Address `0x000001FC` contains the CRP value. If CRP is disabled,
-this word is `0xFFFFFFFF`. This maps to a specific block and offset:
-- Block: `0x1FC / 320 = 1.59` → partially in block 1
-- Look for distinctive patterns at that position
+## Decrypted Firmware Analysis
 
-### 4. Differential Analysis
-Compare with firmware from other Arturia products (.mbf files for
-MiniBrute, MicroBrute SE) — shared encoding would confirm the scheme
-and provide more known-plaintext pairs.
+### v1.0.4.114 (latest)
 
-### 5. Capture Live SysEx
-Use SysEx Librarian during a firmware update to capture the raw MIDI
-stream. Compare with .mbf file to determine if additional framing/
-headers exist in the MIDI transport layer.
+| Property | Value |
+|----------|-------|
+| .mbf size | 148,200 bytes |
+| Payload (Intel HEX) | 148,176 bytes, 3,296 lines |
+| Binary size | 52,664 bytes (51.4 KB) |
+| Base address | 0x00002000 (8KB bootloader reserved) |
+| Entry point | 0x00002184 |
+| Flash usage | 40.2% of 128KB |
 
-## Differential Analysis: v1.0.4.114 vs v1.0.3.2
+### v1.0.3.2
 
-Second file: `MicroBrute_Firmware_Release_V1.0.3.2.mbf`
+| Property | Value |
+|----------|-------|
+| .mbf size | 137,956 bytes |
+| Binary size | 49,024 bytes (47.9 KB) |
+| Base address | 0x00002000 |
+| Entry point | 0x00002184 (same) |
+| Flash usage | 37.4% of 128KB |
 
-| Property | v1.0.4.114 | v1.0.3.2 |
-|----------|-----------|----------|
-| Size | 148,200 bytes | 137,956 bytes |
-| Blocks | 411 full + 240 | 383 full + 76 |
-| Entropy | 5.7903 | 5.7897 |
-| 7-bit only | Yes | Yes |
-| Block size | 360 | 360 |
+### ARM Vector Table (at 0x2000)
 
-### Key Differential Findings
+| Vector | Instruction | Notes |
+|--------|------------|-------|
+| Reset | `LDR PC, [PC, #0x18]` | Standard ARM vector load |
+| Undef | `LDR PC, [PC, #0x18]` | Shared handler setup |
+| SWI | `LDR PC, [PC, #0x18]` | |
+| PrefAbort | `LDR PC, [PC, #0x18]` | |
+| DataAbort | `LDR PC, [PC, #0x18]` | |
+| Checksum | `0x0000CD80` | NXP boot checksum (sum of vectors 0-4,6-7 + this = 0) |
+| IRQ | `LDR PC, [PC, #-0x120]` | Reads VIC VectAddr register directly |
+| FIQ | `LDR PC, [PC, #0x18]` | |
 
-1. **All block signatures are IDENTICAL between versions**
-   - Confirms signatures are encoding structural markers, not data-dependent
-   - The encoding scheme is the same between firmware versions
+The IRQ vector `0xE51FF120` is the standard NXP pattern: `LDR PC, [0xFFFFF030]` (VICVectAddr).
 
-2. **Blocks 1 and 2 are identical between versions**
-   - Flash addresses 0x140-0x3BF (block 1-2, 640 bytes)
-   - Likely bootloader or exception handler code (unchanged between versions)
-   - Block 0 differs only in later sub-blocks (first 48 bytes match)
+### Memory Map
 
-3. **64.6% of shared bytes differ** — extensive code changes between versions
+```
+0x00000000 - 0x00001FFF  ISP Bootloader (8 KB, not in firmware image)
+0x00002000 - 0x0000EDBD  Application firmware (v1.0.4: ~52 KB)
+0x0000EDBE - 0x0001FFFF  Unused flash (~44 KB)
+0x40000000 - 0x400087FF  SRAM (34 KB)
+```
 
-4. **Late blocks (383-410) are all unique** — not just erased flash
-   - v1.0.4 contains more code than v1.0.3
-   - No simple "erased = 0xFF" pattern visible
+### Key Strings Found in Firmware
 
-5. **Block 0 partial match** — first 48 bytes identical (ARM vector table
-   entry points are the same), but later bytes differ (some vectors changed)
+| Address | String | Significance |
+|---------|--------|-------------|
+| 0x0C7E4 | `SIGPVFN: Pure virtual fn called` | C++ runtime (Keil/ARM) |
+| 0x0CA2C | `SIGRTMEM: Out of heap memory` | Heap allocation failure |
+| 0x0CA4C | `: Heap memory corrupted` | Memory corruption detect |
+| 0x0CA78 | `SIGABRT: Abnormal termination` | Abort handler |
 
-### Encoding Scheme Constraints (from differential)
+These are ARM C/C++ runtime library strings — firmware is compiled with a commercial ARM toolchain (likely Keil MDK or IAR).
 
-- Position-dependent encoding (same plaintext at same position = same output)
-- Not simple XOR (blocks with mostly 0xFF would produce recognizable patterns)
-- Likely involves bit manipulation and/or substitution
-- 7-bit constraint is enforced per-byte (no escape sequences)
-- Block boundaries are meaningful — encoding restarts each block
+### Differential Analysis (v1.0.4.114 vs v1.0.3.2)
 
-## Recommendations
+| Metric | Value |
+|--------|-------|
+| Size difference | 3,640 bytes (v1.0.4 larger) |
+| Differing bytes | 47,050 of 49,024 shared (96%) |
+| Diff regions | 1,293 |
+| Entry point | Same (0x2184) |
+| Vector table | Mostly same, handler addresses differ |
 
-1. **Priority: Decompile MIDI Control Center**
-   - Arturia's update tool contains the .mbf encoder/decoder
-   - Java-based (use JD-GUI or CFR to decompile)
-   - Search for the 5-byte signature constants in the binary
-2. **Capture SysEx during update** — reveals MIDI framing around .mbf data
-3. **Known plaintext attack on block 0**
-   - First 32 bytes of ARM7 vector table are predictable (LDR PC instructions)
-   - Compare with encoded block 0 data to derive mapping
-4. **Acquire MiniBrute .mbf** — same MCU family, may use identical encoding
-5. **Block 1-2 are stable** — use as additional known-plaintext reference
-   if bootloader code is ever dumped
+96% difference means these are full recompiles, not patches. Both versions share the entry point and basic architecture.
+
+---
+
+## CRP Status
+
+The CRP (Code Read Protection) word lives at absolute address **0x1FC** — inside the bootloader area (0x0000-0x1FFF) which is NOT included in the firmware update image. This means:
+
+1. The .mbf update **cannot change CRP** — it only writes to 0x2000+
+2. CRP was set at **factory** and persists across firmware updates
+3. The only way to determine CRP level is to **physically probe** UART0 (P0.2/P0.3) with ISP
+4. If CRP is set, the firmware dump we have from .mbf decryption is already the application code — we don't need to bypass CRP for application analysis
+
+**The .mbf decryption makes CRP bypass unnecessary for firmware analysis.** CRP bypass is only needed if we want to modify the bootloader area or read factory-specific calibration data.
+
+---
+
+## Update Protocol
+
+The firmware update uses MIDI SysEx. From the `LPC23XXUpdater` disassembly:
+
+1. `StartUpdate` — sends SysEx command to enter bootloader mode
+2. File is divided into **28-byte (0x1C) packets**
+3. Each packet sent via `SendNextPacket` as SysEx message
+4. Device ACKs each packet (or updater retransmits)
+5. `SendEndOfUpdateMsg` — signals completion
+6. `Reboot` — resets device
+
+The Intel HEX text is sent directly (not the binary) — 28 bytes at a time.
+
+Total packets: `148,176 / 28 = 5,292 packets`
+
+---
+
+## Previous Analysis Corrections
+
+The earlier analysis of "360-byte block structure with 5-byte signatures" was observing **patterns in the XOR keystream**, not real data structures. Since the key is 24 bytes and repeats, and the Intel HEX format has regular line structure (`:10XXXX00...` = 43+ chars per line), the interaction between key period (24) and HEX line length created apparent 360-byte periodicities (LCM effects). The "fixed signatures" were key bytes XOR'd with predictable HEX format characters (`:`, hex digits, newlines).
+
+---
+
+## Files
+
+| File | Contents |
+|------|----------|
+| `firmware/MicroBrute_Firmware_Update_1_0_4_114.mbf` | Original encrypted v1.0.4.114 |
+| `firmware/MicroBrute_Firmware_Update_1_0_4_114.hex` | Decrypted Intel HEX |
+| `firmware/MicroBrute_Firmware_Update_1_0_4_114.bin` | Raw ARM binary (load at 0x2000) |
+| `firmware/MicroBrute_1_0_3_2.bin` | Raw ARM binary v1.0.3.2 |
+| `tools/mbf_decrypt.py` | Decryption tool |
+
+### Peripheral Usage Map
+
+From literal pool analysis — addresses referencing LPC2361 peripheral registers:
+
+| Peripheral | Base Address | Code References | Likely Purpose |
+|-----------|-------------|-----------------|----------------|
+| System Control | 0xE01FC000 | 0x2170, 0xA39C | PLL, clocking, power |
+| PINSEL | 0xE002C000 | 0x2C44, 0x3EB4, 0x4350, 0x6CAC, 0x752C | Pin mux config |
+| VIC | 0xFFFFF000 | 0x2C64, 0x3250, 0x3F7C, 0x4340, 0x6114 | Interrupt setup (5 refs) |
+| UART0 | 0xE000C000 | 0x3EA8 | MIDI or debug serial |
+| Timer0 | 0xE0004000 | 0x3F70, 0x6750 | Tempo/timing |
+| Timer1 | 0xE0008000 | 0x9C5C | Secondary timing |
+| SPI | 0xE0028000 | 0x4348, 0x6B78 | External device comm |
+| SSP0 | 0xE0020000 | 0xE3B4 | SPI-like interface |
+| PWM0/1 | 0xE001C000 | 0x4610 | Waveform/indicator |
+| Fast GPIO 0 | 0x3FFFC000 | 0x669C, 0x6B74 | LEDs, buttons, control |
+
+**Not found as literals** (accessed via helper functions or indirectly):
+- I2C0 (0xE0044000) — for MCP4728 DAC
+- DAC (0xE006C000) — on-chip 10-bit DAC
+- ADC (0xE004C000)
+- UART1 (0xE0010000) — MIDI?
+
+### Code Statistics
+
+| Metric | Value |
+|--------|-------|
+| Thumb functions (~PUSH {.., LR}) | ~327 |
+| ARM functions (~STMDB SP!) | ~18 |
+| Printable strings (6+ chars) | 4 (runtime only) |
+| Exception handlers | 0x2040-0x2054 |
+
+### Loading in Ghidra
+
+1. Import `.bin` file
+2. Language: `ARM:LE:32:v4t` (ARM7TDMI)
+3. Base address: `0x00002000`
+4. Install SVD-Loader, load LPC23xx SVD for peripheral labels
+5. Entry point: `0x00002184`
+6. Mark 0x2040-0x2054 as exception handler pointer table
+7. Functions start predominantly as Thumb — enable Thumb disassembly
