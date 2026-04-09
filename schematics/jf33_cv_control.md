@@ -8,6 +8,15 @@ The Joyo JF-33 uses a PT2399 delay chip. This design adds:
 3. Eurorack level matching (input attenuation, output amplification)
 4. Anti-latch-up protection (CRITICAL)
 
+**Key reference:** Eddy Bergman BMC 83 VC Delay — production-ready Eurorack
+PT2399 design with proven anti-latch-up circuit.
+See: https://www.eddybergman.com/2025/04/voltage-controlled-delay.html
+
+**Delay time equation:** Delay(ms) = 11.46 × R(kΩ) + 29.70
+(Source: Electric Druid — https://electricdruid.net/useful-design-equations-for-the-pt2399/)
+
+**PT2399 clones:** CD2399/CD2399GP is a confirmed drop-in replacement (same pinout/specs).
+
 ---
 
 ## 1. Anti-Latch-Up Protection (BUILD THIS FIRST)

@@ -102,6 +102,25 @@ Buffer with TL074 #2 (spare sections from expander design or add second IC).
   LFO (mod matrix)      ──[10kΩ]──┤+ TL074 follower├── DB-9 A pin 4
 ```
 
+## Triangle Buffer (with 2x Gain)
+
+Research confirmed TP124 (triangle) is inherently quieter than other
+waveform outputs. Instead of a unity follower, use a non-inverting
+amplifier with 2x gain to match levels with saw/square.
+
+```
+  TP124 (Triangle) ──[1kΩ]──┬── TL074 #2 section D (+in)
+                             │         │
+                            10MΩ      out ── [1kΩ] ── to DB-9 or body jack
+                             │         │
+                            GND       -in ──┬── 100kΩ (Rf, feedback)
+                                            │
+                                          100kΩ (Rg, to GND)
+
+  Gain = 1 + Rf/Rg = 1 + 100k/100k = 2x
+  Use matched 1% resistors for accurate gain.
+```
+
 ## LED Drivers (3x 2N3904 NPN)
 
 Pico GPIO at 3.3V, LEDs need ~10-20mA.
