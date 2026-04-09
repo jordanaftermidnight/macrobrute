@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 213.36 128.5" width="213.36mm" height="128.5mm">
+  <title>MACROBRUTE Expander — 42HP Eurorack Panel Layout</title>
+  <desc>
+    42HP = 213.36mm. Panel height = 128.5mm.
+    Mounting holes: 3.2mm at 7.5mm from edges, 122.5mm vertical spacing.
+    Jack holes: 6mm (Thonkiconn PJ398SM). Pot holes: 7mm (Alpha 9mm).
+    All coordinates in mm from top-left corner.
+  </desc>
+
+  <!-- Panel outline -->
+  <rect x="0" y="0" width="213.36" height="128.5" rx="0"
+        fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
+
+  <!-- Mounting holes (3.2mm, Eurorack standard) -->
+  <circle cx="7.5" cy="3" r="1.6" fill="none" stroke="#666" stroke-width="0.3"/>
+  <circle cx="7.5" cy="125.5" r="1.6" fill="none" stroke="#666" stroke-width="0.3"/>
+  <circle cx="205.86" cy="3" r="1.6" fill="none" stroke="#666" stroke-width="0.3"/>
+  <circle cx="205.86" cy="125.5" r="1.6" fill="none" stroke="#666" stroke-width="0.3"/>
+
+  <!-- ============================================ -->
+  <!-- ROW 1: OUTPUTS FROM MICROBRUTE (top)         -->
+  <!-- Y center = 18mm                              -->
+  <!-- ============================================ -->
+  <text x="5" y="10" font-size="3.5" fill="#ff6600" font-weight="bold">CV OUTPUTS</text>
+
+  <!-- Gate Out -->
+  <circle cx="15" cy="18" r="3" fill="none" stroke="#ff6600" stroke-width="0.3"/>
+  <text x="15" y="25" text-anchor="middle" font-size="2" fill="#ccc">GATE</text>
+
+  <!-- Pitch CV Out -->
+  <circle cx="30" cy="18" r="3" fill="none" stroke="#ff6600" stroke-width="0.3"/>
+  <text x="30" y="25" text-anchor="middle" font-size="2" fill="#ccc">PITCH</text>
+
+  <!-- Envelope Out -->
+  <circle cx="45" cy="18" r="3" fill="none" stroke="#ff6600" stroke-width="0.3"/>
+  <text x="45" y="25" text-anchor="middle" font-size="2" fill="#ccc">ENV</text>
+
+  <!-- LFO Out -->
+  <circle cx="60" cy="18" r="3" fill="none" stroke="#ff6600" stroke-width="0.3"/>
+  <text x="60" y="25" text-anchor="middle" font-size="2" fill="#ccc">LFO</text>
+
+  <text x="78" y="10" font-size="3.5" fill="#00ccff" font-weight="bold">AUDIO OUTPUTS</text>
+
+  <!-- VCO Mix Out -->
+  <circle cx="82" cy="18" r="3" fill="none" stroke="#00ccff" stroke-width="0.3"/>
+  <text x="82" y="25" text-anchor="middle" font-size="2" fill="#ccc">MIX</text>
+
+  <!-- VCF Out -->
+  <circle cx="97" cy="18" r="3" fill="none" stroke="#00ccff" stroke-width="0.3"/>
+  <text x="97" y="25" text-anchor="middle" font-size="2" fill="#ccc">VCF</text>
+
+  <!-- Saw Out -->
+  <circle cx="112" cy="18" r="3" fill="none" stroke="#00ccff" stroke-width="0.3"/>
+  <text x="112" y="25" text-anchor="middle" font-size="2" fill="#ccc">SAW</text>
+
+  <!-- Square Out -->
+  <circle cx="127" cy="18" r="3" fill="none" stroke="#00ccff" stroke-width="0.3"/>
+  <text x="127" y="25" text-anchor="middle" font-size="2" fill="#ccc">SQR</text>
+
+  <!-- ============================================ -->
+  <!-- ROW 2: INPUTS TO MICROBRUTE                  -->
+  <!-- Y center = 40mm (pots at 36, jacks at 44)    -->
+  <!-- ============================================ -->
+  <text x="5" y="31" font-size="3.5" fill="#ff3366" font-weight="bold">CV INPUTS</text>
+
+  <!-- Filter CV — pot + jack -->
+  <circle cx="15" cy="36" r="3.5" fill="none" stroke="#ff3366" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <text x="15" y="33" text-anchor="middle" font-size="1.8" fill="#999">pot</text>
+  <circle cx="15" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="15" y="55" text-anchor="middle" font-size="2" fill="#ccc">FLT</text>
+
+  <!-- VCA CV — pot + jack -->
+  <circle cx="35" cy="36" r="3.5" fill="none" stroke="#ff3366" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <circle cx="35" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="35" y="55" text-anchor="middle" font-size="2" fill="#ccc">VCA</text>
+
+  <!-- Resonance CV — pot + jack -->
+  <circle cx="55" cy="36" r="3.5" fill="none" stroke="#ff3366" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <circle cx="55" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="55" y="55" text-anchor="middle" font-size="2" fill="#ccc">RES</text>
+
+  <!-- Sync In -->
+  <circle cx="75" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="75" y="55" text-anchor="middle" font-size="2" fill="#ccc">SYNC</text>
+
+  <!-- Gate In -->
+  <circle cx="90" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="90" y="55" text-anchor="middle" font-size="2" fill="#ccc">G.IN</text>
+
+  <!-- Ext Audio In -->
+  <circle cx="105" cy="48" r="3" fill="none" stroke="#ff3366" stroke-width="0.3"/>
+  <text x="105" y="55" text-anchor="middle" font-size="2" fill="#ccc">EXT</text>
+
+  <!-- ============================================ -->
+  <!-- ROW 3: CLOCK SECTION                         -->
+  <!-- Y center = 68mm                              -->
+  <!-- ============================================ -->
+  <text x="5" y="62" font-size="3.5" fill="#33ff33" font-weight="bold">CLOCK</text>
+
+  <!-- Clock Out -->
+  <circle cx="15" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="15" y="75" text-anchor="middle" font-size="2" fill="#ccc">CLK</text>
+
+  <!-- Clock In -->
+  <circle cx="30" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="30" y="75" text-anchor="middle" font-size="2" fill="#ccc">IN</text>
+
+  <!-- Tap Tempo (button) -->
+  <circle cx="45" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="45" y="75" text-anchor="middle" font-size="2" fill="#ccc">TAP</text>
+
+  <!-- Div /2 -->
+  <circle cx="65" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="65" y="75" text-anchor="middle" font-size="2" fill="#ccc">/2</text>
+
+  <!-- Div /4 -->
+  <circle cx="80" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="80" y="75" text-anchor="middle" font-size="2" fill="#ccc">/4</text>
+
+  <!-- Div /8 -->
+  <circle cx="95" cy="68" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="95" y="75" text-anchor="middle" font-size="2" fill="#ccc">/8</text>
+
+  <!-- Clock LEDs (3mm) -->
+  <circle cx="65" cy="62" r="1" fill="#33ff33" stroke="none"/>
+  <circle cx="80" cy="62" r="1" fill="#33ff33" stroke="none"/>
+  <circle cx="95" cy="62" r="1" fill="#33ff33" stroke="none"/>
+
+  <!-- ============================================ -->
+  <!-- ROW 3 continued: UTILITIES (right side)      -->
+  <!-- ============================================ -->
+  <text x="115" y="62" font-size="3.5" fill="#ffcc00" font-weight="bold">UTILITIES</text>
+
+  <!-- Noise Out -->
+  <circle cx="120" cy="68" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="120" y="75" text-anchor="middle" font-size="2" fill="#ccc">NOIS</text>
+
+  <!-- LFO Tri -->
+  <circle cx="140" cy="68" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="140" y="75" text-anchor="middle" font-size="2" fill="#ccc">TRI</text>
+
+  <!-- LFO Sqr -->
+  <circle cx="155" cy="68" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="155" y="75" text-anchor="middle" font-size="2" fill="#ccc">SQR</text>
+
+  <!-- LFO Rate pot -->
+  <circle cx="147.5" cy="60" r="3.5" fill="none" stroke="#ffcc00" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <text x="147.5" y="57" text-anchor="middle" font-size="1.8" fill="#999">RATE</text>
+
+  <!-- S&H Out -->
+  <circle cx="175" cy="68" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="175" y="75" text-anchor="middle" font-size="2" fill="#ccc">S&H</text>
+
+  <!-- S&H Rate pot -->
+  <circle cx="175" cy="60" r="3.5" fill="none" stroke="#ffcc00" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <text x="175" y="57" text-anchor="middle" font-size="1.8" fill="#999">RATE</text>
+
+  <!-- ============================================ -->
+  <!-- ROW 4: MORE UTILITIES + MANUAL GATE (bottom) -->
+  <!-- Y center = 90mm                              -->
+  <!-- ============================================ -->
+
+  <!-- Slew In -->
+  <circle cx="120" cy="90" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="120" y="97" text-anchor="middle" font-size="2" fill="#ccc">SLW</text>
+
+  <!-- Slew Out -->
+  <circle cx="135" cy="90" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="135" y="97" text-anchor="middle" font-size="2" fill="#ccc">OUT</text>
+
+  <!-- Slew Time pot -->
+  <circle cx="127.5" cy="83" r="3.5" fill="none" stroke="#ffcc00" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <text x="127.5" y="80" text-anchor="middle" font-size="1.8" fill="#999">TIME</text>
+
+  <!-- Attenuverter In -->
+  <circle cx="155" cy="90" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="155" y="97" text-anchor="middle" font-size="2" fill="#ccc">A/V</text>
+
+  <!-- Attenuverter Out -->
+  <circle cx="170" cy="90" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="170" y="97" text-anchor="middle" font-size="2" fill="#ccc">OUT</text>
+
+  <!-- Attenuverter Amount pot -->
+  <circle cx="162.5" cy="83" r="3.5" fill="none" stroke="#ffcc00" stroke-width="0.2" stroke-dasharray="1,1"/>
+  <text x="162.5" y="80" text-anchor="middle" font-size="1.8" fill="#999">AMT</text>
+
+  <!-- Mult 1x3 -->
+  <circle cx="190" cy="82" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="190" y="79" text-anchor="middle" font-size="2" fill="#ccc">IN</text>
+  <circle cx="190" cy="93" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <circle cx="200" cy="93" r="3" fill="none" stroke="#ffcc00" stroke-width="0.3"/>
+  <text x="195" y="100" text-anchor="middle" font-size="2" fill="#ccc">MULT</text>
+
+  <!-- Manual Gate button + output -->
+  <circle cx="15" cy="90" r="3" fill="none" stroke="#33ff33" stroke-width="0.3"/>
+  <text x="15" y="97" text-anchor="middle" font-size="2" fill="#ccc">MAN</text>
+  <text x="15" y="100" text-anchor="middle" font-size="1.8" fill="#ccc">GATE</text>
+
+  <!-- Gate LED -->
+  <circle cx="15" cy="83" r="1" fill="#33ff33" stroke="none"/>
+
+  <!-- ============================================ -->
+  <!-- BOTTOM: DB-9 CONNECTORS                      -->
+  <!-- Y center = 115mm                             -->
+  <!-- ============================================ -->
+  <text x="40" y="108" text-anchor="middle" font-size="3" fill="#888">DB-9 A (OUT)</text>
+  <rect x="20" y="110" width="40" height="12" rx="2"
+        fill="none" stroke="#888" stroke-width="0.3"/>
+
+  <text x="100" y="108" text-anchor="middle" font-size="3" fill="#888">DB-9 B (IN+PWR)</text>
+  <rect x="80" y="110" width="40" height="12" rx="2"
+        fill="none" stroke="#888" stroke-width="0.3"/>
+
+  <!-- ============================================ -->
+  <!-- LEGEND                                       -->
+  <!-- ============================================ -->
+  <rect x="145" y="104" width="65" height="22" fill="#222" stroke="#444" stroke-width="0.2"/>
+  <text x="148" y="110" font-size="2" fill="#ff6600">● CV Outputs (from MB)</text>
+  <text x="148" y="114" font-size="2" fill="#00ccff">● Audio Outputs</text>
+  <text x="148" y="118" font-size="2" fill="#ff3366">● CV Inputs (to MB)</text>
+  <text x="148" y="122" font-size="2" fill="#33ff33">● Clock / Gate</text>
+  <text x="148" y="126" font-size="2" fill="#ffcc00">● Utilities</text>
+</svg>

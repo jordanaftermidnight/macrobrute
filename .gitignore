@@ -1,0 +1,36 @@
+# Secrets and credentials
+.secrets
+.env*
+*.key
+*.pem
+
+# MCP config
+.mcp.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+__pycache__/
+*.pyc
+*.o
+*.elf
+*.hex
+*.bin
+*.map
+
+# Gerber outputs (track selectively)
+gerber/
+
+# Backup files
+*.bak
+*.orig
