@@ -346,24 +346,61 @@ MCP4728 I2C address confirmed: 0x60 (write addr 0xC0 at code 0xC222).
 
 | Address | Callers | Confirmed Role |
 |---------|---------|----------------|
-| 0x6D54 | 38 | Table lookup dispatcher: `table[index]` → FUN_00006cc0 |
-| 0x6D78 | — | Interpolating table lookup (calibration curves) |
+| 0x6D54 | 38 | Piecewise linear interpolation table builder (6-segment curves) |
+| 0x6D78 | — | Interpolating table lookup (calibration curves, 14-bit input) |
 | 0x703E | — | Pitch CV calibration: 14-bit → DAC (table + offset -400) |
 | 0x71AE | — | DAC write with calibration |
 | 0x71C8 | — | DAC write (buffered) |
 | 0x71A0 | — | DAC channel select + write |
-| 0x6F04 | — | I2C write to MCP4728 (low-level) |
+| 0x6F04 | — | I2C DAC write: wait ready (FUN_6E4A), then FUN_D894(ch, val16, config) |
+| 0x6E4A | — | I2C wait/ready check (takes channel + 0x96) |
+| 0xD894 | — | I2C data transmission (low-level) |
 | 0x7BE2 | — | Note Off handler |
 | 0x7C54 | — | Note On handler (with velocity) |
 | 0x3496 | — | SysEx response sender |
 | 0xD17C | — | SysEx message builder |
 | 0xD830 | — | SysEx transmit |
-| 0x5EC8 | 30 | Core utility (param setter?) |
+| 0x5EC8 | 30 | State refresh wrapper → FUN_00005bf0 (recalc after param change) |
+| 0x5BF0 | — | State refresh (actual implementation) |
+| 0xD860 | — | Heap allocator (malloc) — sizes 0x24, 0x30 seen |
+| 0x6D30 | — | Interpolation table object constructor (takes obj + segment count) |
+| 0x6118 | — | MIDI/comm channel init (RX buffer, params) |
+| 0x5EEC | — | Secondary channel init |
+| 0x60E8 | — | VIC interrupt setup (takes channel, handler, priority) |
 | 0xC222 | — | MCP4728 I2C addr setup (0xC0 = 0x60<<1) |
+
+**DAC Channel Object Layout:**
+```
++0x00: Pointer to I2C peripheral config
++0x0C: 16-bit DAC value (written to MCP4728)
++0x96: Status/busy flag (checked before I2C write)
+```
+
+**FUN_00003d88 — MIDI UART Init (at 0xE007C000, NOT UART0):**
+```
+Divisor = 0x1E (30) → PCLK 15MHz / (16 × 30) = 31,250 baud (MIDI)
+LCR = 0x83 (DLAB + 8N1), then 0x03 (clear DLAB)
+FCR = 3 (FIFO enable + reset)
+IER = 3 (RBR + THRE interrupts enabled)
+PINSEL offset 0x24 = 0x0F000000 (pin mux for UART)
+```
+Called from FUN_00005a94. Creates RX buffer (0x210 bytes at ctx+0x20C), sets up VIC interrupt (channel 0x1D=29, handler at DAT_00003ebc, priority 0xF).
+
+**Sequencer Timing Curves (3 piecewise-linear tables, 6 segments each):**
+
+Each maps MIDI 0-127 → microseconds through non-linear interpolation:
+```
+Table A (rate curve 1): 0→896→3,000→14,000→100K→600K→100M µs
+Table B (rate curve 2): 0→896→4,000→18,000→150K→600K→100M µs
+Table C (rate curve 3): 0→896→2,000→10,000→50K→600K→100M µs
+```
+All share the same endpoint (100M µs timeout) and first segment (0-127 → 0-896).
+Different mid-range shapes provide different rate knob response curves.
+Likely: Gate Length, Arpeggiator Rate, Sequencer Rate.
 
 **No IAP flash writes found** — parameters are volatile (SRAM). Persist only via SysEx preset dump.
 
-**VIC Channels:** Slot 0 (likely Timer0/WDT), Channel 16 (EINT2) active.
+**VIC Channels:** Slot 0 (likely Timer0/WDT), Channel 16 (EINT2), Channel 29 (MIDI UART) active.
 
 ### Loading in Ghidra
 
