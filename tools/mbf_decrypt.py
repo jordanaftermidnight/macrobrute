@@ -37,12 +37,19 @@ def decrypt_mbf(data: bytes) -> bytes:
 
 
 def validate_and_strip(decrypted: bytes) -> bytes:
-    """Validate key header and return payload (Intel HEX)."""
+    """Validate key header and return Intel HEX payload.
+
+    .mbf structure after decryption: [24-byte key][0x00 null][Intel HEX text]
+    """
     if decrypted[:len(KEY)] != KEY:
         print(f"ERROR: Header mismatch. Expected {KEY!r}, got {decrypted[:len(KEY)]!r}",
               file=sys.stderr)
         sys.exit(1)
-    return decrypted[len(KEY):]
+    # Skip key + null terminator
+    offset = len(KEY)
+    if offset < len(decrypted) and decrypted[offset] == 0x00:
+        offset += 1
+    return decrypted[offset:]
 
 
 def ihex_to_bin(hex_text: str) -> tuple[int, bytes, int | None]:

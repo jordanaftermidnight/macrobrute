@@ -76,12 +76,12 @@ def run_tests():
         dec1 = decrypt_mbf(mbf1)
         test("Header matches key", dec1[:len(KEY)] == KEY)
 
-        payload1 = dec1[len(KEY):]
+        payload1 = validate_and_strip(dec1)
         test("Payload is pure ASCII",
              all(b < 128 for b in payload1))
 
-        test("Payload starts with null + Intel HEX record",
-             payload1[0:2] == b'\x00:',
+        test("Payload starts with Intel HEX record",
+             payload1[0:1] == b':',
              f"got {payload1[:5]!r}")
 
         # Parse Intel HEX
@@ -167,7 +167,7 @@ def run_tests():
         dec2 = decrypt_mbf(mbf2)
         test("Header matches key", dec2[:len(KEY)] == KEY)
 
-        payload2 = dec2[len(KEY):]
+        payload2 = validate_and_strip(dec2)
         test("Payload is pure ASCII", all(b < 128 for b in payload2))
 
         hex_text2 = payload2.decode('ascii', errors='replace')
