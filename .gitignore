@@ -34,3 +34,6 @@ gerber/
 # Backup files
 *.bak
 *.orig
+macrobrute.gpr
+macrobrute.lock
+macrobrute.rep/

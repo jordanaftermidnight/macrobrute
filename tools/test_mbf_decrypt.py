@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Test suite for MicroBrute .mbf firmware decryption.
+Test suite for MicroBrute .mbf firmware tools.
 
-Validates the cipher, decryption tool, Intel HEX parsing, and ARM binary integrity.
+Validates the cipher, decryption, encryption, Intel HEX parsing, and ARM binary integrity.
 Run: python3 tools/test_mbf_decrypt.py
 """
 
@@ -13,6 +13,7 @@ import os
 # Add tools dir to path
 sys.path.insert(0, os.path.dirname(__file__))
 from mbf_decrypt import decrypt_mbf, validate_and_strip, ihex_to_bin, KEY, KEY_START_INDEX
+from mbf_encrypt import encrypt_mbf, bin_to_ihex, validate_arm_binary, verify_round_trip
 
 FIRMWARE_DIR = os.path.join(os.path.dirname(__file__), '..', 'firmware')
 
@@ -189,6 +190,65 @@ def run_tests():
              base1 == base2 == 0x2000)
     else:
         print(f"\n  SKIP: {mbf_path_2} not found")
+
+    # ================================================================
+    # 4. Encryption tool tests
+    # ================================================================
+    print("\n=== Encryption Tool ===")
+
+    # encrypt_mbf is symmetric with decrypt_mbf
+    test("encrypt_mbf == decrypt_mbf (same function)",
+         encrypt_mbf(b"hello world") == decrypt_mbf(b"hello world"))
+
+    # bin_to_ihex produces valid Intel HEX
+    test_bin = bytes(range(256)) * 4  # 1024 bytes
+    hex_out = bin_to_ihex(test_bin, base_addr=0x2000, entry=0x2184)
+    test("bin_to_ihex starts with extended address record",
+         hex_out.startswith(":02000004"))
+    test("bin_to_ihex contains EOF record",
+         ":00000001FF" in hex_out)
+
+    # Round-trip: binary → ihex → binary
+    rt_base, rt_bin, rt_entry = ihex_to_bin(hex_out)
+    test("bin→ihex→bin base address preserved", rt_base == 0x2000)
+    test("bin→ihex→bin binary content preserved", rt_bin == test_bin)
+    test("bin→ihex→bin entry point preserved", rt_entry == 0x2184)
+
+    # Intel HEX checksum validity
+    ihex_csum_err = 0
+    for line in hex_out.splitlines():
+        line = line.strip()
+        if line.startswith(':'):
+            raw = bytes.fromhex(line[1:])
+            if sum(raw) & 0xFF != 0:
+                ihex_csum_err += 1
+    test("bin_to_ihex all checksums valid", ihex_csum_err == 0,
+         f"{ihex_csum_err} errors")
+
+    # Full .mbf round-trip on real firmware
+    if os.path.exists(mbf_path_1):
+        print("\n=== Full Encrypt/Decrypt Round-Trip ===")
+        with open(mbf_path_1, 'rb') as f:
+            orig_mbf = f.read()
+
+        # Decrypt → get binary → re-encrypt → decrypt again → compare binary
+        dec = decrypt_mbf(orig_mbf)
+        payload = validate_and_strip(dec)
+        hex_text = payload.decode('ascii', errors='replace')
+        orig_base, orig_bin, orig_entry = ihex_to_bin(hex_text)
+
+        # Re-encrypt from binary
+        new_hex = bin_to_ihex(orig_bin, orig_base, orig_entry)
+        new_plain = KEY + b"\x00" + new_hex.encode("ascii")
+        new_mbf = encrypt_mbf(new_plain)
+
+        # Verify round-trip
+        test("verify_round_trip passes",
+             verify_round_trip(new_mbf, orig_bin, orig_base, quiet=True))
+
+        # ARM binary validation
+        test("validate_arm_binary passes on stock firmware",
+             validate_arm_binary(orig_bin, orig_base))
 
     # ================================================================
     # Summary

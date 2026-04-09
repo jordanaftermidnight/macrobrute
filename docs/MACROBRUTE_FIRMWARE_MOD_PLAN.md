@@ -201,8 +201,9 @@ normal update process — it only writes to the application area (0x2000+).
 | File | Purpose |
 |------|---------|
 | `tools/mbf_decrypt.py` | Decrypt .mbf → .hex → .bin |
-| `tools/mbf_encrypt.py` | (TODO) Encrypt .bin → .hex → .mbf |
-| `tools/test_mbf_decrypt.py` | Automated test suite (43 tests) |
+| `tools/mbf_encrypt.py` | Encrypt .bin/.hex → .mbf (with `--verify` round-trip) |
+| `tools/test_mbf_decrypt.py` | Automated test suite (52 tests: cipher, decrypt, encrypt, round-trip) |
+| `tools/ghidra_label_firmware.py` | Ghidra script: labels vectors, peripherals, known code locations |
 | `firmware/*.mbf` | Stock firmware backups (v1.0.4.114, v1.0.3.2) |
 | `firmware/*.bin` | Decrypted ARM binaries (gitignored, regenerate with decrypt tool) |
 | `docs/research/mbf_analysis.md` | Full technical analysis of cipher and firmware |
