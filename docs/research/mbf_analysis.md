@@ -259,13 +259,7 @@ Sub-commands likely correspond to the SysEx parameter IDs used by MicroBrute Con
 This handles the standard `F0 7E 7F 06 01 F7` Identity Request message.
 
 **Parameter command dispatch (0x4CDC-0x4D5E):**
-
-| Address | Value | Likely purpose |
-|---------|-------|---------------|
-| 0x4CDC | 0x01 | Read/write param |
-| 0x4CE0 | 0x02 | Preset related? |
-| 0x4CE4 | 0x04 | Firmware update? |
-| 0x4D56 | 0x05 | Calibration? |
+See "Complete SysEx Command Table" in Ghidra Analysis Results below for the full 43-command mapping derived from FUN_00004c28.
 
 ### Ghidra Analysis Results (2026-04-09)
 
@@ -309,14 +303,86 @@ MCP4728 I2C address confirmed: 0x60 (write addr 0xC0 at code 0xC222).
 +0x88: pitch CV tuning table (14-bit input → DAC value via FUN_00006d78)
 ```
 
-**SysEx Protocol:**
+**SysEx Protocol (FUN_00004c28 — 43 commands fully mapped):**
+
+Two paths:
 - Path 1: MIDI Identity Request (`F0 7E 7F 06 01 F7`) → FUN_00003496 (reply)
-- Path 2: Arturia proprietary (`F0 00 20 6B ...`) with sub-commands:
-  - 0x01: Parameter read/write
-  - 0x02: Preset operation
-  - 0x04: Firmware update mode
-  - 0x05: Special (checks sub-cmd 0x01, value 0x3E=62)
+- Path 2: Arturia proprietary (`F0 00 20 6B 05 01 ...`) — full command table below
 - Response chain: FUN_0000D17C (build) → FUN_0000D04C (finalize) → FUN_0000D830 (transmit)
+
+Identity response variants (checked via `*param_2`):
+- 0x01 → response code 0x1020004, size 0x10
+- 0x02 → response code 0x2020004, size 0x20
+- 0x04 → response code 0x1020004, size 0x40 (firmware update mode)
+
+**Complete SysEx Command Table:**
+
+Message format: `F0 00 20 6B 05 01 [value_byte] .. [cmd_id] [data...] F7`
+
+Two parameter access mechanisms identified:
+- **Group A** (0x05-0x12): FUN_0000e8d0 (write) / FUN_0000e8ae (read), direct offsets from parameter objects
+- **Group B** (0x2A-0x3D): FUN_0000e884 (write) / FUN_0000e85e (read), via accessor functions
+
+| Cmd | Hex | R/W | Function | Data Object | Inferred Parameter |
+|-----|-----|-----|----------|-------------|--------------------|
+| 0x00 | 0x00 | Action | Preset recall: send response, 100ms delay, FUN_00005ed4 | — | Preset Recall |
+| 0x05 | 0x05 | Write | FUN_0000e8d0 → FUN_0000d1f8(*DAT_00004e98) + FUN_00007cc2 | DAT_00004e98 | **Bend Range** (confirmed) |
+| 0x06 | 0x06 | Read | FUN_0000e8ae → FUN_0000d1f8(*DAT_0000528c), responds cmd=0x05 | DAT_0000528c | Bend Range read |
+| 0x07 | 0x07 | Write | FUN_0000e8d0 → *DAT_0000528c + 0x0C | DAT_0000528c+0x0C | Gate Length* |
+| 0x08 | 0x08 | Read | FUN_0000e8ae → *DAT_0000528c + 0x0C, responds cmd=0x07 | DAT_0000528c+0x0C | Gate Length read* |
+| 0x0B | 0x0B | Write | FUN_0000e8d0 → *DAT_0000528c + 0x24 | DAT_0000528c+0x24 | Velocity Response* |
+| 0x0C | 0x0C | Read | FUN_0000e8ae → *DAT_0000528c + 0x24, responds cmd=0x0B | DAT_0000528c+0x24 | Velocity Response read* |
+| 0x0D | 0x0D | Write | FUN_0000e8d0 → *DAT_0000528c + 0x2C | DAT_0000528c+0x2C | Note Priority* |
+| 0x0E | 0x0E | Read | FUN_0000e8ae → *DAT_0000528c + 0x2C, responds cmd=0x0D | DAT_0000528c+0x2C | Note Priority read* |
+| 0x0F | 0x0F | Write | FUN_0000e8d0 → *DAT_0000528c + 0x34 | DAT_0000528c+0x34 | Play (Hold)* |
+| 0x10 | 0x10 | Read | FUN_0000e8ae → *DAT_0000528c + 0x34, responds cmd=0x0F | DAT_0000528c+0x34 | Play read* |
+| 0x11 | 0x11 | Write | FUN_0000e8d0 → *DAT_0000528c + 0x3C | DAT_0000528c+0x3C | Seq Play Retrig* |
+| 0x12 | 0x12 | Read | FUN_0000e8ae → *DAT_0000528c + 0x3C, responds cmd=0x11 | DAT_0000528c+0x3C | Seq Play Retrig read* |
+| 0x1C | 0x1C | Action | FUN_0000980a(1) | — | **Sequencer Enable** |
+| 0x1D | 0x1D | Action | FUN_0000980a(0) | — | **Sequencer Disable** |
+| 0x1E | 0x1E | Read | FUN_0000e8ae → *DAT_00005688 + 0x4C, responds cmd=0x1E | DAT_00005688+0x4C | Step On* |
+| 0x1F | 0x1F | Write | FUN_0000e8d0 → *DAT_00005688 + 0x4C | DAT_00005688+0x4C | Step On write* |
+| 0x20 | 0x20 | NOP | `break` — no action | — | Reserved |
+| 0x21 | 0x21 | Action | FUN_0000a56a(*DAT_0000568c, 2) | DAT_0000568c | **Key Mode: Hold** |
+| 0x22 | 0x22 | Action | FUN_0000a56a(*DAT_0000568c, 1) | DAT_0000568c | **Key Mode: Single Trig** |
+| 0x23 | 0x23 | Action | FUN_0000a56a(*DAT_0000568c, 3) | DAT_0000568c | **Key Mode: Multi Trig** |
+| 0x24 | 0x24 | Action | FUN_0000a57e + FUN_0000a56a(*DAT_0000568c, 0) | DAT_0000568c | **Key Mode: Reset** |
+| 0x27 | 0x27 | Write | Calibration high: write at offset +0x184, signed (val-0x40), I2C recalc | DAT_00005688+0x184 | **Calibration High** |
+| 0x28 | 0x28 | Write | Calibration low: write at offset +0x17C, signed (val-0x40), I2C recalc | DAT_00005688+0x17C | **Calibration Low** |
+| 0x29 | 0x29 | Write | Calibration bulk: 128 bytes at offset +0x18C, complex table rebuild | DAT_00005688+0x18C | **Calibration Table** |
+| 0x2A | 0x2A | Write | FUN_0000e884 → FUN_0000d1ee(*DAT_00005688) + FUN_00007cc2 | DAT_00005688 | Seq/Arp Edit* |
+| 0x2B | 0x2B | Read | FUN_0000e85e → FUN_0000d1ee(*DAT_00005688), responds cmd=0x2A | DAT_00005688 | Seq/Arp Edit read* |
+| 0x2C | 0x2C | Write | FUN_0000e884 → FUN_0000d1da(*DAT_00005688) | DAT_00005688 | Tempo/Rate* |
+| 0x2D | 0x2D | Read | FUN_0000e85e → FUN_0000d1da(*DAT_00005688), responds cmd=0x2C | DAT_00005688 | Tempo/Rate read* |
+| 0x2E | 0x2E | Write | FUN_0000e884 → FUN_0000d218(*DAT_0000528c) | DAT_0000528c | LFO Key Retrig* |
+| 0x2F | 0x2F | Read | FUN_0000e85e → FUN_0000d218(*DAT_0000528c), responds cmd=0x2E | DAT_0000528c | LFO Key Retrig read* |
+| 0x32 | 0x32 | Write | FUN_0000e884 → FUN_0000d1fe(*DAT_0000528c) | DAT_0000528c | Env Legato* |
+| 0x33 | 0x33 | Read | FUN_0000e85e → FUN_0000d1fe(*DAT_0000528c), responds cmd=0x32 | DAT_0000528c | Env Legato read* |
+| 0x34 | 0x34 | Write | FUN_0000e884 → FUN_0000d1e4(*DAT_0000528c) | DAT_0000528c | MIDI Receive Ch* |
+| 0x35 | 0x35 | Read | FUN_0000e85e → FUN_0000d1e4(*DAT_0000528c), responds cmd=0x34 | DAT_0000528c | MIDI Receive Ch read* |
+| 0x36 | 0x36 | Write | FUN_0000e884 → FUN_0000d1d0(*DAT_00005688) | DAT_00005688 | Swing* |
+| 0x37 | 0x37 | Read | FUN_0000e85e → FUN_0000d1d0(*DAT_00005688), responds cmd=0x36 | DAT_00005688 | Swing read* |
+| 0x38 | 0x38 | Write | FUN_0000e884 → FUN_0000d222(*DAT_00005688) | DAT_00005688 | MIDI Channel* |
+| 0x39 | 0x39 | Read | FUN_0000e85e → FUN_0000d222(*DAT_00005688), responds cmd=0x38 | DAT_00005688 | MIDI Channel read* |
+| 0x3A | 0x3A | Write | Seq step write: FUN_0000d208 (step select), FUN_0000e7d2/e80c + FUN_0000b8ae | DAT_00005910 | **Seq Step Write** |
+| 0x3B | 0x3B | Read | Seq step read: FUN_0000d208 (step select), FUN_0000e7d2, 0x23-byte response | DAT_00005910 | **Seq Step Read** |
+| 0x3C | 0x3C | Write | FUN_0000e884 → FUN_0000d1c4(*DAT_00005688) | DAT_00005688 | Step Size/Next Seq* |
+| 0x3D | 0x3D | Read | FUN_0000e85e → FUN_0000d1c4(*DAT_00005688), responds cmd=0x3C | DAT_00005688 | Step Size/Next Seq read* |
+
+*\* = Inferred from MicroBrute Connection app parameters. Needs MIDI traffic capture to confirm.*
+**Bold** = Confirmed from code analysis.
+
+**Post-switch logic (all commands):**
+After the switch, if return mode == 0x12:
+- param_3==0: Set ctx+0x498=1, FUN_000071c8 (DAC write), FUN_0000d0d4
+- param_3!=0: Set ctx+0x498=0, FUN_000071c8 (zero), FUN_0000d0d4
+
+**Parameter storage objects:**
+- `DAT_00004e98`: Bend range parameter (standalone)
+- `DAT_0000528c`: Synth parameters (offsets: +0x00, +0x0C, +0x24, +0x2C, +0x34, +0x3C) — 6 params via Group A functions
+- `DAT_00005688`: Sequencer/system parameters (offset +0x4C, plus accessor functions) — Group B functions
+- `DAT_0000568c`: Key mode controller (FUN_0000a56a with mode values 0-3)
+- `DAT_00005910`: Sequence step data (per-step read/write via FUN_0000d208)
 
 **Sequencer Timing Constants (microseconds):**
 ```
@@ -401,6 +467,15 @@ Likely: Gate Length, Arpeggiator Rate, Sequencer Rate.
 **No IAP flash writes found** — parameters are volatile (SRAM). Persist only via SysEx preset dump.
 
 **VIC Channels:** Slot 0 (likely Timer0/WDT), Channel 16 (EINT2), Channel 29 (MIDI UART) active.
+
+### Verifying Inferred Parameter Names
+
+To confirm the `*` (inferred) SysEx parameter names, capture MIDI traffic from MicroBrute Connection:
+1. Open a MIDI monitor (e.g., `MIDI Monitor.app` on macOS, or `amidi -d`)
+2. Connect MicroBrute via USB
+3. Open MicroBrute Connection and change each parameter one at a time
+4. Log the SysEx command ID sent for each parameter change
+5. Cross-reference with the table above to confirm or correct mappings
 
 ### Loading in Ghidra
 
