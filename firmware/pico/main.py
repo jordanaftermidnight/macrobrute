@@ -117,8 +117,13 @@ def draw_home(oled):
     oled.text(bpm_str, 40, 16)
 
     # Clock status
-    status = "EXT" if clock.ext_sync else ("RUN" if clock.running else "STOP")
-    oled.text(status, 88, 16)
+    if clock.ext_sync:
+        status = "EXT" + ("*" if clock.ext_detected else "?")
+    elif clock.running:
+        status = "RUN"
+    else:
+        status = "STOP"
+    oled.text(status, 84, 16)
 
     # Tick counter
     oled.text("Tick:" + str(clock.tick_count), 4, 30)

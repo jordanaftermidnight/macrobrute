@@ -124,6 +124,11 @@ class MIDIBridge:
                 if self._rx_pos < len(self._rx_buf):
                     self._rx_buf[self._rx_pos] = b
                     self._rx_pos += 1
+                else:
+                    # Buffer overflow — abort this message
+                    self._in_sysex = False
+                    self._rx_pos = 0
+                    continue
                 if b == SYSEX_END:
                     self._in_sysex = False
                     self._handle_sysex(self._rx_buf[:self._rx_pos])

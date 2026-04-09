@@ -12,17 +12,17 @@ Original order assumed physical access to MicroBrute throughout. Revised order f
 |----------|-------|--------|
 | 1 | Phase 0: Toolchain setup | **Audited** — install commands ready |
 | 2 | Phase 6A: .mbf decrypt / firmware RE | **DONE** — cipher cracked, firmware decrypted |
-| 3 | Phase 1: Pico firmware bring-up | **Code reviewed** — 5 bugs fixed, ready for hardware |
+| 3 | Phase 1: Pico firmware bring-up | **Code reviewed** — 4 bugs fixed, ready for hardware |
 | 4 | Phase 0: Hardware validation | Needs physical access |
 | 5 | Phase 2: Internal wiring | Needs physical access |
 | 6 | Phase 3: Panel mods | Needs physical access |
-| 7 | Phase 4: Expander build | Needs IC inventory check |
+| 7 | Phase 4: Expander build | **BOM verified** — needs IC inventory check |
 | 8 | Phase 5: System integration | After all above |
 
 ### IC Inventory Check Needed
 
 Before ordering, verify which of these are already in the IC kit:
-TL074×4, TL072×3, CD4024×2, CD4051×1, CD40106×2, LF398×1, 2N3904×15, BC337×1, 1N4148×20, 1N5817×6, BAT54S×6, 78L05×1, 7809×1
+TL074×4, TL072×5, CD4024×1, CD4051×1, CD40106×2, LF398×1, 2N3904×8, BC337×1, 1N4148×8, 1N5817×6, BAT54S×9, 78L05×1, 7809×2
 
 ---
 
@@ -46,13 +46,87 @@ pip3 install pyserial mpremote
 
 ### Component Orders (2 batches, ship in parallel)
 
-**Batch 1 — ICs + Passives (TME/Mouser, ~€50, 3-5 days):**
-TL074×4, TL072×3, CD4024×2, CD4051×1, CD40106×2, LF398×1, 2N3904×15, BC337×1, 1N4148×20, 1N5817×6, BAT54S×6, 78L05×1, 7809×1, resistor kit (1k-1M), capacitor kit (100pF-100µF), DIP sockets, ferrite beads
+**Batch 1 — ICs + Passives (TME/Mouser, ~€70-85, 3-5 days):**
 
-**Batch 2 — Jacks + Pots + Hardware (Thonk + AliExpress, ~€50, 1-3 weeks):**
-Thonkiconn PJ398SM×15, PJ301M×15, 100kΩ 9mm pots×10, 1MΩ pot×1, knobs×12, 42HP panel blank. AliExpress: 22AWG wire spools, pin headers, SPST toggles×4, DB-9 solder-cup connectors, M2/M3 hardware, heat shrink
+*ICs:*
+| Component | Qty | Package | Used In |
+|-----------|-----|---------|---------|
+| TL074CN | 4 | DIP-14 | Breakout (1), Expander (3) |
+| TL072CP | 5 | DIP-8 | Breakout (1), Expander (2), JF-33 (1), DSO (1) |
+| CD4024BE | 1 | DIP-14 | Expander (clock divider) |
+| CD4051BE | 1 | DIP-16 | DSO mux (shared with touch plates) |
+| CD40106BE | 2 | DIP-14 | Breakout (1), Expander (1) |
+| LF398N | 1 | DIP-8 | Expander (S&H) |
+| 78L05 | 1 | TO-92 | Expander (+5V for CD4024) |
+| 7809 | 2 | TO-220 | JF-33 (1), DSO (1) |
 
-**Estimated total: €100-150** (excluding tools)
+*Semiconductors:*
+| Component | Qty | Package | Used In |
+|-----------|-----|---------|---------|
+| 2N3904 | 8 | TO-92 | Breakout LEDs (3), Expander noise (2), JF-33 (1), spare (2) |
+| BC337 | 1 | TO-92 | JF-33 (anti-latch-up) |
+| 1N4148 | 10 | DO-35 | Expander (6), JF-33 (2), spare (2) |
+| 1N5817 | 6 | DO-41 | Breakout power (3), Expander power (2), spare (1) |
+| BAT54S | 9 | SOT-23 | Breakout (3), Expander (4), DSO (1), spare (1) |
+
+*Resistors (1/4W metal film):*
+| Value | Qty | Used In |
+|-------|-----|---------|
+| 470Ω | 3 | Breakout LED current limiting |
+| 1kΩ | 40 | Output series, LED base, input isolation (all boards) |
+| 10kΩ | 15 | Pull-ups, dividers, gate circuit, bias (all boards) |
+| 47kΩ | 2 | DSO feedback/bias |
+| 100kΩ | 25 | Mixing, feedback, attenuators, timing (all boards) |
+| 470kΩ | 2 | Expander noise bias |
+| 1MΩ | 1 | Touch plate discharge |
+| 4.7MΩ | 1 | Expander noise feedback |
+| 10MΩ | 4 | Breakout TL074 input bias |
+
+*Capacitors:*
+| Value | Qty | Type | Used In |
+|-------|-----|------|---------|
+| 100nF | 35 | Ceramic (C0G/X7R) | IC decoupling, filtering (all boards) |
+| 1nF | 1 | **Polystyrene** | Expander S&H hold cap (critical — never ceramic) |
+| 1µF | 5 | Film (polyester) | LFO/slew timing, AC coupling, anti-latch |
+| 10µF | 3 | Electrolytic 16V+ | Expander bulk decoupling |
+| 47µF | 2 | Electrolytic 25V | Expander power filtering |
+| 100µF | 4 | Electrolytic 25V | Breakout (2), JF-33 (1), DSO (1) |
+
+*Misc passives:*
+| Component | Qty | Notes |
+|-----------|-----|-------|
+| Ferrite bead 100Ω | 2 | Axial, breakout power lines |
+| DIP-14 socket | 2 | TL074, CD40106 |
+| DIP-8 socket | 2 | TL072, LF398 |
+| DIP-16 socket | 1 | CD4051 |
+| LED 3mm (red/green) | 6 | Expander indicators (clock, gate, LFO, dividers) |
+
+**Batch 2 — Jacks + Pots + Hardware (Thonk + AliExpress, ~€60-80):**
+
+*Thonk:*
+| Component | Qty | Notes |
+|-----------|-----|-------|
+| Thonkiconn PJ398SM | 16 | Standard Eurorack mono jacks |
+| Thonkiconn PJ301M | 15 | Compact Eurorack mono jacks |
+| 100kΩ linear pot (9mm) | 5 | Expander attenuators (4), JF-33 CV (1) |
+| 1MΩ log pot (9mm) | 3 | LFO rate, S&H rate, slew rate |
+| Knobs (19mm, aluminum) | 12 | For all pots |
+| 42HP blank panel | 1 | Anodized aluminum |
+
+*AliExpress:*
+| Component | Qty | Notes |
+|-----------|-----|-------|
+| 22AWG wire spool | 2 | Red + black, 10m each |
+| Pin headers 2.54mm | 2 strips | Male + female |
+| SPST toggle switch | 4 | Circuit bending (Phase 6E) |
+| DB-9 solder-cup male | 2 | Rear panel interconnect |
+| M2/M3 standoffs + screws | 1 kit | Nylon/brass assortment |
+| Heat shrink assortment | 1 set | 2:1 ratio |
+| Momentary pushbutton | 1 | Expander manual gate |
+| Eurorack 16-pin power header | 1 | IDC + ribbon cable |
+| Brass bolts M6×20 + washers | 4+4 | Touch plates (Phase 6D, optional) |
+
+**Estimated total: €135-175** (excluding tools)
 
 ### Test Checkpoint
 - [ ] Pico boots, OLED displays, encoder rotates, LEDs blink

@@ -15,7 +15,7 @@ class SH1106_SPI:
         self.pages = self.height // 8
 
         self.dc = Pin(config.OLED_DC, Pin.OUT)
-        self.cs = Pin(config.OLED_CS, Pin.OUT)
+        self.cs = Pin(config.OLED_CS, Pin.OUT, value=1)  # CS inactive (active-low)
         self.rst = Pin(config.OLED_RST, Pin.OUT)
 
         self.spi = SPI(

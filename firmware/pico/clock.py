@@ -128,6 +128,12 @@ class Clock:
             self._ext_tick_pending = False
             self._fire_tick()
 
+        # Clear stale external clock data after 2s of silence
+        if self._ext_sync and self._ext_periods and self._ext_last_edge > 0:
+            if time.ticks_diff(time.ticks_us(), self._ext_last_edge) >= 2_000_000:
+                self._ext_periods.clear()
+                self._ext_bpm = 0
+
         # Process deferred external clock period measurement
         period = self._ext_pending_period
         if period > 0:
@@ -152,7 +158,7 @@ class Clock:
         now = time.ticks_us()
         if self._ext_last_edge > 0:
             period_us = time.ticks_diff(now, self._ext_last_edge)
-            if 10_000 < period_us < 6_000_000:  # ~10 BPM to ~6000 BPM
+            if 10_000 < period_us < 6_000_000:  # 10ms (~6000 BPM) to 6s (~10 BPM)
                 self._ext_pending_period = period_us
                 if self._ext_sync and self._running:
                     self._ext_tick_pending = True
