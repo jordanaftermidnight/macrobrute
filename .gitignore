@@ -37,3 +37,6 @@ gerber/
 macrobrute.gpr
 macrobrute.lock
 macrobrute.rep/
+firmware/ghidra_disasm.txt
+firmware/ghidra_decompiled.c
+firmware/ghidra_decompiled.h
