@@ -36,25 +36,31 @@ pip3 install pyserial binwalk
 | P0.3 | RXD0 | Pin 99 | Rear board, near JTAG header |
 | P2.10 | ISP entry | Pin 53 | Rear board |
 | RESET | System reset | Pin 17 | Rear board |
-| GND | Ground | Multiple | TP72 |
+| GND | Ground | Multiple | TP72 (on FRONT/Analog board, not rear) |
 
 ### Procedure
 
 1. Open MicroBrute (6 screws on bottom)
 2. Photograph rear board at high resolution
 3. Locate LPC2361 (QFP-100 package, largest IC on rear board)
-4. Locate JTAG header (10-pin, fully populated per docs)
-5. Trace pin 98 (P0.2/TXD0) — likely accessible at JTAG header or nearby via
+4. Locate JTAG header — labeled **P1_JTAG**, **20-pin shrouded IDC** (2x10),
+   immediately left of the LPC2361. Confirmed populated from photos.
+5. Trace pin 98 (P0.2/TXD0) — likely accessible near JTAG header or nearby via
 6. Trace pin 99 (P0.3/RXD0) — same area
 7. Find P2.10 (pin 53) — may need to probe with multimeter
-8. Use JTAG header pin mapping from NXP LPC2361 JTAG standard:
-   - Pin 1: TMS
-   - Pin 3: TCK
-   - Pin 5: TDO
-   - Pin 7: TDI
-   - Pin 9: nTRST
-   - Even pins: GND
-   Note: UART0 pins may NOT be on JTAG header — they're separate
+8. Use standard 20-pin ARM JTAG pinout:
+   - Pin 1: VTref     Pin 2: nSRST
+   - Pin 3: nTRST     Pin 4: GND
+   - Pin 5: TDI       Pin 6: GND
+   - Pin 7: TMS       Pin 8: GND
+   - Pin 9: TCK       Pin 10: GND
+   - Pin 11: RTCK     Pin 12: GND
+   - Pin 13: TDO      Pin 14: GND
+   - Pin 15: RESET    Pin 16: GND
+   - Pin 17: DBGRQ    Pin 18: GND
+   - Pin 19: DBGACK   Pin 20: GND
+   Note: UART0 pins (P0.2/P0.3) are NOT on the JTAG header — they're
+   separate pads near the QFP
 
 ---
 

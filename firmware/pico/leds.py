@@ -38,12 +38,18 @@ class LED:
 
 
 class LEDManager:
-    """Manage all three status LEDs."""
+    """Manage RGB LED (common cathode) for status indication.
+
+    Single RGB LED replaces 3 discrete LEDs. Same GPIO pins:
+      GP8 = Red (clock), GP9 = Green (gate), GP10 = Blue (mode)
+    Colors: red=clock tick, green=gate active, blue=mode indicator.
+    Combined states produce mixed colors (yellow=clock+gate, etc).
+    """
 
     def __init__(self):
-        self.clock = LED(config.LED_CLOCK)
-        self.gate = LED(config.LED_GATE)
-        self.mode = LED(config.LED_MODE)
+        self.clock = LED(config.LED_CLOCK)   # Red channel
+        self.gate = LED(config.LED_GATE)     # Green channel
+        self.mode = LED(config.LED_MODE)     # Blue channel
 
     def update(self):
         self.clock.update()
@@ -55,10 +61,16 @@ class LEDManager:
         self.gate.off()
         self.mode.off()
 
+    def set_color(self, r=0, g=0, b=0):
+        """Set RGB brightness (0-65535 each)."""
+        self.clock.on(r)
+        self.gate.on(g)
+        self.mode.on(b)
+
     def startup_sequence(self):
-        """Brief LED test on boot."""
-        for led in (self.clock, self.gate, self.mode):
-            led.on()
-            time.sleep_ms(100)
-        time.sleep_ms(200)
+        """RGB color cycle on boot."""
+        for r, g, b in [(65535, 0, 0), (0, 65535, 0), (0, 0, 65535),
+                         (65535, 65535, 65535)]:
+            self.set_color(r, g, b)
+            time.sleep_ms(150)
         self.all_off()

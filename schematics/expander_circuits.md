@@ -156,7 +156,7 @@ Simplified description:
 
 ---
 
-## 4. Sample & Hold (LF398 or CD4066 + TL072)
+## 4. Sample & Hold (LF398 or CD4051 + TL072)
 
 ### Using LF398 (preferred):
 ```
@@ -181,14 +181,17 @@ Simplified description:
   Never use ceramic or electrolytic — excessive droop
 ```
 
-### Using CD4066 (simpler but more droop):
+### Using CD4051 channel 0 (simpler but more droop):
 ```
-  Signal In ──[10kΩ]── CD4066 signal pin ──┬── TL072 follower ── S&H OUT
-                                            │
-  Clock ────── CD4066 control pin          1nF polystyrene
-                                            │
-                                           GND
+  Signal In ──[10kΩ]── CD4051 CH0 (pin 13) ──┬── TL072 follower ── S&H OUT
+                                               │
+  Clock ────── CD4051 INH (pin 6, inverted)   1nF polystyrene
+  A/B/C = LOW (selects CH0)                    │
+                                              GND
 ```
+Note: CD4051 replaces CD4066 (unavailable locally). Tie address pins
+A=B=C=LOW to select channel 0. INH (pin 6) acts as the switch control
+(active LOW — invert clock with spare CD40106 gate if needed).
 
 **S&H Rate:** Use a separate astable (CD40106 oscillator) or tap clock divider.
 

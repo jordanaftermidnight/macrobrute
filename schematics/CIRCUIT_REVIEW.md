@@ -255,3 +255,53 @@ Systematic review of all circuit designs for correctness, safety, and reliabilit
 
 All critical safety issues (anti-latch-up, current limiting, protection
 diodes, power isolation) are correctly addressed.
+
+---
+
+## External Review — Gemini Flash (April 2026)
+
+Multi-model council review of overall MACROBRUTE architecture.
+
+### TL074 Headroom
+**Status:** OK — no action needed.
+10Vpp signals = +/-5V peak. TL074 swings +/-9V on +/-12V rails. 4V headroom
+per side. No clipping risk under normal conditions.
+
+### DB-9 Signal Crosstalk
+**Status:** MEDIUM RISK — use shielded cables.
+9 analog signals in shared DB-9 cable. Crosstalk between channels possible,
+especially at higher frequencies. Mitigations:
+- Use shielded DB-9 cables (standard RS-232 shielded cables work)
+- Buffer outputs are low impedance (TL074 output ~75 ohm) which minimizes coupling
+- Keep cable length under 2m for audio frequencies
+
+### MicroBrute PSU Loading
+**Status:** MONITOR — ~47mA added load.
+- TL074: ~3mA, TL072: ~3mA, CD40106: ~1mA
+- Pico H via 78L05: ~40mA from +5V rail
+- Total: ~47mA on top of stock circuit draw
+- MicroBrute PSU rated for stock load only
+- **Mitigation:** Power Pico from USB if PSU sags below 11V under load.
+  Or use buck converter module (more efficient than 78L05 linear reg).
+
+### Ground Loop (MicroBrute <-> Eurorack)
+**Status:** HIGH RISK — design carefully.
+Two separate PSUs connected via DB-9 GND pin creates ground loop potential.
+- DB-9 GND must be the ONLY ground connection between the systems
+- If hum appears: add 100nF ceramic cap in series with DB-9 GND pin
+- Salvaged isolation transformer (46.9/82.4 ohm windings) available for
+  critical signal paths if needed
+- Do NOT connect Eurorack chassis ground to MicroBrute chassis
+
+### CD40106 5V to Pico 3.3V
+**Status:** DANGER — needs level shifting.
+CD40106 runs on +5V. Output swings 0-5V. Pico GPIO max input is 3.3V.
+Any CD40106 output going to Pico will exceed abs max rating.
+- **Fix:** Use CD4049UBE (on hand, x3) as level shifter. Power CD4049UBE
+  from 3.3V — it safely accepts inputs above VDD. One gate per signal.
+- Alternative: resistor divider (1k + 2k) but CD4049UBE is cleaner.
+
+### Vactrol Nonlinearity
+**Status:** ACCEPTABLE — musical feature.
+Logarithmic response of vactrol LDR is inherent and desirable for
+resonance CV control in a synth context. No fix needed.

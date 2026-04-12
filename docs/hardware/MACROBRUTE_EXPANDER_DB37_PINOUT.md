@@ -144,7 +144,7 @@ All grounds connect to a **single star point** on the expander PCB, then to chas
 | Sub | TP102 | Rear | 1kΩ | Affected by knob |
 | Metalizer | TP109 | Rear | 1kΩ | Affected by knob |
 | Gate (internal) | TP83 | Rear | — | Needs buffer on expander |
-| Filter CV | Summing node | Front | 220kΩ in | To U8A inv input area |
+| Filter CV | **TP26** | Front | 220kΩ in | "Misc Cutoff Input" per schematic (TP27/28 also available) |
 | VCA CV | TP10 or TP11 | Front | — | Direct injection |
 | PWM CV | R289 junction | Rear | 39kΩ in | PW circuit |
 | +12V | TP70 | Front | Ferrite | Power tap |
