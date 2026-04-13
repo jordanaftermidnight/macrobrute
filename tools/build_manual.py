@@ -429,7 +429,9 @@ tr:target td{animation:flash 1.5s ease}
 .svg-wrap{margin:16px 0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--bg2)}
 .svg-caption{padding:8px 12px;background:var(--bg3);font-size:13px;font-weight:600;color:var(--txb);border-bottom:1px solid var(--border)}
 .svg-container{overflow-x:auto;padding:16px;background:#F5F5F0;-webkit-overflow-scrolling:touch}
-.svg-container svg{max-width:none;display:block;margin:0 auto}
+.svg-container svg{max-width:none;display:block;margin:0 auto;background:#F5F5F0}
+.svg-container text{fill:#1a1a1a !important}
+.svg-container .ic-name,.svg-container .rail{fill:#fff !important}
 @media(max-width:768px){.svg-container{padding:8px}.svg-container svg{height:auto}}
 #no-res{text-align:center;padding:48px;color:var(--txd);font-size:16px;display:none}
 
