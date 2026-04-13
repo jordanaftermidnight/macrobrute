@@ -32,6 +32,8 @@ SVG_MAP = {
     "schematics/expander_circuits.md": [
         "schematics/noise_generator_schematic.svg",
         "schematics/lfo_schematic.svg",
+        "schematics/sah_schematic.svg",
+        "schematics/clock_divider_schematic.svg",
     ],
     "schematics/wiring_diagram.md": ["schematics/wiring_overview.svg"],
     "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],
@@ -623,9 +625,14 @@ def _embed_svgs(fpath):
         if full_path.exists():
             try:
                 svg_content = full_path.read_text(encoding="utf-8")
-                # Extract title for caption
-                title_match = re.search(r'<text[^>]*class="title"[^>]*>([^<]+)</text>', svg_content)
-                caption = title_match.group(1) if title_match else Path(svg_path).stem.replace("_", " ").title()
+                # Extract title for caption (handle HTML entities like &amp;)
+                title_match = re.search(r'<text[^>]*class="title"[^>]*>(.+?)</text>', svg_content)
+                if title_match:
+                    caption = title_match.group(1)
+                    # Decode common HTML entities
+                    caption = caption.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
+                else:
+                    caption = Path(svg_path).stem.replace("_", " ").title()
 
                 # Wrap SVG in a scrollable container
                 embeds.append(f'<div class="svg-wrap">')

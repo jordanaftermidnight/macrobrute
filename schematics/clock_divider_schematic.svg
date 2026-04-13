@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+<defs>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; }
+    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="600" height="450" fill="#FEFEFE"/>
+<text x="300" y="25" class="title" text-anchor="middle">Clock Divider</text>
+<text x="300" y="42" class="subtitle" text-anchor="middle">/2 /4 /8 with CD4024 or CD4040</text>
+<polygon points="70,170 70,230 130,200" class="component"/>
+<text x="100" y="205" class="label" text-anchor="middle" font-size="9">Buffer</text>
+<text x="67" y="182" class="pin" text-anchor="end">-</text>
+<text x="67" y="218" class="pin" text-anchor="end">+</text>
+<circle cx="30" cy="200" r="8" class="component"/>
+<line x1="30" y1="200" x2="50" y2="200" class="wire"/>
+<text x="30" y="222" class="label" text-anchor="middle">CLK IN</text>
+<line x1="38" y1="200" x2="70" y2="200" class="wire"/>
+<rect x="200.0" y="125.0" width="100" height="150" class="component" fill="#f5f5f5"/>
+<text x="250" y="200" class="label" text-anchor="middle">CD4024</text>
+<text x="250" y="212" class="value" text-anchor="middle">7-stage</text>
+<line x1="300" y1="140" x2="380" y2="140" class="wire"/>
+<rect x="320.0" y="125.0" width="40" height="30" class="component" fill="#f5f5f5"/>
+<text x="340" y="140" class="label" text-anchor="middle">/2</text>
+<line x1="380" y1="140" x2="450" y2="140" class="wire"/>
+<circle cx="470" cy="140" r="8" class="component"/>
+<line x1="470" y1="140" x2="490" y2="140" class="wire"/>
+<text x="470" y="162" class="label" text-anchor="middle">/2</text>
+<line x1="300" y1="200" x2="380" y2="200" class="wire"/>
+<rect x="320.0" y="185.0" width="40" height="30" class="component" fill="#f5f5f5"/>
+<text x="340" y="200" class="label" text-anchor="middle">/4</text>
+<line x1="380" y1="200" x2="450" y2="200" class="wire"/>
+<circle cx="470" cy="200" r="8" class="component"/>
+<line x1="470" y1="200" x2="490" y2="200" class="wire"/>
+<text x="470" y="222" class="label" text-anchor="middle">/4</text>
+<line x1="300" y1="260" x2="380" y2="260" class="wire"/>
+<rect x="320.0" y="245.0" width="40" height="30" class="component" fill="#f5f5f5"/>
+<text x="340" y="260" class="label" text-anchor="middle">/8</text>
+<line x1="380" y1="260" x2="450" y2="260" class="wire"/>
+<circle cx="470" cy="260" r="8" class="component"/>
+<line x1="470" y1="260" x2="490" y2="260" class="wire"/>
+<text x="470" y="282" class="label" text-anchor="middle">/8</text></svg>

@@ -1,74 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 550" width="700" height="550">
 <defs>
   <style>
-    text { font-family: "SF Mono", Consolas, "Liberation Mono", monospace; }
-    .title { font-size: 16px; font-weight: bold; fill: #222; }
-    .subtitle { font-size: 11px; fill: #555; }
-    .label { font-size: 10px; fill: #333; font-weight: bold; }
-    .value { font-size: 9px; fill: #555; }
-    .pin { font-size: 8px; fill: #666; }
-    .wire { stroke: #0066CC; stroke-width: 2; fill: none; }
-    .component { stroke: #333; stroke-width: 1.5; fill: none; }
-    .filled { fill: #333; }
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; }
+    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
     .junction { fill: #0066CC; }
-    .ground { stroke: #4A4; stroke-width: 2; }
-    .power { stroke: #D44; stroke-width: 2; }
   </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
 </defs>
-<rect width="600" height="450" fill="#F5F5F0"/>
-<text x="300" y="20" class="title" text-anchor="middle">Triangle/Square LFO — Schematic</text>
-<text x="300" y="36" class="subtitle" text-anchor="middle">TL072 integrator + Schmitt trigger</text>
-<polygon points="120,120 120,180 180,150" class="component"/>
-<text x="150" y="150" class="label" text-anchor="middle" dominant-baseline="central">A</text>
-<text x="117" y="135" class="pin" text-anchor="end">-</text>
-<text x="117" y="165" class="pin" text-anchor="end">+</text>
-<text x="105" y="135" class="value" text-anchor="end">2(-)</text>
-<text x="105" y="165" class="value" text-anchor="end">3(+)</text>
-<text x="185" y="150" class="value" text-anchor="start">1(out)</text>
-<polygon points="370,120 370,180 430,150" class="component"/>
-<text x="400" y="150" class="label" text-anchor="middle" dominant-baseline="central">B</text>
-<text x="367" y="135" class="pin" text-anchor="end">-</text>
-<text x="367" y="165" class="pin" text-anchor="end">+</text>
-<text x="355" y="135" class="value" text-anchor="end">6(-)</text>
-<text x="355" y="165" class="value" text-anchor="end">5(+)</text>
-<text x="435" y="150" class="value" text-anchor="start">7(out)</text>
-<line x1="180" y1="150" x2="220" y2="150" class="wire"/>
-<line x1="220" y1="150" x2="220" y2="100" class="wire"/>
-<line x1="220" y1="100" x2="130" y2="100" class="wire"/>
-<line x1="130" y1="100" x2="130" y2="135" class="wire"/>
-<line x1="110" y1="85" x2="125" y2="85" class="wire"/>
-<line x1="135" y1="85" x2="150" y2="85" class="wire"/>
-<line x1="125" y1="75" x2="125" y2="95" class="component" stroke-width="2"/>
-<line x1="135" y1="75" x2="135" y2="95" class="component" stroke-width="2"/>
-<text x="130" y="65" class="label" text-anchor="left">C1</text>
-<text x="130" y="110" class="value" text-anchor="left">1µF</text>
-<path d="M200,280 L205,272 L213,288 L220,272 L227,288 L235,272 L240,280" class="component"/>
-<line x1="220" y1="250" x2="220" y2="272" class="wire"/>
-<polygon points="220,272 216,264 224,264" class="filled"/>
-<text x="220" y="245" class="label" text-anchor="middle">RATE</text>
-<text x="220" y="298" class="value" text-anchor="middle">1MΩ</text>
-<line x1="220" y1="250" x2="220" y2="200" class="wire"/>
-<line x1="220" y1="200" x2="250" y2="200" class="wire"/>
-<line x1="250" y1="200" x2="250" y2="165" class="wire"/>
-<line x1="430" y1="150" x2="480" y2="150" class="wire"/>
-<line x1="480" y1="150" x2="480" y2="80" class="wire"/>
-<line x1="480" y1="80" x2="330" y2="80" class="wire"/>
-<line x1="330" y1="80" x2="330" y2="100" class="wire"/>
-<path d="M330,90 L324.0,95.0 L336.0,102.5 L324.0,110.0 L336.0,117.5 L324.0,125.0 L330,130" class="component"/>
-<text x="330" y="82" class="label" text-anchor="middle">100k</text>
-<path d="M330,120 L324.0,125.0 L336.0,132.5 L324.0,140.0 L336.0,147.5 L324.0,155.0 L330,160" class="component"/>
-<text x="330" y="112" class="label" text-anchor="middle">100k</text>
-<line x1="330" y1="160" x2="330" y2="175" class="ground"/>
-<line x1="315" y1="175" x2="345" y2="175" class="ground"/>
-<line x1="319.5" y1="180" x2="340.5" y2="180" class="ground"/>
-<line x1="220" y1="150" x2="220" y2="320" class="wire"/>
-<circle cx="240" cy="320" r="8" class="component"/>
-<line x1="240" y1="320" x2="260" y2="320" class="component"/>
-<text x="240" y="340" class="label" text-anchor="middle">TRI</text>
-<line x1="480" y1="150" x2="480" y2="350" class="wire"/>
-<path d="M480,300 L474.0,305.0 L486.0,312.5 L474.0,320.0 L486.0,327.5 L474.0,335.0 L480,340" class="component"/>
-<text x="480" y="292" class="label" text-anchor="middle">1.8k</text>
-<circle cx="500" cy="350" r="8" class="component"/>
-<line x1="500" y1="350" x2="520" y2="350" class="component"/>
-<text x="500" y="370" class="label" text-anchor="middle">SQR</text>
-</svg>
+<rect width="700" height="550" fill="#FEFEFE"/>
+<text x="350" y="25" class="title" text-anchor="middle">Triangle/Square LFO</text>
+<text x="350" y="42" class="subtitle" text-anchor="middle">TL072 integrator + Schmitt trigger</text>
+<polygon points="170,120 170,180 230,150" class="component"/>
+<text x="200" y="155" class="label" text-anchor="middle" font-size="9">A (Integrator)</text>
+<text x="167" y="132" class="pin" text-anchor="end">-</text>
+<text x="167" y="168" class="pin" text-anchor="end">+</text>
+<polygon points="470,120 470,180 530,150" class="component"/>
+<text x="500" y="155" class="label" text-anchor="middle" font-size="9">B (Schmitt)</text>
+<text x="467" y="132" class="pin" text-anchor="end">-</text>
+<text x="467" y="168" class="pin" text-anchor="end">+</text>
+<line x1="120" y1="150" x2="170" y2="150" class="wire"/>
+<path d="M120,150 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="145" y="132" class="label" text-anchor="middle">R1</text>
+<text x="145" y="172" class="value" text-anchor="middle">1M</text>
+<line x1="230" y1="150" x2="260" y2="150" class="wire"/>
+<line x1="260" y1="150" x2="260" y2="80" class="wire"/>
+<line x1="260" y1="80" x2="170" y2="80" class="wire"/>
+<line x1="170" y1="80" x2="170" y2="132" class="wire"/>
+<line x1="175" y1="80" x2="196" y2="80" class="wire"/>
+<line x1="204" y1="80" x2="225" y2="80" class="wire"/>
+<line x1="196" y1="72" x2="196" y2="88" class="component" stroke-width="2"/>
+<line x1="204" y1="72" x2="204" y2="88" class="component" stroke-width="2"/>
+<text x="200" y="62" class="label" text-anchor="middle">C1</text>
+<text x="200" y="102" class="value" text-anchor="middle">1µF</text>
+<line x1="170" y1="168" x2="170" y2="250" class="wire"/>
+<line x1="170" y1="250" x2="170" y2="262" class="wire"/>
+<line x1="160" y1="262" x2="180" y2="262" class="wire" stroke-width="2"/>
+<line x1="164" y1="266" x2="176" y2="266" class="wire" stroke-width="1.5"/>
+<line x1="230" y1="150" x2="280" y2="150" class="wire"/>
+<line x1="280" y1="150" x2="280" y2="300" class="wire"/>
+<path d="M260,340 l5,-8 l5,8 l5,-8 l5,8 l5,-8 l5,8" class="component"/>
+<line x1="280" y1="310" x2="280" y2="330" class="wire"/>
+<polygon points="280,330 276,322 284,322" class="filled"/>
+<text x="280" y="305" class="label" text-anchor="middle">RATE</text>
+<text x="280" y="360" class="value" text-anchor="middle">1M</text>
+<line x1="280" y1="370" x2="280" y2="420" class="wire"/>
+<line x1="280" y1="420" x2="430" y2="420" class="wire"/>
+<line x1="430" y1="420" x2="430" y2="168" class="wire"/>
+<line x1="430" y1="168" x2="470" y2="168" class="wire"/>
+<line x1="530" y1="150" x2="580" y2="150" class="wire"/>
+<line x1="580" y1="150" x2="580" y2="60" class="wire"/>
+<line x1="580" y1="60" x2="430" y2="60" class="wire"/>
+<line x1="430" y1="60" x2="430" y2="132" class="wire"/>
+<path d="M480,60 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="505" y="42" class="label" text-anchor="middle">R2</text>
+<text x="505" y="82" class="value" text-anchor="middle">100k</text>
+<path d="M430,71 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l0,5" class="component"/>
+<text x="410" y="91" class="label" text-anchor="end">R3</text>
+<text x="442" y="96" class="value">100k</text>
+<line x1="430" y1="130" x2="430" y2="142" class="wire"/>
+<line x1="420" y1="142" x2="440" y2="142" class="wire" stroke-width="2"/>
+<line x1="424" y1="146" x2="436" y2="146" class="wire" stroke-width="1.5"/>
+<line x1="280" y1="150" x2="280" y2="480" class="wire"/>
+<circle cx="280" cy="500" r="8" class="component"/>
+<line x1="280" y1="500" x2="300" y2="500" class="wire"/>
+<text x="280" y="522" class="label" text-anchor="middle">TRI</text>
+<line x1="580" y1="150" x2="580" y2="480" class="wire"/>
+<path d="M580,425 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l0,5" class="component"/>
+<text x="560" y="445" class="label" text-anchor="end">R4</text>
+<text x="592" y="450" class="value">1.8k</text>
+<circle cx="580" cy="500" r="8" class="component"/>
+<line x1="580" y1="500" x2="600" y2="500" class="wire"/>
+<text x="580" y="522" class="label" text-anchor="middle">SQR</text></svg>
