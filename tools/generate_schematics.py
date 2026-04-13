@@ -694,6 +694,107 @@ def generate_attenuverter_schematic() -> str:
     return r.render()
 
 
+def generate_pt2399_cv_schematic() -> str:
+    """Generate PT2399 CV Control schematic (JF-33 delay mod)."""
+    r = SchematicRenderer(700, 600, "PT2399 CV Control", "Anti-latch-up + CV current sink for JF-33 delay")
+
+    # +5V rail (from 78L05)
+    for x in [150, 550]:
+        r.vcc(Point(x, 50), label="+5V")
+
+    # === ANTI-LATCH-UP CIRCUIT (left side) ===
+    r.elements.append(f'<text x="80" y="80" class="label">Anti-Latch-Up</text>')
+
+    # BC337 transistor
+    r.npn_transistor(Point(150, 150), label="BC337")
+
+    # 100k from +5V to base
+    r.wire(Point(150, 50), Point(150, 100))
+    r.resistor(Point(130, 75), label="R1", value="100k", vertical=False)
+
+    # 100k from base to +5V (pulldown for startup)
+    r.wire(Point(150, 100), Point(150, 120))
+
+    # 1uF cap from base to GND (timing)
+    r.wire(Point(150, 180), Point(150, 220))
+    r.wire(Point(150, 220), Point(120, 220))
+    r.capacitor(Point(120, 250), label="C1", value="1µF", polarized=True, vertical=True)
+    r.ground(Point(120, 280))
+
+    # Emitter to GND
+    r.wire(Point(165, 170), Point(165, 300))
+    r.ground(Point(165, 300))
+
+    # PT2399 pin 6 connection label
+    r.elements.append(f'<text x="180" y="135" class="value">To PT2399 pin 6</text>')
+
+    # === CV CONTROL CIRCUIT (right side) ===
+    r.elements.append(f'<text x="450" y="80" class="label">CV Control</text>')
+
+    # CV Input jack
+    r.jack(Point(450, 120), label="CV 0-5V")
+    r.wire(Point(470, 120), Point(500, 120))
+    r.resistor(Point(515, 120), label="R2", value="100k", vertical=False)
+    r.wire(Point(530, 120), Point(550, 120))
+
+    # Attenuator pot
+    r.potentiometer(Point(550, 180), label="ATTEN", value="100k")
+    r.wire(Point(550, 150), Point(550, 130))
+    r.wire(Point(550, 210), Point(550, 250))
+    r.ground(Point(550, 250))
+
+    # TL072 buffer
+    r.opamp(Point(620, 200), label="TL072", pins=("-", "+", "out"))
+    r.wire(Point(550, 180), Point(580, 182))  # Pot wiper to +in
+
+    # -in to output (voltage follower)
+    r.wire(Point(620, 200), Point(660, 200))
+    r.wire(Point(660, 200), Point(660, 160))
+    r.wire(Point(660, 160), Point(590, 160))
+    r.wire(Point(590, 160), Point(590, 182))
+
+    # +in to GND (for bias)
+    r.wire(Point(580, 218), Point(580, 280))
+    r.ground(Point(580, 280))
+
+    # Output to 2N3904 base (via 1k)
+    r.wire(Point(660, 200), Point(700, 200))
+    r.wire(Point(700, 200), Point(700, 350))
+    r.resistor(Point(700, 380), label="R3", value="1k", vertical=True)
+
+    # 2N3904 current sink
+    r.npn_transistor(Point(620, 420), label="2N3904")
+    r.wire(Point(700, 400), Point(635, 420))  # Base connection
+
+    # Collector to PT2399 pin 6 (through anti-latch-up)
+    r.wire(Point(605, 405), Point(605, 350))
+    r.wire(Point(605, 350), Point(400, 350))
+    r.wire(Point(400, 350), Point(400, 150))
+    r.wire(Point(400, 150), Point(180, 150))  # Connect to anti-latch-up output
+
+    # Emitter resistor to GND
+    r.wire(Point(635, 445), Point(635, 480))
+    r.resistor(Point(635, 500), label="R4", value="1k", vertical=True)
+    r.ground(Point(635, 530))
+
+    # Protection diode (1N4148)
+    r.elements.append(f'<text x="480" y="400" class="value">D1 (1N4148)</text>')
+    r.elements.append(f'<line x1="480" y1="410" x2="480" y2="450" stroke="#333" stroke-width="1"/>')
+    # Diode symbol (pointing from pin 6 to GND)
+    r.elements.extend([
+        f'<polygon points="470,430 490,430 480,450" fill="none" stroke="#333" stroke-width="1.5"/>',
+        f'<line x1="470" y1="450" x2="490" y2="450" stroke="#333" stroke-width="1.5"/>',
+    ])
+    r.wire(Point(480, 450), Point(480, 480))
+    r.ground(Point(480, 480))
+
+    # === ANNOTATIONS ===
+    r.annotate(Point(50, 150), "Startup:\nBC337 OFF\nfor ~500ms")
+    r.annotate(Point(50, 420), "CV→Current:\nSink 0-5mA\nfrom pin 6")
+
+    return r.render()
+
+
 def main():
     """Generate all schematics."""
     os.makedirs("schematics", exist_ok=True)
@@ -705,6 +806,7 @@ def main():
         ("clock_divider_schematic.svg", generate_clock_divider_schematic),
         ("slew_limiter_schematic.svg", generate_slew_limiter_schematic),
         ("attenuverter_schematic.svg", generate_attenuverter_schematic),
+        ("pt2399_cv_control_schematic.svg", generate_pt2399_cv_schematic),
         ("wiring_overview.svg", generate_wiring_diagram),
     ]
     

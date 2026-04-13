@@ -1117,6 +1117,151 @@ def generate_expander_sah():
 
 
 # ============================================================
+# SLEW LIMITER MODULE
+# ============================================================
+
+def generate_expander_slew():
+    """Expander Module 6 — Slew Limiter (TL072 + diode steering)."""
+    COLS = 16
+    ROWS = 10
+    lines = svg_start(COLS, ROWS, "Expander Module 6 — Slew Limiter", extra_h=100)
+    lines += svg_board(COLS, ROWS)
+
+    # Power rails
+    lines += svg_rail(1, COLS, "+12V", C_RAIL_12V)
+    lines += svg_rail(3, COLS, "-12V", C_RAIL_N12V)
+    lines += svg_rail(10, COLS, "GND", C_RAIL_GND)
+
+    # TL072 dual opamp (DIP8) - rows 4-7, cols 4-7
+    lines += svg_dip("U1", "TL072", 4, 4, 8, col_span=4,
+                     pin_labels_l=["OUT-A", "-IN-A", "+IN-A", "V-"],
+                     pin_labels_r=["V+", "+IN-B", "-IN-B", "OUT-B"])
+
+    # Input zone and series resistor (10k)
+    lines += svg_zone_label(5, 1, "IN")
+    lines += svg_resistor_h(5, 2, 3, "10k")
+
+    # RISE pot path (D1) - rows 4-5
+    lines += svg_pot(4, 11, 1, "RISE", "1M log")
+    lines += svg_diode_h(4, 9, 10, "D1")
+
+    # FALL pot path (D2) - rows 6-7
+    lines += svg_pot(7, 11, 1, "FALL", "1M log")
+    lines += svg_diode_h(7, 9, 10, "D2")
+
+    # D1 and D2 connect to input node
+    lines += svg_jumper(5, 4, 4, 4, 0)  # Input to D1
+    lines += svg_jumper(5, 4, 7, 4, 1)  # Input to D2
+
+    # Pots connect to opamp -in (pin 2)
+    lines += svg_jumper(4, 10, 5, 6, 2)  # RISE pot wiper to pin 2
+    lines += svg_jumper(7, 10, 5, 6, 3)  # FALL pot wiper to pin 2
+
+    # Timing capacitor (1µF) from output (pin 1) to -in (pin 2)
+    lines += svg_cap_h(6, 8, 10, "1µF", C_CAP_ELEC)
+
+    # +IN-A (pin 3) to GND
+    lines += svg_jumper(6, 5, 10, 5, 0)
+
+    # Output
+    lines += svg_zone_label(6, 15, "OUT")
+    lines += svg_jumper(5, 8, 6, 15, 1)
+
+    # Track cuts
+    lines += svg_track_cut(5, 6)  # Cut at pin 2
+    lines += svg_track_cut(6, 9)  # Cut for cap
+
+    # Annotation
+    lines += svg_callout(2, 12, [
+        "SLEW LIMITER",
+        "Separate rise/fall via",
+        "diode steering (D1/D2)",
+    ])
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC, "TL072"),
+        ("rect", C_DIODE, "1N4148"),
+        ("rect", C_CAP_ELEC, "1µF timing"),
+        ("x", C_CUT, "Track cut"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+# ============================================================
+# ATTENUVERTER MODULE
+# ============================================================
+
+def generate_expander_attenuverter():
+    """Expander Module 7 — Attenuverter (TL072 + center-detent pot)."""
+    COLS = 16
+    ROWS = 9
+    lines = svg_start(COLS, ROWS, "Expander Module 7 — Attenuverter", extra_h=100)
+    lines += svg_board(COLS, ROWS)
+
+    # Power rails
+    lines += svg_rail(1, COLS, "+12V", C_RAIL_12V)
+    lines += svg_rail(3, COLS, "-12V", C_RAIL_N12V)
+    lines += svg_rail(9, COLS, "GND", C_RAIL_GND)
+
+    # TL072 (DIP8) - rows 4-7, cols 4-7
+    lines += svg_dip("U1", "TL072", 4, 4, 8, col_span=4,
+                     pin_labels_l=["OUT", "-IN", "+IN", "V-"],
+                     pin_labels_r=["V+", "NC", "NC", "NC"])
+
+    # Input zone and Rin (100k)
+    lines += svg_zone_label(5, 1, "IN")
+    lines += svg_resistor_h(5, 2, 3, "100k")
+
+    # Center-detent pot (100k)
+    lines += svg_pot(5, 11, 1, "ATTEN", "100k center")
+
+    # Pot connections:
+    # CCW (left) to input signal (for inverted path)
+    lines += svg_jumper(5, 3, 5, 10, 0)  # Rin to pot CCW
+
+    # CW (right) to GND
+    lines += svg_jumper(5, 12, 9, 12, 1)
+
+    # Wiper (center) to opamp -in (pin 2)
+    lines += svg_jumper(5, 11, 5, 6, 2)
+
+    # Feedback resistor (100k) from output to -in
+    lines += svg_resistor_v(4, 8, 6, "100k")
+    lines += svg_jumper(4, 8, 5, 8, 3)  # Connect to pin 2
+
+    # +IN (pin 3) to GND
+    lines += svg_jumper(6, 5, 9, 5, 0)
+
+    # Output
+    lines += svg_zone_label(5, 15, "OUT")
+    lines += svg_jumper(5, 8, 5, 15, 1)
+
+    # Track cuts
+    lines += svg_track_cut(5, 6)  # At pin 2
+    lines += svg_track_cut(5, 11)  # At pot wiper
+
+    # Annotation
+    lines += svg_callout(2, 12, [
+        "ATTENUVERTER",
+        "-1x to +1x via",
+        "center-detent pot",
+    ])
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC, "TL072"),
+        ("rect", C_RESISTOR, "100k (Rin/Rf)"),
+        ("x", C_CUT, "Track cut"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+# ============================================================
 # TOUCH TEST BOARD
 # ============================================================
 
@@ -1214,6 +1359,8 @@ def main():
         "expander_lfo.svg": generate_expander_lfo,
         "expander_clockdiv.svg": generate_expander_clockdiv,
         "expander_sah.svg": generate_expander_sah,
+        "expander_slew.svg": generate_expander_slew,
+        "expander_attenuverter.svg": generate_expander_attenuverter,
         "touch_test_board.svg": generate_touch_test,
     }
 

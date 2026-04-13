@@ -28,6 +28,8 @@ SVG_MAP = {
         "schematics/expander_lfo.svg",
         "schematics/expander_clockdiv.svg",
         "schematics/expander_sah.svg",
+        "schematics/expander_slew.svg",
+        "schematics/expander_attenuverter.svg",
     ],
     "schematics/expander_circuits.md": [
         "schematics/noise_generator_schematic.svg",
@@ -38,6 +40,7 @@ SVG_MAP = {
         "schematics/attenuverter_schematic.svg",
     ],
     "schematics/wiring_diagram.md": ["schematics/wiring_overview.svg"],
+    "schematics/jf33_cv_control.md": ["schematics/pt2399_cv_control_schematic.svg"],
     "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],
 }
 
