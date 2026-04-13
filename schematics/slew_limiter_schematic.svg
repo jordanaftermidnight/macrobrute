@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 450" width="550" height="450">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="550" height="450" fill="#FEFEFE"/>
+<text x="275" y="25" class="title" text-anchor="middle">Slew Limiter</text>
+<text x="275" y="42" class="subtitle" text-anchor="middle">Separate Rise/Fall with Diode Steering</text>
+<circle cx="50" cy="200" r="8" class="component"/>
+<line x1="50" y1="200" x2="70" y2="200" class="wire"/>
+<text x="50" y="222" class="label" text-anchor="middle">IN</text>
+<line x1="70" y1="200" x2="100" y2="200" class="wire"/>
+<path d="M90,200 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="115" y="182" class="label" text-anchor="middle">Rin</text>
+<text x="115" y="222" class="value" text-anchor="middle">10k</text>
+<line x1="130" y1="200" x2="160" y2="200" class="wire"/>
+<circle cx="160" cy="200" r="3.5" class="junction"/>
+<line x1="160" y1="200" x2="160" y2="120" class="wire"/>
+<line x1="160" y1="120" x2="200" y2="120" class="wire"/>
+<polygon points="200,110 200,130 220,120" fill="none" stroke="#333" stroke-width="1.5"/>
+<line x1="220" y1="110" x2="220" y2="130" stroke="#333" stroke-width="1.5"/>
+<line x1="220" y1="120" x2="260" y2="120" class="wire"/>
+<path d="M270,120 l5,-8 l5,8 l5,-8 l5,8 l5,-8 l5,8" class="component"/>
+<line x1="290" y1="90" x2="290" y2="110" class="wire"/>
+<polygon points="290,110 286,102 294,102" class="filled"/>
+<text x="290" y="85" class="label" text-anchor="middle">RISE</text>
+<text x="290" y="140" class="value" text-anchor="middle">1M log</text>
+<line x1="290" y1="90" x2="290" y2="60" class="wire"/>
+<line x1="290" y1="60" x2="380" y2="60" class="wire"/>
+<line x1="160" y1="200" x2="160" y2="280" class="wire"/>
+<line x1="160" y1="280" x2="200" y2="280" class="wire"/>
+<polygon points="220,270 220,290 200,280" fill="none" stroke="#333" stroke-width="1.5"/>
+<line x1="200" y1="270" x2="200" y2="290" stroke="#333" stroke-width="1.5"/>
+<line x1="160" y1="280" x2="260" y2="280" class="wire"/>
+<path d="M270,280 l5,-8 l5,8 l5,-8 l5,8 l5,-8 l5,8" class="component"/>
+<line x1="290" y1="250" x2="290" y2="270" class="wire"/>
+<polygon points="290,270 286,262 294,262" class="filled"/>
+<text x="290" y="245" class="label" text-anchor="middle">FALL</text>
+<text x="290" y="300" class="value" text-anchor="middle">1M log</text>
+<line x1="290" y1="310" x2="290" y2="340" class="wire"/>
+<line x1="290" y1="340" x2="380" y2="340" class="wire"/>
+<line x1="380" y1="60" x2="380" y2="200" class="wire"/>
+<line x1="380" y1="340" x2="380" y2="200" class="wire"/>
+<circle cx="380" cy="200" r="3.5" class="junction"/>
+<polygon points="420,170 420,230 480,200" class="component"/>
+<text x="450" y="205" class="label" text-anchor="middle" font-size="9">TL072</text>
+<text x="417" y="182" class="pin" text-anchor="end">-</text>
+<text x="417" y="218" class="pin" text-anchor="end">+</text>
+<line x1="380" y1="200" x2="420" y2="200" class="wire"/>
+<line x1="480" y1="200" x2="520" y2="200" class="wire"/>
+<line x1="520" y1="200" x2="520" y2="320" class="wire"/>
+<line x1="520" y1="320" x2="420" y2="320" class="wire"/>
+<line x1="420" y1="320" x2="420" y2="218" class="wire"/>
+<line x1="445" y1="320" x2="466" y2="320" class="wire"/>
+<line x1="474" y1="320" x2="495" y2="320" class="wire"/>
+<line x1="466" y1="312" x2="466" y2="328" class="component" stroke-width="2"/>
+<line x1="474" y1="312" x2="474" y2="328" class="component" stroke-width="2"/>
+<text x="470" y="302" class="label" text-anchor="middle">C</text>
+<text x="470" y="342" class="value" text-anchor="middle">1µF</text>
+<line x1="420" y1="182" x2="420" y2="380" class="wire"/>
+<line x1="420" y1="380" x2="420" y2="392" class="wire"/>
+<line x1="410" y1="392" x2="430" y2="392" class="wire" stroke-width="2"/>
+<line x1="414" y1="396" x2="426" y2="396" class="wire" stroke-width="1.5"/>
+<line x1="480" y1="200" x2="520" y2="200" class="wire"/>
+<circle cx="520" cy="200" r="8" class="component"/>
+<line x1="520" y1="200" x2="540" y2="200" class="wire"/>
+<text x="520" y="222" class="label" text-anchor="middle">OUT</text></svg>

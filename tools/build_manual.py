@@ -34,6 +34,8 @@ SVG_MAP = {
         "schematics/lfo_schematic.svg",
         "schematics/sah_schematic.svg",
         "schematics/clock_divider_schematic.svg",
+        "schematics/slew_limiter_schematic.svg",
+        "schematics/attenuverter_schematic.svg",
     ],
     "schematics/wiring_diagram.md": ["schematics/wiring_overview.svg"],
     "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],

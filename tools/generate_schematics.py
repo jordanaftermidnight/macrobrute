@@ -582,6 +582,118 @@ def generate_wiring_diagram() -> str:
     return r.render()
 
 
+def generate_slew_limiter_schematic() -> str:
+    """Generate Slew Limiter schematic (TL072 + diode steering)."""
+    r = SchematicRenderer(550, 450, "Slew Limiter", "Separate Rise/Fall with Diode Steering")
+    
+    # Input
+    r.jack(Point(50, 200), label="IN")
+    r.wire(Point(70, 200), Point(100, 200))
+    r.resistor(Point(115, 200), label="Rin", value="10k", vertical=False)
+    r.wire(Point(130, 200), Point(160, 200))
+    r.junction(Point(160, 200))
+    
+    # RISE path (D1)
+    r.wire(Point(160, 200), Point(160, 120))
+    r.wire(Point(160, 120), Point(200, 120))
+    # Diode D1 (pointing right)
+    r.elements.extend([
+        f'<polygon points="200,110 200,130 220,120" fill="none" stroke="#333" stroke-width="1.5"/>',
+        f'<line x1="220" y1="110" x2="220" y2="130" stroke="#333" stroke-width="1.5"/>',
+    ])
+    r.wire(Point(220, 120), Point(260, 120))
+    r.potentiometer(Point(290, 120), label="RISE", value="1M log")
+    r.wire(Point(290, 90), Point(290, 60))
+    r.wire(Point(290, 60), Point(380, 60))
+    
+    # FALL path (D2)  
+    r.wire(Point(160, 200), Point(160, 280))
+    r.wire(Point(160, 280), Point(200, 280))
+    # Diode D2 (pointing left)
+    r.elements.extend([
+        f'<polygon points="220,270 220,290 200,280" fill="none" stroke="#333" stroke-width="1.5"/>',
+        f'<line x1="200" y1="270" x2="200" y2="290" stroke="#333" stroke-width="1.5"/>',
+    ])
+    r.wire(Point(160, 280), Point(260, 280))
+    r.potentiometer(Point(290, 280), label="FALL", value="1M log")
+    r.wire(Point(290, 310), Point(290, 340))
+    r.wire(Point(290, 340), Point(380, 340))
+    
+    # Both paths join
+    r.wire(Point(380, 60), Point(380, 200))
+    r.wire(Point(380, 340), Point(380, 200))
+    r.junction(Point(380, 200))
+    
+    # Opamp
+    r.opamp(Point(450, 200), label="TL072", pins=("-", "+", "out"))
+    r.wire(Point(380, 200), Point(420, 200))
+    
+    # Feedback capacitor
+    r.wire(Point(480, 200), Point(520, 200))
+    r.wire(Point(520, 200), Point(520, 320))
+    r.wire(Point(520, 320), Point(420, 320))
+    r.wire(Point(420, 320), Point(420, 218))
+    r.capacitor(Point(470, 320), label="C", value="1µF", vertical=False)
+    
+    # +in to ground
+    r.wire(Point(420, 182), Point(420, 380))
+    r.ground(Point(420, 380))
+    
+    # Output
+    r.wire(Point(480, 200), Point(520, 200))
+    r.jack(Point(520, 200), label="OUT")
+    
+    return r.render()
+
+
+def generate_attenuverter_schematic() -> str:
+    """Generate Attenuverter schematic (TL072)."""
+    r = SchematicRenderer(550, 400, "Attenuverter", "Center-Detent Pot for -1x to +1x")
+    
+    # Input
+    r.jack(Point(50, 150), label="IN")
+    r.wire(Point(70, 150), Point(100, 150))
+    r.resistor(Point(125, 150), label="R1", value="100k", vertical=False)
+    r.wire(Point(150, 150), Point(180, 150))
+    
+    # Potentiometer (center-detent)
+    r.potentiometer(Point(220, 150), label="Atten", value="100k center")
+    r.wire(Point(220, 120), Point(220, 100))
+    r.wire(Point(220, 100), Point(350, 100))
+    r.wire(Point(220, 180), Point(220, 250))
+    r.wire(Point(220, 250), Point(180, 250))
+    r.ground(Point(180, 250))
+    
+    # Pot CCW end goes to input (for inverted signal)
+    r.wire(Point(150, 150), Point(150, 280))
+    r.wire(Point(150, 280), Point(120, 280))
+    r.wire(Point(120, 280), Point(120, 250))
+    r.wire(Point(120, 250), Point(120, 200))
+    
+    # Opamp
+    r.opamp(Point(400, 180), label="TL072", pins=("-", "+", "out"))
+    
+    # Wiper to -in
+    r.wire(Point(350, 100), Point(350, 162))
+    r.wire(Point(350, 162), Point(370, 162))
+    
+    # +in to ground
+    r.wire(Point(370, 198), Point(370, 300))
+    r.ground(Point(370, 300))
+    
+    # Feedback resistor
+    r.wire(Point(430, 180), Point(480, 180))
+    r.wire(Point(480, 180), Point(480, 100))
+    r.wire(Point(480, 100), Point(350, 100))
+    r.resistor(Point(415, 100), label="Rf", value="100k", vertical=False)
+    
+    # Output
+    r.wire(Point(430, 180), Point(480, 180))
+    r.jack(Point(500, 180), label="OUT")
+    
+    return r.render()
+
+
 def main():
     """Generate all schematics."""
     os.makedirs("schematics", exist_ok=True)
@@ -591,6 +703,8 @@ def main():
         ("lfo_schematic.svg", generate_lfo_schematic),
         ("sah_schematic.svg", generate_sah_schematic),
         ("clock_divider_schematic.svg", generate_clock_divider_schematic),
+        ("slew_limiter_schematic.svg", generate_slew_limiter_schematic),
+        ("attenuverter_schematic.svg", generate_attenuverter_schematic),
         ("wiring_overview.svg", generate_wiring_diagram),
     ]
     
