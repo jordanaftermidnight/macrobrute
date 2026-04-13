@@ -31,12 +31,20 @@ __pycache__/
 # Gerber outputs (track selectively)
 gerber/
 
-# Backup files
-*.bak
-*.orig
+# Working files (photos, scratch docs)
+files/
+
+# Ghidra project
 macrobrute.gpr
 macrobrute.lock
+macrobrute.lock~
 macrobrute.rep/
+
+# Ghidra exports
 firmware/ghidra_disasm.txt
 firmware/ghidra_decompiled.c
 firmware/ghidra_decompiled.h
+
+# Backup files
+*.bak
+*.orig

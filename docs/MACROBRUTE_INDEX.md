@@ -82,7 +82,7 @@
 | `MACROBRUTE_MASTER_PLAN.md` | Early planning document |
 | `MACROBRUTE_V2_SPEC.md` | Earlier spec revision |
 | `MACROBRUTE_REVISED_SPEC.md` | DB-9 correction (from DB-25 hallucination) |
-| `MACROBRUTE_EXPANDER_DB37_PINOUT.md` | **OBSOLETE** — predates DB-9 decision |
+| `MACROBRUTE_EXPANDER_DB37_PINOUT.md` | **OBSOLETE** — predates DB-9 decision (moved here from `docs/hardware/`) |
 
 ---
 

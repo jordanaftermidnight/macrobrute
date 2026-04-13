@@ -223,7 +223,7 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack
 - Yusynth schematics: https://hackabrute.yusynth.net
 - Maffez Pedrobrute: https://maffez.com/?page_id=2285
 - ModWiggler thread: https://modwiggler.com/forum/viewtopic.php?t=152071
-- Project test points: files/MACROBRUTE_TEST_POINTS_VERIFIED.md
+- Project test points: docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md
 - Touch bend specs: docs/mods/touch_bend_specs.md
 - Circuit review: schematics/CIRCUIT_REVIEW.md
 - Wiring diagram: schematics/wiring_diagram.md
