@@ -430,8 +430,11 @@ tr:target td{animation:flash 1.5s ease}
 .svg-caption{padding:8px 12px;background:var(--bg3);font-size:13px;font-weight:600;color:var(--txb);border-bottom:1px solid var(--border)}
 .svg-container{overflow-x:auto;padding:16px;background:#F5F5F0;-webkit-overflow-scrolling:touch}
 .svg-container svg{max-width:none;display:block;margin:0 auto;background:#F5F5F0}
-.svg-container text{fill:#1a1a1a !important}
-.svg-container .ic-name,.svg-container .rail{fill:#fff !important}
+.svg-container text{fill:#1a1a1a !important;text-shadow:0 0 2px #fff,0 0 3px #fff,0 0 4px #fff !important;font-weight:600 !important}
+.svg-container .ic-name,.svg-container .rail{fill:#fff !important;text-shadow:0 0 2px #000,0 0 3px #000 !important}
+.svg-container .title,.svg-container .subtitle{fill:#1a1a1a !important;text-shadow:0 0 3px #fff,0 0 5px #fff !important;font-weight:700 !important}
+.svg-container .pin,.svg-container .comp,.svg-container .zone-label,.svg-container .note{fill:#222 !important;text-shadow:0 0 2px #fff,0 0 3px #fff !important;font-weight:600 !important}
+.svg-container .row-label,.svg-container .col-label{fill:#333 !important;text-shadow:0 0 2px #fff !important;font-weight:700 !important}
 @media(max-width:768px){.svg-container{padding:8px}.svg-container svg{height:auto}}
 #no-res{text-align:center;padding:48px;color:var(--txd);font-size:16px;display:none}
 
