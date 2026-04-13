@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+<defs>
+  <style>
+    text { font-family: "SF Mono", Consolas, "Liberation Mono", monospace; }
+    .title { font-size: 16px; font-weight: bold; fill: #222; }
+    .subtitle { font-size: 11px; fill: #555; }
+    .label { font-size: 10px; fill: #333; font-weight: bold; }
+    .value { font-size: 9px; fill: #555; }
+    .pin { font-size: 8px; fill: #666; }
+    .wire { stroke: #0066CC; stroke-width: 2; fill: none; }
+    .component { stroke: #333; stroke-width: 1.5; fill: none; }
+    .filled { fill: #333; }
+    .junction { fill: #0066CC; }
+    .ground { stroke: #4A4; stroke-width: 2; }
+    .power { stroke: #D44; stroke-width: 2; }
+  </style>
+</defs>
+<rect width="500" height="400" fill="#F5F5F0"/>
+<text x="250" y="20" class="title" text-anchor="middle">White Noise Generator — Schematic</text>
+<text x="250" y="36" class="subtitle" text-anchor="middle">2N3904 avalanche breakdown + TL072 amplifier</text>
+<line x1="100" y1="60" x2="400" y2="60" class="wire"/>
+<text x="250" y="55" class="label" text-anchor="middle" fill="#D44">+12V</text>
+<circle cx="150" cy="150" r="20" class="component"/>
+<line x1="130" y1="150" x2="150" y2="150" class="component"/>
+<line x1="150" y1="150" x2="162" y2="135" class="component"/>
+<line x1="162" y1="135" x2="165" y2="125" class="wire"/>
+<line x1="150" y1="150" x2="162" y2="162" class="component"/>
+<polygon points="162,162 166,156 158,158" class="filled"/>
+<line x1="162" y1="162" x2="165" y2="175" class="wire"/>
+<text x="125" y="150" class="value" text-anchor="end">B</text>
+<text x="170" y="125" class="value" text-anchor="start">C</text>
+<text x="170" y="175" class="value" text-anchor="start">E</text>
+<text x="150" y="185" class="label" text-anchor="middle">2N3904</text>
+<line x1="150" y1="60" x2="150" y2="125" class="wire"/>
+<path d="M110,90 L115.0,84.0 L122.5,96.0 L130.0,84.0 L137.5,96.0 L145.0,84.0 L150,90" class="component"/>
+<text x="130" y="75" class="label" text-anchor="middle">470k</text>
+<path d="M150,90 L155.0,84.0 L162.5,96.0 L170.0,84.0 L177.5,96.0 L185.0,84.0 L190,90" class="component"/>
+<text x="170" y="75" class="label" text-anchor="middle">470k</text>
+<line x1="165" y1="175" x2="165" y2="250" class="wire"/>
+<line x1="165" y1="230" x2="165" y2="245" class="wire"/>
+<line x1="165" y1="255" x2="165" y2="270" class="wire"/>
+<line x1="155" y1="245" x2="175" y2="245" class="component" stroke-width="2"/>
+<line x1="155" y1="255" x2="175" y2="255" class="component" stroke-width="2"/>
+<text x="183" y="255" class="value" text-anchor="left">100pF</text>
+<line x1="165" y1="270" x2="165" y2="290" class="wire"/>
+<line x1="165" y1="290" x2="165" y2="305" class="ground"/>
+<line x1="150" y1="305" x2="180" y2="305" class="ground"/>
+<line x1="154.5" y1="310" x2="175.5" y2="310" class="ground"/>
+<polygon points="270,170 270,230 330,200" class="component"/>
+<text x="300" y="200" class="label" text-anchor="middle" dominant-baseline="central">TL072</text>
+<text x="267" y="185" class="pin" text-anchor="end">-</text>
+<text x="267" y="215" class="pin" text-anchor="end">+</text>
+<text x="255" y="185" class="value" text-anchor="end">2(-)</text>
+<text x="255" y="215" class="value" text-anchor="end">3(+)</text>
+<text x="335" y="200" class="value" text-anchor="start">1(out)</text>
+<line x1="165" y1="150" x2="250" y2="150" class="wire"/>
+<line x1="250" y1="150" x2="250" y2="185" class="wire"/>
+<line x1="250" y1="185" x2="270" y2="185" class="wire"/>
+<line x1="330" y1="200" x2="360" y2="200" class="wire"/>
+<line x1="360" y1="200" x2="360" y2="130" class="wire"/>
+<line x1="360" y1="130" x2="230" y2="130" class="wire"/>
+<line x1="230" y1="130" x2="230" y2="185" class="wire"/>
+<path d="M275,130 L280.0,124.0 L287.5,136.0 L295.0,124.0 L302.5,136.0 L310.0,124.0 L315,130" class="component"/>
+<text x="295" y="115" class="label" text-anchor="middle">4.7M</text>
+<text x="295" y="150" class="value" text-anchor="middle">feedback</text>
+<line x1="250" y1="215" x2="250" y2="290" class="wire"/>
+<path d="M250,240 L244.0,245.0 L256.0,252.5 L244.0,260.0 L256.0,267.5 L244.0,275.0 L250,280" class="component"/>
+<text x="250" y="232" class="label" text-anchor="middle">100k</text>
+<line x1="250" y1="290" x2="250" y2="305" class="ground"/>
+<line x1="235" y1="305" x2="265" y2="305" class="ground"/>
+<line x1="239.5" y1="310" x2="260.5" y2="310" class="ground"/>
+<line x1="360" y1="200" x2="420" y2="200" class="wire"/>
+<circle cx="440" cy="200" r="8" class="component"/>
+<line x1="440" y1="200" x2="460" y2="200" class="component"/>
+<text x="440" y="220" class="label" text-anchor="middle">NOISE</text>
+</svg>

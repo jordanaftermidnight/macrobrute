@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+<defs>
+  <style>
+    text { font-family: "SF Mono", Consolas, "Liberation Mono", monospace; }
+    .title { font-size: 16px; font-weight: bold; fill: #222; }
+    .subtitle { font-size: 11px; fill: #555; }
+    .label { font-size: 10px; fill: #333; font-weight: bold; }
+    .value { font-size: 9px; fill: #555; }
+    .pin { font-size: 8px; fill: #666; }
+    .wire { stroke: #0066CC; stroke-width: 2; fill: none; }
+    .component { stroke: #333; stroke-width: 1.5; fill: none; }
+    .filled { fill: #333; }
+    .junction { fill: #0066CC; }
+    .ground { stroke: #4A4; stroke-width: 2; }
+    .power { stroke: #D44; stroke-width: 2; }
+  </style>
+</defs>
+<rect width="900" height="600" fill="#F5F5F0"/>
+<text x="450" y="20" class="title" text-anchor="middle">MACROBRUTE System Wiring — Overview</text>
+<text x="450" y="36" class="subtitle" text-anchor="middle">Signal flow from MicroBrute to Expander</text>
+<rect x="40" y="160" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="100" y="190" class="label" text-anchor="middle">MicroBrute</text>
+<text x="100" y="208" class="label" text-anchor="middle">PCB</text>
+<rect x="220" y="160" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="280" y="190" class="label" text-anchor="middle">Breakout</text>
+<text x="280" y="208" class="label" text-anchor="middle">PCB</text>
+<rect x="390" y="160" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="450" y="190" class="label" text-anchor="middle">DB-9 A</text>
+<text x="450" y="208" class="label" text-anchor="middle">(Rear)</text>
+<rect x="520" y="160" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="580" y="190" class="label" text-anchor="middle">Cable</text>
+<rect x="690" y="160" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="750" y="190" class="label" text-anchor="middle">Expander</text>
+<line x1="160" y1="100" x2="690" y2="100" class="wire"/>
+<text x="170" y="95" class="value" font-size="8">TP94 Saw</text>
+<line x1="160" y1="130" x2="690" y2="130" class="wire"/>
+<text x="170" y="125" class="value" font-size="8">TP93 Sqr</text>
+<line x1="160" y1="160" x2="690" y2="160" class="wire"/>
+<text x="170" y="155" class="value" font-size="8">TP30 Mix</text>
+<line x1="160" y1="190" x2="690" y2="190" class="wire"/>
+<text x="170" y="185" class="value" font-size="8">TP19 VCF</text>
+<line x1="160" y1="280" x2="690" y2="280" class="wire"/>
+<text x="170" y="275" class="value" font-size="8">TP83 Gate</text>
+<line x1="160" y1="310" x2="690" y2="310" class="wire"/>
+<text x="170" y="305" class="value" font-size="8">Pitch CV</text>
+<line x1="160" y1="340" x2="690" y2="340" class="wire"/>
+<text x="170" y="335" class="value" font-size="8">Envelope</text>
+<line x1="160" y1="370" x2="690" y2="370" class="wire"/>
+<text x="170" y="365" class="value" font-size="8">LFO</text>
+</svg>

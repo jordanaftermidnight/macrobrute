@@ -29,6 +29,11 @@ SVG_MAP = {
         "schematics/expander_clockdiv.svg",
         "schematics/expander_sah.svg",
     ],
+    "schematics/expander_circuits.md": [
+        "schematics/noise_generator_schematic.svg",
+        "schematics/lfo_schematic.svg",
+    ],
+    "schematics/wiring_diagram.md": ["schematics/wiring_overview.svg"],
     "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],
 }
 
