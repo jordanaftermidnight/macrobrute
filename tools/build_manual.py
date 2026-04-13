@@ -682,7 +682,7 @@ def build():
         _sidebar(),
         '<main id="main">',
         f'<div class="hdr"><h1>MACROBRUTE Manual</h1>'
-        f'<p>MicroBrute &rarr; Semi-Modular Industrial/Techno Instrument</p>'
+        f'<p>MicroBrute &rarr; Semi-Modular Synthesizer Expansion</p>'
         f'<p>Generated {today} &middot; {ndocs} documents</p></div>',
         _quick_ref(),
         '<div id="no-res">No matching documents</div>',

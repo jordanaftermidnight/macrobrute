@@ -53,17 +53,23 @@ class SchematicRenderer:
         self.elements: List[str] = []
         
     def _svg_header(self) -> str:
-        """Generate SVG header with styles."""
+        """Generate SVG header with text shadow for dark mode readability."""
         return f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {self.width} {self.height}" width="{self.width}" height="{self.height}">
 <defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
   <style>
-    .title {{ font: bold 16px "SF Mono", Consolas, monospace; fill: {self.C_TEXT}; }}
-    .subtitle {{ font: 11px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; }}
-    .label {{ font: bold 10px "SF Mono", Consolas, monospace; fill: {self.C_TEXT}; }}
-    .value {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; }}
-    .pin {{ font: 8px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; }}
-    .anno {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_ANNOTATION}; }}
+    .title {{ font: bold 16px "SF Mono", Consolas, monospace; fill: {self.C_TEXT}; filter: url(#textshadow); }}
+    .subtitle {{ font: 11px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
+    .label {{ font: bold 10px "SF Mono", Consolas, monospace; fill: {self.C_TEXT}; filter: url(#textshadow); }}
+    .value {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
+    .pin {{ font: 8px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
+    .anno {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_ANNOTATION}; filter: url(#textshadow); }}
     .wire {{ stroke: {self.C_WIRE}; stroke-width: 1.5; fill: none; }}
     .wire-thick {{ stroke: {self.C_WIRE}; stroke-width: 2.5; fill: none; }}
     .component {{ stroke: {self.C_COMPONENT}; stroke-width: 1.5; fill: none; }}
