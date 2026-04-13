@@ -240,7 +240,8 @@ def _md(text, doc_id=""):
         para = []
         while i < len(lines) and lines[i].strip():
             t = lines[i].strip()
-            if (t.startswith("#") or t.startswith("```") or t.startswith("|")
+            # Only break for actual markdown headers (# followed by space)
+            if (re.match(r"^#{1,6}\s", t) or t.startswith("```") or t.startswith("|")
                     or re.match(r"^[-*]{3,}\s*$", t)
                     or re.match(r"^[-*]\s", t) or re.match(r"^\d+[.)]\s", t)):
                 break
