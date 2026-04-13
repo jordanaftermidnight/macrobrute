@@ -404,146 +404,174 @@ def generate_clock_divider_schematic() -> str:
     return r.render()
 
 
+def db9_connector(r, x, y, label, pins, is_female=True):
+    """Draw DB-9 connector with pins labeled."""
+    w, h = 70, 110
+    # Connector body
+    r.elements.append(f'<rect x="{x-w/2}" y="{y-h/2}" width="{w}" height="{h}" rx="8" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2"/>')
+    # Label
+    r.elements.append(f'<text x="{x}" y="{y-h/2-8}" class="label" text-anchor="middle" fill="#0066CC">{label}</text>')
+    # Pins (5 on top row, 4 on bottom for DB-9)
+    pin_labels = pins if len(pins) == 9 else pins + [""]
+    for i in range(5):  # Top row: 5,4,3,2,1 (right to left for female)
+        px = x + 25 - i * 12
+        py = y - 15
+        r.elements.append(f'<circle cx="{px}" cy="{py}" r="3" fill="#gold" stroke="#B8860B" stroke-width="1"/>')
+        if pin_labels[4-i]:
+            r.elements.append(f'<text x="{px}" y="{py-8}" class="value" font-size="7" text-anchor="middle">{pin_labels[4-i][:6]}</text>')
+    for i in range(4):  # Bottom row: 9,8,7,6
+        px = x + 19 - i * 12
+        py = y + 15
+        r.elements.append(f'<circle cx="{px}" cy="{py}" r="3" fill="#gold" stroke="#B8860B" stroke-width="1"/>')
+        if pin_labels[8-i]:
+            r.elements.append(f'<text x="{px}" y="{py+12}" class="value" font-size="7" text-anchor="middle">{pin_labels[8-i][:6]}</text>')
+
+
+def switch(r, x, y, label=None):
+    """Draw SPST switch symbol."""
+    r.elements.extend([
+        f'<line x1="{x}" y1="{y-10}" x2="{x}" y2="{y+10}" class="component"/>',
+        f'<circle cx="{x}" cy="{y-10}" r="2" class="filled"/>',
+        f'<circle cx="{x}" cy="{y+10}" r="2" class="filled"/>',
+        f'<line x1="{x}" y1="{y-10}" x2="{x+12}" y2="{y+5}" class="component"/>',
+    ])
+    if label:
+        r.elements.append(f'<text x="{x+15}" y="{y}" class="value" font-size="8">{label}</text>')
+
+
+def led(r, x, y, label=None, color="#D44"):
+    """Draw LED symbol."""
+    # Triangle
+    r.elements.append(f'<polygon points="{x-8},{y+8} {x-8},{y-8} {x+8},{y}" fill="{color}" stroke="#333" stroke-width="1"/>')
+    # Arrows for light emission
+    r.elements.append(f'<line x1="{x+10}" y1="{y-8}" x2="{x+14}" y2="{y-12}" class="component"/>')
+    r.elements.append(f'<line x1="{x+12}" y1="{y-6}" x2="{x+16}" y2="{y-10}" class="component"/>')
+    if label:
+        r.elements.append(f'<text x="{x}" y="{y+18}" class="value" font-size="8" text-anchor="middle">{label}</text>')
+
+
 def generate_wiring_diagram() -> str:
-    """Generate comprehensive system wiring diagram with both DB-9 A and B."""
-    r = SchematicRenderer(1200, 900, "MACROBRUTE Complete System Wiring", "DB-9 A (Outputs) and DB-9 B (Inputs + Power)")
+    """Generate compact system wiring diagram."""
+    r = SchematicRenderer(900, 650, "MACROBRUTE Interconnect Wiring", "DB-9 A (Outputs) & DB-9 B (Inputs + Power)")
     
-    # Title section with DB-9 pinout summary
-    r.elements.append(f'<text x="600" y="65" class="subtitle" text-anchor="middle">DB-9 A = MicroBrute → Expander (Signals) | DB-9 B = Expander → MicroBrute (CV + Power)</text>')
+    # === COMPACT TWO-COLUMN LAYOUT ===
+    # Left: DB-9 A outputs | Right: DB-9 B inputs + Power
     
-    # === DB-9 A SECTION (TOP) ===
-    r.elements.append(f'<text x="100" y="100" class="label" font-size="12" fill="#0066CC">DB-9 A: OUTPUTS</text>')
+    # Column headers
+    r.elements.append(f'<text x="220" y="50" class="label" font-size="12" fill="#0066CC">DB-9 A: OUTPUTS →</text>')
+    r.elements.append(f'<text x="680" y="50" class="label" font-size="12" fill="#D44">← DB-9 B: INPUTS</text>')
     
-    # Stage boxes for DB-9 A
-    stages_a = [
-        ("MicroBrute\\nPCB", 100, 130),
-        ("Breakout\\nPCB", 300, 130),
-        ("DB-9 A", 500, 130),
-        ("Cable A", 700, 130),
-        ("Expander\\nOutput Jacks", 950, 130),
+    # DB-9 connectors (center)
+    db9_connector(r, 450, 180, "DB-9 A (Rear)", 
+                  ["Gate", "Pitch", "Env", "LFO", "Mix", "VCF", "Saw", "Sqr", "GND"])
+    db9_connector(r, 450, 450, "DB-9 B (Rear)",
+                  ["Filt", "VCA", "Res", "Sync", "Gate", "Ext", "+12V", "-12V", "GND"])
+    
+    # === DB-9 A OUTPUTS (Left side, flowing right) ===
+    y_start = 110
+    spacing = 22
+    
+    outputs = [
+        ("1", "TP83 Gate", "10k", "→Schmitt→"),
+        ("2", "Pitch CV", "", "Direct→"),
+        ("3", "Env Out", "10k", "→Buffer→"),
+        ("4", "LFO Out", "10k", "→Buffer→"),
+        ("5", "TP30 Mix", "1k", "→Buffer→"),
+        ("6", "TP19 VCF", "1k", "→Buffer→"),
+        ("7", "TP94 Saw", "1k", "→Buffer→"),
+        ("8", "TP93 Sqr", "1k", "→Buffer→"),
     ]
     
-    for label, x, y in stages_a:
-        r.elements.append(f'<rect x="{x-50}" y="{y}" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>')
-        lines = label.split("\\n")
-        for i, line in enumerate(lines):
-            r.elements.append(f'<text x="{x}" y="{y+22+i*16}" class="label" text-anchor="middle">{line}</text>')
-    
-    # DB-9 A signals (Outputs from MicroBrute)
-    signals_a = [
-        ("Pin 7: TP94 Saw", 220, "1kΩ", "Buf", "Saw Out"),
-        ("Pin 8: TP93 Sqr", 250, "1kΩ", "Buf", "Sqr Out"),
-        ("Pin 5: TP30 Mix", 280, "1kΩ", "Buf", "Mix Out"),
-        ("Pin 6: TP19 VCF", 310, "1kΩ", "Buf", "VCF Out"),
-        ("Pin 2: Pitch CV", 350, None, "Buf", "Pitch Out"),
-        ("Pin 1: TP83 Gate", 380, "10kΩ", "Schmitt", "Gate Out"),
-        ("Pin 3: Env", 410, "10kΩ", "Buf", "Env Out"),
-        ("Pin 4: LFO", 440, "10kΩ", "Buf", "LFO Out"),
-    ]
-    
-    for label, y, series_r, buffer, output_label in signals_a:
-        # From MicroBrute to Breakout
-        r.wire(Point(100, y), Point(200, y))
-        if series_r:
-            r.resistor(Point(150, y), value=series_r, vertical=False)
-        r.elements.append(f'<text x="50" y="{y-5}" class="value" font-size="8">{label}</text>')
+    for i, (pin, name, resistor, processing) in enumerate(outputs):
+        y = y_start + i * spacing
         
-        # Continue to DB-9 A
-        r.wire(Point(200, y), Point(400, y))
-        if buffer:
-            r.block(Point(300, y), 40, 20, label=buffer)
+        # Signal name on far left
+        r.elements.append(f'<text x="10" y="{y+3}" class="label" font-size="9">{name}</text>')
         
-        # To cable
-        r.wire(Point(400, y), Point(600, y))
-        r.wire(Point(600, y), Point(850, y))
+        # Series resistor if present
+        r.wire(Point(90, y), Point(130, y))
+        if resistor:
+            r.resistor(Point(110, y), value=resistor, vertical=False)
         
-        # Output jack
-        r.jack(Point(920, y), label=output_label.replace(" Out", ""))
-        r.elements.append(f'<text x="{y < 350 and 1000 or 1010}" y="{y+3}" class="value" font-size="8">{output_label}</text>')
+        # Processing block
+        r.wire(Point(130, y), Point(200, y))
+        r.block(Point(165, y), 50, 16, label=processing.replace("→", "").replace("Buffer", "Buf"))
+        
+        # To DB-9 A
+        r.wire(Point(200, y), Point(415, y))
+        
+        # Pin label
+        r.elements.append(f'<text x="425" y="{y+3}" class="value" font-size="8" fill="#gold">{pin}</text>')
     
-    # === DB-9 B SECTION (BOTTOM) ===
-    r.elements.append(f'<text x="100" y="520" class="label" font-size="12" fill="#D44">DB-9 B: INPUTS + POWER</text>')
+    # === DB-9 B INPUTS (Right side, flowing left) ===
+    y_start = 380
     
-    # Stage boxes for DB-9 B
-    stages_b = [
-        ("Expander\\nControls", 100, 550),
-        ("Cable B", 300, 550),
-        ("DB-9 B", 500, 550),
-        ("Breakout", 700, 550),
-        ("MicroBrute\\nCircuit", 950, 550),
+    inputs = [
+        ("1", "Filter CV", "Pot", "Atten→", "→Filter"),
+        ("2", "VCA CV", "Pot", "→", "→TP10/11"),
+        ("3", "Resonance", "Pot", "Vactrol→", "→RP13"),
+        ("4", "Sync", "", "→", "→VCO"),
+        ("5", "Gate In", "", "Diode→", "→Gate"),
+        ("6", "Ext Audio", "", "→", "→Mixer"),
     ]
     
-    for label, x, y in stages_b:
-        r.elements.append(f'<rect x="{x-50}" y="{y}" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>')
-        lines = label.split("\\n")
-        for i, line in enumerate(lines):
-            r.elements.append(f'<text x="{x}" y="{y+22+i*16}" class="label" text-anchor="middle">{line}</text>')
-    
-    # DB-9 B signals (Inputs to MicroBrute)
-    signals_b = [
-        ("Pin 1: Filter CV", 640, "Pot", "Atten", "Filter In"),
-        ("Pin 2: VCA CV", 670, "Pot", "Direct", "VCA In"),
-        ("Pin 3: Resonance", 700, "Pot", "Vactrol", "Res CV"),
-        ("Pin 4: Sync", 730, None, "Direct", "Sync"),
-        ("Pin 5: Gate In", 760, "Diode", "Schmitt", "Gate"),
-        ("Pin 6: Ext Audio", 790, None, "Mixer", "Ext In"),
-    ]
-    
-    for label, y, control, protection, dest in signals_b:
-        # From expander controls
-        r.wire(Point(100, y), Point(200, y))
+    for i, (pin, name, control, processing, dest) in enumerate(inputs):
+        y = y_start + i * spacing
+        
+        # From DB-9 B
+        r.elements.append(f'<text x="485" y="{y+3}" class="value" font-size="8" fill="#gold" text-anchor="middle">{pin}</text>')
+        r.wire(Point(485, y), Point(550, y))
+        
+        # Processing
+        if processing.strip("→"):
+            r.block(Point(580, y), 45, 16, label=processing.replace("→", "").replace("Atten", "Att"))
+        r.wire(Point(550, y), Point(620, y))
+        
+        # Control element
         if control:
-            r.block(Point(150, y), 40, 20, label=control)
-        r.elements.append(f'<text x="40" y="{y-5}" class="value" font-size="8">{label}</text>')
+            r.block(Point(655, y), 35, 16, label=control)
+        r.wire(Point(620, y), Point(720, y))
         
-        # Through cable
-        r.wire(Point(200, y), Point(400, y))
-        
-        # To DB-9 B
-        r.wire(Point(400, y), Point(600, y))
-        if protection:
-            r.block(Point(500, y), 50, 20, label=protection)
-        
-        # To MicroBrute
-        r.wire(Point(600, y), Point(850, y))
-        r.elements.append(f'<text x="860" y="{y+3}" class="value" font-size="8">→ {dest}</text>')
+        # Destination
+        r.elements.append(f'<text x="730" y="{y+3}" class="label" font-size="9">{dest}</text>')
     
-    # === POWER SECTION ===
-    r.elements.append(f'<text x="100" y="860" class="label" font-size="12" fill="#4A4">POWER</text>')
+    # === POWER (Bottom right) ===
+    r.elements.append(f'<text x="550" y="570" class="label" font-size="11" fill="#4A4">POWER</text>')
     
-    # Power rails
-    power_lines = [
-        ("Pin 7: +12V", 880, "#D44", "Red"),
-        ("Pin 8: -12V", 910, "#44D", "Brown"),
-        ("Pin 9: GND", 940, "#4A4", "Black"),
+    power = [
+        ("7", "+12V", "#D44", "Fuse", "→Breakout"),
+        ("8", "-12V", "#44D", "Fuse", "→Breakout"),
+        ("9", "GND", "#4A4", "", "→Star Gnd"),
     ]
     
-    for label, y, color, wire_color in power_lines:
-        # Expander power entry
-        r.wire(Point(100, y), Point(200, y))
-        r.elements.append(f'<line x1="100" y1="{y}" x2="150" y2="{y}" stroke="{color}" stroke-width="3"/>')
-        r.elements.append(f'<text x="40" y="{y+3}" class="value" font-size="8">{label}</text>')
+    for i, (pin, name, color, protect, dest) in enumerate(power):
+        y = 590 + i * 18
         
-        # Through cable
-        r.wire(Point(200, y), Point(400, y))
+        r.elements.append(f'<text x="485" y="{y+3}" class="value" font-size="8" fill="#gold" text-anchor="middle">{pin}</text>')
+        r.wire(Point(485, y), Point(550, y))
+        r.elements.append(f'<line x1="485" y1="{y}" x2="515" y2="{y}" stroke="{color}" stroke-width="2"/>')
         
-        # Protection at DB-9 B
-        r.wire(Point(400, y), Point(600, y))
-        if "GND" not in label:
-            r.block(Point(500, y), 50, 20, label="Fuse+Diode")
+        if protect:
+            r.block(Point(575, y), 40, 14, label=protect)
+        r.wire(Point(550, y), Point(650, y))
         
-        # To breakout
-        r.wire(Point(600, y), Point(850, y))
-        
-        # Distribution
-        r.elements.append(f'<text x="860" y="{y+3}" class="value" font-size="8">→ All PCBs</text>')
+        r.elements.append(f'<text x="660" y="{y+3}" class="label" font-size="9" fill="{color}">{dest}</text>')
     
-    # Legend
-    r.elements.append(f'<text x="1000" y="500" class="label" font-size="9">Legend:</text>')
-    r.elements.append(f'<rect x="980" y="510" width="15" height="10" fill="#E8D5A3" stroke="#B8722D"/>')
-    r.elements.append(f'<text x="1000" y="518" class="value" font-size="8">Stage</text>')
-    r.elements.append(f'<line x1="980" y1="530" x2="995" y2="530" class="wire"/>')
-    r.elements.append(f'<text x="1000" y="533" class="value" font-size="8">Signal</text>')
+    # === CLOCK BYPASS (Bottom left) ===
+    r.elements.append(f'<text x="10" y="570" class="label" font-size="11" fill="#666">CLOCK I/O (Direct)</text>')
+    r.elements.append(f'<text x="10" y="588" class="value" font-size="8">Pico GP22 → CLK Out jack</text>')
+    r.elements.append(f'<text x="10" y="603" class="value" font-size="8">Pico GP21 → CLK In jack</text>')
+    r.elements.append(f'<text x="10" y="618" class="value" font-size="8">Pico GND → Common GND</text>')
+    
+    # Legend box
+    r.elements.append(f'<rect x="750" y="85" width="140" height="75" fill="#f5f5f5" stroke="#ccc" stroke-width="1" rx="3"/>')
+    r.elements.append(f'<text x="760" y="100" class="label" font-size="9">Legend</text>')
+    r.elements.append(f'<line x1="760" y1="110" x2="780" y2="110" class="wire"/>')
+    r.elements.append(f'<text x="785" y="113" class="value" font-size="8">Signal wire</text>')
+    r.resistor(Point(770, 125), value="R", vertical=False)
+    r.elements.append(f'<text x="785" y="128" class="value" font-size="8">Series resistor</text>')
+    r.block(Point(785, 145), 30, 12, label="Buf")
+    r.elements.append(f'<text x="820" y="148" class="value" font-size="8">= Buffer</text>')
     
     return r.render()
 
