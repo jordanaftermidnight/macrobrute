@@ -405,64 +405,145 @@ def generate_clock_divider_schematic() -> str:
 
 
 def generate_wiring_diagram() -> str:
-    """Generate improved system wiring diagram."""
-    r = SchematicRenderer(1000, 700, "MACROBRUTE System Wiring", "Complete signal flow from MicroBrute to Expander")
+    """Generate comprehensive system wiring diagram with both DB-9 A and B."""
+    r = SchematicRenderer(1200, 900, "MACROBRUTE Complete System Wiring", "DB-9 A (Outputs) and DB-9 B (Inputs + Power)")
     
-    # Stage positions
-    stages = [
-        ("MicroBrute\\nPCB", 100),
-        ("Breakout\\nPCB", 300),
-        ("DB-9 A\\n(Rear)", 500),
-        ("Cable", 650),
-        ("Expander", 850),
+    # Title section with DB-9 pinout summary
+    r.elements.append(f'<text x="600" y="65" class="subtitle" text-anchor="middle">DB-9 A = MicroBrute → Expander (Signals) | DB-9 B = Expander → MicroBrute (CV + Power)</text>')
+    
+    # === DB-9 A SECTION (TOP) ===
+    r.elements.append(f'<text x="100" y="100" class="label" font-size="12" fill="#0066CC">DB-9 A: OUTPUTS</text>')
+    
+    # Stage boxes for DB-9 A
+    stages_a = [
+        ("MicroBrute\\nPCB", 100, 130),
+        ("Breakout\\nPCB", 300, 130),
+        ("DB-9 A", 500, 130),
+        ("Cable A", 700, 130),
+        ("Expander\\nOutput Jacks", 950, 130),
     ]
     
-    # Draw stage boxes
-    for label, x in stages:
-        r.elements.append(f'<rect x="{x-60}" y="{100}" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>')
+    for label, x, y in stages_a:
+        r.elements.append(f'<rect x="{x-50}" y="{y}" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>')
         lines = label.split("\\n")
         for i, line in enumerate(lines):
-            r.elements.append(f'<text x="{x}" y="{135+i*18}" class="label" text-anchor="middle">{line}</text>')
+            r.elements.append(f'<text x="{x}" y="{y+22+i*16}" class="label" text-anchor="middle">{line}</text>')
     
-    # Signal lines with components
-    signals = [
-        ("TP94 Saw", 100, 220, 300, 220, "1kΩ"),
-        ("TP93 Sqr", 100, 250, 300, 250, "1kΩ"),
-        ("TP30 Mix", 100, 280, 300, 280, "1kΩ"),
-        ("TP19 VCF", 100, 310, 300, 310, "1kΩ"),
-        ("Pitch CV", 100, 360, 300, 360, None),
-        ("TP83 Gate", 100, 390, 300, 390, "10kΩ"),
+    # DB-9 A signals (Outputs from MicroBrute)
+    signals_a = [
+        ("Pin 7: TP94 Saw", 220, "1kΩ", "Buf", "Saw Out"),
+        ("Pin 8: TP93 Sqr", 250, "1kΩ", "Buf", "Sqr Out"),
+        ("Pin 5: TP30 Mix", 280, "1kΩ", "Buf", "Mix Out"),
+        ("Pin 6: TP19 VCF", 310, "1kΩ", "Buf", "VCF Out"),
+        ("Pin 2: Pitch CV", 350, None, "Buf", "Pitch Out"),
+        ("Pin 1: TP83 Gate", 380, "10kΩ", "Schmitt", "Gate Out"),
+        ("Pin 3: Env", 410, "10kΩ", "Buf", "Env Out"),
+        ("Pin 4: LFO", 440, "10kΩ", "Buf", "LFO Out"),
     ]
     
-    for label, x1, y1, x2, y2, component in signals:
-        # Draw wire
-        r.wire(Point(x1, y1), Point(x2, y2))
+    for label, y, series_r, buffer, output_label in signals_a:
+        # From MicroBrute to Breakout
+        r.wire(Point(100, y), Point(200, y))
+        if series_r:
+            r.resistor(Point(150, y), value=series_r, vertical=False)
+        r.elements.append(f'<text x="50" y="{y-5}" class="value" font-size="8">{label}</text>')
         
-        # Component in middle
-        if component:
-            r.resistor(Point((x1+x2)//2, y1), value=component, vertical=False)
+        # Continue to DB-9 A
+        r.wire(Point(200, y), Point(400, y))
+        if buffer:
+            r.block(Point(300, y), 40, 20, label=buffer)
         
-        # Label
-        r.elements.append(f'<text x="{x1+10}" y="{y1-8}" class="value">{label}</text>')
-        
-        # Continue to DB-9
-        r.wire(Point(x2, y2), Point(500, y2))
-        
-        # Buffer block
-        r.block(Point(400, y2), 50, 30, label="Buf")
-        
-        # Continue through cable
-        r.wire(Point(500, y2), Point(650, y2))
-        r.wire(Point(650, y2), Point(790, y2))
+        # To cable
+        r.wire(Point(400, y), Point(600, y))
+        r.wire(Point(600, y), Point(850, y))
         
         # Output jack
-        r.jack(Point(810, y2), label=label.split()[1])
+        r.jack(Point(920, y), label=output_label.replace(" Out", ""))
+        r.elements.append(f'<text x="{y < 350 and 1000 or 1010}" y="{y+3}" class="value" font-size="8">{output_label}</text>')
     
-    # Power section
-    r.elements.append(f'<text x="{500}" y="{550}" class="label" text-anchor="middle">Power Distribution</text>')
-    r.vcc(Point(400, 580), label="+12V")
-    r.vcc(Point(500, 580), label="-12V")
-    r.ground(Point(600, 620))
+    # === DB-9 B SECTION (BOTTOM) ===
+    r.elements.append(f'<text x="100" y="520" class="label" font-size="12" fill="#D44">DB-9 B: INPUTS + POWER</text>')
+    
+    # Stage boxes for DB-9 B
+    stages_b = [
+        ("Expander\\nControls", 100, 550),
+        ("Cable B", 300, 550),
+        ("DB-9 B", 500, 550),
+        ("Breakout", 700, 550),
+        ("MicroBrute\\nCircuit", 950, 550),
+    ]
+    
+    for label, x, y in stages_b:
+        r.elements.append(f'<rect x="{x-50}" y="{y}" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>')
+        lines = label.split("\\n")
+        for i, line in enumerate(lines):
+            r.elements.append(f'<text x="{x}" y="{y+22+i*16}" class="label" text-anchor="middle">{line}</text>')
+    
+    # DB-9 B signals (Inputs to MicroBrute)
+    signals_b = [
+        ("Pin 1: Filter CV", 640, "Pot", "Atten", "Filter In"),
+        ("Pin 2: VCA CV", 670, "Pot", "Direct", "VCA In"),
+        ("Pin 3: Resonance", 700, "Pot", "Vactrol", "Res CV"),
+        ("Pin 4: Sync", 730, None, "Direct", "Sync"),
+        ("Pin 5: Gate In", 760, "Diode", "Schmitt", "Gate"),
+        ("Pin 6: Ext Audio", 790, None, "Mixer", "Ext In"),
+    ]
+    
+    for label, y, control, protection, dest in signals_b:
+        # From expander controls
+        r.wire(Point(100, y), Point(200, y))
+        if control:
+            r.block(Point(150, y), 40, 20, label=control)
+        r.elements.append(f'<text x="40" y="{y-5}" class="value" font-size="8">{label}</text>')
+        
+        # Through cable
+        r.wire(Point(200, y), Point(400, y))
+        
+        # To DB-9 B
+        r.wire(Point(400, y), Point(600, y))
+        if protection:
+            r.block(Point(500, y), 50, 20, label=protection)
+        
+        # To MicroBrute
+        r.wire(Point(600, y), Point(850, y))
+        r.elements.append(f'<text x="860" y="{y+3}" class="value" font-size="8">→ {dest}</text>')
+    
+    # === POWER SECTION ===
+    r.elements.append(f'<text x="100" y="860" class="label" font-size="12" fill="#4A4">POWER</text>')
+    
+    # Power rails
+    power_lines = [
+        ("Pin 7: +12V", 880, "#D44", "Red"),
+        ("Pin 8: -12V", 910, "#44D", "Brown"),
+        ("Pin 9: GND", 940, "#4A4", "Black"),
+    ]
+    
+    for label, y, color, wire_color in power_lines:
+        # Expander power entry
+        r.wire(Point(100, y), Point(200, y))
+        r.elements.append(f'<line x1="100" y1="{y}" x2="150" y2="{y}" stroke="{color}" stroke-width="3"/>')
+        r.elements.append(f'<text x="40" y="{y+3}" class="value" font-size="8">{label}</text>')
+        
+        # Through cable
+        r.wire(Point(200, y), Point(400, y))
+        
+        # Protection at DB-9 B
+        r.wire(Point(400, y), Point(600, y))
+        if "GND" not in label:
+            r.block(Point(500, y), 50, 20, label="Fuse+Diode")
+        
+        # To breakout
+        r.wire(Point(600, y), Point(850, y))
+        
+        # Distribution
+        r.elements.append(f'<text x="860" y="{y+3}" class="value" font-size="8">→ All PCBs</text>')
+    
+    # Legend
+    r.elements.append(f'<text x="1000" y="500" class="label" font-size="9">Legend:</text>')
+    r.elements.append(f'<rect x="980" y="510" width="15" height="10" fill="#E8D5A3" stroke="#B8722D"/>')
+    r.elements.append(f'<text x="1000" y="518" class="value" font-size="8">Stage</text>')
+    r.elements.append(f'<line x1="980" y1="530" x2="995" y2="530" class="wire"/>')
+    r.elements.append(f'<text x="1000" y="533" class="value" font-size="8">Signal</text>')
     
     return r.render()
 

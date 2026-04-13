@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
 <defs>
   <style>
     .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; }
@@ -18,97 +18,223 @@
     <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
   </marker>
 </defs>
-<rect width="1000" height="700" fill="#FEFEFE"/>
-<text x="500" y="25" class="title" text-anchor="middle">MACROBRUTE System Wiring</text>
-<text x="500" y="42" class="subtitle" text-anchor="middle">Complete signal flow from MicroBrute to Expander</text>
-<rect x="40" y="100" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="100" y="135" class="label" text-anchor="middle">MicroBrute</text>
-<text x="100" y="153" class="label" text-anchor="middle">PCB</text>
-<rect x="240" y="100" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="300" y="135" class="label" text-anchor="middle">Breakout</text>
-<text x="300" y="153" class="label" text-anchor="middle">PCB</text>
-<rect x="440" y="100" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="500" y="135" class="label" text-anchor="middle">DB-9 A</text>
-<text x="500" y="153" class="label" text-anchor="middle">(Rear)</text>
-<rect x="590" y="100" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="650" y="135" class="label" text-anchor="middle">Cable</text>
-<rect x="790" y="100" width="120" height="80" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="850" y="135" class="label" text-anchor="middle">Expander</text>
-<line x1="100" y1="220" x2="300" y2="220" class="wire"/>
-<path d="M175,220 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="200" y="242" class="value" text-anchor="middle">1kΩ</text>
-<text x="110" y="212" class="value">TP94 Saw</text>
-<line x1="300" y1="220" x2="500" y2="220" class="wire"/>
-<rect x="375.0" y="205.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="220" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="220" x2="650" y2="220" class="wire"/>
-<line x1="650" y1="220" x2="790" y2="220" class="wire"/>
-<circle cx="810" cy="220" r="8" class="component"/>
-<line x1="810" y1="220" x2="830" y2="220" class="wire"/>
-<text x="810" y="242" class="label" text-anchor="middle">Saw</text>
-<line x1="100" y1="250" x2="300" y2="250" class="wire"/>
-<path d="M175,250 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="200" y="272" class="value" text-anchor="middle">1kΩ</text>
-<text x="110" y="242" class="value">TP93 Sqr</text>
-<line x1="300" y1="250" x2="500" y2="250" class="wire"/>
-<rect x="375.0" y="235.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="250" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="250" x2="650" y2="250" class="wire"/>
-<line x1="650" y1="250" x2="790" y2="250" class="wire"/>
-<circle cx="810" cy="250" r="8" class="component"/>
-<line x1="810" y1="250" x2="830" y2="250" class="wire"/>
-<text x="810" y="272" class="label" text-anchor="middle">Sqr</text>
-<line x1="100" y1="280" x2="300" y2="280" class="wire"/>
-<path d="M175,280 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="200" y="302" class="value" text-anchor="middle">1kΩ</text>
-<text x="110" y="272" class="value">TP30 Mix</text>
-<line x1="300" y1="280" x2="500" y2="280" class="wire"/>
-<rect x="375.0" y="265.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="280" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="280" x2="650" y2="280" class="wire"/>
-<line x1="650" y1="280" x2="790" y2="280" class="wire"/>
-<circle cx="810" cy="280" r="8" class="component"/>
-<line x1="810" y1="280" x2="830" y2="280" class="wire"/>
-<text x="810" y="302" class="label" text-anchor="middle">Mix</text>
-<line x1="100" y1="310" x2="300" y2="310" class="wire"/>
-<path d="M175,310 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="200" y="332" class="value" text-anchor="middle">1kΩ</text>
-<text x="110" y="302" class="value">TP19 VCF</text>
-<line x1="300" y1="310" x2="500" y2="310" class="wire"/>
-<rect x="375.0" y="295.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="310" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="310" x2="650" y2="310" class="wire"/>
-<line x1="650" y1="310" x2="790" y2="310" class="wire"/>
-<circle cx="810" cy="310" r="8" class="component"/>
-<line x1="810" y1="310" x2="830" y2="310" class="wire"/>
-<text x="810" y="332" class="label" text-anchor="middle">VCF</text>
-<line x1="100" y1="360" x2="300" y2="360" class="wire"/>
-<text x="110" y="352" class="value">Pitch CV</text>
-<line x1="300" y1="360" x2="500" y2="360" class="wire"/>
-<rect x="375.0" y="345.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="360" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="360" x2="650" y2="360" class="wire"/>
-<line x1="650" y1="360" x2="790" y2="360" class="wire"/>
-<circle cx="810" cy="360" r="8" class="component"/>
-<line x1="810" y1="360" x2="830" y2="360" class="wire"/>
-<text x="810" y="382" class="label" text-anchor="middle">CV</text>
-<line x1="100" y1="390" x2="300" y2="390" class="wire"/>
-<path d="M175,390 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="200" y="412" class="value" text-anchor="middle">10kΩ</text>
-<text x="110" y="382" class="value">TP83 Gate</text>
-<line x1="300" y1="390" x2="500" y2="390" class="wire"/>
-<rect x="375.0" y="375.0" width="50" height="30" class="component" fill="#f5f5f5"/>
-<text x="400" y="390" class="label" text-anchor="middle">Buf</text>
-<line x1="500" y1="390" x2="650" y2="390" class="wire"/>
-<line x1="650" y1="390" x2="790" y2="390" class="wire"/>
-<circle cx="810" cy="390" r="8" class="component"/>
-<line x1="810" y1="390" x2="830" y2="390" class="wire"/>
-<text x="810" y="412" class="label" text-anchor="middle">Gate</text>
-<text x="500" y="550" class="label" text-anchor="middle">Power Distribution</text>
-<line x1="400" y1="580" x2="400" y2="568" class="wire" stroke="#D44" stroke-width="2"/>
-<text x="404" y="574" class="value" fill="#D44">+12V</text>
-<line x1="500" y1="580" x2="500" y2="568" class="wire" stroke="#D44" stroke-width="2"/>
-<text x="504" y="574" class="value" fill="#D44">-12V</text>
-<line x1="600" y1="620" x2="600" y2="632" class="wire"/>
-<line x1="590" y1="632" x2="610" y2="632" class="wire" stroke-width="2"/>
-<line x1="594" y1="636" x2="606" y2="636" class="wire" stroke-width="1.5"/></svg>
+<rect width="1200" height="900" fill="#FEFEFE"/>
+<text x="600" y="25" class="title" text-anchor="middle">MACROBRUTE Complete System Wiring</text>
+<text x="600" y="42" class="subtitle" text-anchor="middle">DB-9 A (Outputs) and DB-9 B (Inputs + Power)</text>
+<text x="600" y="65" class="subtitle" text-anchor="middle">DB-9 A = MicroBrute → Expander (Signals) | DB-9 B = Expander → MicroBrute (CV + Power)</text>
+<text x="100" y="100" class="label" font-size="12" fill="#0066CC">DB-9 A: OUTPUTS</text>
+<rect x="50" y="130" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="100" y="152" class="label" text-anchor="middle">MicroBrute</text>
+<text x="100" y="168" class="label" text-anchor="middle">PCB</text>
+<rect x="250" y="130" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="300" y="152" class="label" text-anchor="middle">Breakout</text>
+<text x="300" y="168" class="label" text-anchor="middle">PCB</text>
+<rect x="450" y="130" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="500" y="152" class="label" text-anchor="middle">DB-9 A</text>
+<rect x="650" y="130" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="700" y="152" class="label" text-anchor="middle">Cable A</text>
+<rect x="900" y="130" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="950" y="152" class="label" text-anchor="middle">Expander</text>
+<text x="950" y="168" class="label" text-anchor="middle">Output Jacks</text>
+<line x1="100" y1="220" x2="200" y2="220" class="wire"/>
+<path d="M125,220 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="242" class="value" text-anchor="middle">1kΩ</text>
+<text x="50" y="215" class="value" font-size="8">Pin 7: TP94 Saw</text>
+<line x1="200" y1="220" x2="400" y2="220" class="wire"/>
+<rect x="280.0" y="210.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="220" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="220" x2="600" y2="220" class="wire"/>
+<line x1="600" y1="220" x2="850" y2="220" class="wire"/>
+<circle cx="920" cy="220" r="8" class="component"/>
+<line x1="920" y1="220" x2="940" y2="220" class="wire"/>
+<text x="920" y="242" class="label" text-anchor="middle">Saw</text>
+<text x="1000" y="223" class="value" font-size="8">Saw Out</text>
+<line x1="100" y1="250" x2="200" y2="250" class="wire"/>
+<path d="M125,250 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="272" class="value" text-anchor="middle">1kΩ</text>
+<text x="50" y="245" class="value" font-size="8">Pin 8: TP93 Sqr</text>
+<line x1="200" y1="250" x2="400" y2="250" class="wire"/>
+<rect x="280.0" y="240.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="250" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="250" x2="600" y2="250" class="wire"/>
+<line x1="600" y1="250" x2="850" y2="250" class="wire"/>
+<circle cx="920" cy="250" r="8" class="component"/>
+<line x1="920" y1="250" x2="940" y2="250" class="wire"/>
+<text x="920" y="272" class="label" text-anchor="middle">Sqr</text>
+<text x="1000" y="253" class="value" font-size="8">Sqr Out</text>
+<line x1="100" y1="280" x2="200" y2="280" class="wire"/>
+<path d="M125,280 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="302" class="value" text-anchor="middle">1kΩ</text>
+<text x="50" y="275" class="value" font-size="8">Pin 5: TP30 Mix</text>
+<line x1="200" y1="280" x2="400" y2="280" class="wire"/>
+<rect x="280.0" y="270.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="280" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="280" x2="600" y2="280" class="wire"/>
+<line x1="600" y1="280" x2="850" y2="280" class="wire"/>
+<circle cx="920" cy="280" r="8" class="component"/>
+<line x1="920" y1="280" x2="940" y2="280" class="wire"/>
+<text x="920" y="302" class="label" text-anchor="middle">Mix</text>
+<text x="1000" y="283" class="value" font-size="8">Mix Out</text>
+<line x1="100" y1="310" x2="200" y2="310" class="wire"/>
+<path d="M125,310 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="332" class="value" text-anchor="middle">1kΩ</text>
+<text x="50" y="305" class="value" font-size="8">Pin 6: TP19 VCF</text>
+<line x1="200" y1="310" x2="400" y2="310" class="wire"/>
+<rect x="280.0" y="300.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="310" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="310" x2="600" y2="310" class="wire"/>
+<line x1="600" y1="310" x2="850" y2="310" class="wire"/>
+<circle cx="920" cy="310" r="8" class="component"/>
+<line x1="920" y1="310" x2="940" y2="310" class="wire"/>
+<text x="920" y="332" class="label" text-anchor="middle">VCF</text>
+<text x="1000" y="313" class="value" font-size="8">VCF Out</text>
+<line x1="100" y1="350" x2="200" y2="350" class="wire"/>
+<text x="50" y="345" class="value" font-size="8">Pin 2: Pitch CV</text>
+<line x1="200" y1="350" x2="400" y2="350" class="wire"/>
+<rect x="280.0" y="340.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="350" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="350" x2="600" y2="350" class="wire"/>
+<line x1="600" y1="350" x2="850" y2="350" class="wire"/>
+<circle cx="920" cy="350" r="8" class="component"/>
+<line x1="920" y1="350" x2="940" y2="350" class="wire"/>
+<text x="920" y="372" class="label" text-anchor="middle">Pitch</text>
+<text x="1010" y="353" class="value" font-size="8">Pitch Out</text>
+<line x1="100" y1="380" x2="200" y2="380" class="wire"/>
+<path d="M125,380 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="402" class="value" text-anchor="middle">10kΩ</text>
+<text x="50" y="375" class="value" font-size="8">Pin 1: TP83 Gate</text>
+<line x1="200" y1="380" x2="400" y2="380" class="wire"/>
+<rect x="280.0" y="370.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="380" class="label" text-anchor="middle">Schmitt</text>
+<line x1="400" y1="380" x2="600" y2="380" class="wire"/>
+<line x1="600" y1="380" x2="850" y2="380" class="wire"/>
+<circle cx="920" cy="380" r="8" class="component"/>
+<line x1="920" y1="380" x2="940" y2="380" class="wire"/>
+<text x="920" y="402" class="label" text-anchor="middle">Gate</text>
+<text x="1010" y="383" class="value" font-size="8">Gate Out</text>
+<line x1="100" y1="410" x2="200" y2="410" class="wire"/>
+<path d="M125,410 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="432" class="value" text-anchor="middle">10kΩ</text>
+<text x="50" y="405" class="value" font-size="8">Pin 3: Env</text>
+<line x1="200" y1="410" x2="400" y2="410" class="wire"/>
+<rect x="280.0" y="400.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="410" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="410" x2="600" y2="410" class="wire"/>
+<line x1="600" y1="410" x2="850" y2="410" class="wire"/>
+<circle cx="920" cy="410" r="8" class="component"/>
+<line x1="920" y1="410" x2="940" y2="410" class="wire"/>
+<text x="920" y="432" class="label" text-anchor="middle">Env</text>
+<text x="1010" y="413" class="value" font-size="8">Env Out</text>
+<line x1="100" y1="440" x2="200" y2="440" class="wire"/>
+<path d="M125,440 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="150" y="462" class="value" text-anchor="middle">10kΩ</text>
+<text x="50" y="435" class="value" font-size="8">Pin 4: LFO</text>
+<line x1="200" y1="440" x2="400" y2="440" class="wire"/>
+<rect x="280.0" y="430.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="300" y="440" class="label" text-anchor="middle">Buf</text>
+<line x1="400" y1="440" x2="600" y2="440" class="wire"/>
+<line x1="600" y1="440" x2="850" y2="440" class="wire"/>
+<circle cx="920" cy="440" r="8" class="component"/>
+<line x1="920" y1="440" x2="940" y2="440" class="wire"/>
+<text x="920" y="462" class="label" text-anchor="middle">LFO</text>
+<text x="1010" y="443" class="value" font-size="8">LFO Out</text>
+<text x="100" y="520" class="label" font-size="12" fill="#D44">DB-9 B: INPUTS + POWER</text>
+<rect x="50" y="550" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="100" y="572" class="label" text-anchor="middle">Expander</text>
+<text x="100" y="588" class="label" text-anchor="middle">Controls</text>
+<rect x="250" y="550" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="300" y="572" class="label" text-anchor="middle">Cable B</text>
+<rect x="450" y="550" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="500" y="572" class="label" text-anchor="middle">DB-9 B</text>
+<rect x="650" y="550" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="700" y="572" class="label" text-anchor="middle">Breakout</text>
+<rect x="900" y="550" width="100" height="50" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="950" y="572" class="label" text-anchor="middle">MicroBrute</text>
+<text x="950" y="588" class="label" text-anchor="middle">Circuit</text>
+<line x1="100" y1="640" x2="200" y2="640" class="wire"/>
+<rect x="130.0" y="630.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="150" y="640" class="label" text-anchor="middle">Pot</text>
+<text x="40" y="635" class="value" font-size="8">Pin 1: Filter CV</text>
+<line x1="200" y1="640" x2="400" y2="640" class="wire"/>
+<line x1="400" y1="640" x2="600" y2="640" class="wire"/>
+<rect x="475.0" y="630.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="640" class="label" text-anchor="middle">Atten</text>
+<line x1="600" y1="640" x2="850" y2="640" class="wire"/>
+<text x="860" y="643" class="value" font-size="8">→ Filter In</text>
+<line x1="100" y1="670" x2="200" y2="670" class="wire"/>
+<rect x="130.0" y="660.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="150" y="670" class="label" text-anchor="middle">Pot</text>
+<text x="40" y="665" class="value" font-size="8">Pin 2: VCA CV</text>
+<line x1="200" y1="670" x2="400" y2="670" class="wire"/>
+<line x1="400" y1="670" x2="600" y2="670" class="wire"/>
+<rect x="475.0" y="660.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="670" class="label" text-anchor="middle">Direct</text>
+<line x1="600" y1="670" x2="850" y2="670" class="wire"/>
+<text x="860" y="673" class="value" font-size="8">→ VCA In</text>
+<line x1="100" y1="700" x2="200" y2="700" class="wire"/>
+<rect x="130.0" y="690.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="150" y="700" class="label" text-anchor="middle">Pot</text>
+<text x="40" y="695" class="value" font-size="8">Pin 3: Resonance</text>
+<line x1="200" y1="700" x2="400" y2="700" class="wire"/>
+<line x1="400" y1="700" x2="600" y2="700" class="wire"/>
+<rect x="475.0" y="690.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="700" class="label" text-anchor="middle">Vactrol</text>
+<line x1="600" y1="700" x2="850" y2="700" class="wire"/>
+<text x="860" y="703" class="value" font-size="8">→ Res CV</text>
+<line x1="100" y1="730" x2="200" y2="730" class="wire"/>
+<text x="40" y="725" class="value" font-size="8">Pin 4: Sync</text>
+<line x1="200" y1="730" x2="400" y2="730" class="wire"/>
+<line x1="400" y1="730" x2="600" y2="730" class="wire"/>
+<rect x="475.0" y="720.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="730" class="label" text-anchor="middle">Direct</text>
+<line x1="600" y1="730" x2="850" y2="730" class="wire"/>
+<text x="860" y="733" class="value" font-size="8">→ Sync</text>
+<line x1="100" y1="760" x2="200" y2="760" class="wire"/>
+<rect x="130.0" y="750.0" width="40" height="20" class="component" fill="#f5f5f5"/>
+<text x="150" y="760" class="label" text-anchor="middle">Diode</text>
+<text x="40" y="755" class="value" font-size="8">Pin 5: Gate In</text>
+<line x1="200" y1="760" x2="400" y2="760" class="wire"/>
+<line x1="400" y1="760" x2="600" y2="760" class="wire"/>
+<rect x="475.0" y="750.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="760" class="label" text-anchor="middle">Schmitt</text>
+<line x1="600" y1="760" x2="850" y2="760" class="wire"/>
+<text x="860" y="763" class="value" font-size="8">→ Gate</text>
+<line x1="100" y1="790" x2="200" y2="790" class="wire"/>
+<text x="40" y="785" class="value" font-size="8">Pin 6: Ext Audio</text>
+<line x1="200" y1="790" x2="400" y2="790" class="wire"/>
+<line x1="400" y1="790" x2="600" y2="790" class="wire"/>
+<rect x="475.0" y="780.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="790" class="label" text-anchor="middle">Mixer</text>
+<line x1="600" y1="790" x2="850" y2="790" class="wire"/>
+<text x="860" y="793" class="value" font-size="8">→ Ext In</text>
+<text x="100" y="860" class="label" font-size="12" fill="#4A4">POWER</text>
+<line x1="100" y1="880" x2="200" y2="880" class="wire"/>
+<line x1="100" y1="880" x2="150" y2="880" stroke="#D44" stroke-width="3"/>
+<text x="40" y="883" class="value" font-size="8">Pin 7: +12V</text>
+<line x1="200" y1="880" x2="400" y2="880" class="wire"/>
+<line x1="400" y1="880" x2="600" y2="880" class="wire"/>
+<rect x="475.0" y="870.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="880" class="label" text-anchor="middle">Fuse+Diode</text>
+<line x1="600" y1="880" x2="850" y2="880" class="wire"/>
+<text x="860" y="883" class="value" font-size="8">→ All PCBs</text>
+<line x1="100" y1="910" x2="200" y2="910" class="wire"/>
+<line x1="100" y1="910" x2="150" y2="910" stroke="#44D" stroke-width="3"/>
+<text x="40" y="913" class="value" font-size="8">Pin 8: -12V</text>
+<line x1="200" y1="910" x2="400" y2="910" class="wire"/>
+<line x1="400" y1="910" x2="600" y2="910" class="wire"/>
+<rect x="475.0" y="900.0" width="50" height="20" class="component" fill="#f5f5f5"/>
+<text x="500" y="910" class="label" text-anchor="middle">Fuse+Diode</text>
+<line x1="600" y1="910" x2="850" y2="910" class="wire"/>
+<text x="860" y="913" class="value" font-size="8">→ All PCBs</text>
+<line x1="100" y1="940" x2="200" y2="940" class="wire"/>
+<line x1="100" y1="940" x2="150" y2="940" stroke="#4A4" stroke-width="3"/>
+<text x="40" y="943" class="value" font-size="8">Pin 9: GND</text>
+<line x1="200" y1="940" x2="400" y2="940" class="wire"/>
+<line x1="400" y1="940" x2="600" y2="940" class="wire"/>
+<line x1="600" y1="940" x2="850" y2="940" class="wire"/>
+<text x="860" y="943" class="value" font-size="8">→ All PCBs</text>
+<text x="1000" y="500" class="label" font-size="9">Legend:</text>
+<rect x="980" y="510" width="15" height="10" fill="#E8D5A3" stroke="#B8722D"/>
+<text x="1000" y="518" class="value" font-size="8">Stage</text>
+<line x1="980" y1="530" x2="995" y2="530" class="wire"/>
+<text x="1000" y="533" class="value" font-size="8">Signal</text></svg>
