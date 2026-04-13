@@ -19,6 +19,19 @@ from datetime import date
 PROJECT = Path(__file__).resolve().parent.parent
 OUTPUT = PROJECT / "manual.html"
 
+# ─── SVG Mappings ───────────────────────────────────────────────────
+# Maps markdown files to their associated SVG layout diagrams
+SVG_MAP = {
+    "schematics/breakout_stripboard.md": ["schematics/breakout_layout.svg"],
+    "schematics/expander_stripboard.md": [
+        "schematics/expander_noise.svg",
+        "schematics/expander_lfo.svg",
+        "schematics/expander_clockdiv.svg",
+        "schematics/expander_sah.svg",
+    ],
+    "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],
+}
+
 # ─── Document Organization ──────────────────────────────────────────
 
 QUICK_REF = [
@@ -403,6 +416,14 @@ tr:target td{animation:flash 1.5s ease}
 .ref.tp{color:var(--green)} .ref.gp{color:var(--purple)}
 
 .miss{color:var(--red);font-style:italic}
+
+/* SVG Diagrams */
+.svg-diagrams{margin:16px 0}
+.svg-wrap{margin:16px 0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--bg2)}
+.svg-caption{padding:8px 12px;background:var(--bg3);font-size:13px;font-weight:600;color:var(--txb);border-bottom:1px solid var(--border)}
+.svg-container{overflow-x:auto;padding:16px;background:#F5F5F0;-webkit-overflow-scrolling:touch}
+.svg-container svg{max-width:none;display:block;margin:0 auto}
+@media(max-width:768px){.svg-container{padding:8px}.svg-container svg{height:auto}}
 #no-res{text-align:center;padding:48px;color:var(--txd);font-size:16px;display:none}
 
 /* Back to top */
@@ -585,15 +606,43 @@ def _quick_ref():
 </div>"""
 
 
+def _embed_svgs(fpath):
+    """Generate HTML for embedded SVGs associated with a markdown file."""
+    svg_paths = SVG_MAP.get(fpath, [])
+    if not svg_paths:
+        return ""
+
+    embeds = ['<div class="svg-diagrams">']
+    for svg_path in svg_paths:
+        full_path = PROJECT / svg_path
+        if full_path.exists():
+            try:
+                svg_content = full_path.read_text(encoding="utf-8")
+                # Extract title for caption
+                title_match = re.search(r'<text[^>]*class="title"[^>]*>([^<]+)</text>', svg_content)
+                caption = title_match.group(1) if title_match else Path(svg_path).stem.replace("_", " ").title()
+
+                # Wrap SVG in a scrollable container
+                embeds.append(f'<div class="svg-wrap">')
+                embeds.append(f'<div class="svg-caption">{_html.escape(caption)}</div>')
+                embeds.append(f'<div class="svg-container">{svg_content}</div>')
+                embeds.append('</div>')
+            except Exception as e:
+                embeds.append(f'<!-- Error loading {svg_path}: {e} -->')
+    embeds.append('</div>')
+    return "\n".join(embeds)
+
+
 def _doc_section(fpath):
     did = _make_id(fpath)
     title, body = _read(fpath)
     html = _autolink(_md(body, did))
+    svgs = _embed_svgs(fpath)
     return f"""<div class="ds" id="{did}">
 <div class="dh"><span class="arr">&#9654;</span>
 <span class="dt">{_html.escape(_short(title))}</span>
 <span class="dp">{_html.escape(fpath)}</span></div>
-<div class="db">{html}</div></div>"""
+<div class="db">{svgs}{html}</div></div>"""
 
 
 def _count_docs():
