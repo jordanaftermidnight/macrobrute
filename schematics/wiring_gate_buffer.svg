@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="500" height="400" fill="#FEFEFE"/>
+<text x="250" y="25" class="title" text-anchor="middle">Gate Buffer</text>
+<text x="250" y="42" class="subtitle" text-anchor="middle">CD40106 Schmitt Trigger</text>
+<circle cx="50" cy="150" r="8" class="component"/>
+<line x1="50" y1="150" x2="70" y2="150" class="wire"/>
+<text x="50" y="172" class="label" text-anchor="middle">TP83 Gate</text>
+<line x1="70" y1="150" x2="100" y2="150" class="wire"/>
+<path d="M60,150 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="85" y="172" class="value" text-anchor="middle">10kΩ</text>
+<line x1="100" y1="150" x2="130" y2="150" class="wire"/>
+<rect x="150" y="100" width="80" height="100" fill="#2D2D2D" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="190" y="125" class="label" text-anchor="middle" fill="#FFF">CD40106</text>
+<text x="190" y="145" class="value" text-anchor="middle" fill="#DDD">Schmitt</text>
+<polygon points="160,130 160,170 200,150" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<circle cx="205" cy="150" r="3" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<line x1="130" y1="150" x2="160" y2="150" class="wire"/>
+<line x1="205" y1="150" x2="250" y2="150" class="wire"/>
+<line x1="250" y1="150" x2="350" y2="150" class="wire"/>
+<text x="360" y="153" class="value" font-size="9">DB-9 A Pin 1</text>
+<line x1="190" y1="80" x2="190" y2="68" class="wire" stroke="#D44" stroke-width="2"/>
+<text x="194" y="74" class="value" fill="#D44">+12V</text>
+<line x1="190" y1="220" x2="190" y2="232" class="wire"/>
+<line x1="180" y1="232" x2="200" y2="232" class="wire" stroke-width="2"/>
+<line x1="184" y1="236" x2="196" y2="236" class="wire" stroke-width="1.5"/>
+<text x="250" y="280" class="value" text-anchor="middle">Schmitt trigger cleans up gate edges</text>
+<text x="250" y="300" class="value" text-anchor="middle">Output: 0V/+12V compatible with Eurorack</text></svg>

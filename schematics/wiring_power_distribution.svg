@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="600" height="500" fill="#FEFEFE"/>
+<text x="300" y="25" class="title" text-anchor="middle">Power Distribution</text>
+<text x="300" y="42" class="subtitle" text-anchor="middle">±12V from MicroBrute to Expander modules</text>
+<rect x="50" y="200" width="100" height="100" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="100" y="235" class="label" text-anchor="middle">MicroBrute</text>
+<text x="100" y="255" class="value" text-anchor="middle" fill="#D44">+12V TP70</text>
+<text x="100" y="275" class="value" text-anchor="middle" fill="#44D">-12V TP71</text>
+<text x="100" y="295" class="value" text-anchor="middle" fill="#4A4">GND TP72</text>
+<rect x="250" y="150" width="100" height="200" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="8"/>
+<text x="300" y="130" class="label" text-anchor="middle" fill="#D44">DB-9 B</text>
+<text x="300" y="180" class="value" text-anchor="middle" fill="#gold">Pin 7: +12V</text>
+<text x="300" y="250" class="value" text-anchor="middle" fill="#gold">Pin 9: GND</text>
+<text x="300" y="320" class="value" text-anchor="middle" fill="#gold">Pin 8: -12V</text>
+<text x="380" y="175" class="value" font-size="8">Fuse + 1N5817</text>
+<text x="380" y="315" class="value" font-size="8">Fuse + 1N5817</text>
+<rect x="450" y="100" width="120" height="300" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="510" y="80" class="label" text-anchor="middle">Expander Bus</text>
+<text x="455" y="130" class="value" font-size="8">Noise Gen</text>
+<line x1="530" y1="127" x2="550" y2="127" class="wire"/>
+<line x1="550" y1="127" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="127" x2="570" y2="127" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="160" class="value" font-size="8">LFO</text>
+<line x1="530" y1="157" x2="550" y2="157" class="wire"/>
+<line x1="550" y1="157" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="157" x2="570" y2="157" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="190" class="value" font-size="8">S&H</text>
+<line x1="530" y1="187" x2="550" y2="187" class="wire"/>
+<line x1="550" y1="187" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="187" x2="570" y2="187" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="220" class="value" font-size="8">Clock Div</text>
+<line x1="530" y1="217" x2="550" y2="217" class="wire"/>
+<line x1="550" y1="217" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="217" x2="570" y2="217" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="250" class="value" font-size="8">Slew</text>
+<line x1="530" y1="247" x2="550" y2="247" class="wire"/>
+<line x1="550" y1="247" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="247" x2="570" y2="247" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="280" class="value" font-size="8">Atten</text>
+<line x1="530" y1="277" x2="550" y2="277" class="wire"/>
+<line x1="550" y1="277" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="277" x2="570" y2="277" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="310" class="value" font-size="8">Mult</text>
+<line x1="530" y1="307" x2="550" y2="307" class="wire"/>
+<line x1="550" y1="307" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="307" x2="570" y2="307" stroke="#D44" stroke-width="1.5"/>
+<text x="455" y="340" class="value" font-size="8">Button</text>
+<line x1="530" y1="337" x2="550" y2="337" class="wire"/>
+<line x1="550" y1="337" x2="550" y2="250" class="wire"/>
+<line x1="550" y1="337" x2="570" y2="337" stroke="#D44" stroke-width="1.5"/>
+<line x1="530" y1="115" x2="570" y2="115" stroke="#D44" stroke-width="2"/>
+<text x="575" y="118" class="value" font-size="7" fill="#D44">+12V</text>
+<line x1="530" y1="250" x2="570" y2="250" stroke="#4A4" stroke-width="2"/>
+<text x="575" y="253" class="value" font-size="7" fill="#4A4">GND</text>
+<line x1="530" y1="385" x2="570" y2="385" stroke="#44D" stroke-width="2"/>
+<text x="575" y="388" class="value" font-size="7" fill="#44D">-12V</text>
+<line x1="150" y1="230" x2="250" y2="230" class="wire"/>
+<line x1="150" y1="230" x2="250" y2="230" stroke="#D44" stroke-width="2"/>
+<line x1="150" y1="250" x2="250" y2="250" class="wire"/>
+<line x1="150" y1="250" x2="250" y2="250" stroke="#4A4" stroke-width="2"/>
+<line x1="150" y1="270" x2="250" y2="270" class="wire"/>
+<line x1="150" y1="270" x2="250" y2="270" stroke="#44D" stroke-width="2"/>
+<line x1="350" y1="180" x2="450" y2="115" class="wire"/>
+<line x1="350" y1="250" x2="450" y2="250" class="wire"/>
+<line x1="350" y1="320" x2="450" y2="385" class="wire"/></svg>
