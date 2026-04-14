@@ -1,4 +1,4 @@
-# MACROBRUTE: Comprehensive Modification Research for CCLI Handoff
+# MACROBRUTE: Comprehensive Modification Research 
 
 **Project:** Arturia MicroBrute Deep Modification  
 **Codename:** MACROBRUTE  
