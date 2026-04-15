@@ -4,6 +4,10 @@
 
 Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico H digital brain, Eurorack expander module, integrated oscilloscope, CV-controlled delay, and firmware reverse engineering.
 
+## Documentation
+
+- 📖 **[Full Build Manual](./Macrobrute%20Manual.html)** — Complete reference with wiring diagrams, schematics, BOM, and mod guides
+
 ## Project Scope
 
 - **Panel modifications** — OLED display, rotary encoder, status LEDs, circuit bending switches
