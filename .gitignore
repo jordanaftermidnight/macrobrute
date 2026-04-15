@@ -22,7 +22,6 @@ Thumbs.db
 build/
 __pycache__/
 *.pyc
-manual.html
 *.o
 *.elf
 *.hex
