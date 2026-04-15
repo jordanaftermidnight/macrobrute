@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400">
+<style>
+  .title { font: bold 14px sans-serif; fill: #1a1a1a; }
+  .subtitle { font: 10px sans-serif; fill: #555; }
+  .label { font: bold 10px sans-serif; fill: #1a1a1a; }
+  .value { font: 9px sans-serif; fill: #555; }
+  .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+</style>
+<text x="350" y="22" class="title" text-anchor="middle">Buffered Multiple (1→3)</text>
+<text x="350" y="38" class="subtitle" text-anchor="middle">TL074 — 3x Unity Gain Buffer (4th section spare)</text>
+<!-- Input -->
+<circle cx="40" cy="150" r="6" fill="none" stroke="#333" stroke-width="1.5"/>
+<text x="40" y="172" class="label" text-anchor="middle" font-size="9">IN</text>
+<line x1="46" y1="150" x2="100" y2="150" class="wire"/>
+<circle cx="100" cy="150" r="3" fill="#0066CC"/>
+<!-- Junction → 3 branches -->
+<line x1="100" y1="150" x2="100" y2="80" class="wire"/>
+<line x1="100" y1="80" x2="140" y2="80" class="wire"/>
+<line x1="100" y1="150" x2="140" y2="150" class="wire"/>
+<line x1="100" y1="150" x2="100" y2="230" class="wire"/>
+<line x1="100" y1="230" x2="140" y2="230" class="wire"/>
+<!-- Buffer A (y=80) -->
+<polygon points="140,60 140,100 180,80" fill="none" stroke="#333" stroke-width="1.5"/>
+<text x="148" y="78" class="value" font-size="7">+</text>
+<text x="148" y="93" class="value" font-size="7">−</text>
+<line x1="180" y1="80" x2="200" y2="80" class="wire"/>
+<line x1="200" y1="80" x2="200" y2="60" class="wire"/>
+<line x1="200" y1="60" x2="130" y2="60" class="wire"/>
+<line x1="130" y1="60" x2="130" y2="90" class="wire"/>
+<line x1="130" y1="90" x2="140" y2="90" class="wire"/>
+<circle cx="200" cy="80" r="3" fill="#0066CC"/>
+<line x1="200" y1="80" x2="260" y2="80" class="wire"/>
+<rect x="255" y="75" width="30" height="10" fill="none" stroke="#333" stroke-width="0.8"/>
+<text x="270" y="82" class="value" text-anchor="middle" font-size="6">470Ω</text>
+<line x1="285" y1="80" x2="340" y2="80" class="wire"/>
+<text x="350" y="78" class="label" font-size="9">OUT A</text>
+<text x="350" y="92" class="value" font-size="7">→ Expander jack</text>
+<!-- Buffer B (y=150) -->
+<polygon points="140,130 140,170 180,150" fill="none" stroke="#333" stroke-width="1.5"/>
+<text x="148" y="148" class="value" font-size="7">+</text>
+<text x="148" y="163" class="value" font-size="7">−</text>
+<line x1="180" y1="150" x2="200" y2="150" class="wire"/>
+<line x1="200" y1="150" x2="200" y2="130" class="wire"/>
+<line x1="200" y1="130" x2="130" y2="130" class="wire"/>
+<line x1="130" y1="130" x2="130" y2="160" class="wire"/>
+<line x1="130" y1="160" x2="140" y2="160" class="wire"/>
+<circle cx="200" cy="150" r="3" fill="#0066CC"/>
+<line x1="200" y1="150" x2="260" y2="150" class="wire"/>
+<rect x="255" y="145" width="30" height="10" fill="none" stroke="#333" stroke-width="0.8"/>
+<text x="270" y="152" class="value" text-anchor="middle" font-size="6">470Ω</text>
+<line x1="285" y1="150" x2="340" y2="150" class="wire"/>
+<text x="350" y="148" class="label" font-size="9">OUT B</text>
+<text x="350" y="162" class="value" font-size="7">→ Expander jack</text>
+<!-- Buffer C (y=230) -->
+<polygon points="140,210 140,250 180,230" fill="none" stroke="#333" stroke-width="1.5"/>
+<text x="148" y="228" class="value" font-size="7">+</text>
+<text x="148" y="243" class="value" font-size="7">−</text>
+<line x1="180" y1="230" x2="200" y2="230" class="wire"/>
+<line x1="200" y1="230" x2="200" y2="210" class="wire"/>
+<line x1="200" y1="210" x2="130" y2="210" class="wire"/>
+<line x1="130" y1="210" x2="130" y2="240" class="wire"/>
+<line x1="130" y1="240" x2="140" y2="240" class="wire"/>
+<circle cx="200" cy="230" r="3" fill="#0066CC"/>
+<line x1="200" y1="230" x2="260" y2="230" class="wire"/>
+<rect x="255" y="225" width="30" height="10" fill="none" stroke="#333" stroke-width="0.8"/>
+<text x="270" y="232" class="value" text-anchor="middle" font-size="6">470Ω</text>
+<line x1="285" y1="230" x2="340" y2="230" class="wire"/>
+<text x="350" y="228" class="label" font-size="9">OUT C</text>
+<text x="350" y="242" class="value" font-size="7">→ Expander jack</text>
+<!-- TL074 chip label -->
+<rect x="145" y="290" width="60" height="30" fill="#333" stroke="#1a1a1a" stroke-width="1" rx="3"/>
+<text x="175" y="309" class="label" text-anchor="middle" fill="#FFF" font-size="9">TL074</text>
+<text x="175" y="340" class="value" text-anchor="middle" font-size="8">Section D (pins 12-14) unused — tie IN3+ to GND</text>
+<!-- Notes -->
+<rect x="50" y="355" width="600" height="35" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
+<text x="70" y="375" class="value" font-size="8">Unity gain (output = input). 470Ω series R prevents capacitive load oscillation. Each output drives one destination without loading the source.</text>
+</svg>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 600" width="700" height="600">
 <defs>
   <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
     <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
@@ -14,8 +14,10 @@
     .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
-    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
-    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
     .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
     .filled { fill: #1a1a1a; }
     .junction { fill: #0066CC; }
@@ -24,69 +26,101 @@
     <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
   </marker>
 </defs>
-<rect width="600" height="500" fill="#FEFEFE"/>
-<text x="300" y="25" class="title" text-anchor="middle">Output Buffer Board</text>
-<text x="300" y="42" class="subtitle" text-anchor="middle">TL074 #1 — 4-channel unity gain buffer</text>
-<rect x="200" y="100" width="200" height="300" fill="#2D2D2D" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="300" y="130" class="label" text-anchor="middle" fill="#FFF">TL074</text>
-<text x="300" y="150" class="value" text-anchor="middle" fill="#DDD">Quad Opamp</text>
-<text x="50" y="183" class="value" font-size="9">Saw (TP94)</text>
-<line x1="100" y1="180" x2="150" y2="180" class="wire"/>
-<path d="M100,180 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="125" y="202" class="value" text-anchor="middle">1kΩ</text>
-<line x1="150" y1="180" x2="200" y2="180" class="wire"/>
-<polygon points="200,165 200,195 240,180" fill="none" stroke="#FFF" stroke-width="1.5"/>
-<text x="215" y="183" class="value" fill="#FFF" font-size="8">1</text>
-<line x1="240" y1="180" x2="260" y2="180" class="wire"/>
-<line x1="260" y1="180" x2="260" y2="150" class="wire"/>
-<line x1="260" y1="150" x2="220" y2="150" class="wire"/>
-<line x1="220" y1="150" x2="220" y2="170" class="wire"/>
-<line x1="240" y1="180" x2="280" y2="180" class="wire"/>
-<line x1="280" y1="180" x2="400" y2="180" class="wire"/>
-<text x="410" y="183" class="value" font-size="9">DB-9 A Pin 7</text>
-<text x="50" y="223" class="value" font-size="9">Square (TP93)</text>
-<line x1="100" y1="220" x2="150" y2="220" class="wire"/>
-<path d="M100,220 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="125" y="242" class="value" text-anchor="middle">1kΩ</text>
-<line x1="150" y1="220" x2="200" y2="220" class="wire"/>
-<polygon points="200,205 200,235 240,220" fill="none" stroke="#FFF" stroke-width="1.5"/>
-<text x="215" y="223" class="value" fill="#FFF" font-size="8">2</text>
-<line x1="240" y1="220" x2="260" y2="220" class="wire"/>
-<line x1="260" y1="220" x2="260" y2="190" class="wire"/>
-<line x1="260" y1="190" x2="220" y2="190" class="wire"/>
-<line x1="220" y1="190" x2="220" y2="210" class="wire"/>
-<line x1="240" y1="220" x2="280" y2="220" class="wire"/>
-<line x1="280" y1="220" x2="400" y2="220" class="wire"/>
-<text x="410" y="223" class="value" font-size="9">DB-9 A Pin 8</text>
-<text x="50" y="263" class="value" font-size="9">Mix (TP30)</text>
-<line x1="100" y1="260" x2="150" y2="260" class="wire"/>
-<path d="M100,260 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="125" y="282" class="value" text-anchor="middle">1kΩ</text>
+<rect width="700" height="600" fill="#FEFEFE"/>
+<text x="350" y="25" class="title" text-anchor="middle">Output Buffer Board</text>
+<text x="350" y="42" class="subtitle" text-anchor="middle">TL074 #1 — 5-Channel Buffer (4× Unity + 1× 2x Gain)</text>
+<rect x="200" y="80" width="200" height="420" fill="#2D2D2D" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="300" y="105" class="label" text-anchor="middle" fill="#FFF">TL074 #1</text>
+<text x="300" y="125" class="value" text-anchor="middle" fill="#DDD">4-Channel Buffer</text>
+<text x="30" y="163" class="value" font-size="9">Saw (TP94)</text>
+<line x1="80" y1="160" x2="150" y2="160" class="wire"/>
+<path d="M90,160 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="115" y="182" class="value" text-anchor="middle">1kΩ</text>
+<line x1="150" y1="160" x2="200" y2="160" class="wire"/>
+<polygon points="200,142 200,178 250,160" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<text x="225" y="164" class="value" fill="#FFF" font-size="9">1×1</text>
+<line x1="250" y1="160" x2="270" y2="160" class="wire"/>
+<line x1="270" y1="160" x2="270" y2="125" class="wire"/>
+<line x1="270" y1="125" x2="220" y2="125" class="wire"/>
+<line x1="220" y1="125" x2="220" y2="148" class="wire"/>
+<line x1="250" y1="160" x2="300" y2="160" class="wire"/>
+<line x1="300" y1="160" x2="500" y2="160" class="wire"/>
+<text x="510" y="163" class="value" font-size="9">DB-9 A Pin 7</text>
+<text x="30" y="213" class="value" font-size="9">Square (TP93)</text>
+<line x1="80" y1="210" x2="150" y2="210" class="wire"/>
+<path d="M90,210 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="115" y="232" class="value" text-anchor="middle">1kΩ</text>
+<line x1="150" y1="210" x2="200" y2="210" class="wire"/>
+<polygon points="200,192 200,228 250,210" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<text x="225" y="214" class="value" fill="#FFF" font-size="9">2×1</text>
+<line x1="250" y1="210" x2="270" y2="210" class="wire"/>
+<line x1="270" y1="210" x2="270" y2="175" class="wire"/>
+<line x1="270" y1="175" x2="220" y2="175" class="wire"/>
+<line x1="220" y1="175" x2="220" y2="198" class="wire"/>
+<line x1="250" y1="210" x2="300" y2="210" class="wire"/>
+<line x1="300" y1="210" x2="500" y2="210" class="wire"/>
+<text x="510" y="213" class="value" font-size="9">DB-9 A Pin 8</text>
+<text x="30" y="263" class="value" font-size="9">Mix (TP30)</text>
+<line x1="80" y1="260" x2="150" y2="260" class="wire"/>
+<path d="M90,260 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="115" y="282" class="value" text-anchor="middle">1kΩ</text>
 <line x1="150" y1="260" x2="200" y2="260" class="wire"/>
-<polygon points="200,245 200,275 240,260" fill="none" stroke="#FFF" stroke-width="1.5"/>
-<text x="215" y="263" class="value" fill="#FFF" font-size="8">3</text>
-<line x1="240" y1="260" x2="260" y2="260" class="wire"/>
-<line x1="260" y1="260" x2="260" y2="230" class="wire"/>
-<line x1="260" y1="230" x2="220" y2="230" class="wire"/>
-<line x1="220" y1="230" x2="220" y2="250" class="wire"/>
-<line x1="240" y1="260" x2="280" y2="260" class="wire"/>
-<line x1="280" y1="260" x2="400" y2="260" class="wire"/>
-<text x="410" y="263" class="value" font-size="9">DB-9 A Pin 9</text>
-<text x="50" y="303" class="value" font-size="9">VCF (TP19)</text>
-<line x1="100" y1="300" x2="150" y2="300" class="wire"/>
-<path d="M100,300 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="125" y="322" class="value" text-anchor="middle">1kΩ</text>
-<line x1="150" y1="300" x2="200" y2="300" class="wire"/>
-<polygon points="200,285 200,315 240,300" fill="none" stroke="#FFF" stroke-width="1.5"/>
-<text x="215" y="303" class="value" fill="#FFF" font-size="8">4</text>
-<line x1="240" y1="300" x2="260" y2="300" class="wire"/>
-<line x1="260" y1="300" x2="260" y2="270" class="wire"/>
-<line x1="260" y1="270" x2="220" y2="270" class="wire"/>
-<line x1="220" y1="270" x2="220" y2="290" class="wire"/>
-<line x1="240" y1="300" x2="280" y2="300" class="wire"/>
-<line x1="280" y1="300" x2="400" y2="300" class="wire"/>
-<text x="410" y="303" class="value" font-size="9">DB-9 A Pin 10</text>
-<line x1="250" y1="420" x2="250" y2="408" class="wire" stroke="#D44" stroke-width="2"/>
-<text x="254" y="414" class="value" fill="#D44">V+ +12V</text>
-<line x1="350" y1="420" x2="350" y2="408" class="wire" stroke="#D44" stroke-width="2"/>
-<text x="354" y="414" class="value" fill="#D44">V- -12V</text></svg>
+<polygon points="200,242 200,278 250,260" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<text x="225" y="264" class="value" fill="#FFF" font-size="9">3×1</text>
+<line x1="250" y1="260" x2="270" y2="260" class="wire"/>
+<line x1="270" y1="260" x2="270" y2="225" class="wire"/>
+<line x1="270" y1="225" x2="220" y2="225" class="wire"/>
+<line x1="220" y1="225" x2="220" y2="248" class="wire"/>
+<line x1="250" y1="260" x2="300" y2="260" class="wire"/>
+<line x1="300" y1="260" x2="500" y2="260" class="wire"/>
+<text x="510" y="263" class="value" font-size="9">DB-9 A Pin 5</text>
+<text x="30" y="313" class="value" font-size="9">VCF (TP19)</text>
+<line x1="80" y1="310" x2="150" y2="310" class="wire"/>
+<path d="M90,310 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="115" y="332" class="value" text-anchor="middle">1kΩ</text>
+<line x1="150" y1="310" x2="200" y2="310" class="wire"/>
+<polygon points="200,292 200,328 250,310" fill="none" stroke="#FFF" stroke-width="1.5"/>
+<text x="225" y="314" class="value" fill="#FFF" font-size="9">4×1</text>
+<line x1="250" y1="310" x2="270" y2="310" class="wire"/>
+<line x1="270" y1="310" x2="270" y2="275" class="wire"/>
+<line x1="270" y1="275" x2="220" y2="275" class="wire"/>
+<line x1="220" y1="275" x2="220" y2="298" class="wire"/>
+<line x1="250" y1="310" x2="300" y2="310" class="wire"/>
+<line x1="300" y1="310" x2="500" y2="310" class="wire"/>
+<text x="510" y="313" class="value" font-size="9">DB-9 A Pin 6</text>
+<text x="30" y="383" class="value" font-size="9" fill="#0066CC">TP124 Triangle (2× Gain)</text>
+<line x1="80" y1="380" x2="140" y2="380" class="wire"/>
+<path d="M85,380 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="110" y="402" class="value" text-anchor="middle">1kΩ</text>
+<line x1="140" y1="380" x2="200" y2="380" class="wire"/>
+<polygon points="200,360 200,400 260,380" fill="none" stroke="#00BCD4" stroke-width="2"/>
+<text x="230" y="384" class="value" fill="#00BCD4" font-size="9" font-weight="bold">5×2</text>
+<line x1="200" y1="380" x2="180" y2="380" class="wire"/>
+<line x1="200" y1="360" x2="180" y2="360" class="wire"/>
+<line x1="180" y1="360" x2="180" y2="320" class="wire"/>
+<path d="M180,315 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l0,5" class="component"/>
+<text x="192" y="340" class="value">10kΩ</text>
+<line x1="180" y1="315" x2="180" y2="327" class="wire"/>
+<line x1="170" y1="327" x2="190" y2="327" class="wire" stroke-width="2"/>
+<line x1="174" y1="331" x2="186" y2="331" class="wire" stroke-width="1.5"/>
+<line x1="260" y1="380" x2="290" y2="380" class="wire"/>
+<line x1="290" y1="380" x2="290" y2="340" class="wire"/>
+<line x1="290" y1="340" x2="210" y2="340" class="wire"/>
+<line x1="210" y1="340" x2="210" y2="360" class="wire"/>
+<path d="M225,340 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="250" y="362" class="value" text-anchor="middle">10kΩ</text>
+<line x1="290" y1="380" x2="500" y2="380" class="wire"/>
+<text x="510" y="383" class="value" font-size="9">DB-9 A Pin 9 (Triangle)</text>
+<rect x="30" y="450" width="640" height="110" fill="#E3F2FD" stroke="#0066CC" stroke-width="1" rx="4"/>
+<text x="350" y="475" class="label" text-anchor="middle" fill="#0066CC">New Discoveries Fix — Channel 5 (Triangle)</text>
+<text x="350" y="495" class="value" text-anchor="middle" font-size="9">TP124 triangle output is ~50% quieter than other waveforms (confirmed finding)</text>
+<text x="350" y="512" class="value" text-anchor="middle" font-size="9">Solution: Non-inverting amplifier with 2× gain (Rf = Rg = 10kΩ)</text>
+<text x="350" y="529" class="value" text-anchor="middle" font-size="9">Reference: docs/research/additional_mods_findings.md — Triangle Output Level Problem</text>
+<text x="350" y="548" class="value" text-anchor="middle" font-size="9">Note: Blue highlight indicates modified channel; standard channels in white</text>
+<line x1="250" y1="580" x2="250" y2="568" class="wire" stroke="#D44" stroke-width="2"/>
+<text x="254" y="574" class="value" fill="#D44">V+ +12V</text>
+<line x1="300" y1="580" x2="300" y2="592" class="wire"/>
+<line x1="290" y1="592" x2="310" y2="592" class="wire" stroke-width="2"/>
+<line x1="294" y1="596" x2="306" y2="596" class="wire" stroke-width="1.5"/>
+<line x1="350" y1="580" x2="350" y2="568" class="wire" stroke="#D44" stroke-width="2"/>
+<text x="354" y="574" class="value" fill="#D44">V- -12V</text></svg>

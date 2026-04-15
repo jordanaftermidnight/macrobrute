@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550">
+<style>
+.title{font:bold 17px sans-serif;fill:#eee}
+.subtitle{font:11px sans-serif;fill:#aaa}
+.section-head{font:bold 13px sans-serif;fill:#FF9800}
+.label{font:10px sans-serif;fill:#ccc}
+.val{font:9px sans-serif;fill:#999}
+.func{font:bold 9px sans-serif;fill:#4CAF50}
+.resist{fill:none;stroke:#ccc;stroke-width:1}
+.wire{stroke:#888;stroke-width:1;fill:none}
+.wire-r{stroke:#F44336;stroke-width:1;fill:none}
+.wire-b{stroke:#2196F3;stroke-width:1;fill:none}
+.wire-g{stroke:#4CAF50;stroke-width:1;fill:none}
+.wire-o{stroke:#FF9800;stroke-width:1;fill:none}
+.wire-p{stroke:#9C27B0;stroke-width:1;fill:none}
+.pad{fill:#b87333;stroke:#d4a44a;stroke-width:1.5}
+.ic-box{fill:#1a1a2a;stroke:#9C27B0;stroke-width:1.5;rx:4}
+.res-box{fill:#1a1a1a;stroke:#888;stroke-width:1;rx:2}
+.comp-label{font:bold 10px sans-serif;fill:#fff}
+.sub-label{font:9px sans-serif;fill:#aaa}
+.divider{stroke:#555;stroke-width:0.5;stroke-dasharray:4,4}
+.bolt{fill:#b87333;stroke:#d4a44a;stroke-width:1}
+.panel{fill:#333;stroke:#666;stroke-width:1}
+</style>
+<rect width="800" height="550" fill="#111"/>
+<text x="400" y="22" text-anchor="middle" class="title">Touch Plate Redesign</text>
+<text x="400" y="38" text-anchor="middle" class="subtitle">Resistive Body Contact + Capacitive MPR121</text>
+
+<!-- Dividing line -->
+<line x1="395" y1="48" x2="395" y2="400" class="divider"/>
+
+<!-- ========== LEFT SIDE: Resistive Touch ========== -->
+<text x="190" y="58" text-anchor="middle" class="section-head">Resistive Touch (Body Contact)</text>
+
+<!-- +3.3V supply rail -->
+<line x1="50" y1="75" x2="330" y2="75" class="wire-r"/>
+<text x="45" y="72" text-anchor="end" font-size="9" fill="#F44336" font-family="sans-serif">+3.3V</text>
+
+<!-- Touch pad 1: Pitch Shimmer -->
+<g transform="translate(70,85)">
+<rect x="0" y="0" width="55" height="45" class="pad" rx="4"/>
+<text x="28" y="18" text-anchor="middle" class="func">Pitch</text>
+<text x="28" y="30" text-anchor="middle" class="func">Shimmer</text>
+<!-- Resistor from +3.3V -->
+<line x1="28" y1="-10" x2="28" y2="0" class="wire-r"/>
+<rect x="22" y="-10" width="12" height="0" class="res-box"/>
+<!-- Wire down to junction -->
+<line x1="28" y1="45" x2="28" y2="55" class="wire"/>
+<!-- 10kΩ -->
+<rect x="8" y="-25" width="40" height="12" class="res-box"/>
+<text x="28" y="-17" text-anchor="middle" class="val">10kΩ</text>
+<line x1="28" y1="-25" x2="28" y2="-35" class="wire-r"/>
+<!-- Junction dot -->
+<circle cx="28" cy="55" r="3" fill="#FF9800"/>
+<!-- ADC wire -->
+<line x1="28" y1="55" x2="120" y2="55" class="wire-p"/>
+<text x="122" y="58" class="label">→ GP26</text>
+<!-- GND through body -->
+<line x1="28" y1="55" x2="28" y2="75" class="wire"/>
+<text x="28" y="88" text-anchor="middle" class="val">↕ body → GND</text>
+</g>
+
+<!-- Touch pad 2: Crunch (Metalizer) -->
+<g transform="translate(180,85)">
+<rect x="0" y="0" width="55" height="45" class="pad" rx="4"/>
+<text x="28" y="18" text-anchor="middle" class="func">Crunch</text>
+<text x="28" y="30" text-anchor="middle" class="func">(Metal)</text>
+<rect x="8" y="-25" width="40" height="12" class="res-box"/>
+<text x="28" y="-17" text-anchor="middle" class="val">4.7kΩ</text>
+<line x1="28" y1="-25" x2="28" y2="-35" class="wire-r"/>
+<circle cx="28" cy="55" r="3" fill="#FF9800"/>
+<line x1="28" y1="55" x2="120" y2="55" class="wire-p"/>
+<text x="122" y="58" class="label">→ GP27</text>
+<line x1="28" y1="55" x2="28" y2="75" class="wire"/>
+<text x="28" y="88" text-anchor="middle" class="val">↕ body → GND</text>
+</g>
+
+<!-- Touch pad 3: Wah (Filter) -->
+<g transform="translate(70,220)">
+<rect x="0" y="0" width="55" height="45" class="pad" rx="4"/>
+<text x="28" y="18" text-anchor="middle" class="func">Wah</text>
+<text x="28" y="30" text-anchor="middle" class="func">(Filter)</text>
+<rect x="8" y="-25" width="40" height="12" class="res-box"/>
+<text x="28" y="-17" text-anchor="middle" class="val">22kΩ</text>
+<line x1="28" y1="-25" x2="28" y2="-35" class="wire-r"/>
+<circle cx="28" cy="55" r="3" fill="#FF9800"/>
+<line x1="28" y1="55" x2="120" y2="55" class="wire-p"/>
+<text x="122" y="58" class="label">→ GP28</text>
+<line x1="28" y1="55" x2="28" y2="75" class="wire"/>
+<text x="28" y="88" text-anchor="middle" class="val">↕ body → GND</text>
+</g>
+
+<!-- Touch pad 4: Distort (Brute Factor) -->
+<g transform="translate(180,220)">
+<rect x="0" y="0" width="55" height="45" class="pad" rx="4"/>
+<text x="28" y="18" text-anchor="middle" class="func">Distort</text>
+<text x="28" y="30" text-anchor="middle" class="func">(Brute)</text>
+<rect x="8" y="-25" width="40" height="12" class="res-box"/>
+<text x="28" y="-17" text-anchor="middle" class="val">15kΩ</text>
+<line x1="28" y1="-25" x2="28" y2="-35" class="wire-r"/>
+<circle cx="28" cy="55" r="3" fill="#FF9800"/>
+<line x1="28" y1="55" x2="120" y2="55" class="wire-p"/>
+<text x="122" y="58" class="label">→ GP29</text>
+<line x1="28" y1="55" x2="28" y2="75" class="wire"/>
+<text x="28" y="88" text-anchor="middle" class="val">↕ body → GND</text>
+</g>
+
+<!-- Circuit description for resistive -->
+<rect x="50" y="330" width="290" height="60" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
+<text x="195" y="348" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Circuit: +3.3V → R Pad → junction</text>
+<text x="195" y="360" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Junction → Pico ADC input</text>
+<text x="195" y="372" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Touching pad adds body resistance to GND</text>
+<text x="195" y="384" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Voltage divider: Vout = 3.3V × Rbody/(R+Rbody)</text>
+
+<!-- GND rail -->
+<line x1="50" y1="395" x2="330" y2="395" class="wire-g"/>
+<text x="45" y="392" text-anchor="end" font-size="9" fill="#9E9E9E" font-family="sans-serif">GND</text>
+
+<!-- ========== RIGHT SIDE: Capacitive Touch (MPR121) ========== -->
+<text x="590" y="58" text-anchor="middle" class="section-head">Capacitive Touch (MPR121)</text>
+
+<!-- Pico -->
+<rect x="415" y="75" width="90" height="55" fill="#1a1a2a" stroke="#9C27B0" stroke-width="1.5" rx="4"/>
+<text x="460" y="95" text-anchor="middle" class="comp-label">Pico</text>
+<text x="460" y="108" text-anchor="middle" class="sub-label">RP2040</text>
+<text x="435" y="122" text-anchor="middle" class="val">GP2</text>
+<text x="480" y="122" text-anchor="middle" class="val">GP3</text>
+<text x="460" y="75" text-anchor="middle" class="val">IRQ → GP6</text>
+
+<!-- I2C bus lines -->
+<line x1="505" y1="90" x2="545" y2="90" class="wire-p"/>
+<text x="525" y="87" text-anchor="middle" class="val">SDA</text>
+<line x1="505" y1="110" x2="545" y2="110" class="wire-o"/>
+<text x="525" y="107" text-anchor="middle" class="val">SCL</text>
+
+<!-- MPR121 -->
+<rect x="545" y="70" width="100" height="70" class="ic-box"/>
+<text x="595" y="95" text-anchor="middle" class="comp-label">MPR121</text>
+<text x="595" y="108" text-anchor="middle" class="sub-label">I²C addr 0x5A</text>
+<text x="595" y="120" text-anchor="middle" class="val">Cap touch controller</text>
+<!-- IRQ line -->
+<line x1="595" y1="70" x2="595" y2="55" class="wire"/>
+<line x1="595" y1="55" x2="460" y2="55" class="wire"/>
+<line x1="460" y1="55" x2="460" y2="75" class="wire"/>
+<text x="530" y="53" class="val">IRQ line</text>
+
+<!-- Touch channels from MPR121 -->
+<!-- Channel lines going right -->
+<line x1="645" y1="82" x2="710" y2="82" class="wire-g"/>
+<line x1="645" y1="95" x2="710" y2="95" class="wire-g"/>
+<line x1="645" y1="108" x2="710" y2="108" class="wire-g"/>
+<line x1="645" y1="118" x2="710" y2="118" class="wire-g"/>
+<!-- Additional lines from bottom of IC -->
+<line x1="565" y1="140" x2="565" y2="160" class="wire-g"/>
+<line x1="590" y1="140" x2="590" y2="160" class="wire-g"/>
+
+<!-- Touch pad circles for capacitive -->
+<g transform="translate(710,75)">
+<!-- 6 touch pads as rectangles -->
+<rect x="0" y="0" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="10" text-anchor="middle" class="func" font-size="7">CH0</text>
+
+<rect x="0" y="13" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="23" text-anchor="middle" class="func" font-size="7">CH1</text>
+
+<rect x="0" y="26" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="36" text-anchor="middle" class="func" font-size="7">CH2</text>
+
+<rect x="0" y="39" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="49" text-anchor="middle" class="func" font-size="7">CH3</text>
+
+<rect x="0" y="52" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="62" text-anchor="middle" class="func" font-size="7">CH4</text>
+
+<rect x="0" y="65" width="35" height="14" class="pad" rx="3"/>
+<text x="18" y="75" text-anchor="middle" class="func" font-size="7">CH5</text>
+</g>
+
+<!-- MPR121 description -->
+<rect x="415" y="165" width="330" height="55" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
+<text x="580" y="182" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">I²C: SDA (GP2), SCL (GP3) at 100kHz</text>
+<text x="580" y="194" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">IRQ: active-low on GP6, alerts Pico on touch</text>
+<text x="580" y="206" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">6 channels for expander panel touch plates</text>
+<text x="580" y="218" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Touch threshold: 12, release threshold: 6</text>
+
+<!-- I2C pullup resistors -->
+<rect x="505" y="125" width="35" height="10" class="res-box"/>
+<text x="523" y="133" text-anchor="middle" class="val">4.7kΩ</text>
+<line x1="523" y1="125" x2="523" y2="120" class="wire-r"/>
+<text x="538" y="122" class="val">→ +3.3V</text>
+<rect x="505" y="138" width="35" height="10" class="res-box"/>
+<text x="523" y="146" text-anchor="middle" class="val">4.7kΩ</text>
+
+<!-- ========== BOTTOM: Construction ========== -->
+<rect x="10" y="410" width="780" height="130" fill="#0a0a0a" stroke="#FF9800" stroke-width="1" rx="5"/>
+<text x="400" y="430" text-anchor="middle" class="section-head">Construction — Brass M3 Bolt Touch Points</text>
+
+<!-- Cross-section diagram -->
+<!-- Panel -->
+<rect x="60" y="445" width="200" height="10" class="panel" rx="2"/>
+<text x="160" y="442" text-anchor="middle" class="label">Panel (front)</text>
+
+<!-- Bolt shaft through panel -->
+<rect x="148" y="440" width="6" height="40" class="bolt" rx="1"/>
+<text x="165" y="462" class="val">M3 brass bolt</text>
+
+<!-- Bolt head (on front of panel) -->
+<rect x="142" y="435" width="18" height="8" class="bolt" rx="2"/>
+<text x="160" y="448" text-anchor="middle" class="val" font-size="7">head</text>
+
+<!-- Nut (on back of panel) -->
+<rect x="140" y="455" width="22" height="8" class="bolt" rx="1"/>
+<text x="172" y="472" class="val">M3 nut</text>
+
+<!-- Wire from nut -->
+<line x1="151" y1="463" x2="151" y2="485" stroke="#FF9800" stroke-width="1.5"/>
+<text x="151" y="498" text-anchor="middle" class="label">wire to PCB</text>
+
+<!-- Safety resistor on wire -->
+<rect x="141" y="478" width="20" height="8" class="res-box"/>
+<text x="151" y="490" text-anchor="middle" class="val" font-size="7">10kΩ</text>
+
+<!-- Panel hole callout -->
+<line x1="130" y1="448" x2="100" y2="470" stroke="#aaa" stroke-width="0.5"/>
+<text x="75" y="478" class="val">∅6mm hole</text>
+
+<!-- Spacing diagram -->
+<text x="400" y="445" class="section-head" font-size="11">Spacing: 18–20mm between bolts</text>
+
+<!-- Bolt spacing visualization -->
+<circle cx="350" cy="475" r="5" class="bolt"/>
+<circle cx="370" cy="475" r="5" class="bolt"/>
+<circle cx="390" cy="475" r="5" class="bolt"/>
+<circle cx="410" cy="475" r="5" class="bolt"/>
+<circle cx="430" cy="475" r="5" class="bolt"/>
+<circle cx="450" cy="475" r="5" class="bolt"/>
+
+<!-- Spacing arrows -->
+<line x1="355" y1="485" x2="365" y2="485" stroke="#aaa" stroke-width="0.5"/>
+<text x="360" y="495" text-anchor="middle" class="val" font-size="7">20</text>
+<line x1="375" y1="485" x2="385" y2="485" stroke="#aaa" stroke-width="0.5"/>
+<line x1="395" y1="485" x2="405" y2="485" stroke="#aaa" stroke-width="0.5"/>
+<line x1="415" y1="485" x2="425" y2="485" stroke="#aaa" stroke-width="0.5"/>
+<line x1="435" y1="485" x2="445" y2="485" stroke="#aaa" stroke-width="0.5"/>
+
+<text x="350" y="505" class="func" font-size="8">Shimmer</text>
+<text x="370" y="505" class="func" font-size="8">Crunch</text>
+<text x="392" y="505" class="func" font-size="8">Wah</text>
+<text x="410" y="505" class="func" font-size="8">Distort</text>
+<text x="428" y="505" class="func" font-size="8">Gate</text>
+<text x="448" y="505" class="func" font-size="8">Mod</text>
+
+<!-- Safety note -->
+<rect x="520" y="440" width="260" height="85" fill="#1a0a0a" stroke="#F44336" stroke-width="0.8" rx="4"/>
+<text x="650" y="458" text-anchor="middle" font-size="10" fill="#F44336" font-family="sans-serif" font-weight="bold">Safety Notes</text>
+<text x="530" y="473" class="val">• 10kΩ current-limiting on every touch pad</text>
+<text x="530" y="485" class="val">• Maximum touch current: 3.3V/10kΩ = 0.33mA</text>
+<text x="530" y="497" class="val">• MPR121: built-in ESD, no external needed</text>
+<text x="530" y="509" class="val">• Resistive path: body completes circuit to GND</text>
+<text x="530" y="521" class="val">• Keep touch wiring away from audio paths</text>
+</svg>

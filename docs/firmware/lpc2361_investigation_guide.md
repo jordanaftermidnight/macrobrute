@@ -5,7 +5,7 @@
 ### Hardware
 - PL2303HX USB-TTL adapter (3.3V) — already owned
 - Multimeter with continuity mode
-- Oscilloscope (DSO130 or external)
+- Oscilloscope (DSO138 or external)
 - Fine probe tips or test clips
 
 ### Software (macOS)

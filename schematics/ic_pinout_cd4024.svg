@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" width="500" height="600">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 11px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 9px "SF Mono", Consolas, monospace; fill: #FFF; }
+    .pin-num { font: 8px "SF Mono", Consolas, monospace; fill: gold; font-weight: bold; }
+    .pin-func { font: 8px "SF Mono", Consolas, monospace; fill: #FFF; }
+  </style>
+</defs>
+<rect width="500" height="600" fill="#FEFEFE"/>
+<text x="250" y="30" class="title" text-anchor="middle">CD4024</text>
+<text x="250" y="50" class="subtitle" text-anchor="middle">DIP-14 - 7-Stage Counter</text>
+<rect x="175" y="80" width="150" height="285" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="5"/>
+<circle cx="190" cy="95" r="5" fill="gold"/>
+<text x="190" y="110" class="value" text-anchor="middle" fill="gold" font-size="8">Pin 1</text>
+<text x="250.0" y="222.5" class="label" text-anchor="middle" fill="#FFF" font-size="14">CD4024</text>
+<text x="250.0" y="242.5" class="value" text-anchor="middle" fill="#CCC" font-size="9">DIP-14</text>
+<circle cx="175" cy="115" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="118" class="pin-num" text-anchor="end">1</text>
+<text x="187" y="118" class="pin-func" font-size="8">CLK</text>
+<circle cx="175" cy="150" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="153" class="pin-num" text-anchor="end">2</text>
+<text x="187" y="153" class="pin-func" font-size="8">RESET</text>
+<circle cx="175" cy="185" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="188" class="pin-num" text-anchor="end">3</text>
+<text x="187" y="188" class="pin-func" font-size="8">Q7</text>
+<circle cx="175" cy="220" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="223" class="pin-num" text-anchor="end">4</text>
+<text x="187" y="223" class="pin-func" font-size="8">Q6</text>
+<circle cx="175" cy="255" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="258" class="pin-num" text-anchor="end">5</text>
+<text x="187" y="258" class="pin-func" font-size="8">Q5</text>
+<circle cx="175" cy="290" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="293" class="pin-num" text-anchor="end">6</text>
+<text x="187" y="293" class="pin-func" font-size="8">Q4</text>
+<circle cx="175" cy="325" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="163" y="328" class="pin-num" text-anchor="end">7</text>
+<text x="187" y="328" class="pin-func" font-size="8">GND</text>
+<circle cx="325" cy="330" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="333" class="pin-num" text-anchor="start">14</text>
+<text x="313" y="333" class="pin-func" text-anchor="end" font-size="8">VCC</text>
+<circle cx="325" cy="295" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="298" class="pin-num" text-anchor="start">13</text>
+<text x="313" y="298" class="pin-func" text-anchor="end" font-size="8">Q3</text>
+<circle cx="325" cy="260" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="263" class="pin-num" text-anchor="start">12</text>
+<text x="313" y="263" class="pin-func" text-anchor="end" font-size="8">Q2</text>
+<circle cx="325" cy="225" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="228" class="pin-num" text-anchor="start">11</text>
+<text x="313" y="228" class="pin-func" text-anchor="end" font-size="8">Q1</text>
+<circle cx="325" cy="190" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="193" class="pin-num" text-anchor="start">10</text>
+<text x="313" y="193" class="pin-func" text-anchor="end" font-size="8">NC</text>
+<circle cx="325" cy="155" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="158" class="pin-num" text-anchor="start">9</text>
+<text x="313" y="158" class="pin-func" text-anchor="end" font-size="8">NC</text>
+<circle cx="325" cy="120" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
+<text x="337" y="123" class="pin-num" text-anchor="start">8</text>
+<text x="313" y="123" class="pin-func" text-anchor="end" font-size="8">NC</text>
+<text x="250" y="405" class="label" text-anchor="middle" font-size="11">Complete Pinout Reference</text>
+<rect x="50" y="418" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="430" class="value" font-size="9" font-weight="bold">1.</text>
+<text x="75" y="430" class="value" font-size="9">CLK</text>
+<rect x="250" y="418" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="430" class="value" font-size="9" font-weight="bold">2.</text>
+<text x="275" y="430" class="value" font-size="9">RESET</text>
+<rect x="50" y="438" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="450" class="value" font-size="9" font-weight="bold">3.</text>
+<text x="75" y="450" class="value" font-size="9">Q7</text>
+<rect x="250" y="438" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="450" class="value" font-size="9" font-weight="bold">4.</text>
+<text x="275" y="450" class="value" font-size="9">Q6</text>
+<rect x="50" y="458" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="470" class="value" font-size="9" font-weight="bold">5.</text>
+<text x="75" y="470" class="value" font-size="9">Q5</text>
+<rect x="250" y="458" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="470" class="value" font-size="9" font-weight="bold">6.</text>
+<text x="275" y="470" class="value" font-size="9">Q4</text>
+<rect x="50" y="478" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="490" class="value" font-size="9" font-weight="bold">7.</text>
+<text x="75" y="490" class="value" font-size="9">GND</text>
+<rect x="250" y="478" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="490" class="value" font-size="9" font-weight="bold">8.</text>
+<text x="275" y="490" class="value" font-size="9">NC</text>
+<rect x="50" y="498" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="510" class="value" font-size="9" font-weight="bold">9.</text>
+<text x="75" y="510" class="value" font-size="9">NC</text>
+<rect x="250" y="498" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="510" class="value" font-size="9" font-weight="bold">10.</text>
+<text x="275" y="510" class="value" font-size="9">NC</text>
+<rect x="50" y="518" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="530" class="value" font-size="9" font-weight="bold">11.</text>
+<text x="75" y="530" class="value" font-size="9">Q1</text>
+<rect x="250" y="518" width="190" height="18" fill="#FFFFFF" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="530" class="value" font-size="9" font-weight="bold">12.</text>
+<text x="275" y="530" class="value" font-size="9">Q2</text>
+<rect x="50" y="538" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="55" y="550" class="value" font-size="9" font-weight="bold">13.</text>
+<text x="75" y="550" class="value" font-size="9">Q3</text>
+<rect x="250" y="538" width="190" height="18" fill="#F5F5F5" stroke="#DDD" stroke-width="0.5"/>
+<text x="255" y="550" class="value" font-size="9" font-weight="bold">14.</text>
+<text x="275" y="550" class="value" font-size="9">VCC</text>
+</svg>

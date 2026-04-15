@@ -1,8 +1,18 @@
-# DSO130 Input Protection & Signal Multiplexer
+# DSO138 Input Protection & Signal Multiplexer
 
-## Input Protection (Eurorack ±12V → DSO130 safe range)
+> **⚠️ PROPOSED DESIGN — NOT IMPLEMENTED**
+>
+> This section documents an alternative design approach that was considered but **not used** in the final MACROBRUTE build.
+>
+> **Reason for exclusion:** DB-9 connector limitations (insufficient pins for oscilloscope integration) and aesthetic concerns (preferring a clean expander panel over additional front-panel displays).
+>
+> The final design uses the **OLED display** (SH1122 256x64) for signal visualization instead. See [Control & Interface](/#cat-control) section for the implemented solution.
 
-The DSO130's ADC accepts 0-3.3V. Eurorack signals can reach ±10V.
+---
+
+## Input Protection (Eurorack ±12V → DSO138 safe range)
+
+The DSO138's ADC accepts 0-3.3V. Eurorack signals can reach ±10V.
 This circuit scales and offsets the input.
 
 ### Protection + Scaling Circuit
@@ -49,7 +59,7 @@ or a 6-position rotary switch.
                               +5V
                                │
                          ┌─────┴─────┐
-  Signal 0 (Saw) ──[1kΩ]─┤ X0  COM  ├── out ──[TL072 buffer]── DSO130 IN
+  Signal 0 (Saw) ──[1kΩ]─┤ X0  COM  ├── out ──[TL072 buffer]── DSO138 IN
   Signal 1 (Sqr) ──[1kΩ]─┤ X1       │
   Signal 2 (Mix) ──[1kΩ]─┤ X2       │
   Signal 3 (VCF) ──[1kΩ]─┤ X3       │
@@ -84,22 +94,22 @@ or a 6-position rotary switch.
 
 **Or with Pico GPIO:** 3 GPIOs directly to A, B, C.
 
-### DSO130 Power
+### DSO138 Power
 
 ```
-  +12V Eurorack ──[7809 regulator]── +9V ── DSO130 power input
+  +12V Eurorack ──[7809 regulator]── +9V ── DSO138 power input
                                       │
                                    100µF + 100nF
                                       │
                                      GND
 
-  DSO130 current draw: ~120-130mA at 9V
+  DSO138 current draw: ~120-130mA at 9V
   7809 dissipation: (12-9) × 0.13 = 0.39W (fine without heatsink)
 ```
 
 ### Mounting
 
-- DSO130 PCB dimensions: ~85mm x 65mm
+- DSO138 PCB dimensions: ~85mm x 65mm
 - Mount behind panel with M3 standoffs (11mm)
 - Cut rectangular window in panel for 2.4" TFT display
-- Display window: ~38mm x 50mm (verify against your DSO130 build)
+- Display window: ~38mm x 50mm (verify against your DSO138 build)

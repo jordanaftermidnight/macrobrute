@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+<defs>
+  <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+  </marker>
+</defs>
+<style>
+  .t { font: bold 15px sans-serif; fill: #1a1a1a; }
+  .st { font: 11px sans-serif; fill: #555; }
+  .l { font: bold 10px sans-serif; fill: #FFF; text-anchor: middle; }
+  .v { font: 9px sans-serif; fill: #333; }
+  .vl { font: 8px sans-serif; fill: #666; }
+  .bus-label { font: bold 9px sans-serif; fill: #333; text-anchor: middle; }
+</style>
+<text x="500" y="25" class="t" text-anchor="middle">CV Control Flow</text>
+<text x="500" y="45" class="st" text-anchor="middle">Modulation Matrix — Grouped Signal Buses</text>
+<text x="105" y="75" class="v" font-weight="bold" font-size="10">SOURCES</text>
+<text x="495" y="75" class="v" font-weight="bold" font-size="10">DESTINATIONS</text>
+<text x="870" y="75" class="v" font-weight="bold" font-size="10">EXTERNAL INPUTS</text>
+
+<!-- SOURCE BOXES -->
+<rect x="50" y="85" width="110" height="100" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="110" class="l" font-size="10">MODULATION</text>
+<text x="105" y="128" class="l" font-size="7">LFO (0-5V △)</text>
+<text x="105" y="142" class="l" font-size="7">Envelope (ADSR)</text>
+<text x="105" y="156" class="l" font-size="7">Mod Wheel (0-5V)</text>
+<text x="105" y="175" class="l" font-size="6">→ Pitch, Filter, VCA</text>
+
+<rect x="50" y="200" width="110" height="60" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4" opacity="0.8"/>
+<text x="105" y="225" class="l" font-size="10">PITCH CV</text>
+<text x="105" y="242" class="l" font-size="7">1V/octave</text>
+<text x="105" y="255" class="l" font-size="6">→ Pitch (VCO)</text>
+
+<rect x="50" y="280" width="110" height="80" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="305" class="l" font-size="10">EXPANDER MOD</text>
+<text x="105" y="325" class="l" font-size="7">Exp LFO (Free)</text>
+<text x="105" y="342" class="l" font-size="7">Exp S&amp;H</text>
+<text x="105" y="355" class="l" font-size="6">→ Resonance</text>
+
+<!-- DESTINATION BOXES -->
+<rect x="450" y="95" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="111" class="l" font-size="10">Pitch</text>
+<text x="495" y="125" class="l" font-size="7">VCO Freq</text>
+
+<rect x="450" y="145" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="161" class="l" font-size="10">Filter</text>
+<text x="495" y="175" class="l" font-size="7">Cutoff</text>
+
+<rect x="450" y="195" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="211" class="l" font-size="10">Resonance</text>
+<text x="495" y="225" class="l" font-size="7">Peak</text>
+
+<rect x="450" y="245" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="261" class="l" font-size="10">VCA</text>
+<text x="495" y="275" class="l" font-size="7">Amplitude</text>
+
+<rect x="450" y="295" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="311" class="l" font-size="10">PWM</text>
+<text x="495" y="325" class="l" font-size="7">Width</text>
+
+<rect x="450" y="345" width="90" height="38" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="495" y="361" class="l" font-size="10">Metalizer</text>
+<text x="495" y="375" class="l" font-size="7">Harm</text>
+
+<!-- EXTERNAL INPUT BOXES -->
+<rect x="820" y="85" width="100" height="35" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="870" y="100" class="l" font-size="9">Filter CV</text>
+<text x="870" y="113" class="l" font-size="7">DB-9 B</text>
+
+<rect x="820" y="130" width="100" height="35" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="870" y="145" class="l" font-size="9">VCA CV</text>
+<text x="870" y="158" class="l" font-size="7">DB-9 B</text>
+
+<rect x="820" y="175" width="100" height="35" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="870" y="190" class="l" font-size="9">Res CV</text>
+<text x="870" y="203" class="l" font-size="7">DB-9 B</text>
+
+<rect x="820" y="220" width="100" height="35" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="870" y="235" class="l" font-size="9">Gate In</text>
+<text x="870" y="248" class="l" font-size="7">DB-9 B</text>
+
+<rect x="820" y="265" width="100" height="35" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="870" y="280" class="l" font-size="9">Sync</text>
+<text x="870" y="293" class="l" font-size="7">DB-9 B</text>
+
+<!-- MODULATION BUS → Pitch, Filter, VCA -->
+<line x1="160" y1="135" x2="250" y2="135" stroke="#9C27B0" stroke-width="4"/>
+<text x="205" y="125" class="bus-label" font-size="7">Modulation Bus</text>
+<text x="205" y="147" class="vl" font-size="6">LFO, Env, Wheel</text>
+
+<!-- Branch 1: → Pitch (up from bus) -->
+<line x1="250" y1="135" x2="250" y2="114" stroke="#9C27B0" stroke-width="3"/>
+<line x1="250" y1="114" x2="450" y2="114" stroke="#9C27B0" stroke-width="3" marker-end="url(#arr)"/>
+<text x="340" y="108" class="vl" font-size="6">LFO→Pitch</text>
+<text x="340" y="120" class="vl" font-size="6">Wheel→Pitch</text>
+
+<!-- Branch 2: → Filter (straight across) -->
+<line x1="250" y1="135" x2="260" y2="135" stroke="#9C27B0" stroke-width="3"/>
+<line x1="260" y1="135" x2="260" y2="164" stroke="#9C27B0" stroke-width="3"/>
+<line x1="260" y1="164" x2="450" y2="164" stroke="#9C27B0" stroke-width="3" marker-end="url(#arr)"/>
+<text x="345" y="158" class="vl" font-size="6">LFO→Filter</text>
+<text x="345" y="170" class="vl" font-size="6">Env→Filter</text>
+
+<!-- Branch 3: → VCA (drops down with offset) -->
+<line x1="250" y1="135" x2="250" y2="264" stroke="#9C27B0" stroke-width="3"/>
+<line x1="250" y1="264" x2="450" y2="264" stroke="#9C27B0" stroke-width="3" marker-end="url(#arr)"/>
+<text x="345" y="256" class="vl" font-size="6">LFO→VCA</text>
+<text x="345" y="268" class="vl" font-size="6">Env→VCA</text>
+
+<!-- PITCH CV → Pitch (dashed, routes up to Pitch dest) -->
+<line x1="160" y1="230" x2="380" y2="230" stroke="#9C27B0" stroke-width="3" stroke-dasharray="5,3"/>
+<line x1="380" y1="230" x2="380" y2="114" stroke="#9C27B0" stroke-width="3" stroke-dasharray="5,3"/>
+<line x1="380" y1="114" x2="450" y2="114" stroke="#9C27B0" stroke-width="3" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<text x="270" y="222" class="vl" font-size="6">Pitch CV→VCO</text>
+
+<!-- EXPANDER MOD → Resonance -->
+<line x1="160" y1="320" x2="310" y2="320" stroke="#4CAF50" stroke-width="3"/>
+<text x="235" y="312" class="vl" font-size="7">Expander Mod</text>
+<text x="235" y="330" class="vl" font-size="6">ExpLFO, ExpS&amp;H</text>
+<line x1="310" y1="320" x2="310" y2="214" stroke="#4CAF50" stroke-width="3"/>
+<line x1="310" y1="214" x2="450" y2="214" stroke="#4CAF50" stroke-width="3" marker-end="url(#arr)"/>
+<text x="355" y="206" class="vl" font-size="6">Exp→Res</text>
+
+<!-- EXTERNAL INPUT ROUTING -->
+<!-- Filter CV → Filter -->
+<line x1="820" y1="102" x2="680" y2="102" stroke="#FF9800" stroke-width="3"/>
+<line x1="680" y1="102" x2="680" y2="164" stroke="#FF9800" stroke-width="3"/>
+<line x1="680" y1="164" x2="540" y2="164" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="750" y="154" class="vl" font-size="6">Ext→Filter</text>
+
+<!-- VCA CV → VCA -->
+<line x1="820" y1="147" x2="700" y2="147" stroke="#FF9800" stroke-width="3"/>
+<line x1="700" y1="147" x2="700" y2="264" stroke="#FF9800" stroke-width="3"/>
+<line x1="700" y1="264" x2="540" y2="264" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="760" y="254" class="vl" font-size="6">Ext→VCA</text>
+
+<!-- Res CV → Resonance -->
+<line x1="820" y1="192" x2="720" y2="192" stroke="#FF9800" stroke-width="3"/>
+<line x1="720" y1="192" x2="720" y2="214" stroke="#FF9800" stroke-width="3"/>
+<line x1="720" y1="214" x2="540" y2="214" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="770" y="229" class="vl" font-size="6">Ext→Res</text>
+
+<!-- Gate In → PWM -->
+<line x1="820" y1="237" x2="740" y2="237" stroke="#FF9800" stroke-width="3"/>
+<line x1="740" y1="237" x2="740" y2="314" stroke="#FF9800" stroke-width="3"/>
+<line x1="740" y1="314" x2="540" y2="314" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="780" y="304" class="vl" font-size="6">Gate→PWM</text>
+
+<!-- Sync → Metalizer -->
+<line x1="820" y1="282" x2="760" y2="282" stroke="#FF9800" stroke-width="3"/>
+<line x1="760" y1="282" x2="760" y2="364" stroke="#FF9800" stroke-width="3"/>
+<line x1="760" y1="364" x2="540" y2="364" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="800" y="354" class="vl" font-size="6">Sync→Metal</text>
+
+<!-- NOTES BOX -->
+<rect x="50" y="410" width="900" height="170" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
+<text x="500" y="435" class="v" font-weight="bold" font-size="10" fill="#E65100">CV Routing Notes</text>
+<text x="70" y="455" class="v" font-size="8" fill="#E65100">Modulation Bus:</text>
+<text x="155" y="455" class="v" font-size="8">LFO + Envelope + Mod Wheel all route to Pitch, Filter, VCA (summing at destination)</text>
+<text x="70" y="480" class="v" font-size="8" fill="#E65100">Pitch CV:</text>
+<text x="155" y="480" class="v" font-size="8">Keyboard pitch + external pitch sources sum at VCO frequency input</text>
+<text x="70" y="505" class="v" font-size="8" fill="#E65100">Expander Mod:</text>
+<text x="155" y="505" class="v" font-size="8">Free-running LFO and S&amp;H from expander module route to Resonance</text>
+<text x="70" y="530" class="v" font-size="8" fill="#E65100">External CVs:</text>
+<text x="155" y="530" class="v" font-size="8">From DB-9 B: Filter CV, VCA CV, Res CV go directly to their destinations</text>
+<text x="70" y="555" class="v" font-size="8" fill="#E65100">Gate/Sync:</text>
+<text x="155" y="555" class="v" font-size="8">Gate In → PWM, Sync → Metalizer (for hard sync effects)</text>
+</svg>

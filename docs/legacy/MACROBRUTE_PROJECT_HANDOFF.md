@@ -1,4 +1,4 @@
-# MACROBRUTE CCLI Handoff Document
+# MACROBRUTE Project Handoff Document (Legacy)
 
 **Project:** Arturia MicroBrute Deep Modification  
 **Codename:** MACROBRUTE  
@@ -556,9 +556,9 @@ git clone https://github.com/psas/liblpc23xx.git
 
 ---
 
-## PART 9: CCLI TASK BREAKDOWN
+## PART 9: TASK BREAKDOWN
 
-### Immediate CCLI Tasks
+### Immediate Tasks
 
 1. **Create panel drilling template** — SVG with exact positions for all 18 panel points + OLED cutout + encoder hole
 2. **Design internal wiring diagram** — Show all connections from test points to panel jacks to DB-9
@@ -568,7 +568,7 @@ git clone https://github.com/psas/liblpc23xx.git
 6. **Pico H pinout diagram** — Final GPIO assignments
 7. **Pico firmware scaffold** — Basic structure for OLED + encoder + clock
 
-### Medium-Term CCLI Tasks
+### Medium-Term Tasks
 
 8. **Expander schematic** — Complete circuit for all utility sections
 9. **Expander panel layout** — Jack and pot positions
@@ -580,7 +580,7 @@ git clone https://github.com/psas/liblpc23xx.git
 
 - **MACROBRUTE_MASTER_PLAN.md** — High-level project overview
 - **MACROBRUTE_REVISED_SPEC.md** — Current architecture decisions
-- **MACROBRUTE_CCLI_HANDOFF.md** — This document (CCLI reference)
+- **MACROBRUTE_PROJECT_HANDOFF.md** — This document (project reference)
 - **MACROBRUTE_BUILD_LOG.md** — Progress tracking, photos, notes
 - **MACROBRUTE_FIRMWARE_NOTES.md** — LPC2361 RE findings
 
@@ -674,4 +674,4 @@ LED on:   LDR should read <20kΩ (ideally <10kΩ)
 
 ---
 
-*End of CCLI Handoff Document*
+*End of Project Handoff Document (Legacy)*

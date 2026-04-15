@@ -1,0 +1,380 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720">
+<style>
+.title{font:bold 18px sans-serif;fill:#eee}
+.subtitle{font:12px sans-serif;fill:#aaa}
+.colhead{font:bold 11px sans-serif;fill:#ddd}
+.label{font:10px sans-serif;fill:#ccc}
+.pin{font:bold 9px sans-serif;fill:#fff}
+.box{stroke-width:1.5;rx:3}
+.audio{stroke:#2196F3;fill:none;stroke-width:1.5}
+.cv{stroke:#9C27B0;fill:none;stroke-width:1.5}
+.gate{stroke:#4CAF50;fill:none;stroke-width:1.5}
+.power{stroke:#F44336;fill:none;stroke-width:1.5}
+.src-box{fill:none;stroke:#2196F3}
+.buf-box{fill:none;stroke:#9C27B0}
+.pin-box{fill:#e0e0e0;stroke:#666}
+.exp-box{fill:none;stroke:#4CAF50}
+.cable-line{stroke:#888;stroke-width:4;fill:none}
+.cable-arrow{font:14px sans-serif;fill:#888}
+.section-head{font:bold 13px sans-serif;fill:#ff9800}
+.gnd-label{font:bold 9px sans-serif;fill:#F44336}
+</style>
+<rect width="1000" height="720" fill="#111"/>
+<text x="500" y="24" text-anchor="middle" class="title">MACROBRUTE Interconnect Wiring</text>
+<text x="500" y="40" text-anchor="middle" class="subtitle">Complete Signal Path: MicroBrute ↔ DB-9 ↔ Expander</text>
+
+<!-- Column Headers -->
+<text x="90" y="62" text-anchor="middle" class="colhead">MICROBRUTE PCB</text>
+<text x="275" y="62" text-anchor="middle" class="colhead">BREAKOUT PCB</text>
+<text x="440" y="62" text-anchor="middle" class="colhead">DB-9 A</text>
+<text x="560" y="62" text-anchor="middle" class="colhead">CABLE</text>
+<text x="720" y="62" text-anchor="middle" class="colhead">DB-9 A</text>
+<text x="875" y="62" text-anchor="middle" class="colhead">EXPANDER</text>
+
+<!-- ===== OUTPUT SIGNALS (Top Section) ===== -->
+<text x="10" y="80" class="section-head">OUTPUTS (MicroBrute → Expander)</text>
+
+<!-- Row 1: Saw -->
+<rect x="30" y="88" width="120" height="22" class="box src-box"/>
+<text x="90" y="103" text-anchor="middle" class="label">TP94 Saw</text>
+<line x1="150" y1="99" x2="200" y2="99" class="audio"/>
+<rect x="200" y="88" width="150" height="22" class="box buf-box"/>
+<text x="275" y="103" text-anchor="middle" class="label">TL074 A follower</text>
+<line x1="350" y1="99" x2="415" y2="99" class="audio"/>
+<rect x="415" y="88" width="50" height="22" class="box pin-box"/>
+<text x="440" y="103" text-anchor="middle" class="pin">7</text>
+<line x1="465" y1="99" x2="535" y2="99" class="audio cable-line"/>
+<text x="500" y="96" class="cable-arrow">↔</text>
+<line x1="585" y1="99" x2="695" y2="99" class="audio"/>
+<rect x="695" y="88" width="50" height="22" class="box pin-box"/>
+<text x="720" y="103" text-anchor="middle" class="pin">7</text>
+<line x1="745" y1="99" x2="800" y2="99" class="audio"/>
+<rect x="800" y="88" width="100" height="22" class="box exp-box"/>
+<text x="850" y="103" text-anchor="middle" class="label">SAW jack</text>
+
+<!-- Row 2: Sqr -->
+<rect x="30" y="118" width="120" height="22" class="box src-box"/>
+<text x="90" y="133" text-anchor="middle" class="label">TP93 Sqr</text>
+<line x1="150" y1="129" x2="200" y2="129" class="audio"/>
+<rect x="200" y="118" width="150" height="22" class="box buf-box"/>
+<text x="275" y="133" text-anchor="middle" class="label">TL074 B follower</text>
+<line x1="350" y1="129" x2="415" y2="129" class="audio"/>
+<rect x="415" y="118" width="50" height="22" class="box pin-box"/>
+<text x="440" y="133" text-anchor="middle" class="pin">8</text>
+<line x1="465" y1="129" x2="535" y2="129" class="audio cable-line"/>
+<text x="500" y="126" class="cable-arrow">↔</text>
+<line x1="585" y1="129" x2="695" y2="129" class="audio"/>
+<rect x="695" y="118" width="50" height="22" class="box pin-box"/>
+<text x="720" y="133" text-anchor="middle" class="pin">8</text>
+<line x1="745" y1="129" x2="800" y2="129" class="audio"/>
+<rect x="800" y="118" width="100" height="22" class="box exp-box"/>
+<text x="850" y="133" text-anchor="middle" class="label">SQR jack</text>
+
+<!-- Row 3: Mix -->
+<rect x="30" y="148" width="120" height="22" class="box src-box"/>
+<text x="90" y="163" text-anchor="middle" class="label">TP30 Mix</text>
+<line x1="150" y1="159" x2="200" y2="159" class="audio"/>
+<rect x="200" y="148" width="150" height="22" class="box buf-box"/>
+<text x="275" y="163" text-anchor="middle" class="label">TL074 C follower</text>
+<line x1="350" y1="159" x2="415" y2="159" class="audio"/>
+<rect x="415" y="148" width="50" height="22" class="box pin-box"/>
+<text x="440" y="163" text-anchor="middle" class="pin">5</text>
+<line x1="465" y1="159" x2="535" y2="159" class="audio cable-line"/>
+<text x="500" y="156" class="cable-arrow">↔</text>
+<line x1="585" y1="159" x2="695" y2="159" class="audio"/>
+<rect x="695" y="148" width="50" height="22" class="box pin-box"/>
+<text x="720" y="163" text-anchor="middle" class="pin">5</text>
+<line x1="745" y1="159" x2="800" y2="159" class="audio"/>
+<rect x="800" y="148" width="100" height="22" class="box exp-box"/>
+<text x="850" y="163" text-anchor="middle" class="label">MIX jack</text>
+
+<!-- Row 4: VCF -->
+<rect x="30" y="178" width="120" height="22" class="box src-box"/>
+<text x="90" y="193" text-anchor="middle" class="label">TP19 VCF</text>
+<line x1="150" y1="189" x2="200" y2="189" class="audio"/>
+<rect x="200" y="178" width="150" height="22" class="box buf-box"/>
+<text x="275" y="193" text-anchor="middle" class="label">TL074 D follower</text>
+<line x1="350" y1="189" x2="415" y2="189" class="audio"/>
+<rect x="415" y="178" width="50" height="22" class="box pin-box"/>
+<text x="440" y="193" text-anchor="middle" class="pin">6</text>
+<line x1="465" y1="189" x2="535" y2="189" class="audio cable-line"/>
+<text x="500" y="186" class="cable-arrow">↔</text>
+<line x1="585" y1="189" x2="695" y2="189" class="audio"/>
+<rect x="695" y="178" width="50" height="22" class="box pin-box"/>
+<text x="720" y="193" text-anchor="middle" class="pin">6</text>
+<line x1="745" y1="189" x2="800" y2="189" class="audio"/>
+<rect x="800" y="178" width="100" height="22" class="box exp-box"/>
+<text x="850" y="193" text-anchor="middle" class="label">VCF jack</text>
+
+<!-- Row 5: Gate -->
+<rect x="30" y="208" width="120" height="22" class="box src-box"/>
+<text x="90" y="223" text-anchor="middle" class="label">TP83 Gate</text>
+<line x1="150" y1="219" x2="200" y2="219" class="gate"/>
+<rect x="200" y="208" width="150" height="22" class="box buf-box"/>
+<text x="275" y="223" text-anchor="middle" class="label">CD40106 Schmitt</text>
+<line x1="350" y1="219" x2="415" y2="219" class="gate"/>
+<rect x="415" y="208" width="50" height="22" class="box pin-box"/>
+<text x="440" y="223" text-anchor="middle" class="pin">1</text>
+<line x1="465" y1="219" x2="535" y2="219" class="gate cable-line"/>
+<text x="500" y="216" class="cable-arrow">↔</text>
+<line x1="585" y1="219" x2="695" y2="219" class="gate"/>
+<rect x="695" y="208" width="50" height="22" class="box pin-box"/>
+<text x="720" y="223" text-anchor="middle" class="pin">1</text>
+<line x1="745" y1="219" x2="800" y2="219" class="gate"/>
+<rect x="800" y="208" width="100" height="22" class="box exp-box"/>
+<text x="850" y="223" text-anchor="middle" class="label">GATE jack</text>
+
+<!-- Row 6: Pitch CV -->
+<rect x="30" y="238" width="120" height="22" class="box src-box"/>
+<text x="90" y="253" text-anchor="middle" class="label">Pitch CV</text>
+<line x1="150" y1="249" x2="200" y2="249" class="cv"/>
+<rect x="200" y="238" width="150" height="22" class="box buf-box"/>
+<text x="275" y="253" text-anchor="middle" class="label">Direct pass</text>
+<line x1="350" y1="249" x2="415" y2="249" class="cv"/>
+<rect x="415" y="238" width="50" height="22" class="box pin-box"/>
+<text x="440" y="253" text-anchor="middle" class="pin">2</text>
+<line x1="465" y1="249" x2="535" y2="249" class="cv cable-line"/>
+<text x="500" y="246" class="cable-arrow">↔</text>
+<line x1="585" y1="249" x2="695" y2="249" class="cv"/>
+<rect x="695" y="238" width="50" height="22" class="box pin-box"/>
+<text x="720" y="253" text-anchor="middle" class="pin">2</text>
+<line x1="745" y1="249" x2="800" y2="249" class="cv"/>
+<rect x="800" y="238" width="100" height="22" class="box exp-box"/>
+<text x="850" y="253" text-anchor="middle" class="label">PITCH jack</text>
+
+<!-- Row 7: Envelope -->
+<rect x="30" y="268" width="120" height="22" class="box src-box"/>
+<text x="90" y="283" text-anchor="middle" class="label">Envelope</text>
+<line x1="150" y1="279" x2="200" y2="279" class="cv"/>
+<rect x="200" y="268" width="150" height="22" class="box buf-box"/>
+<text x="275" y="283" text-anchor="middle" class="label">TL074 #2 A</text>
+<line x1="350" y1="279" x2="415" y2="279" class="cv"/>
+<rect x="415" y="268" width="50" height="22" class="box pin-box"/>
+<text x="440" y="283" text-anchor="middle" class="pin">3</text>
+<line x1="465" y1="279" x2="535" y2="279" class="cv cable-line"/>
+<text x="500" y="276" class="cable-arrow">↔</text>
+<line x1="585" y1="279" x2="695" y2="279" class="cv"/>
+<rect x="695" y="268" width="50" height="22" class="box pin-box"/>
+<text x="720" y="283" text-anchor="middle" class="pin">3</text>
+<line x1="745" y1="279" x2="800" y2="279" class="cv"/>
+<rect x="800" y="268" width="100" height="22" class="box exp-box"/>
+<text x="850" y="283" text-anchor="middle" class="label">ENV jack</text>
+
+<!-- Row 8: LFO -->
+<rect x="30" y="298" width="120" height="22" class="box src-box"/>
+<text x="90" y="313" text-anchor="middle" class="label">LFO</text>
+<line x1="150" y1="309" x2="200" y2="309" class="cv"/>
+<rect x="200" y="298" width="150" height="22" class="box buf-box"/>
+<text x="275" y="313" text-anchor="middle" class="label">TL074 #2 B</text>
+<line x1="350" y1="309" x2="415" y2="309" class="cv"/>
+<rect x="415" y="298" width="50" height="22" class="box pin-box"/>
+<text x="440" y="313" text-anchor="middle" class="pin">4</text>
+<line x1="465" y1="309" x2="535" y2="309" class="cv cable-line"/>
+<text x="500" y="306" class="cable-arrow">↔</text>
+<line x1="585" y1="309" x2="695" y2="309" class="cv"/>
+<rect x="695" y="298" width="50" height="22" class="box pin-box"/>
+<text x="720" y="313" text-anchor="middle" class="pin">4</text>
+<line x1="745" y1="309" x2="800" y2="309" class="cv"/>
+<rect x="800" y="298" width="100" height="22" class="box exp-box"/>
+<text x="850" y="313" text-anchor="middle" class="label">LFO jack</text>
+
+<!-- Row 9: GND -->
+<rect x="30" y="328" width="120" height="22" class="box src-box" style="stroke:#F44336"/>
+<text x="90" y="343" text-anchor="middle" class="label">GND (TP72)</text>
+<line x1="150" y1="339" x2="415" y2="339" class="power"/>
+<rect x="415" y="328" width="50" height="22" class="box pin-box" style="stroke:#F44336"/>
+<text x="440" y="343" text-anchor="middle" class="pin">9</text>
+<line x1="465" y1="339" x2="535" y2="339" class="power cable-line"/>
+<text x="500" y="336" class="cable-arrow">↔</text>
+<line x1="585" y1="339" x2="695" y2="339" class="power"/>
+<rect x="695" y="328" width="50" height="22" class="box pin-box" style="stroke:#F44336"/>
+<text x="720" y="343" text-anchor="middle" class="pin">9</text>
+<line x1="745" y1="339" x2="800" y2="339" class="power"/>
+<rect x="800" y="328" width="100" height="22" class="box exp-box" style="stroke:#F44336"/>
+<text x="850" y="343" text-anchor="middle" class="gnd-label">GND</text>
+
+<!-- ===== INPUT SIGNALS (Bottom Section) ===== -->
+<text x="10" y="378" class="section-head">INPUTS (Expander → MicroBrute)</text>
+
+<!-- Row 10: Filter CV -->
+<rect x="800" y="388" width="100" height="22" class="box exp-box"/>
+<text x="850" y="403" text-anchor="middle" class="label">Filter CV</text>
+<line x1="800" y1="399" x2="745" y2="399" class="cv"/>
+<rect x="695" y="388" width="50" height="22" class="box pin-box"/>
+<text x="720" y="403" text-anchor="middle" class="pin">6*</text>
+<line x1="695" y1="399" x2="585" y2="399" class="cv cable-line"/>
+<text x="560" y="396" class="cable-arrow">↔</text>
+<line x1="535" y1="399" x2="465" y2="399" class="cv"/>
+<rect x="415" y="388" width="50" height="22" class="box pin-box"/>
+<text x="440" y="403" text-anchor="middle" class="pin">6*</text>
+<line x1="415" y1="399" x2="350" y2="399" class="cv"/>
+<rect x="200" y="388" width="150" height="22" class="box buf-box"/>
+<text x="275" y="403" text-anchor="middle" class="label">Atten → BAT54S</text>
+<line x1="200" y1="399" x2="150" y2="399" class="cv"/>
+<rect x="30" y="388" width="120" height="22" class="box src-box"/>
+<text x="90" y="403" text-anchor="middle" class="label">Filter CV in</text>
+
+<!-- Row 11: VCA CV -->
+<rect x="800" y="418" width="100" height="22" class="box exp-box"/>
+<text x="850" y="433" text-anchor="middle" class="label">VCA CV</text>
+<line x1="800" y1="429" x2="745" y2="429" class="cv"/>
+<rect x="695" y="418" width="50" height="22" class="box pin-box"/>
+<text x="720" y="433" text-anchor="middle" class="pin">7*</text>
+<line x1="695" y1="429" x2="585" y2="429" class="cv cable-line"/>
+<text x="560" y="426" class="cable-arrow">↔</text>
+<line x1="535" y1="429" x2="465" y2="429" class="cv"/>
+<rect x="415" y="418" width="50" height="22" class="box pin-box"/>
+<text x="440" y="433" text-anchor="middle" class="pin">7*</text>
+<line x1="415" y1="429" x2="350" y2="429" class="cv"/>
+<rect x="200" y="418" width="150" height="22" class="box buf-box"/>
+<text x="275" y="433" text-anchor="middle" class="label">Atten → BAT54S</text>
+<line x1="200" y1="429" x2="150" y2="429" class="cv"/>
+<rect x="30" y="418" width="120" height="22" class="box src-box"/>
+<text x="90" y="433" text-anchor="middle" class="label">VCA CV in</text>
+
+<!-- Row 12: Resonance CV -->
+<rect x="800" y="448" width="100" height="22" class="box exp-box"/>
+<text x="850" y="463" text-anchor="middle" class="label">Resonance</text>
+<line x1="800" y1="459" x2="745" y2="459" class="cv"/>
+<rect x="695" y="448" width="50" height="22" class="box pin-box"/>
+<text x="720" y="463" text-anchor="middle" class="pin">8*</text>
+<line x1="695" y1="459" x2="585" y2="459" class="cv cable-line"/>
+<text x="560" y="456" class="cable-arrow">↔</text>
+<line x1="535" y1="459" x2="465" y2="459" class="cv"/>
+<rect x="415" y="448" width="50" height="22" class="box pin-box"/>
+<text x="440" y="463" text-anchor="middle" class="pin">8*</text>
+<line x1="415" y1="459" x2="350" y2="459" class="cv"/>
+<rect x="200" y="448" width="150" height="22" class="box buf-box"/>
+<text x="275" y="463" text-anchor="middle" class="label">Vactrol driver</text>
+<line x1="200" y1="459" x2="150" y2="459" class="cv"/>
+<rect x="30" y="448" width="120" height="22" class="box src-box"/>
+<text x="90" y="463" text-anchor="middle" class="label">Resonance CV</text>
+
+<!-- Row 13: Sync -->
+<rect x="800" y="478" width="100" height="22" class="box exp-box"/>
+<text x="850" y="493" text-anchor="middle" class="label">Sync</text>
+<line x1="800" y1="489" x2="745" y2="489" class="gate"/>
+<rect x="695" y="478" width="50" height="22" class="box pin-box"/>
+<text x="720" y="493" text-anchor="middle" class="pin">5*</text>
+<line x1="695" y1="489" x2="585" y2="489" class="gate cable-line"/>
+<text x="560" y="486" class="cable-arrow">↔</text>
+<line x1="535" y1="489" x2="465" y2="489" class="gate"/>
+<rect x="415" y="478" width="50" height="22" class="box pin-box"/>
+<text x="440" y="493" text-anchor="middle" class="pin">5*</text>
+<line x1="415" y1="489" x2="350" y2="489" class="gate"/>
+<rect x="200" y="478" width="150" height="22" class="box buf-box"/>
+<text x="275" y="493" text-anchor="middle" class="label">BAT54S clamp</text>
+<line x1="200" y1="489" x2="150" y2="489" class="gate"/>
+<rect x="30" y="478" width="120" height="22" class="box src-box"/>
+<text x="90" y="493" text-anchor="middle" class="label">Sync in</text>
+
+<!-- Row 14: Gate In -->
+<rect x="800" y="508" width="100" height="22" class="box exp-box"/>
+<text x="850" y="523" text-anchor="middle" class="label">Gate In</text>
+<line x1="800" y1="519" x2="745" y2="519" class="gate"/>
+<rect x="695" y="508" width="50" height="22" class="box pin-box"/>
+<text x="720" y="523" text-anchor="middle" class="pin">3*</text>
+<line x1="695" y1="519" x2="585" y2="519" class="gate cable-line"/>
+<text x="560" y="516" class="cable-arrow">↔</text>
+<line x1="535" y1="519" x2="465" y2="519" class="gate"/>
+<rect x="415" y="508" width="50" height="22" class="box pin-box"/>
+<text x="440" y="523" text-anchor="middle" class="pin">3*</text>
+<line x1="415" y1="519" x2="350" y2="519" class="gate"/>
+<rect x="200" y="508" width="150" height="22" class="box buf-box"/>
+<text x="275" y="523" text-anchor="middle" class="label">CD40106 → BAT54S</text>
+<line x1="200" y1="519" x2="150" y2="519" class="gate"/>
+<rect x="30" y="508" width="120" height="22" class="box src-box"/>
+<text x="90" y="523" text-anchor="middle" class="label">Gate In</text>
+
+<!-- Row 15: Ext Audio -->
+<rect x="800" y="538" width="100" height="22" class="box exp-box"/>
+<text x="850" y="553" text-anchor="middle" class="label">Ext Audio</text>
+<line x1="800" y1="549" x2="745" y2="549" class="audio"/>
+<rect x="695" y="538" width="50" height="22" class="box pin-box"/>
+<text x="720" y="553" text-anchor="middle" class="pin">1*</text>
+<line x1="695" y1="549" x2="585" y2="549" class="audio cable-line"/>
+<text x="560" y="546" class="cable-arrow">↔</text>
+<line x1="535" y1="549" x2="465" y2="549" class="audio"/>
+<rect x="415" y="538" width="50" height="22" class="box pin-box"/>
+<text x="440" y="553" text-anchor="middle" class="pin">1*</text>
+<line x1="415" y1="549" x2="350" y2="549" class="audio"/>
+<rect x="200" y="538" width="150" height="22" class="box buf-box"/>
+<text x="275" y="553" text-anchor="middle" class="label">Atten → BAT54S</text>
+<line x1="200" y1="549" x2="150" y2="549" class="audio"/>
+<rect x="30" y="538" width="120" height="22" class="box src-box"/>
+<text x="90" y="553" text-anchor="middle" class="label">Ext Audio in</text>
+
+<!-- Power section -->
+<text x="10" y="570" class="section-head">POWER</text>
+
+<!-- +12V stays local on breakout board -->
+<rect x="30" y="588" width="120" height="22" class="box src-box" style="stroke:#F44336"/>
+<text x="90" y="603" text-anchor="middle" class="label">TP70 +12V</text>
+<line x1="150" y1="399" x2="200" y2="399" class="wire-r"/>
+<rect x="200" y="588" width="150" height="22" class="box buf-box" style="stroke:#F44336"/>
+<text x="275" y="603" text-anchor="middle" class="label">1N5817 → 100Ω</text>
+<line x1="350" y1="399" x2="460" y2="399" stroke="#F44336" stroke-width="1.5"/>
+<rect x="460" y="588" width="100" height="22" fill="#1a1a1a" stroke="#F44336" stroke-width="1.5" rx="3"/>
+<text x="510" y="603" text-anchor="middle" class="label">+12V_BRK</text>
+<text x="580" y="595" class="val">Local to breakout:</text>
+<text x="580" y="608" class="val">U1/U2 TL074 V+</text>
+
+<!-- -12V stays local on breakout board -->
+<rect x="30" y="618" width="120" height="22" class="box src-box" style="stroke:#2196F3"/>
+<text x="90" y="633" text-anchor="middle" class="label">TP71 -12V</text>
+<line x1="150" y1="429" x2="200" y2="429" class="wire-b"/>
+<rect x="200" y="618" width="150" height="22" class="box buf-box" style="stroke:#2196F3"/>
+<text x="275" y="633" text-anchor="middle" class="label">1N5817 → 100Ω</text>
+<line x1="350" y1="429" x2="460" y2="429" stroke="#2196F3" stroke-width="1.5"/>
+<rect x="460" y="618" width="100" height="22" fill="#1a1a1a" stroke="#2196F3" stroke-width="1.5" rx="3"/>
+<text x="510" y="633" text-anchor="middle" class="label">-12V_BRK</text>
+<text x="580" y="625" class="val">Local to breakout:</text>
+<text x="580" y="638" class="val">U1/U2 TL074 V-</text>
+
+<!-- +5V from Pico VSYS -->
+<rect x="30" y="652" width="120" height="22" class="box src-box" style="stroke:#4CAF50"/>
+<text x="90" y="667" text-anchor="middle" class="label">Pico VSYS</text>
+<line x1="150" y1="463" x2="200" y2="463" class="wire-grn"/>
+<rect x="200" y="652" width="150" height="22" class="buf-box" style="stroke:#4CAF50;stroke-width:1"/>
+<text x="275" y="667" text-anchor="middle" class="label">1N5817 (pin 39)</text>
+<line x1="350" y1="463" x2="460" y2="463" stroke="#4CAF50" stroke-width="1.5"/>
+<rect x="460" y="652" width="100" height="22" fill="#1a1a1a" stroke="#4CAF50" stroke-width="1.5" rx="3"/>
+<text x="510" y="667" text-anchor="middle" class="label">+5V_BRK</text>
+<text x="580" y="660" class="val">CD40106 VDD,</text>
+<text x="580" y="673" class="val">Encoder, Pico</text>
+
+<!-- GND through DB-9 pin 9 -->
+<rect x="30" y="686" width="120" height="22" class="box src-box" style="stroke:#F44336"/>
+<text x="90" y="701" text-anchor="middle" class="label">TP72 GND</text>
+<line x1="150" y1="497" x2="200" y2="497" class="wire-g"/>
+<rect x="200" y="686" width="150" height="22" class="buf-box" style="stroke:#9E9E9E;stroke-width:1"/>
+<text x="275" y="701" text-anchor="middle" class="label">Star point</text>
+<line x1="350" y1="497" x2="415" y2="497" class="power"/>
+<rect x="415" y="686" width="50" height="22" class="box pin-box" style="stroke:#9E9E9E"/>
+<text x="440" y="701" text-anchor="middle" class="pin">9</text>
+<line x1="465" y1="497" x2="535" y2="497" class="power cable-line"/>
+<text x="500" y="694" class="cable-arrow">↔</text>
+<line x1="585" y1="497" x2="695" y2="497" class="power"/>
+<rect x="695" y="686" width="50" height="22" class="box pin-box" style="stroke:#9E9E9E"/>
+<text x="720" y="701" text-anchor="middle" class="pin">9</text>
+<line x1="745" y1="497" x2="800" y2="497" class="power"/>
+<rect x="800" y="686" width="100" height="22" class="box exp-box" style="stroke:#9E9E9E"/>
+<text x="850" y="701" text-anchor="middle" class="gnd-label">GND</text>
+
+<!-- Expander Eurorack power (right side) -->
+<rect x="560" y="716" width="430" height="30" fill="#1a1a2a" stroke="#FF9800" stroke-width="1" rx="3"/>
+<text x="775" y="732" text-anchor="middle" font-size="9" fill="#FF9800" font-family="sans-serif" font-weight="bold">EXPANDER: Separate Eurorack ±12V via 16-pin header — NOT routed through DB-9</text>
+<text x="775" y="743" text-anchor="middle" font-size="7" fill="#888" font-family="sans-serif">DB-9 carries signals + GND only · ±12V_BRK stays on breakout board</text>
+
+
+<!-- Legend -->
+<rect x="30" y="730" width="14" height="4" fill="#2196F3"/>
+<text x="50" y="736" class="label">Audio</text>
+<rect x="120" y="730" width="14" height="4" fill="#9C27B0"/>
+<text x="140" y="736" class="label">CV</text>
+<rect x="180" y="730" width="14" height="4" fill="#4CAF50"/>
+<text x="200" y="736" class="label">Gate</text>
+<rect x="250" y="730" width="14" height="4" fill="#F44336"/>
+<text x="270" y="736" class="label">Power</text>
+<text x="700" y="736" class="label">* = DB-9 B connector pins</text>
+</svg>

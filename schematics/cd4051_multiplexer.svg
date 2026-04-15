@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" width="800" height="550">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<style>
+  .title { font: bold 16px sans-serif; fill: #1a1a1a; }
+  .subtitle { font: 11px sans-serif; fill: #555; }
+  .label { font: bold 10px sans-serif; fill: #1a1a1a; }
+  .value { font: 9px sans-serif; fill: #555; }
+  .pin { font: 9px sans-serif; fill: #333; }
+  .anno { font: 9px sans-serif; fill: #0066CC; }
+  .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+</style>
+<text x="400" y="25" class="title" text-anchor="middle">CD4051 Analog Multiplexer</text>
+<text x="400" y="42" class="subtitle" text-anchor="middle">8-Channel Signal Selector for Oscilloscope</text>
+<rect x="300" y="60" width="200" height="380" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="5"/>
+<circle cx="315" cy="75" r="5" fill="gold"/>
+<text x="400" y="110" class="label" text-anchor="middle" fill="#FFF" font-size="13">CD4051</text>
+<text x="400" y="128" class="value" text-anchor="middle" fill="#CCC" font-size="9">8-Ch MUX</text>
+<!-- Left side pins (1-8) -->
+<line x1="250" y1="150" x2="300" y2="150" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="153" class="pin" text-anchor="end">X4 (LFO) ● 8</text>
+<rect x="260" y="145" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="152" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="180" x2="300" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="183" class="pin" text-anchor="end">X6 (NC) ● 7</text>
+<rect x="260" y="175" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="182" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="210" x2="300" y2="210" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="213" class="pin" text-anchor="end">X2 (Mix) ● 6</text>
+<rect x="260" y="205" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="212" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="240" x2="300" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="243" class="pin" text-anchor="end">X1 (Sqr) ● 5</text>
+<rect x="260" y="235" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="242" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="270" x2="300" y2="270" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="273" class="pin" text-anchor="end">X0 (Saw) ● 4</text>
+<rect x="260" y="265" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="272" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="300" x2="300" y2="300" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="303" class="pin" text-anchor="end">X3 (VCF) ● 3</text>
+<rect x="260" y="295" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="302" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="330" x2="300" y2="330" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="333" class="pin" text-anchor="end">X5 (Env) ● 2</text>
+<rect x="260" y="325" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="332" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="360" x2="300" y2="360" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="363" class="pin" text-anchor="end">X7 (NC) ● 1</text>
+<rect x="260" y="355" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
+<text x="270" y="362" class="value" text-anchor="middle" font-size="5">1kΩ</text>
+<line x1="250" y1="400" x2="300" y2="400" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="403" class="pin" text-anchor="end" fill="#CC0000">VDD (+5V) ● 16</text>
+<line x1="250" y1="420" x2="300" y2="420" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="245" y="423" class="pin" text-anchor="end">VEE (GND) ● 15</text>
+<!-- Right side pins (9-16) -->
+<line x1="500" y1="150" x2="550" y2="150" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="555" y="153" class="pin">● 9 A (LSB)</text>
+<line x1="500" y1="180" x2="550" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="555" y="183" class="pin">● 10 B</text>
+<line x1="500" y1="210" x2="550" y2="210" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="555" y="213" class="pin">● 11 C (MSB)</text>
+<line x1="500" y1="240" x2="550" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="555" y="243" class="pin">● 12 INH (→GND)</text>
+<line x1="500" y1="280" x2="550" y2="280" stroke="#0066CC" stroke-width="2.5"/>
+<text x="555" y="283" class="pin" fill="#0066CC" font-weight="bold">● 13 COM (Output)</text>
+<line x1="500" y1="320" x2="550" y2="320" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="555" y="323" class="pin">● 14 VSS (GND)</text>
+<!-- COM → Buffer → DSO -->
+<rect x="580" y="265" width="60" height="35" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
+<text x="610" y="282" class="label" text-anchor="middle" fill="#FFF" font-size="8">TL072</text>
+<text x="610" y="293" class="value" text-anchor="middle" fill="#FFF" font-size="7">Buffer</text>
+<line x1="640" y1="282" x2="700" y2="282" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="720" y="285" class="anno" font-size="9">To DSO138</text>
+<!-- Control box -->
+<rect x="580" y="170" width="160" height="60" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="3"/>
+<text x="660" y="190" class="label" text-anchor="middle" fill="#1B5E20" font-size="9">Control (Pico GPIO)</text>
+<text x="590" y="205" class="value" font-size="7">Saw(0): A=0 B=0 C=0</text>
+<text x="590" y="217" class="value" font-size="7">Sqr(1): A=1 B=0 C=0</text>
+<text x="590" y="229" class="value" font-size="7">Mix(2): A=0 B=1 C=0</text>
+<!-- Notes box -->
+<rect x="50" y="460" width="700" height="75" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
+<text x="400" y="480" class="label" text-anchor="middle" fill="#E65100" font-size="10">How It Works</text>
+<text x="70" y="498" class="value" font-size="8">• 8 analog inputs (X0-X7), 3-bit address (A,B,C) selects one channel → COM output</text>
+<text x="70" y="513" class="value" font-size="8">• TL072 buffer drives DSO138 input. 1kΩ series resistors protect against shorts.</text>
+<text x="70" y="528" class="value" font-size="8">• INH tied to GND (always enabled). VEE=GND for unipolar signals.</text>
+</svg>

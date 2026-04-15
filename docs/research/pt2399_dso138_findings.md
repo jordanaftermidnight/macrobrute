@@ -51,7 +51,7 @@ Where R is the resistance on Pin 6.
 
 ---
 
-## DSO138 / DSO130
+## DSO138 / DSO138
 
 ### Alternative Firmware
 | Firmware | Features | Source |

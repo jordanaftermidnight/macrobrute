@@ -142,7 +142,7 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 
 ---
 
-## Area 2: DSO130 Oscilloscope Integration
+## Area 2: DSO138 Oscilloscope Integration
 
 ### 2A. Specifications
 
@@ -188,7 +188,7 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 
 **Buffer requirements:**
 - Buffer each mux input with TL074 voltage follower
-- Buffer output with TL072 before feeding DSO130
+- Buffer output with TL072 before feeding DSO138
 - 1kΩ series resistors on each input for isolation
 - 0.1µF bypass caps on all power pins
 - Tie unused channels to ground through 10kΩ resistors
@@ -366,7 +366,7 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 **Panel fabrication:**
 - FR4 PCB panels from JLCPCB/PCBWay at ~$2–5 each
 - Black solder mask with white silkscreen is standard
-- For DSO130: Cut rectangular opening, mount display PCB behind with M3 standoffs
+- For DSO138: Cut rectangular opening, mount display PCB behind with M3 standoffs
 
 ---
 
@@ -594,7 +594,7 @@ F0 00 20 6B 05 01 [counter] 01 [param_code] [value] F7
 ### Phase 2 — Core Expander:
 5. Noise generator, LFO, clock divider, sample & hold
 6. CD4051 signal multiplexer for oscilloscope
-7. DSO130 Eurorack mounting with input protection
+7. DSO138 Eurorack mounting with input protection
 8. Basic Pico firmware (OLED menu, clock generation, MIDI SysEx bridge)
 
 ### Phase 3 — Delay Integration:
@@ -620,7 +620,7 @@ F0 00 20 6B 05 01 [counter] 01 [param_code] [value] F7
 - Matraszek SysEx RE: https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html
 - MicroDude editor: https://github.com/dagargo/microdude
 
-### DSO130/138
+### DSO138/138
 - DLO-138 firmware: https://github.com/ardyesp/DLO-138
 - DSO-238 firmware: https://github.com/barty32/DSO-238
 

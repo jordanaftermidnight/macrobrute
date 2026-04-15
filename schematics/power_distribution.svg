@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500">
+<style>
+.title{font:bold 17px sans-serif;fill:#eee}
+.subtitle{font:11px sans-serif;fill:#aaa}
+.label{font:10px sans-serif;fill:#ccc}
+.val{font:9px sans-serif;fill:#999}
+.bus{stroke-width:3;fill:none}
+.rail-plus{stroke:#F44336;stroke-width:4}
+.rail-minus{stroke:#2196F3;stroke-width:4}
+.rail-gnd{stroke:#9E9E9E;stroke-width:4}
+.rail-3v3{stroke:#FF9800;stroke-width:4}
+.rail-5v{stroke:#4CAF50;stroke-width:4}
+.comp-box{fill:#1a2a3a;stroke:#555;stroke-width:1;rx:3}
+.load-box{fill:#2a1a2a;stroke:#9C27B0;stroke-width:1.5;rx:4}
+.ic-box{fill:#1a2a2a;stroke:#4CAF50;stroke-width:1;rx:3}
+.wire{stroke:#888;stroke-width:1;fill:none}
+.wire-r{stroke:#F44336;stroke-width:1.5;fill:none}
+.wire-b{stroke:#2196F3;stroke-width:1.5;fill:none}
+.wire-g{stroke:#9E9E9E;stroke-width:1.5;fill:none}
+.wire-o{stroke:#FF9800;stroke-width:1.5;fill:none}
+.wire-grn{stroke:#4CAF50;stroke-width:1.5;fill:none}
+.diode{fill:#F44336;stroke:#F44336;stroke-width:1}
+.diode-blue{fill:#2196F3;stroke:#2196F3;stroke-width:1}
+</style>
+<rect width="700" height="500" fill="#111"/>
+<text x="350" y="22" text-anchor="middle" class="title">Power Distribution System</text>
+<text x="350" y="38" text-anchor="middle" class="subtitle">Breakout Board Supply Rails</text>
+
+<!-- +12V path -->
+<text x="15" y="68" font-weight="bold" font-size="11px" fill="#F44336" font-family="sans-serif">MicroBrute TP70</text>
+<text x="15" y="80" class="label">+12V source</text>
+<line x1="130" y1="72" x2="170" y2="72" class="wire-r"/>
+<!-- Diode D1 -->
+<polygon points="170,66 185,72 170,78" class="diode"/>
+<line x1="185" y1="66" x2="185" y2="78" stroke="#F44336" stroke-width="2"/>
+<text x="177" y="62" class="val">1N5817</text>
+<line x1="185" y1="72" x2="220" y2="72" class="wire-r"/>
+<!-- Ferrite FB1 -->
+<rect x="220" y="66" width="50" height="12" fill="#2a2a1a" stroke="#888" stroke-width="1" rx="2"/>
+<text x="245" y="74" text-anchor="middle" class="val">100Ω</text>
+<line x1="270" y1="72" x2="310" y2="72" class="wire-r"/>
+<!-- C1 100µF -->
+<line x1="310" y1="60" x2="310" y2="84" stroke="#999" stroke-width="1.5"/>
+<line x1="316" y1="60" x2="316" y2="84" stroke="#999" stroke-width="1.5"/>
+<text x="313" y="56" text-anchor="middle" class="val">100µF</text>
+<line x1="316" y1="72" x2="350" y2="72" class="wire-r"/>
+<!-- C2 100nF -->
+<line x1="350" y1="63" x2="350" y2="81" stroke="#999" stroke-width="1.5"/>
+<line x1="355" y1="63" x2="355" y2="81" stroke="#999" stroke-width="1.5"/>
+<text x="353" y="56" text-anchor="middle" class="val">100nF</text>
+<line x1="355" y1="72" x2="400" y2="72" class="wire-r"/>
+<!-- +12V_BRK rail -->
+<line x1="400" y1="72" x2="650" y2="72" class="rail-plus"/>
+<text x="405" y="66" font-weight="bold" font-size="10px" fill="#F44336" font-family="sans-serif">+12V_BRK</text>
+<!-- GND returns for caps -->
+<line x1="310" y1="84" x2="310" y2="92" class="wire-g"/>
+<line x1="350" y1="81" x2="350" y2="92" class="wire-g"/>
+<line x1="220" y1="92" x2="350" y2="92" class="wire-g"/>
+
+<!-- -12V path -->
+<text x="15" y="128" font-weight="bold" font-size="11px" fill="#2196F3" font-family="sans-serif">MicroBrute TP71</text>
+<text x="15" y="140" class="label">-12V source</text>
+<line x1="130" y1="132" x2="170" y2="132" class="wire-b"/>
+<!-- Diode D2 -->
+<polygon points="170,126 185,132 170,138" class="diode-blue"/>
+<line x1="185" y1="126" x2="185" y2="138" stroke="#2196F3" stroke-width="2"/>
+<text x="177" y="122" class="val">1N5817</text>
+<line x1="185" y1="132" x2="220" y2="132" class="wire-b"/>
+<!-- Ferrite FB2 -->
+<rect x="220" y="126" width="50" height="12" fill="#1a1a2a" stroke="#888" stroke-width="1" rx="2"/>
+<text x="245" y="134" text-anchor="middle" class="val">100Ω</text>
+<line x1="270" y1="132" x2="310" y2="132" class="wire-b"/>
+<!-- C3 100µF -->
+<line x1="310" y1="120" x2="310" y2="144" stroke="#999" stroke-width="1.5"/>
+<line x1="316" y1="120" x2="316" y2="144" stroke="#999" stroke-width="1.5"/>
+<text x="313" y="116" text-anchor="middle" class="val">100µF</text>
+<line x1="316" y1="132" x2="350" y2="132" class="wire-b"/>
+<!-- C4 100nF -->
+<line x1="350" y1="123" x2="350" y2="141" stroke="#999" stroke-width="1.5"/>
+<line x1="355" y1="123" x2="355" y2="141" stroke="#999" stroke-width="1.5"/>
+<text x="353" y="116" text-anchor="middle" class="val">100nF</text>
+<line x1="355" y1="132" x2="400" y2="132" class="wire-b"/>
+<!-- -12V_BRK rail -->
+<line x1="400" y1="132" x2="650" y2="132" class="rail-minus"/>
+<text x="405" y="126" font-weight="bold" font-size="10px" fill="#2196F3" font-family="sans-serif">-12V_BRK</text>
+<line x1="310" y1="144" x2="310" y2="152" class="wire-g"/>
+<line x1="350" y1="141" x2="350" y2="152" class="wire-g"/>
+<line x1="220" y1="152" x2="350" y2="152" class="wire-g"/>
+
+<!-- +5V path -->
+<text x="15" y="192" font-weight="bold" font-size="11px" fill="#4CAF50" font-family="sans-serif">+5V rail</text>
+<text x="15" y="204" class="label">(from MicroBrute)</text>
+<line x1="100" y1="196" x2="170" y2="196" class="wire-grn"/>
+<!-- Diode D3 -->
+<polygon points="170,190 185,196 170,202" fill="#4CAF50" stroke="#4CAF50" stroke-width="1"/>
+<line x1="185" y1="190" x2="185" y2="202" stroke="#4CAF50" stroke-width="2"/>
+<text x="177" y="186" class="val">1N5817</text>
+<line x1="185" y1="196" x2="230" y2="196" class="wire-grn"/>
+<!-- Pico VSYS -->
+<rect x="230" y="184" width="120" height="24" class="ic-box"/>
+<text x="290" y="200" text-anchor="middle" font-size="10px" fill="#ccc" font-family="sans-serif">Pico VSYS (pin 39)</text>
+<line x1="350" y1="196" x2="400" y2="196" class="wire-grn"/>
+<line x1="400" y1="196" x2="650" y2="196" class="rail-5v"/>
+<text x="405" y="190" font-weight="bold" font-size="10px" fill="#4CAF50" font-family="sans-serif">+5V_BRK</text>
+
+<!-- 3V3 path -->
+<rect x="230" y="232" width="120" height="24" class="ic-box"/>
+<text x="290" y="248" text-anchor="middle" font-size="10px" fill="#ccc" font-family="sans-serif">Pico 3V3_OUT (pin 36)</text>
+<line x1="350" y1="244" x2="400" y2="244" class="wire-o"/>
+<line x1="400" y1="244" x2="650" y2="244" class="rail-3v3"/>
+<text x="405" y="238" font-weight="bold" font-size="10px" fill="#FF9800" font-family="sans-serif">3V3 rail</text>
+
+<!-- GND rail -->
+<text x="15" y="278" font-weight="bold" font-size="11px" fill="#9E9E9E" font-family="sans-serif">MicroBrute TP72</text>
+<text x="15" y="290" class="label">GND source</text>
+<line x1="130" y1="282" x2="400" y2="282" class="rail-gnd"/>
+<text x="405" y="276" font-weight="bold" font-size="10px" fill="#9E9E9E" font-family="sans-serif">GND</text>
+<line x1="400" y1="282" x2="650" y2="282" class="rail-gnd"/>
+
+<!-- Loads section -->
+<text x="350" y="320" text-anchor="middle" font-weight="bold" font-size="12px" fill="#eee" font-family="sans-serif">Connected Loads</text>
+
+<!-- TL074 loads -->
+<rect x="80" y="340" width="140" height="60" class="load-box"/>
+<text x="150" y="360" text-anchor="middle" font-size="11px" fill="#F44336" font-family="sans-serif">U1 TL074</text>
+<text x="150" y="375" text-anchor="middle" class="label">Quad op-amp</text>
+<line x1="120" y1="340" x2="120" y2="320" class="wire-r"/>
+<text x="95" y="315" class="val">V+ = +12V_BRK</text>
+<line x1="180" y1="340" x2="180" y2="320" class="wire-b"/>
+<text x="165" y="395" class="val">V- = -12V_BRK</text>
+<text x="150" y="392" text-anchor="middle" class="label">4 buffer channels</text>
+
+<!-- CD40106 -->
+<rect x="270" y="340" width="140" height="60" class="load-box"/>
+<text x="340" y="360" text-anchor="middle" font-size="11px" fill="#4CAF50" font-family="sans-serif">U3 CD40106</text>
+<text x="340" y="375" text-anchor="middle" class="label">Schmitt trigger</text>
+<line x1="340" y1="340" x2="340" y2="318" stroke="#4CAF50" stroke-width="1.5"/>
+<text x="320" y="314" class="val">VDD = +5V_BRK</text>
+<text x="340" y="392" text-anchor="middle" class="label">Gate buffer</text>
+
+<!-- OLED -->
+<rect x="460" y="340" width="140" height="60" class="load-box"/>
+<text x="530" y="360" text-anchor="middle" font-size="11px" fill="#FF9800" font-family="sans-serif">OLED Display</text>
+<text x="530" y="375" text-anchor="middle" class="label">SSD1306 128×64</text>
+<line x1="530" y1="340" x2="530" y2="318" stroke="#FF9800" stroke-width="1.5"/>
+<text x="510" y="314" class="val">VCC = 3V3</text>
+<text x="530" y="392" text-anchor="middle" class="label">I²C from Pico</text>
+
+<!-- TL074 #2 -->
+<rect x="80" y="420" width="140" height="60" class="load-box"/>
+<text x="150" y="440" text-anchor="middle" font-size="11px" fill="#F44336" font-family="sans-serif">U2 TL074 #2</text>
+<text x="150" y="455" text-anchor="middle" class="label">Quad op-amp</text>
+<line x1="120" y1="420" x2="120" y2="405" stroke="#F44336" stroke-width="1.5"/>
+<line x1="180" y1="420" x2="180" y2="405" stroke="#2196F3" stroke-width="1.5"/>
+<text x="150" y="472" text-anchor="middle" class="label">2 channels: Env, LFO</text>
+
+<!-- Encoder -->
+<rect x="270" y="420" width="140" height="60" class="load-box"/>
+<text x="340" y="440" text-anchor="middle" font-size="11px" fill="#FF9800" font-family="sans-serif">Encoder</text>
+<text x="340" y="455" text-anchor="middle" class="label">Rotary encoder</text>
+<line x1="340" y1="420" x2="340" y2="405" stroke="#FF9800" stroke-width="1.5"/>
+<text x="340" y="472" text-anchor="middle" class="label">+ switch to Pico</text>
+
+<!-- Pico -->
+<rect x="460" y="420" width="140" height="60" class="ic-box" style="stroke:#9C27B0"/>
+<text x="530" y="440" text-anchor="middle" font-size="11px" fill="#9C27B0" font-family="sans-serif">RP2040 Pico</text>
+<text x="530" y="455" text-anchor="middle" class="label">Communication hub</text>
+<line x1="530" y1="420" x2="530" y2="405" stroke="#4CAF50" stroke-width="1.5"/>
+<text x="510" y="415" class="val">VSYS = +5V</text>
+<text x="530" y="472" text-anchor="middle" class="label">I²C, SPI, ADC</text>
+</svg>

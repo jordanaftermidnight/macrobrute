@@ -14,8 +14,10 @@
     .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
-    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
-    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
     .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
     .filled { fill: #1a1a1a; }
     .junction { fill: #0066CC; }
@@ -42,6 +44,10 @@
 <text x="250" y="155" class="label" text-anchor="middle" font-size="9">TL072</text>
 <text x="217" y="132" class="pin" text-anchor="end">-</text>
 <text x="217" y="168" class="pin" text-anchor="end">+</text>
+<line x1="250" y1="120" x2="250" y2="110" class="component"/>
+<text x="255" y="115" class="pin" font-size="7">V+</text>
+<line x1="250" y1="180" x2="250" y2="190" class="component"/>
+<text x="255" y="188" class="pin" font-size="7">V-</text>
 <line x1="160" y1="100" x2="210" y2="148" class="wire"/>
 <line x1="210" y1="152" x2="210" y2="250" class="wire"/>
 <line x1="210" y1="250" x2="210" y2="262" class="wire"/>

@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<style>
+.title{font:bold 17px sans-serif;fill:#eee}
+.subtitle{font:11px sans-serif;fill:#aaa}
+.label{font:10px sans-serif;fill:#ccc}
+.val{font:9px sans-serif;fill:#aaa}
+.pin-label{font:8px sans-serif;fill:#999}
+.net-label{font:bold 9px sans-serif;fill:#FF9800}
+.row-bg{fill:#181818;stroke:#333;stroke-width:0.5}
+.opamp{fill:#1a2a3a;stroke:#2196F3;stroke-width:1.5}
+.ic-label{font:bold 10px sans-serif;fill:#2196F3}
+.resistor{fill:none;stroke:#ccc;stroke-width:1.2}
+.wire-a{stroke:#2196F3;stroke-width:1.2;fill:none}
+.wire-cv{stroke:#9C27B0;stroke-width:1.2;fill:none}
+.wire-g{stroke:#4CAF50;stroke-width:1.2;fill:none}
+.cap-dec{stroke:#FF9800;stroke-width:1}
+.bias-r{stroke:#aaa;stroke-width:0.8;stroke-dasharray:2,2}
+</style>
+<rect width="800" height="500" fill="#111"/>
+<text x="400" y="22" text-anchor="middle" class="title">Output Buffer Board</text>
+<text x="400" y="38" text-anchor="middle" class="subtitle">TL074 Followers + CD40106 Gate Buffer</text>
+
+<!-- Row labels -->
+<text x="10" y="68" class="label" fill="#2196F3">1</text>
+<text x="10" y="124" class="label" fill="#2196F3">2</text>
+<text x="10" y="180" class="label" fill="#2196F3">3</text>
+<text x="10" y="236" class="label" fill="#2196F3">4</text>
+<text x="10" y="292" class="label" fill="#4CAF50">5</text>
+<text x="10" y="348" class="label" fill="#9C27B0">6</text>
+<text x="10" y="404" class="label" fill="#9C27B0">7</text>
+
+<!-- ===== Row 1: Saw ===== -->
+<rect x="5" y="54" width="790" height="50" class="row-bg" rx="3"/>
+<text x="30" y="82" class="net-label">TP94</text>
+<text x="30" y="92" class="pin-label">(Saw)</text>
+<line x1="70" y1="78" x2="100" y2="78" class="wire-a"/>
+<!-- R1 1kΩ -->
+<rect x="100" y="74" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="86" text-anchor="middle" class="val">1kΩ</text>
+<line x1="140" y1="78" x2="175" y2="78" class="wire-a"/>
+<!-- TL074 A op-amp triangle -->
+<polygon points="175,62 175,94 230,78" class="opamp"/>
+<text x="193" y="78" class="ic-label">A</text>
+<text x="180" y="72" class="pin-label">+</text>
+<text x="180" y="90" class="pin-label">−</text>
+<!-- Feedback loop -->
+<path d="M230,78 L240,78 L240,60 L170,60 L170,90 L175,90" fill="none" stroke="#2196F3" stroke-width="1" stroke-dasharray="3,2"/>
+<!-- Bias resistor 10MΩ to GND -->
+<line x1="175" y1="62" x2="175" y2="52" class="bias-r"/>
+<rect x="168" y="46" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="44" text-anchor="middle" class="val">10MΩ</text>
+<line x1="168" y1="49" x2="155" y2="49" stroke="#999" stroke-width="0.5"/>
+<text x="155" y="47" class="val" text-anchor="end">GND</text>
+<!-- Output series R -->
+<line x1="230" y1="78" x2="280" y2="78" class="wire-a"/>
+<rect x="280" y="74" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="300" y="86" text-anchor="middle" class="val">1kΩ</text>
+<line x1="320" y1="78" x2="360" y2="78" class="wire-a"/>
+<text x="365" y="82" class="net-label">DB-9 A:7</text>
+
+<!-- Decoupling cap -->
+<line x1="245" y1="62" x2="260" y2="62" class="cap-dec"/>
+<line x1="253" y1="55" x2="253" y2="69" class="cap-dec"/>
+<line x1="258" y1="55" x2="258" y2="69" class="cap-dec"/>
+<text x="255" y="53" text-anchor="middle" class="val">100nF</text>
+
+<!-- ===== Row 2: Sqr ===== -->
+<rect x="5" y="110" width="790" height="50" class="row-bg" rx="3"/>
+<text x="30" y="138" class="net-label">TP93</text>
+<text x="30" y="148" class="pin-label">(Sqr)</text>
+<line x1="70" y1="134" x2="100" y2="134" class="wire-a"/>
+<rect x="100" y="130" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="142" text-anchor="middle" class="val">1kΩ</text>
+<line x1="140" y1="134" x2="175" y2="134" class="wire-a"/>
+<polygon points="175,118 175,150 230,134" class="opamp"/>
+<text x="193" y="134" class="ic-label">B</text>
+<text x="180" y="128" class="pin-label">+</text>
+<text x="180" y="146" class="pin-label">−</text>
+<path d="M230,134 L240,134 L240,116 L170,116 L170,146 L175,146" fill="none" stroke="#2196F3" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="175" y1="118" x2="175" y2="108" class="bias-r"/>
+<rect x="168" y="102" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="100" text-anchor="middle" class="val">10MΩ</text>
+<line x1="230" y1="134" x2="280" y2="134" class="wire-a"/>
+<rect x="280" y="130" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="300" y="142" text-anchor="middle" class="val">1kΩ</text>
+<line x1="320" y1="134" x2="360" y2="134" class="wire-a"/>
+<text x="365" y="138" class="net-label">DB-9 A:8</text>
+
+<!-- ===== Row 3: Mix ===== -->
+<rect x="5" y="166" width="790" height="50" class="row-bg" rx="3"/>
+<text x="20" y="194" class="net-label">TP30</text>
+<text x="20" y="204" class="pin-label">(Mix)</text>
+<line x1="70" y1="190" x2="100" y2="190" class="wire-a"/>
+<rect x="100" y="186" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="198" text-anchor="middle" class="val">1kΩ</text>
+<line x1="140" y1="190" x2="175" y2="190" class="wire-a"/>
+<polygon points="175,174 175,206 230,190" class="opamp"/>
+<text x="193" y="190" class="ic-label">C</text>
+<text x="180" y="184" class="pin-label">+</text>
+<text x="180" y="202" class="pin-label">−</text>
+<path d="M230,190 L240,190 L240,172 L170,172 L170,202 L175,202" fill="none" stroke="#2196F3" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="175" y1="174" x2="175" y2="164" class="bias-r"/>
+<rect x="168" y="158" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="156" text-anchor="middle" class="val">10MΩ</text>
+<line x1="230" y1="190" x2="280" y2="190" class="wire-a"/>
+<rect x="280" y="186" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="300" y="198" text-anchor="middle" class="val">1kΩ</text>
+<line x1="320" y1="190" x2="360" y2="190" class="wire-a"/>
+<text x="365" y="194" class="net-label">DB-9 A:5</text>
+
+<!-- ===== Row 4: VCF ===== -->
+<rect x="5" y="222" width="790" height="50" class="row-bg" rx="3"/>
+<text x="17" y="250" class="net-label">TP19</text>
+<text x="17" y="260" class="pin-label">(VCF)</text>
+<line x1="70" y1="246" x2="100" y2="246" class="wire-a"/>
+<rect x="100" y="242" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="254" text-anchor="middle" class="val">1kΩ</text>
+<line x1="140" y1="246" x2="175" y2="246" class="wire-a"/>
+<polygon points="175,230 175,262 230,246" class="opamp"/>
+<text x="193" y="246" class="ic-label">D</text>
+<text x="180" y="240" class="pin-label">+</text>
+<text x="180" y="258" class="pin-label">−</text>
+<path d="M230,246 L240,246 L240,228 L170,228 L170,258 L175,258" fill="none" stroke="#2196F3" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="175" y1="230" x2="175" y2="220" class="bias-r"/>
+<rect x="168" y="214" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="212" text-anchor="middle" class="val">10MΩ</text>
+<line x1="230" y1="246" x2="280" y2="246" class="wire-a"/>
+<rect x="280" y="242" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="300" y="254" text-anchor="middle" class="val">1kΩ</text>
+<line x1="320" y1="246" x2="360" y2="246" class="wire-a"/>
+<text x="365" y="250" class="net-label">DB-9 A:6</text>
+
+<!-- TL074 label on right -->
+<rect x="440" y="58" width="90" height="210" fill="#0a1520" stroke="#2196F3" stroke-width="1" rx="5" stroke-dasharray="4,2"/>
+<text x="485" y="168" text-anchor="middle" font-size="12" fill="#2196F3" font-family="sans-serif" font-weight="bold">U1</text>
+<text x="485" y="182" text-anchor="middle" class="label">TL074</text>
+<text x="485" y="195" text-anchor="middle" class="val">DIP-14</text>
+<text x="485" y="210" text-anchor="middle" class="val">±12V_BRK</text>
+
+<!-- ===== Row 5: Gate ===== -->
+<rect x="5" y="278" width="790" height="50" class="row-bg" rx="3"/>
+<text x="17" y="306" class="net-label">TP83</text>
+<text x="17" y="316" class="pin-label">(Gate)</text>
+<line x1="70" y1="302" x2="100" y2="302" class="wire-g"/>
+<rect x="100" y="298" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="310" text-anchor="middle" class="val">10kΩ</text>
+<line x1="140" y1="302" x2="175" y2="302" class="wire-g"/>
+<!-- Schmitt trigger symbol (NOT gate shape) -->
+<path d="M175,288 L175,316 L225,302 Z" fill="#1a2a1a" stroke="#4CAF50" stroke-width="1.5"/>
+<!-- Hysteresis symbol -->
+<circle cx="225" cy="302" r="4" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
+<text x="195" y="302" font-size="9" fill="#4CAF50" font-family="sans-serif">Schmitt</text>
+<line x1="229" y1="302" x2="360" y2="302" class="wire-g"/>
+<text x="365" y="306" class="net-label">DB-9 A:1</text>
+<text x="440" y="306" class="label" fill="#4CAF50">U3 CD40106</text>
+
+<!-- ===== Row 6: Envelope ===== -->
+<rect x="5" y="334" width="790" height="50" class="row-bg" rx="3"/>
+<text x="17" y="362" class="net-label">Env</text>
+<text x="17" y="372" class="pin-label">(mod)</text>
+<line x1="70" y1="358" x2="100" y2="358" class="wire-cv"/>
+<rect x="100" y="354" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="366" text-anchor="middle" class="val">10kΩ</text>
+<line x1="140" y1="358" x2="175" y2="358" class="wire-cv"/>
+<polygon points="175,342 175,374 230,358" fill="#1a1a2a" stroke="#9C27B0" stroke-width="1.5"/>
+<text x="193" y="358" class="ic-label" fill="#9C27B0">#2A</text>
+<path d="M230,358 L240,358 L240,340 L170,340 L170,370 L175,370" fill="none" stroke="#9C27B0" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="175" y1="342" x2="175" y2="332" class="bias-r"/>
+<rect x="168" y="326" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="324" text-anchor="middle" class="val">10MΩ</text>
+<line x1="230" y1="358" x2="360" y2="358" class="wire-cv"/>
+<text x="365" y="362" class="net-label">DB-9 A:3</text>
+<text x="440" y="362" class="label" fill="#9C27B0">U2 TL074 #2 ch A</text>
+
+<!-- ===== Row 7: LFO ===== -->
+<rect x="5" y="390" width="790" height="50" class="row-bg" rx="3"/>
+<text x="17" y="418" class="net-label">LFO</text>
+<text x="17" y="428" class="pin-label">(mod)</text>
+<line x1="70" y1="414" x2="100" y2="414" class="wire-cv"/>
+<rect x="100" y="410" width="40" height="8" rx="2" fill="#1a1a1a" stroke="#ccc" stroke-width="1"/>
+<text x="120" y="422" text-anchor="middle" class="val">10kΩ</text>
+<line x1="140" y1="414" x2="175" y2="414" class="wire-cv"/>
+<polygon points="175,398 175,430 230,414" fill="#1a1a2a" stroke="#9C27B0" stroke-width="1.5"/>
+<text x="193" y="414" class="ic-label" fill="#9C27B0">#2B</text>
+<path d="M230,414 L240,414 L240,396 L170,396 L170,426 L175,426" fill="none" stroke="#9C27B0" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="175" y1="398" x2="175" y2="388" class="bias-r"/>
+<rect x="168" y="382" width="14" height="6" rx="1" fill="#1a1a1a" stroke="#aaa" stroke-width="0.8"/>
+<text x="175" y="380" text-anchor="middle" class="val">10MΩ</text>
+<line x1="230" y1="414" x2="360" y2="414" class="wire-cv"/>
+<text x="365" y="418" class="net-label">DB-9 A:4</text>
+<text x="440" y="418" class="label" fill="#9C27B0">U2 TL074 #2 ch B</text>
+
+<!-- TL074 #2 box -->
+<rect x="440" y="330" width="90" height="108" fill="#0a0a1a" stroke="#9C27B0" stroke-width="1" rx="5" stroke-dasharray="4,2"/>
+<text x="485" y="386" text-anchor="middle" font-size="12" fill="#9C27B0" font-family="sans-serif" font-weight="bold">U2</text>
+<text x="485" y="400" text-anchor="middle" class="label">TL074 #2</text>
+<text x="485" y="413" text-anchor="middle" class="val">DIP-14</text>
+<text x="485" y="426" text-anchor="middle" class="val">±12V_BRK</text>
+
+<!-- Power decoupling note -->
+<rect x="560" y="340" width="220" height="100" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
+<text x="670" y="358" text-anchor="middle" font-size="10" fill="#ccc" font-family="sans-serif" font-weight="bold">Power Decoupling</text>
+<text x="670" y="374" text-anchor="middle" class="val">100nF each V+ to GND:</text>
+<text x="670" y="388" text-anchor="middle" class="val">U1 pin 4 (+12V_BRK)</text>
+<text x="670" y="402" text-anchor="middle" class="val">U1 pin 11 (-12V_BRK)</text>
+<text x="670" y="416" text-anchor="middle" class="val">U2 pin 4 (+12V_BRK)</text>
+<text x="670" y="430" text-anchor="middle" class="val">U2 pin 11 (-12V_BRK)</text>
+
+<!-- Legend -->
+<rect x="560" y="458" width="220" height="30" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
+<line x1="570" y1="475" x2="590" y2="475" stroke="#2196F3" stroke-width="2"/>
+<text x="595" y="479" class="val">Audio</text>
+<line x1="630" y1="475" x2="650" y2="475" stroke="#9C27B0" stroke-width="2"/>
+<text x="655" y="479" class="val">CV</text>
+<line x1="680" y1="475" x2="700" y2="475" stroke="#4CAF50" stroke-width="2"/>
+<text x="705" y="479" class="val">Gate</text>
+</svg>

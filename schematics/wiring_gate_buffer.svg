@@ -14,8 +14,10 @@
     .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
     .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
-    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
-    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
     .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
     .filled { fill: #1a1a1a; }
     .junction { fill: #0066CC; }

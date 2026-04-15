@@ -50,7 +50,7 @@ wiring reference for building, debugging, and expanding.
 | 2 | Pitch CV Out | Rear panel jack | Direct (stock buffer) | — | Yellow |
 | 3 | Envelope Out | Mod matrix | TL072 follower | 10kΩ in | Orange |
 | 4 | LFO Out | Mod matrix | TL072 follower | 10kΩ in | Green |
-| 5 | VCO Mix Out | TP30 | TL074 follower | 1kΩ in, 1kΩ out | Blue |
+| 5 | VCO Mix Out | TP30_MIXER_OUT | TL074 follower | 1kΩ in, 1kΩ out | Blue |
 | 6 | VCF Out | TP19 | TL074 follower | 1kΩ in, 1kΩ out | Purple |
 | 7 | Saw Out | TP94 | TL074 follower | 1kΩ in, 1kΩ out | Red |
 | 8 | Square Out | TP93 | TL074 follower | 1kΩ in, 1kΩ out | Brown |
@@ -89,6 +89,8 @@ Routed through rear panel grommet alongside DB-9 cables.
 
 3-conductor shielded cable, <1m.
 
+**Ground loop warning:** Connect DB-9 shield drain to GND at ONE end only (MicroBrute side). Connecting both ends creates a ground loop that introduces 50/60Hz hum into audio paths. Use star grounding: all grounds converge at MicroBrute TP72, single path to expander.
+
 ---
 
 ## 5. Internal MicroBrute Wiring
@@ -114,7 +116,7 @@ All taps use 24AWG wire, soldered to test point pad.
 | Test Point | Signal | Notes | Series R | Destination |
 |------------|--------|-------|----------|-------------|
 | TP19 | VCF Output | Steiner-Parker out | 1kΩ | TL074 D +in → DB-9 A:6 |
-| TP30 | VCO Mix (pre-filter) | AudioOut | 1kΩ | TL074 C +in → DB-9 A:5 |
+| TP30 | VCO Mix (pre-filter, TP30_MIXER_OUT) | AudioOut | 1kΩ | TL074 C +in → DB-9 A:5 |
 | TP10/TP11 | VCA CV inject | CV1/CV2, 100kΩ internal | — | From DB-9 B:2 |
 | TP5 | Envelope 2 Out | | 10kΩ | TL072 A +in → DB-9 A:3 |
 | Mod matrix | LFO | Normalled switching jack | 10kΩ | TL072 B +in → DB-9 A:4 |
@@ -160,7 +162,7 @@ All taps use 24AWG wire, soldered to test point pad.
 
 ## 8. Touch Bolts (6 selected from 8 tested)
 
-All bolts: M3 brass, 6mm panel hole, 15mm spacing between bolts.
+All bolts: M3 brass, 6mm panel hole, 18-20mm spacing between bolts.
 Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GND.
 
 | ID | Name | PCB Point | Safety R | Effect | Intensity | Risk |
@@ -305,7 +307,7 @@ Keeping it off the MB PSU avoids clock noise bleeding into VCO.
 
 ### 12E. DSO138 Oscilloscope — Separate Eurorack Module
 
-Built DSO130 kit available. Convert to Eurorack signal monitor.
+Built DSO138 kit available. Convert to Eurorack signal monitor.
 
 | Feature | Implementation |
 |---------|----------------|
@@ -356,7 +358,7 @@ VCO ──┬── Saw ──────── [1kΩ] ── TL074 A ── [1
            │
            ├── [B2 Insert jack] ── (break point)
            │
-      VCO Mix (TP30) ── [1kΩ] ── TL074 C ── [1kΩ] ── DB-9 A:5 ── Expander: MIX jack
+       VCO Mix (TP30_MIXER_OUT) ── [1kΩ] ── TL074 C ── [1kΩ] ── DB-9 A:5 ── Expander: MIX jack
            │
       Steiner-Parker VCF ◄── Filter CV In (DB-9 B:1, 220kΩ)
            │                ◄── Touch T3 WAH (22kΩ)
@@ -407,7 +409,7 @@ Bought locally in Kaunas, April 2026:
 | HW040 encoder | 1 | ✓ Have |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare) |
 | DB-9 connectors | 2 | ✓ Have |
-| DSO130 oscilloscope | 1 | ✓ Built |
+| DSO138 oscilloscope | 1 | ✓ Built |
 | JF-33 PCB | 1 | ✓ Extracted |
 | CD4049UBE | 3 | ✓ Have (level shifter) |
 | Isolation transformer | 1 | ✓ Salvaged (46.9/82.4Ω) |
@@ -417,7 +419,7 @@ Bought locally in Kaunas, April 2026:
 | Part | Qty | Source | For |
 |------|-----|--------|-----|
 | 1nF polystyrene cap | 1 | TME | S&H hold cap (CRITICAL) |
-| LM7809 | 1-2 | Local/TME | DSO130 power |
+| LM7809 | 1-2 | Local/TME | DSO138 power |
 | LM7805 | 2 | Local/TME | Spares |
 | Thonkiconn PJ398SM | ~20 | Thonk | Expander jacks |
 | Eurorack 16-pin header | 1 | Thonk | Expander power |

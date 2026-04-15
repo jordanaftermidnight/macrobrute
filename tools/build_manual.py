@@ -22,14 +22,42 @@ OUTPUT = PROJECT / "manual.html"
 # ─── SVG Mappings ───────────────────────────────────────────────────
 # Maps markdown files to their associated SVG layout diagrams
 SVG_MAP = {
-    "schematics/breakout_stripboard.md": ["schematics/breakout_layout.svg"],
-    "schematics/expander_stripboard.md": [
-        "schematics/expander_noise.svg",
-        "schematics/expander_lfo.svg",
-        "schematics/expander_clockdiv.svg",
-        "schematics/expander_sah.svg",
-        "schematics/expander_slew.svg",
-        "schematics/expander_attenuverter.svg",
+    "schematics/wiring_diagram.md": [
+        "schematics/system_architecture_block.svg",
+        "schematics/audio_signal_flow.svg",
+        "schematics/cv_control_flow.svg",
+        "schematics/signal_flow_overview.svg",
+        "schematics/wiring_overview.svg",
+        "schematics/wiring_internal.svg",
+        "schematics/wiring_power_distribution.svg",
+        "schematics/interconnect_wiring.svg",
+    ],
+    "schematics/breakout_pcb.md": [
+        "schematics/wiring_output_buffer.svg",
+        "schematics/wiring_gate_buffer.svg",
+        "schematics/wiring_vactrol_driver.svg",
+        "schematics/wiring_cv_protection.svg",
+        "schematics/breakout_layout.svg",
+        "schematics/power_distribution.svg",
+        "schematics/output_buffer_board.svg",
+    ],
+    "schematics/pico_pinout.md": [
+        "schematics/pico_pinout_diagram.svg",
+    ],
+    "schematics/ic_pinout_reference.md": [
+        "schematics/ic_pinout_tl074.svg",
+        "schematics/ic_pinout_tl072.svg",
+        "schematics/ic_pinout_cd40106.svg",
+        "schematics/ic_pinout_cd4051.svg",
+        "schematics/ic_pinout_cd4024.svg",
+        "schematics/ic_pinout_cd4066.svg",
+        "schematics/ic_pinout_lm358.svg",
+        "schematics/ic_pinout_pt2399.svg",
+    ],
+    "schematics/breakout_stripboard.md": [
+        "schematics/breakout_layout.svg",
+        "schematics/zone_layout_stripboard.svg",
+        "schematics/zone_layout_new.svg",
     ],
     "schematics/expander_circuits.md": [
         "schematics/noise_generator_schematic.svg",
@@ -38,18 +66,37 @@ SVG_MAP = {
         "schematics/clock_divider_schematic.svg",
         "schematics/slew_limiter_schematic.svg",
         "schematics/attenuverter_schematic.svg",
+        "schematics/dip_pinout_reference.svg",
     ],
-    "schematics/wiring_diagram.md": [
-        "schematics/wiring_overview.svg",
-        "schematics/wiring_internal.svg",
-        "schematics/wiring_power_distribution.svg",
-        "schematics/wiring_output_buffer.svg",
-        "schematics/wiring_gate_buffer.svg",
-        "schematics/wiring_vactrol_driver.svg",
-        "schematics/wiring_cv_protection.svg",
+    "schematics/expander_stripboard.md": [
+        "schematics/expander_noise.svg",
+        "schematics/expander_lfo.svg",
+        "schematics/expander_clockdiv.svg",
+        "schematics/expander_sah.svg",
+        "schematics/expander_slew.svg",
+        "schematics/expander_attenuverter.svg",
     ],
-    "schematics/jf33_cv_control.md": ["schematics/pt2399_cv_control_schematic.svg"],
-    "docs/mods/touch_bend_specs.md": ["schematics/touch_test_board.svg"],
+    "schematics/CIRCUIT_REVIEW.md": [
+        "schematics/led_driver_array_schematic.svg",
+        "schematics/vactrol_full_schematic.svg",
+        "schematics/input_protection_schematic.svg",
+        "schematics/esd_protection_schematic.svg",
+        "schematics/cv_input_protection_diagram.svg",
+        "schematics/cd4051_multiplexer.svg",
+        "schematics/buffered_multiple_schematic.svg",
+        "schematics/manual_gate_button_schematic.svg",
+    ],
+    "schematics/touch_plates.md": [
+        "schematics/touch_plate_schematic.svg",
+        "schematics/touch_test_board.svg",
+        "schematics/touch_plate_redesign.svg",
+    ],
+    "schematics/jf33_cv_control.md": [
+        "schematics/pt2399_cv_control_schematic.svg",
+    ],
+    "schematics/expander_block_diagram.md": [
+        "schematics/expander_block_diagram.svg",
+    ],
 }
 
 # ─── Document Organization ──────────────────────────────────────────
@@ -61,50 +108,71 @@ QUICK_REF = [
 ]
 
 SECTIONS = [
-    ("Build Guide", "build", [
-        "docs/MACROBRUTE_BUILD_PLAN.md",
-        "docs/MACROBRUTE_CONNECTION_MAP.md",
-        "docs/MACROBRUTE_MOD_SELECTION.md",
+    ("1. Getting Started", "start", [
+        "docs/MACROBRUTE_INDEX.md",
     ]),
-    ("Hardware Reference", "hw", [
-        "docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md",
+    ("2. Planning & Preparation", "plan", [
         "docs/hardware/MACROBRUTE_BOM.md",
         "docs/hardware/MACROBRUTE_SHOPPING_LIST.md",
+        "docs/MACROBRUTE_MOD_SELECTION.md",
+        "docs/MACROBRUTE_BUILD_PLAN.md",
     ]),
-    ("Schematics & Layouts", "sch", [
+    ("3. System Architecture", "arch", [
+        "docs/architecture/MACROBRUTE_FINAL_ARCHITECTURE.md",
+        "docs/MACROBRUTE_CONNECTION_MAP.md",
+        "schematics/expander_block_diagram.md",
+    ]),
+    ("4. Interconnect & Wiring", "wire", [
         "schematics/wiring_diagram.md",
-        "schematics/breakout_stripboard.md",
-        "schematics/breakout_pcb.md",
-        "schematics/expander_stripboard.md",
-        "schematics/expander_circuits.md",
-        "schematics/pico_pinout.md",
-        "schematics/touch_plates.md",
-        "schematics/CIRCUIT_REVIEW.md",
-        "schematics/dso130_input_protection.md",
-        "schematics/jf33_cv_control.md",
     ]),
-    ("Mods & Bends", "mods", [
+    ("5. Breakout Board", "breakout", [
+        "schematics/breakout_pcb.md",
+        "schematics/breakout_stripboard.md",
+        "schematics/pico_pinout.md",
+    ]),
+    ("6. Expander Modules", "expander", [
+        "schematics/expander_circuits.md",
+        "schematics/expander_stripboard.md",
+    ]),
+    ("7. Protection & Safety", "protection", [
+        "schematics/CIRCUIT_REVIEW.md",
+    ]),
+    ("8. Control & Interface", "control", [
+        "schematics/touch_plates.md",
+        "schematics/jf33_cv_control.md",
+        "docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md",
+        "docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md",
+    ]),
+    ("9. Hardware Reference", "hw", [
+        "docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md",
+        "schematics/ic_pinout_reference.md",
+    ]),
+    ("10. Mods & Extensions", "mods", [
         "docs/mods/touch_bend_specs.md",
         "docs/mods/microbrute_mods_guide.md",
         "docs/mods/microbrute_circuit_bending_guide.md",
         "docs/mods/deep_circuit_bending.md",
         "docs/mods/ultimate_microbrute_project.md",
     ]),
-    ("Firmware", "fw", [
-        "docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md",
-        "docs/firmware/lpc2361_investigation_guide.md",
-        "docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md",
+    ("11. Proposed Designs (Not Used)", "proposed", [
+        "schematics/dso130_input_protection.md",
     ]),
-    ("Research", "res", [
+    ("12. Research", "research", [
+        "docs/research/additional_mods_findings.md",
         "docs/research/mbf_analysis.md",
         "docs/research/firmware_re_findings.md",
         "docs/research/pt2399_dso138_findings.md",
-        "docs/research/additional_mods_findings.md",
-    ]),
-    ("Architecture (Legacy)", "arch", [
-        "docs/architecture/MACROBRUTE_FINAL_ARCHITECTURE.md",
+        "docs/firmware/lpc2361_investigation_guide.md",
         "docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
         "docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",
+    ]),
+    ("13. Legacy & Archive", "legacy", [
+        "docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md",
+        "docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md",
+        "docs/legacy/MACROBRUTE_MASTER_PLAN.md",
+        "docs/legacy/MACROBRUTE_REVISED_SPEC.md",
+        "docs/legacy/MACROBRUTE_V2_SPEC.md",
+        "docs/legacy/MACROBRUTE_V2_COMPLETE_SPEC.md",
     ]),
 ]
 
@@ -352,16 +420,25 @@ CSS = """\
     --blue:#58a6ff; --green:#3fb950; --red:#f85149;
     --yel:#d29922; --purple:#bc8cff; --border:#30363d; --r:6px;
 }
+/* Light mode variables */
+body.light-mode {
+    --bg:#ffffff; --bg2:#f6f8fa; --bg3:#eaeef2; --bg4:#f3f4f6;
+    --tx:#1f2328; --txd:#57606a; --txb:#24292f;
+    --blue:#0969da; --green:#1a7f37; --red:#cf222e;
+    --yel:#9a6700; --purple:#8250df; --border:#d0d7de; --r:6px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--tx);line-height:1.6;font-size:15px}
+    background:var(--bg);color:var(--tx);line-height:1.6;font-size:15px;transition:background .3s,color .3s}
 
 /* Sidebar */
 #side{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--bg2);
     border-right:1px solid var(--border);overflow-y:auto;z-index:100;
     display:flex;flex-direction:column}
-#side-hd{padding:16px;border-bottom:1px solid var(--border)}
-#side-hd h1{font-size:16px;color:var(--txb);margin-bottom:12px;letter-spacing:1px}
+#side-hd{padding:16px;border-bottom:1px solid var(--border);position:relative}
+#side-hd h1{font-size:16px;color:var(--txb);margin-bottom:12px;letter-spacing:1px;display:inline-block}
+#theme-toggle{position:absolute;top:16px;right:16px;width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);border-radius:50%;cursor:pointer;font-size:16px;line-height:1;transition:all .2s}
+#theme-toggle:hover{background:var(--bg4);transform:scale(1.1)}
 #q{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);
     border-radius:var(--r);color:var(--tx);font-size:14px;outline:none}
 #q:focus{border-color:var(--blue)}
@@ -378,6 +455,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 #main{margin-left:280px;padding:24px 32px;max-width:1000px}
 .hdr{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
 .hdr h1{font-size:22px;color:var(--txb)} .hdr p{color:var(--txd);font-size:13px}
+.hdr .author{color:var(--blue);font-weight:600;font-size:14px !important;margin-top:8px}
 
 /* Quick ref tabs */
 .qr{margin-bottom:32px}
@@ -389,15 +467,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 
 /* Doc sections */
 .ds{margin-bottom:8px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.dh{padding:12px 16px;background:var(--bg2);cursor:pointer;display:flex;
-    align-items:center;gap:8px;user-select:none}
+details.ds[open]{border-color:var(--blue)}
+/* Search highlighting */
+mark{background:var(--yel);color:var(--bg);border-radius:2px;padding:0 2px}
+.dh{padding:12px 16px;background:var(--bg2);cursor:pointer;display:list-item;
+    align-items:center;gap:8px;user-select:none;list-style:none}
+.dh::-webkit-details-marker{display:none}
+.dh::marker{display:none;content:''}
 .dh:hover{background:var(--bg4)}
-.dh .arr{color:var(--txd);font-size:12px;transition:transform .2s}
-.dh.open .arr{transform:rotate(90deg)}
+.dh .arr{color:var(--txd);font-size:12px;transition:transform .2s;display:inline-block}
+details[open]>.dh .arr{transform:rotate(90deg)}
 .dt{font-size:14px;font-weight:600;color:var(--txb)}
 .dp{font-size:12px;color:var(--txd);margin-left:auto;font-family:monospace}
-.db{display:none;padding:16px 24px;border-top:1px solid var(--border)}
-.db.open{display:block}
+.db{padding:16px 24px;border-top:1px solid var(--border)}
 .cat{font-size:18px;font-weight:600;color:var(--txb);margin:32px 0 12px;
     padding-bottom:8px;border-bottom:1px solid var(--border)}
 .cat:first-child{margin-top:0}
@@ -429,7 +511,7 @@ th{background:var(--bg3);text-align:left;padding:8px 12px;border-bottom:2px soli
 td{padding:6px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 tr:hover td{background:var(--bg4)}
 tr:target td{animation:flash 1.5s ease}
-@keyframes flash{0%{background:#1a3a5c}100%{background:transparent}}
+@keyframes flash{0%{background:var(--blue);color:var(--txb)}100%{background:transparent;color:inherit}}
 
 /* Ref links */
 .ref{text-decoration:none;font-weight:600;border-bottom:1px dotted}
@@ -441,15 +523,68 @@ tr:target td{animation:flash 1.5s ease}
 .svg-diagrams{margin:16px 0}
 .svg-wrap{margin:16px 0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--bg2)}
 .svg-caption{padding:8px 12px;background:var(--bg3);font-size:13px;font-weight:600;color:var(--txb);border-bottom:1px solid var(--border)}
-.svg-container{overflow-x:auto;padding:16px;background:#F5F5F0;-webkit-overflow-scrolling:touch}
-.svg-container svg{max-width:none;display:block;margin:0 auto;background:#F5F5F0}
-.svg-container text{fill:#1a1a1a !important;text-shadow:0 0 2px #fff,0 0 3px #fff,0 0 4px #fff !important;font-weight:600 !important}
-.svg-container .ic-name,.svg-container .rail{fill:#fff !important;text-shadow:0 0 2px #000,0 0 3px #000 !important}
-.svg-container .title,.svg-container .subtitle{fill:#1a1a1a !important;text-shadow:0 0 3px #fff,0 0 5px #fff !important;font-weight:700 !important}
-.svg-container .pin,.svg-container .comp,.svg-container .zone-label,.svg-container .note{fill:#222 !important;text-shadow:0 0 2px #fff,0 0 3px #fff !important;font-weight:600 !important}
-.svg-container .row-label,.svg-container .col-label{fill:#333 !important;text-shadow:0 0 2px #fff !important;font-weight:700 !important}
+.svg-container{overflow-x:auto;padding:16px;background:var(--svg-bg,#F5F5F0);-webkit-overflow-scrolling:touch}
+.svg-container svg{max-width:none;display:block;margin:0 auto}
+/* Dark mode: all SVG text adapts to theme */
+.svg-container text{fill:var(--svg-tx,#1a1a1a) !important}
+/* Light-on-dark labels (inside colored boxes/buses) — keep light in both modes */
+.svg-container .l,.svg-container .ic-name,.svg-container .rail,
+.svg-container .bus-label,.svg-container .sl,.svg-container .legend-title,
+.svg-container .bl,.svg-container .conn,.svg-container .conns,
+.svg-container .comp-label,.svg-container .rail-label
+{fill:var(--svg-txl,#f0f6fc) !important}
+/* Title/subtitle — primary heading text */
+.svg-container .title,.svg-container .subtitle,.svg-container .t,
+.svg-container .colhead
+{fill:var(--svg-tx,#1a1a1a) !important;font-weight:700 !important}
+/* Secondary/annotation text */
+.svg-container .st,.svg-container .v,.svg-container .value,.svg-container .anno,
+.svg-container .note,.svg-container .label,.svg-container .legend-text,
+.svg-container .val,.svg-container .sub-label,.svg-container .cable-arrow,
+.svg-container .pin-label,.svg-container .col-num,.svg-container .row-num,
+.svg-container .sumsub
+{fill:var(--svg-txd,#555) !important}
+/* Component/pin/zone labels */
+.svg-container .pin,.svg-container .pin-num,.svg-container .pin-func,
+.svg-container .comp,.svg-container .component,.svg-container .zone-label,
+.svg-container .p,.svg-container .vl,.svg-container .connector,
+.svg-container .ic-label,.svg-container .ic-type,
+.svg-container .func,.svg-container .net-label,.svg-container .gnd-label,
+.svg-container .section-head,.svg-container .sect
+{fill:var(--svg-txm,#222) !important}
+/* Summary/highlight text — keep themed */
+.svg-container .sum{fill:var(--svg-tx,#1a1a1a) !important;font-weight:700 !important}
+/* Row/column labels in stripboard layouts */
+.svg-container .row-label,.svg-container .col-label
+{fill:var(--svg-txm,#333) !important;font-weight:700 !important}
+/* No text-shadow — just use fill color */
+.svg-container text{text-shadow:none !important}
+/* Theme-specific backgrounds and colors */
+body.light-mode .svg-container{--svg-bg:#F5F5F0;--svg-tx:#1a1a1a;--svg-txd:#555;--svg-txm:#222;--svg-txl:#f0f6fc;background:#F5F5F0}
+body:not(.light-mode) .svg-container{--svg-bg:#2d333b;--svg-tx:#c9d1d9;--svg-txd:#8b949e;--svg-txm:#b0b8c1;--svg-txl:#f0f6fc;background:#2d333b}
 @media(max-width:768px){.svg-container{padding:8px}.svg-container svg{height:auto}}
 #no-res{text-align:center;padding:48px;color:var(--txd);font-size:16px;display:none}
+
+/* Signal path highlighting - per wire, not per type */
+.svg-container .wire,.svg-container .wire-thick{transition:all .2s;cursor:pointer;stroke:#1a1a1a !important}
+.svg-container .wire:hover,.svg-container .wire-thick:hover{stroke:#ff6600 !important;stroke-width:3 !important;filter:drop-shadow(0 0 4px #ff6600) !important}
+body:not(.light-mode) .svg-container .wire,body:not(.light-mode) .svg-container .wire-thick{stroke:#1a1a1a !important}
+/* SVG arrow markers - lighter in dark mode */
+body:not(.light-mode) .svg-container svg defs marker polygon{fill:#aaa !important}
+body:not(.light-mode) .svg-container svg polygon[fill="#333"],body:not(.light-mode) .svg-container svg polygon[fill="#666"]{fill:#aaa !important}
+/* Bus trace mode — when a bus is active, dim everything else */
+.svg-container .bus-trace svg{opacity:1}
+.svg-container .bus-trace .wire,.svg-container .bus-trace .wire-thick,
+.svg-container .bus-trace rect,.svg-container .bus-trace .filled,
+.svg-container .bus-trace .component,.svg-container .bus-trace .junction
+{opacity:0.15;transition:opacity .3s}
+.svg-container .bus-trace .bus-active,.svg-container .bus-trace .bus-active.wire,
+.svg-container .bus-trace .bus-active.wire-thick{opacity:1 !important;stroke-width:3 !important;
+    filter:drop-shadow(0 0 3px #ff6600) !important}
+.svg-container .bus-trace .bus-label{opacity:1 !important;cursor:pointer}
+/* Bus label hint */
+.svg-container .bus-label{cursor:pointer;transition:all .2s}
+.svg-container .bus-label:hover{filter:brightness(1.3)}
 
 /* Back to top */
 #top-btn{position:fixed;bottom:24px;right:24px;width:40px;height:40px;
@@ -479,8 +614,33 @@ tr:target td{animation:flash 1.5s ease}
 /* Print */
 @media print{
     #side,#mb-toggle,#top-btn{display:none!important}
-    #main{margin-left:0} .db{display:block!important}
-    body{background:#fff;color:#000} pre{border:1px solid #ccc}
+    #main{margin-left:0} details.ds{display:block} .db{display:block!important}
+    body{background:#fff;color:#000;counter-reset:figure} pre{border:1px solid #ccc}
+    
+    /* Page break hints - prevent awkward splits */
+    .ds{page-break-inside:avoid;break-inside:avoid}
+    .svg-wrap{page-break-inside:avoid;break-inside:avoid;margin-bottom:16px}
+    table{page-break-inside:avoid;break-inside:avoid}
+    tr{page-break-inside:avoid;break-inside:avoid}
+    pre{page-break-inside:avoid;break-inside:avoid}
+    blockquote{page-break-inside:avoid;break-inside:avoid}
+    
+    /* Major sections start on new pages */
+    .cat{page-break-before:always;break-before:page}
+    .cat:first-child{page-break-before:auto;break-before:auto}
+    
+    /* Keep headers with content */
+    h1,h2,h3{page-break-after:avoid;break-after:avoid}
+    
+    /* SVG diagrams get proper spacing and figure numbers */
+    .svg-container{background:#fff}
+    .svg-container svg{max-width:100%;height:auto}
+    .svg-caption{counter-increment:figure}
+    .svg-caption::before{content:"Figure " counter(figure) ": ";font-weight:700}
+    
+    /* Links show URLs */
+    a[href]:after{content:" (" attr(href) ")";font-size:10px;color:#666}
+    a[href^="#"]:after{content:""}
 }
 """
 
@@ -498,62 +658,67 @@ document.addEventListener('DOMContentLoaded',()=>{
         });
     });
 
-    // Collapse
-    document.querySelectorAll('.dh').forEach(h=>{
-        h.addEventListener('click',()=>{
-            h.classList.toggle('open');
-            h.nextElementSibling.classList.toggle('open');
-        });
-    });
-
     // Search
     const q=document.getElementById('q');
     const hint=document.getElementById('q-hint');
-    const secs=document.querySelectorAll('.ds');
+    const secs=document.querySelectorAll('details.ds');
     const cats=document.querySelectorAll('.cg');
     const qr=document.querySelector('.qr');
     const nr=document.getElementById('no-res');
 
-    q.addEventListener('input',()=>{
+    q.addEventListener('input',e=>{
         const v=q.value.trim().toLowerCase();
         if(!v){
             hint.textContent='TP##, GP##, component, signal...';
-            secs.forEach(s=>{s.style.display='';
-                s.querySelector('.dh').classList.remove('open');
-                s.querySelector('.db').classList.remove('open');});
+            secs.forEach(s=>{s.style.display='';s.open=false;
+                const db=s.querySelector('.db');
+                if(db){let h=db.innerHTML;h=h.split('<mark>').join('').split('</mark>').join('');db.innerHTML=h;}
+            });
             cats.forEach(c=>c.style.display='');
             qr.style.display=''; nr.style.display='none'; return;
         }
         qr.style.display='none';
         let n=0;
         secs.forEach(s=>{
+            const db=s.querySelector('.db');
+            if(!db)return;
+            // Clear previous marks
+            let dh = db.innerHTML;
+            dh = dh.split('<mark>').join('').split('</mark>').join('');
+            db.innerHTML = dh;
             if(s.textContent.toLowerCase().includes(v)){
-                s.style.display=''; n++;
-                s.querySelector('.dh').classList.add('open');
-                s.querySelector('.db').classList.add('open');
+                s.style.display=''; n++; s.open=true;
+                // Highlight matches
+                const txt=db.innerText.toLowerCase();
+                if(txt.includes(v)){
+                    const regex=new RegExp('('+v+')','gi');
+                    db.innerHTML=db.innerHTML.replace(regex,'<mark>$1</mark>');
+                }
             }else{
                 s.style.display='none';
-                s.querySelector('.dh').classList.remove('open');
-                s.querySelector('.db').classList.remove('open');
             }
         });
         cats.forEach(c=>{
-            const vis=c.querySelectorAll('.ds:not([style*=\"display: none\"])');
+            const vis=c.querySelectorAll('.ds:not([style*="display: none"])');
             c.style.display=vis.length?'':'none';
         });
         hint.textContent=n?n+' document'+(n===1?'':'s')+' found':'No matches';
         nr.style.display=n?'none':'block';
     });
 
-    // Keyboard: / to search, Esc to clear
+    // Keyboard: / to search, Esc to clear (already exists at line 689)
     document.addEventListener('keydown',e=>{
-        if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}
+        if(e.key==='\\/'&&document.activeElement!==q){e.preventDefault();q.focus()}
         if(e.key==='Escape'){q.value='';q.dispatchEvent(new Event('input'));q.blur()}
     });
 
     // Mobile menu
     const mb=document.getElementById('mb-toggle');
-    if(mb)mb.addEventListener('click',()=>document.getElementById('side').classList.toggle('open'));
+    const side=document.getElementById('side');
+    if(mb)mb.addEventListener('click',e=>{e.stopPropagation();side.classList.toggle('open')});
+    document.addEventListener('click',e=>{
+        if(side.classList.contains('open')&&!side.contains(e.target)&&e.target!==mb){side.classList.remove('open')}
+    });
 
     // TOC smooth scroll
     document.querySelectorAll('.tl').forEach(a=>{
@@ -561,9 +726,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             e.preventDefault();
             const t=document.querySelector(a.getAttribute('href'));
             if(t){
-                const ds=t.closest('.ds');
-                if(ds){ds.querySelector('.dh').classList.add('open');
-                    ds.querySelector('.db').classList.add('open')}
+                const ds=t.closest('details.ds');
+                if(ds)ds.open=true;
                 t.scrollIntoView({behavior:'smooth',block:'start'});
             }
             document.getElementById('side').classList.remove('open');
@@ -586,6 +750,43 @@ document.addEventListener('DOMContentLoaded',()=>{
     window.addEventListener('scroll',()=>{
         document.getElementById('top-btn').classList.toggle('vis',window.scrollY>300);
     });
+
+    // Theme toggle (light/dark mode)
+    const themeBtn=document.getElementById('theme-toggle');
+    const savedTheme=localStorage.getItem('macrobrute-theme');
+    if(savedTheme==='light')document.body.classList.add('light-mode');
+    
+    if(themeBtn){
+        themeBtn.addEventListener('click',()=>{
+            document.body.classList.toggle('light-mode');
+            const isLight=document.body.classList.contains('light-mode');
+            localStorage.setItem('macrobrute-theme',isLight?'light':'dark');
+            themeBtn.innerHTML=isLight?'🌙':'☀️';
+        });
+    }
+
+    // Bus signal tracing — click a bus-label or wire to highlight its group
+    let activeBus=null;
+    document.querySelectorAll('.svg-container').forEach(container=>{
+        container.addEventListener('click',e=>{
+            const el=e.target;
+            const bus=el.dataset&&el.dataset.bus?el.dataset.bus:
+                       el.closest('[data-bus]')?el.closest('[data-bus]').dataset.bus:null;
+            if(bus){
+                if(activeBus===bus){container.classList.remove('bus-trace');
+                    container.querySelectorAll('.bus-active').forEach(b=>b.classList.remove('bus-active'));
+                    activeBus=null;return;}
+                container.classList.add('bus-trace');
+                container.querySelectorAll('.bus-active').forEach(b=>b.classList.remove('bus-active'));
+                container.querySelectorAll('[data-bus="'+bus+'"]').forEach(b=>b.classList.add('bus-active'));
+                activeBus=bus;
+            }else if(!el.closest('.wire')&&!el.closest('.wire-thick')){
+                container.classList.remove('bus-trace');
+                container.querySelectorAll('.bus-active').forEach(b=>b.classList.remove('bus-active'));
+                activeBus=null;
+            }
+        });
+    });
 });
 """
 
@@ -607,7 +808,8 @@ def _sidebar():
     return f"""<nav id="side">
 <div id="side-hd">
 <h1>MACROBRUTE</h1>
-<input type="text" id="q" placeholder="Search... (press /)">
+<button id="theme-toggle" title="Toggle light/dark mode">☀️</button>
+<input type="text" id="q" placeholder="Search... (press /)" aria-label="Search manual">
 <div id="q-hint">TP##, GP##, component, signal...</div>
 </div>
 <div id="toc">{''.join(toc)}</div>
@@ -631,6 +833,39 @@ def _quick_ref():
 </div>"""
 
 
+def _svg_preprocess(svg_content):
+    """Strip background <rect> and filter artifacts from SVG for theme adaptation."""
+    svg_content = re.sub(
+        r'<rect[^>]*fill="#[FfEe0-9]{6}"[^>]*\s*/?>',
+        '', svg_content, count=1
+    )
+    svg_content = re.sub(
+        r'<rect[^>]*fill="#2F4F4F"[^>]*\s*/?>',
+        '', svg_content, count=1
+    )
+    svg_content = re.sub(
+        r'<rect[^>]*fill="#1[01][0-9a-fA-F]*"[^>]*\s*/?>',
+        '', svg_content, count=1
+    )
+    svg_content = re.sub(r'filter:\s*url\(#ts\)', '', svg_content)
+    svg_content = re.sub(r'filter:\s*url\(#textshadow\)', '', svg_content)
+    svg_content = re.sub(r'filter="url\(#ts\)"', '', svg_content)
+    svg_content = re.sub(r'filter="url\(#textshadow\)"', '', svg_content)
+    svg_content = re.sub(
+        r'<filter[^>]*id="ts"[^>]*>.*?</filter>',
+        '', svg_content, flags=re.DOTALL
+    )
+    svg_content = re.sub(
+        r'<filter[^>]*id="textshadow"[^>]*>.*?</filter>',
+        '', svg_content, flags=re.DOTALL
+    )
+    svg_content = re.sub(
+        r'<filter[^>]*>.*?feFlood[^>]*flood-color="white"[^>]*>.*?</filter>',
+        '', svg_content, flags=re.DOTALL
+    )
+    return svg_content
+
+
 def _embed_svgs(fpath):
     """Generate HTML for embedded SVGs associated with a markdown file."""
     svg_paths = SVG_MAP.get(fpath, [])
@@ -642,7 +877,7 @@ def _embed_svgs(fpath):
         full_path = PROJECT / svg_path
         if full_path.exists():
             try:
-                svg_content = full_path.read_text(encoding="utf-8")
+                svg_content = _svg_preprocess(full_path.read_text(encoding="utf-8"))
                 # Extract title for caption (handle HTML entities like &amp;)
                 title_match = re.search(r'<text[^>]*class="title"[^>]*>(.+?)</text>', svg_content)
                 if title_match:
@@ -652,7 +887,6 @@ def _embed_svgs(fpath):
                 else:
                     caption = Path(svg_path).stem.replace("_", " ").title()
 
-                # Wrap SVG in a scrollable container
                 embeds.append(f'<div class="svg-wrap">')
                 embeds.append(f'<div class="svg-caption">{_html.escape(caption)}</div>')
                 embeds.append(f'<div class="svg-container">{svg_content}</div>')
@@ -668,11 +902,11 @@ def _doc_section(fpath):
     title, body = _read(fpath)
     html = _autolink(_md(body, did))
     svgs = _embed_svgs(fpath)
-    return f"""<div class="ds" id="{did}">
-<div class="dh"><span class="arr">&#9654;</span>
+    return f"""<details class="ds" id="{did}">
+<summary class="dh"><span class="arr">&#9654;</span>
 <span class="dt">{_html.escape(_short(title))}</span>
-<span class="dp">{_html.escape(fpath)}</span></div>
-<div class="db">{svgs}{html}</div></div>"""
+<span class="dp">{_html.escape(fpath)}</span></summary>
+<div class="db">{svgs}{html}</div></details>"""
 
 
 def _count_docs():
@@ -701,7 +935,8 @@ def build():
         '<main id="main">',
         f'<div class="hdr"><h1>MACROBRUTE Manual</h1>'
         f'<p>MicroBrute &rarr; Semi-Modular Synthesizer Expansion</p>'
-        f'<p>Generated {today} &middot; {ndocs} documents</p></div>',
+        f'<p>Generated {today} &middot; {ndocs} documents</p>'
+        f'<p class="author">Authored by: jordanaftermidnight</p></div>',
         _quick_ref(),
         '<div id="no-res">No matching documents</div>',
     ]

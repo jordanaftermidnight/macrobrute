@@ -21,11 +21,11 @@ rear board. L1 (10uH) + C44 (47nF) filter +3V3ARM into +3V3ANA.
 
 | TP | Signal | Location | Notes |
 |----|--------|----------|-------|
-| **TP69** | Power area | Front board, near P4 | Likely +3V3ARM or +3V3ANA |
+| **TP69** | Power area | Front board, near P4 | **UNVERIFIED — Use Caution** Likely +3V3ARM or +3V3ANA |
 | **TP70** | **+12V (A+12)** | Front board, near P4 | Confirmed from schematic + photo |
 | **TP71** | **-12V (A-12)** | Front board, near P4 | Confirmed from schematic + photo |
 | **TP72** | **GND** | Front board, near P4 | Confirmed from schematic + photo |
-| **TP73** | Power area | Front board, near P4 | Likely second GND or +5V |
+| **TP73** | Power area | Front board, near P4 | **UNVERIFIED — Use Caution** Likely second GND or +5V |
 | TP56 | +5VNUM | Rear board | Digital rail (per original doc) |
 
 ### P4 Connector (6-pin JST, white — inter-board power)
@@ -82,7 +82,7 @@ Summing amplifier U6A (TL062CDT). R76 (40.2K) feedback. "Virtual Zero" summing n
 
 | TP | Signal | Function |
 |----|--------|----------|
-| **TP30** | **AudioOut** | Waveform mixer output, pre-filter. Label says "Filter Out" on schematic but signal goes TO filter. |
+| **TP30** | **AudioOut (TP30_MIXER_OUT)** | Waveform mixer output, pre-filter. Label says "Filter Out" on schematic but signal goes TO filter. |
 | **TP31** | ExtAudio_in | External audio input (pot on rear board) |
 
 ---

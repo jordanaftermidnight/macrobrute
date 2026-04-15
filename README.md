@@ -12,7 +12,7 @@ Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM 
 - **Eurorack expander** (~42HP) — Full patchbay, LFO, noise, clock divider, S&H, slew, attenuverter
 - **DB-9 interconnect** — 2x DB-9 (18 pins) connecting MicroBrute to expander
 - **Pico H firmware** — OLED menu, clock gen/detect, tap tempo, MIDI SysEx bridge
-- **DSO130 oscilloscope** — Integrated with signal multiplexer and input protection
+- **OLED visualization** — 2.08" SH1122 256x64 display for signal monitoring and menu system (replaces proposed DSO130 oscilloscope)
 - **JF-33 analog delay** — CV control of delay time and feedback, Eurorack level matching
 - **LPC2361 firmware RE** — CRP detection, potential dump/analysis/modification
 - **Circuit bending** — Touch plates, body contacts, IC-level bend switches
@@ -50,7 +50,7 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 1.3" OLED, HW040 encoder, 2x DB-9, LED/LDR kit, IC kit, DSO130 (built), JF-33 delay PCB, 6U 84HP Eurorack case
+MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 2.08" OLED (SH1122), HW040 encoder, 2x DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, 6U 84HP Eurorack case (Note: DSO130 oscilloscope available but not used in final design)
 
 ### Key Decisions
 | Decision | Choice |

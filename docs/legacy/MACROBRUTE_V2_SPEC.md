@@ -695,4 +695,4 @@ C1: 10µF (input coupling)
 ---
 
 *Document version 2.0 — Last updated: April 2026*
-*Continue development in CCLI for full toolchain integration*
+*Continue development for full toolchain integration*

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" width="1100" height="700">
+<defs>
+  <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+  </marker>
+</defs>
+<style>
+  .t { font: bold 15px sans-serif; fill: #1a1a1a; }
+  .st { font: 11px sans-serif; fill: #555; }
+  .l { font: bold 10px sans-serif; fill: #FFF; text-anchor: middle; }
+  .v { font: 9px sans-serif; fill: #333; }
+  .vl { font: 8px sans-serif; fill: #666; }
+  .bus-label { font: bold 9px sans-serif; fill: #333; text-anchor: middle; }
+</style>
+<rect width="1100" height="700" fill="#FEFEFE"/>
+<text x="550" y="25" class="t" text-anchor="middle">MACROBRUTE System Architecture</text>
+<text x="550" y="45" class="st" text-anchor="middle">Grouped Signal Channels (All DB-9 Pins)</text>
+<text x="120" y="70" class="v" font-weight="bold" font-size="11" fill="#333">MICROBRUTE</text>
+<text x="500" y="70" class="v" font-weight="bold" font-size="11" fill="#333">INTERFACE</text>
+<text x="900" y="70" class="v" font-weight="bold" font-size="11" fill="#333">EXPANDER</text>
+<rect x="50" y="85" width="110" height="90" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="105" class="l" font-size="10">AUDIO OUT</text>
+<text x="105" y="122" class="l" font-size="7">Saw, Sqr, VCF</text>
+<text x="105" y="135" class="l" font-size="7">Mix (Ultrafaux)</text>
+<text x="105" y="148" class="l" font-size="7">Pins: 5,6,7,8</text>
+<rect x="50" y="190" width="110" height="90" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="210" class="l" font-size="10">CV OUT</text>
+<text x="105" y="227" class="l" font-size="7">Pitch, Gate</text>
+<text x="105" y="240" class="l" font-size="7">LFO, Envelope</text>
+<text x="105" y="253" class="l" font-size="7">Pins: 1,2,3,4</text>
+<rect x="50" y="300" width="110" height="70" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="325" class="l" font-size="10">VCF</text>
+<text x="105" y="342" class="l" font-size="7">Filter CV In</text>
+<text x="105" y="355" class="l" font-size="7">Resonance In</text>
+<rect x="50" y="385" width="110" height="60" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="105" y="410" class="l" font-size="10">VCA</text>
+<text x="105" y="427" class="l" font-size="7">VCA CV In</text>
+<rect x="320" y="100" width="130" height="70" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="385" y="125" class="l" font-size="11">DB-9 A</text>
+<text x="385" y="145" class="l" font-size="8">AUDIO →</text>
+<text x="385" y="158" class="l" font-size="7">Pins 5,6,7,8</text>
+<rect x="320" y="200" width="130" height="70" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4" opacity="0.8"/>
+<text x="385" y="225" class="l" font-size="11">DB-9 A</text>
+<text x="385" y="245" class="l" font-size="8">CV / GATE →</text>
+<text x="385" y="258" class="l" font-size="7">Pins 1,2,3,4</text>
+<rect x="320" y="310" width="130" height="80" fill="#FF5722" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="385" y="335" class="l" font-size="11">DB-9 B</text>
+<text x="385" y="355" class="l" font-size="8">← CV INPUTS</text>
+<text x="385" y="372" class="l" font-size="7">Filt, VCA, Res</text>
+<text x="385" y="385" class="l" font-size="7">Sync, Gate, Ext</text>
+<rect x="320" y="410" width="130" height="60" fill="#CC0000" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="385" y="435" class="l" font-size="11">DB-9 B</text>
+<text x="385" y="455" class="l" font-size="8">POWER</text>
+<text x="385" y="468" class="l" font-size="7">+12V, -12V, GND</text>
+<rect x="320" y="510" width="130" height="50" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="385" y="535" class="l" font-size="10">Pico W</text>
+<text x="385" y="550" class="l" font-size="8">Control</text>
+<rect x="320" y="580" width="130" height="40" fill="#673AB7" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="385" y="598" class="l" font-size="10">Touch</text>
+<text x="385" y="612" class="l" font-size="8">4-Point</text>
+<rect x="880" y="100" width="130" height="90" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="945" y="125" class="l" font-size="10">AUDIO IN</text>
+<text x="945" y="142" class="l" font-size="7">Noise Gen</text>
+<text x="945" y="155" class="l" font-size="7">LFO (Free)</text>
+<text x="945" y="168" class="l" font-size="7">S&H, Clock</text>
+<text x="945" y="181" class="l" font-size="7">From DB-9 A</text>
+<rect x="880" y="210" width="130" height="120" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4" opacity="0.8"/>
+<text x="945" y="235" class="l" font-size="10">CV / GATE OUT</text>
+<text x="945" y="255" class="l" font-size="7">LFO → Filter CV</text>
+<text x="945" y="272" class="l" font-size="7">S&H → VCA CV</text>
+<text x="945" y="289" class="l" font-size="7">Clock → Res/Sync</text>
+<text x="945" y="306" class="l" font-size="7">Clock → Gate In</text>
+<text x="945" y="323" class="l" font-size="7">To DB-9 B</text>
+<rect x="880" y="350" width="130" height="100" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="945" y="375" class="l" font-size="10">MODULATION</text>
+<text x="945" y="395" class="l" font-size="7">Slew Limiter</text>
+<text x="945" y="412" class="l" font-size="7">Attenuverter</text>
+<text x="945" y="429" class="l" font-size="7">(Pico Control)</text>
+<line x1="160" y1="130" x2="250" y2="130" stroke="#E91E63" stroke-width="4"/>
+<text x="205" y="122" class="bus-label" font-size="7">Audio Bus</text>
+<text x="205" y="142" class="vl" font-size="6">Saw,Sqr,VCF,Mix</text>
+<line x1="250" y1="130" x2="250" y2="135" stroke="#E91E63" stroke-width="4"/>
+<line x1="250" y1="135" x2="320" y2="135" stroke="#E91E63" stroke-width="4" marker-end="url(#arr)"/>
+<line x1="450" y1="135" x2="550" y2="135" stroke="#FF9800" stroke-width="3"/>
+<line x1="550" y1="135" x2="550" y2="145" stroke="#FF9800" stroke-width="3"/>
+<line x1="550" y1="145" x2="880" y2="145" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="650" y="137" class="vl" font-size="7">Audio→Expander</text>
+<line x1="160" y1="235" x2="270" y2="235" stroke="#9C27B0" stroke-width="4"/>
+<text x="215" y="227" class="bus-label" font-size="7">CV/Gate Bus</text>
+<text x="215" y="247" class="vl" font-size="6">Pitch,LFO,Env,Gate</text>
+<line x1="270" y1="235" x2="270" y2="235" stroke="#9C27B0" stroke-width="4"/>
+<line x1="270" y1="235" x2="320" y2="235" stroke="#9C27B0" stroke-width="4" marker-end="url(#arr)"/>
+<line x1="450" y1="235" x2="580" y2="235" stroke="#FF9800" stroke-width="3" stroke-dasharray="5,3"/>
+<line x1="580" y1="235" x2="580" y2="270" stroke="#FF9800" stroke-width="3" stroke-dasharray="5,3"/>
+<line x1="580" y1="270" x2="880" y2="270" stroke="#FF9800" stroke-width="3" marker-end="url(#arr)"/>
+<text x="680" y="262" class="vl" font-size="7">CV→Expander</text>
+<line x1="880" y1="290" x2="720" y2="290" stroke="#4CAF50" stroke-width="4"/>
+<text x="800" y="282" class="bus-label" font-size="7">CV Out Bus</text>
+<text x="800" y="302" class="vl" font-size="6">LFO,S&H,Clock</text>
+<line x1="720" y1="290" x2="720" y2="350" stroke="#4CAF50" stroke-width="4"/>
+<line x1="720" y1="350" x2="450" y2="350" stroke="#4CAF50" stroke-width="4" marker-end="url(#arr)"/>
+<line x1="320" y1="350" x2="260" y2="350" stroke="#FF5722" stroke-width="3"/>
+<line x1="260" y1="350" x2="260" y2="335" stroke="#FF5722" stroke-width="3"/>
+<line x1="260" y1="335" x2="160" y2="335" stroke="#FF5722" stroke-width="3" marker-end="url(#arr)"/>
+<text x="210" y="327" class="vl" font-size="7">Filter CV</text>
+<line x1="260" y1="350" x2="275" y2="350" stroke="#FF5722" stroke-width="3"/>
+<line x1="275" y1="350" x2="275" y2="415" stroke="#FF5722" stroke-width="3"/>
+<line x1="275" y1="415" x2="160" y2="415" stroke="#FF5722" stroke-width="3" marker-end="url(#arr)"/>
+<text x="220" y="407" class="vl" font-size="7">VCA CV</text>
+<line x1="450" y1="440" x2="650" y2="440" stroke="#CC0000" stroke-width="5"/>
+<text x="550" y="430" class="bus-label" font-size="8" fill="#CC0000">POWER BUS ±12V</text>
+<line x1="650" y1="440" x2="650" y2="165" stroke="#CC0000" stroke-width="5"/>
+<line x1="650" y1="165" x2="880" y2="165" stroke="#CC0000" stroke-width="5" marker-end="url(#arr)"/>
+<text x="750" y="455" class="vl" font-size="7" fill="#CC0000">Power to Expander</text>
+<line x1="450" y1="535" x2="700" y2="535" stroke="#9C27B0" stroke-width="2" stroke-dasharray="5,3"/>
+<line x1="700" y1="535" x2="700" y2="400" stroke="#9C27B0" stroke-width="2" stroke-dasharray="5,3"/>
+<line x1="700" y1="400" x2="880" y2="400" stroke="#9C27B0" stroke-width="2" marker-end="url(#arr)"/>
+<text x="620" y="527" class="vl" font-size="7">GPIO Control</text>
+<line x1="450" y1="605" x2="750" y2="605" stroke="#673AB7" stroke-width="2" stroke-dasharray="5,3"/>
+<line x1="750" y1="605" x2="750" y2="420" stroke="#673AB7" stroke-width="2" stroke-dasharray="5,3"/>
+<line x1="750" y1="420" x2="880" y2="420" stroke="#673AB7" stroke-width="2" marker-end="url(#arr)"/>
+<text x="620" y="617" class="vl" font-size="7">Touch Sense</text>
+<rect x="50" y="650" width="1000" height="40" fill="#F5F5F5" stroke="#999" stroke-width="1" rx="4"/>
+<rect x="70" y="660" width="20" height="14" fill="#E91E63" stroke="#333" rx="2"/>
+<text x="98" y="672" class="v" font-size="8">Audio Bus (Saw, Sqr, VCF, Mix)</text>
+<rect x="270" y="660" width="20" height="14" fill="#9C27B0" stroke="#333" rx="2"/>
+<text x="298" y="672" class="v" font-size="8">CV/Gate Bus (Pitch, LFO, Env, Gate)</text>
+<rect x="470" y="660" width="20" height="14" fill="#FF9800" stroke="#333" rx="2"/>
+<text x="498" y="672" class="v" font-size="8">DB-9 A → Expander</text>
+<rect x="670" y="660" width="20" height="14" fill="#4CAF50" stroke="#333" rx="2"/>
+<text x="698" y="672" class="v" font-size="8">Expander → DB-9 B</text>
+<rect x="870" y="660" width="20" height="14" fill="#CC0000" stroke="#333" rx="2"/>
+<text x="898" y="672" class="v" font-size="8">Power Bus (±12V, GND)</text>
+</svg>

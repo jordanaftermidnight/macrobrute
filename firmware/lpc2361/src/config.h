@@ -60,15 +60,25 @@
 // PIN ASSIGNMENTS
 // ===================
 
-// UART0 (Debug + ISP + Pico comm)
+// UART0: Debug console and ISP (In-System Programming)
+// P0.2/P0.3 are used for ISP bootloader and debug output
+// DO NOT use for Pico communication (conflicts with ISP)
 #define PIN_UART0_TX_PORT  0
 #define PIN_UART0_TX_PIN   2   // P0.2 (TXD0)
 #define PIN_UART0_RX_PORT  0
 #define PIN_UART0_RX_PIN   3   // P0.3 (RXD0)
 
-// UART1 (MIDI IN via optocoupler)
-#define PIN_MIDI_RX_PORT   0
-#define PIN_MIDI_RX_PIN    16  // P0.16 (RXD1) — verify on PCB
+// UART1: Pico Bridge (high-speed internal link)
+// Dedicated UART for Pico W communication
+// P0.15 = TXD1 (to Pico GP1), P0.16 = RXD1 (from Pico GP0)
+#define PIN_UART1_TX_PORT  0
+#define PIN_UART1_TX_PIN   15  // P0.15 (TXD1)
+#define PIN_UART1_RX_PORT  0
+#define PIN_UART1_RX_PIN   16  // P0.16 (RXD1)
+#define PICO_BAUD          115200
+
+// NOTE: MIDI input is handled via bit-bang or separate interface
+// The MicroBrute's MIDI DIN connector goes to a different path
 
 // ISP entry (active LOW during reset)
 #define PIN_ISP_ENTRY_PORT 2

@@ -149,7 +149,7 @@ All grounds connect to a **single star point** on the expander PCB, then to chas
 | PWM CV | R289 junction | Rear | 39kΩ in | PW circuit |
 | +12V | TP70 | Front | Ferrite | Power tap |
 | −12V | TP71 | Front | Ferrite | Power tap |
-| GND | TP72 or TP73 | Front | — | Multiple GND points |
+| GND | TP72 or TP73 (**UNVERIFIED**) | Front | — | Multiple GND points |
 
 ### Insert Mods (Resistor Removal)
 

@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "config.h"
+#include "lpc2361.h"
 
 /*
  * Debug levels:
@@ -15,6 +16,20 @@
 #ifndef DEBUG_LEVEL
 #define DEBUG_LEVEL 2
 #endif
+
+// Safety: Panic function to silence synth on critical error
+// Prevents stuck notes and potential speaker damage
+static inline void panic_silence(void) {
+    // Drop Gate LOW (P0.25) - immediately stop envelope
+    FIO0CLR = (1 << PIN_GATE_PIN);
+
+    // Mute VCA via DAC (P0.26 AOUT) - set to zero
+    // DACR [15:6] = value, [16] = BIAS (0 for normal)
+    DACR = 0;
+
+    // Optional: Turn off any indicator LEDs if defined
+    // FIO0CLR = (1 << PIN_LED_PIN);
+}
 
 // Error: Always important, something went wrong
 #if DEBUG_LEVEL >= 1
@@ -37,11 +52,12 @@
   #define DBG_VERB(fmt, ...)
 #endif
 
-// Assert with message
+// Assert with message - includes safety mute on failure
 #define DBG_ASSERT(cond, fmt, ...) \
     do { \
         if (!(cond)) { \
             DBG_ERR("ASSERT FAIL: " fmt, ##__VA_ARGS__); \
+            panic_silence(); \
             while(1); \
         } \
     } while(0)

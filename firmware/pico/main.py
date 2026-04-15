@@ -13,7 +13,7 @@ from display import Display
 from encoder import Encoder
 from clock import Clock
 from menu import Menu, MenuItem, MenuSystem
-from midi import MIDIBridge, PARAM_BEND_RANGE, PARAM_GATE_LENGTH, PARAM_STEP_SIZE, PARAM_SEQ_SWING
+from midi import LPCBridge, PARAM_BEND_RANGE, PARAM_GATE_LENGTH, PARAM_STEP_SIZE, PARAM_SEQ_SWING
 from leds import LEDManager
 
 # ---- Global State ----
@@ -21,7 +21,7 @@ from leds import LEDManager
 VERSION = "0.1.0"
 
 display = Display()
-midi = MIDIBridge()
+midi = LPCBridge()
 leds = LEDManager()
 
 btn_tap = Pin(config.BTN_TAP, Pin.IN, Pin.PULL_UP)

@@ -81,7 +81,7 @@ After testing, select 6 mods for permanent panel bolts:
 - Insert brass M3 bolts from outside, nut on inside
 - Solder wire from bolt to safety resistor to PCB point
 - Label each bolt on panel (PITCH, CRUNCH, WAH, DISTORT, HARMONIC, GATE)
-- Spacing: 15mm horizontal between bolts to avoid accidental multi-touch
+- Spacing: 18-20mm horizontal between bolts to avoid accidental multi-touch
 
 ---
 

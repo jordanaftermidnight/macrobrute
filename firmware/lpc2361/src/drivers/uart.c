@@ -1,7 +1,8 @@
 /*
  * UART driver for LPC2361
- * UART0: Debug/ISP/Pico comm (P0.2 TXD0, P0.3 RXD0)
- * UART1: MIDI IN (P0.16 RXD1)
+ * UART0: Debug/ISP (P0.2 TXD0, P0.3 RXD0) - 115200 baud
+ * UART1: Pico Bridge (P0.15 TXD1, P0.16 RXD1) - 115200 baud
+ * NOTE: MIDI is handled separately via bit-bang or secondary interface
  */
 
 #include "uart.h"
@@ -50,11 +51,14 @@ int uart_init(uint8_t port, uint32_t baudrate) {
         // Enable UART1 power
         PCONP |= (1 << 4);
 
-        // Pin select: P0.16 = RXD1 (PINSEL1 bits [1:0] = 01)
+        // Pin select: P0.15 = TXD1 (PINSEL0 bits [31:30] = 01)
+        //             P0.16 = RXD1 (PINSEL1 bits [1:0] = 01)
+        PINSEL0 &= ~(3 << 30);
+        PINSEL0 |=  (1 << 30);     // TXD1 on P0.15
         PINSEL1 &= ~(3 << 0);
-        PINSEL1 |=  (1 << 0);
+        PINSEL1 |=  (1 << 0);      // RXD1 on P0.16
 
-        // 8N1 for MIDI (31250 baud)
+        // 8N1 for Pico bridge (115200 baud default)
         U1LCR = 0x83;
         U1DLL = dl & 0xFF;
         U1DLM = (dl >> 8) & 0xFF;
@@ -124,7 +128,7 @@ void uart0_irq_handler(void) {
     VICVectAddr = 0;                // Acknowledge VIC
 }
 
-// UART1 IRQ handler (MIDI)
+// UART1 IRQ handler (Pico Bridge)
 void uart1_irq_handler(void) {
     uint32_t iir = U1IIR;
     if ((iir & 0x0E) == 0x04) {

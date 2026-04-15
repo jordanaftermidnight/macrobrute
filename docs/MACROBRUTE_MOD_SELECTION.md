@@ -44,7 +44,7 @@ swap in from reserves: #5 Envelope Decay (33K) or #7 LFO Speed (47K).
 | # | Mod | Component | Location | Notes |
 |---|-----|-----------|----------|-------|
 | I1 | **Output protection** | 10K resistor | R1 position (BruteFactor.SchDoc) | Tony Allgood design — prevents opamp damage from shorts |
-| I2 | **8-channel buffer** | 2x TL074 | Breakout stripboard | Followers for: Saw(TP94), Sqr(TP93), Tri(TP124), Sub(TP102), Mix(TP30), VCF(TP19), Env(TP6), LFO(TP21) |
+| I2 | **8-channel buffer** | 2x TL074 | Breakout stripboard | Followers for: Saw(TP94), Sqr(TP93), Tri(TP124), Sub(TP102), Mix(TP30_MIXER_OUT), VCF(TP19), Env(TP6), LFO(TP21) |
 | I3 | **Gate buffer** | CD40106 | Breakout stripboard | TP83 → Schmitt trigger → 5V gate out |
 | I4 | **Level shifter** | CD4049UBE | Breakout stripboard | 5V→3.3V for Pico GPIO inputs |
 | I5 | **Vactrol driver** | TL072 + 2N3904 + vactrol | Breakout stripboard | CV→LED→LDR for Brute Factor CV control via DB-9 B |
@@ -116,8 +116,8 @@ SAW, SQR, TRI, SUB, MIX, VCF, ENV, LFO → 8 jacks
 | PT2399 clock injection | JF-33 is a separate build | deep_circuit_bending.md |
 | PT2399 VDD starving | JF-33 is a separate build | deep_circuit_bending.md |
 | PT2399 reference manipulation | JF-33 is a separate build | deep_circuit_bending.md |
-| DSO130 DAC output | Needs custom STM32 firmware | pt2399_dso138_findings.md |
-| DSO130 trigger output | Separate integration project | pt2399_dso138_findings.md |
+| DSO138 DAC output | Needs custom STM32 firmware | pt2399_dso138_findings.md |
+| DSO138 trigger output | Separate integration project | pt2399_dso138_findings.md |
 | Multi-PT2399 cascade/parallel | Advanced, needs dedicated board | deep_circuit_bending.md |
 
 ### Low Priority / Covered by Other Mods
@@ -182,7 +182,7 @@ VCO (rear board)
   ├── TP93 Sqr ──→ Buffer ──→ DB-9 A ──→ Expander SQR jack
   ├── TP124 Tri ──→ Buffer ──→ DB-9 A ──→ Expander TRI jack
   ├── TP102 Sub ──→ Buffer ──→ DB-9 A ──→ Expander SUB jack
-  └── Mixer ──→ TP30 ──→ Buffer ──→ DB-9 A ──→ Expander MIX jack
+   └── Mixer ──→ TP30_MIXER_OUT ──→ Buffer ──→ DB-9 A ──→ Expander MIX jack
          │
          ▼
   [B5 MTL BOOST toggle] ──→ Metalizer

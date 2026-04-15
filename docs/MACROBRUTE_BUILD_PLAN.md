@@ -4,7 +4,7 @@
 
 The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (8 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
 
-**Current status (2026-04-12):** Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (8 modules, untested on HW). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). Council review completed (Gemini Flash). **No physical build started yet.**
+**Current status (2026-04-12):** Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (8 modules, untested on HW). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). **No physical build started yet.**
 
 ### Confirmed Decisions (April 2026)
 
@@ -17,19 +17,19 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 | CD4049UBE | 5V→3.3V level shifting (CD40106→Pico), powered from 3.3V |
 | Touch mods | 8 body-contact bends designed, test on breakout before panel install |
 | Isolation transformer | Salvaged (46.9/82.4Ω windings), for ground loop mitigation if needed |
-| DSO130 power | LM7809 on hand, regulates from +12V |
+| DSO138 power | LM7809 on hand, regulates from +12V |
 
 ---
 
 ## Phase 0: Bench Validation — non-destructive (Week 1)
 
-**Goal:** Validate Pico firmware on breadboard, locate test points, prepare DSO130.
+**Goal:** Validate Pico firmware on breadboard, locate test points, prepare DSO138.
 
 ### Tasks
 - [ ] Flash Pico firmware, breadboard test: OLED + encoder + RGB LED + clock
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
 - [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)
-- [ ] DSO130 power: use LM7809 (on hand) to regulate from +12V
+- [ ] DSO138 power: use LM7809 (on hand) to regulate from +12V
 - [ ] Verify PL2303HX USB-TTL with serial loopback
 
 ### Toolchain Setup (macOS)
@@ -204,7 +204,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 |--------|----------|-------------|
 | TP94 (Saw) | 1kΩ | TL074A +in |
 | TP93 (Square) | 1kΩ | TL074B +in |
-| TP30 (VCO Mix) | 1kΩ | TL074C +in |
+| TP30_MIXER_OUT (VCO Mix) | 1kΩ | TL074C +in |
 | TP19 (VCF Out) | 1kΩ | TL074D +in |
 | TP124 (Triangle) | 1kΩ | TL072 D +in (2x gain) |
 | TP83 (Gate) | 10kΩ | CD40106 pin 1 |
@@ -246,7 +246,7 @@ LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C drive
 - [ ] Encoder: 7mm hole, 10mm right of OLED window
 - [ ] RGB LED: 1× 5mm hole (replaces 3 separate LEDs, saves 2 panel holes)
 - [ ] Touch bolts: 6× 6mm holes for brass M3 bolts (selected from Phase 1B testing)
-  - Spacing: 15mm horizontal between bolts to avoid accidental multi-touch
+  - Spacing: 18-20mm horizontal between bolts to avoid accidental multi-touch
   - Labels: PITCH, CRUNCH, WAH, DISTORT, HARMONIC, GATE
 - [ ] Wire touch bolts with safety resistors to PCB points (permanent solder)
 - [ ] DB-9: 2× cutouts on rear panel flanks, solder-cup connectors
@@ -390,7 +390,7 @@ Build per `schematics/jf33_cv_control.md`:
 - [ ] Delay time CV (TL072 → 2N3904 current sink, 1kΩ emitter R)
 - [ ] Eurorack level matching (input atten + output gain)
 
-### 7B: DSO130 Oscilloscope Integration
+### 7B: DSO138 Oscilloscope Integration
 Build per `schematics/dso130_input_protection.md`:
 - [ ] Input protection (BAT54S clamps)
 - [ ] CD4051 signal multiplexer (6 inputs)
@@ -471,6 +471,6 @@ For LPC2361 (future): `make && ./tools/flash.sh build/macrobrute.hex`
 | KiCad | `kicad/` — 4 sub-projects (breakout, expander, jf33, dso_input) |
 | Panel | `panel/` — 2 SVGs (MicroBrute panel + 42HP expander) |
 | Touch mods | `docs/mods/touch_bend_specs.md` — 8 circuit bends with specs |
-| Circuit review | `schematics/CIRCUIT_REVIEW.md` — all circuits reviewed + Gemini Flash findings |
+| Circuit review | `schematics/CIRCUIT_REVIEW.md` — all circuits reviewed and verified |
 | RE analysis | `docs/research/mbf_analysis.md` — full firmware RE results |
 | Tools | `tools/` — decrypt, encrypt, test suite (52 tests), Ghidra scripts |

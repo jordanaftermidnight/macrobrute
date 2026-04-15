@@ -1,96 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 600" width="700" height="600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" width="900" height="550">
 <defs>
-  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+  <filter id="ts">
     <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
-    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
-    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="d"/>
+    <feComposite in="bg" in2="d" operator="in" result="s"/>
+    <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
-  <style>
-    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
-    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
-    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
-    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
-    .pin { font: 8px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
-    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
-    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
-    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; }
-    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
-    .filled { fill: #1a1a1a; }
-    .junction { fill: #0066CC; }
-  </style>
-  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#666"/>
   </marker>
 </defs>
-<rect width="700" height="600" fill="#FEFEFE"/>
-<text x="350" y="25" class="title" text-anchor="middle">Internal Wiring — MicroBrute to Breakout</text>
-<text x="350" y="42" class="subtitle" text-anchor="middle">Test point taps and power connections</text>
-<rect x="50" y="80" width="120" height="440" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="110" y="60" class="label" text-anchor="middle">MicroBrute PCB</text>
-<text x="110" y="540" class="label" text-anchor="middle" font-size="9">Rear Board</text>
-<rect x="530" y="80" width="120" height="440" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
-<text x="590" y="60" class="label" text-anchor="middle">Breakout PCB</text>
-<text x="115" y="123" class="value" font-size="8" text-anchor="end">TP94 Saw</text>
-<line x1="120" y1="120" x2="550" y2="120" class="wire"/>
-<path d="M310,120 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="142" class="value" text-anchor="middle">1kΩ</text>
-<line x1="550" y1="120" x2="580" y2="120" class="wire"/>
-<text x="585" y="123" class="value" font-size="8">J1-1</text>
-<text x="115" y="153" class="value" font-size="8" text-anchor="end">TP93 Square</text>
-<line x1="120" y1="150" x2="550" y2="150" class="wire"/>
-<path d="M310,150 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="172" class="value" text-anchor="middle">1kΩ</text>
-<line x1="550" y1="150" x2="580" y2="150" class="wire"/>
-<text x="585" y="153" class="value" font-size="8">J1-2</text>
-<text x="115" y="183" class="value" font-size="8" text-anchor="end">TP30 Mix</text>
-<line x1="120" y1="180" x2="550" y2="180" class="wire"/>
-<path d="M310,180 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="202" class="value" text-anchor="middle">1kΩ</text>
-<line x1="550" y1="180" x2="580" y2="180" class="wire"/>
-<text x="585" y="183" class="value" font-size="8">J1-4</text>
-<text x="115" y="213" class="value" font-size="8" text-anchor="end">TP19 VCF</text>
-<line x1="120" y1="210" x2="550" y2="210" class="wire"/>
-<path d="M310,210 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="232" class="value" text-anchor="middle">1kΩ</text>
-<line x1="550" y1="210" x2="580" y2="210" class="wire"/>
-<text x="585" y="213" class="value" font-size="8">J1-3</text>
-<text x="115" y="243" class="value" font-size="8" text-anchor="end">TP124 Tri</text>
-<line x1="120" y1="240" x2="550" y2="240" class="wire"/>
-<path d="M310,240 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="262" class="value" text-anchor="middle">1kΩ</text>
-<line x1="550" y1="240" x2="580" y2="240" class="wire"/>
-<text x="585" y="243" class="value" font-size="8">J1-5</text>
-<text x="115" y="283" class="value" font-size="8" text-anchor="end">TP83 Gate</text>
-<line x1="120" y1="280" x2="550" y2="280" class="wire"/>
-<path d="M310,280 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="302" class="value" text-anchor="middle">10kΩ</text>
-<line x1="550" y1="280" x2="580" y2="280" class="wire"/>
-<text x="585" y="283" class="value" font-size="8">J2-1</text>
-<text x="115" y="323" class="value" font-size="8" text-anchor="end">Env (matrix)</text>
-<line x1="120" y1="320" x2="550" y2="320" class="wire"/>
-<path d="M310,320 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="342" class="value" text-anchor="middle">10kΩ</text>
-<line x1="550" y1="320" x2="580" y2="320" class="wire"/>
-<text x="585" y="323" class="value" font-size="8">J3-1</text>
-<text x="115" y="353" class="value" font-size="8" text-anchor="end">LFO (matrix)</text>
-<line x1="120" y1="350" x2="550" y2="350" class="wire"/>
-<path d="M310,350 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
-<text x="335" y="372" class="value" text-anchor="middle">10kΩ</text>
-<line x1="550" y1="350" x2="580" y2="350" class="wire"/>
-<text x="585" y="353" class="value" font-size="8">J3-2</text>
-<text x="110" y="410" class="label" font-size="10" fill="#D44">Power Taps</text>
-<text x="115" y="433" class="value" font-size="8" text-anchor="end">TP70 +12V</text>
-<line x1="120" y1="430" x2="500" y2="430" class="wire"/>
-<line x1="120" y1="430" x2="500" y2="430" stroke="Red" stroke-width="2"/>
-<text x="530" y="433" class="value" font-size="8">Power header +12V</text>
-<text x="115" y="458" class="value" font-size="8" text-anchor="end">TP71 -12V</text>
-<line x1="120" y1="455" x2="500" y2="455" class="wire"/>
-<line x1="120" y1="455" x2="500" y2="455" stroke="#44D" stroke-width="2"/>
-<text x="530" y="458" class="value" font-size="8">Power header -12V</text>
-<text x="115" y="483" class="value" font-size="8" text-anchor="end">TP72 GND</text>
-<line x1="120" y1="480" x2="500" y2="480" class="wire"/>
-<line x1="120" y1="480" x2="500" y2="480" stroke="#4A4" stroke-width="2"/>
-<text x="530" y="483" class="value" font-size="8">Power header GND</text>
-<text x="350" y="570" class="value" text-anchor="middle">All signals: 24AWG | Power: 22AWG</text></svg>
+<style>
+  .t { font: bold 16px sans-serif; fill: #1a1a1a; filter: url(#ts); }
+  .st { font: 11px sans-serif; fill: #555; filter: url(#ts); }
+  .l { font: bold 10px sans-serif; fill: #1a1a1a; filter: url(#ts); }
+  .v { font: 9px sans-serif; fill: #555; filter: url(#ts); }
+  .sl { font: bold 9px sans-serif; fill: #FFF; text-anchor: middle; }
+</style>
+<rect width="900" height="550" fill="#FEFEFE"/>
+<text x="450" y="25" class="t" text-anchor="middle">Internal Wiring — MicroBrute to Breakout</text>
+<text x="450" y="45" class="st" text-anchor="middle">Test Point Connections</text>
+<rect x="50" y="80" width="150" height="400" fill="#E8D5A3" stroke="#B8722D" stroke-width="2" rx="4"/>
+<text x="125" y="70" class="l" text-anchor="middle" font-size="11" fill="#333">MicroBrute</text>
+<text x="125" y="95" class="v" text-anchor="middle" font-size="9" fill="#333">Test Points</text>
+<rect x="700" y="80" width="150" height="400" fill="#C4A265" stroke="#8B6914" stroke-width="2" rx="4"/>
+<text x="775" y="70" class="l" text-anchor="middle" font-size="11" fill="#333">Breakout</text>
+<text x="775" y="95" class="v" text-anchor="middle" font-size="9" fill="#333">Connectors</text>
+<text x="450" y="120" class="l" text-anchor="middle" font-size="10" fill="#0066CC">AUDIO OUTPUTS (1kΩ series resistors)</text>
+<text x="60" y="140" class="v" text-anchor="start" font-size="9" fill="#333">TP94 Saw</text>
+<line x1="200" y1="137" x2="700" y2="137" stroke="#0066CC" stroke-width="2"/>
+<path d="M350,137 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="130" class="v" text-anchor="middle" font-size="7" fill="#333">1kΩ</text>
+<text x="710" y="140" class="v" text-anchor="start" font-size="9" fill="#333">→ J1-1</text>
+<text x="60" y="165" class="v" text-anchor="start" font-size="9" fill="#333">TP93 Square</text>
+<line x1="200" y1="162" x2="700" y2="162" stroke="#0066CC" stroke-width="2"/>
+<path d="M350,162 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="155" class="v" text-anchor="middle" font-size="7" fill="#333">1kΩ</text>
+<text x="710" y="165" class="v" text-anchor="start" font-size="9" fill="#333">→ J1-2</text>
+<text x="60" y="190" class="v" text-anchor="start" font-size="9" fill="#333">TP30 Mix</text>
+<line x1="200" y1="187" x2="700" y2="187" stroke="#0066CC" stroke-width="2"/>
+<path d="M350,187 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="180" class="v" text-anchor="middle" font-size="7" fill="#333">1kΩ</text>
+<text x="710" y="190" class="v" text-anchor="start" font-size="9" fill="#333">→ J1-4</text>
+<text x="60" y="215" class="v" text-anchor="start" font-size="9" fill="#333">TP19 VCF</text>
+<line x1="200" y1="212" x2="700" y2="212" stroke="#0066CC" stroke-width="2"/>
+<path d="M350,212 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="205" class="v" text-anchor="middle" font-size="7" fill="#333">1kΩ</text>
+<text x="710" y="215" class="v" text-anchor="start" font-size="9" fill="#333">→ J1-3</text>
+<text x="60" y="240" class="v" text-anchor="start" font-size="9" fill="#333">TP124 Triangle</text>
+<line x1="200" y1="237" x2="700" y2="237" stroke="#0066CC" stroke-width="2"/>
+<path d="M350,237 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="230" class="v" text-anchor="middle" font-size="7" fill="#333">1kΩ</text>
+<text x="710" y="240" class="v" text-anchor="start" font-size="9" fill="#333">→ J1-5</text>
+<text x="450" y="280" class="l" text-anchor="middle" font-size="10" fill="#009933">GATE & CV (10kΩ series resistors)</text>
+<text x="60" y="300" class="v" text-anchor="start" font-size="9" fill="#333">TP83 Gate</text>
+<line x1="200" y1="297" x2="700" y2="297" stroke="#009933" stroke-width="2"/>
+<path d="M350,297 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="290" class="v" text-anchor="middle" font-size="7" fill="#333">10kΩ</text>
+<text x="710" y="300" class="v" text-anchor="start" font-size="9" fill="#333">→ J2-1</text>
+<text x="60" y="325" class="v" text-anchor="start" font-size="9" fill="#333">Env (matrix)</text>
+<line x1="200" y1="322" x2="700" y2="322" stroke="#CC6600" stroke-width="2"/>
+<path d="M350,322 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="315" class="v" text-anchor="middle" font-size="7" fill="#333">10kΩ</text>
+<text x="710" y="325" class="v" text-anchor="start" font-size="9" fill="#333">→ J3-1</text>
+<text x="60" y="350" class="v" text-anchor="start" font-size="9" fill="#333">LFO (matrix)</text>
+<line x1="200" y1="347" x2="700" y2="347" stroke="#CC6600" stroke-width="2"/>
+<path d="M350,347 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5" stroke="#8B4513" stroke-width="2" fill="none"/>
+<text x="450" y="340" class="v" text-anchor="middle" font-size="7" fill="#333">10kΩ</text>
+<text x="710" y="350" class="v" text-anchor="start" font-size="9" fill="#333">→ J3-2</text>
+<text x="450" y="390" class="l" text-anchor="middle" font-size="10" fill="#CC0000">POWER (Direct connection)</text>
+<text x="60" y="410" class="v" text-anchor="start" font-size="9" fill="#CC0000">TP70 +12V</text>
+<line x1="200" y1="407" x2="700" y2="407" stroke="#CC0000" stroke-width="3"/>
+<text x="710" y="410" class="v" text-anchor="start" font-size="9" fill="#CC0000">→ Power header +12V</text>
+<text x="60" y="435" class="v" text-anchor="start" font-size="9" fill="#0000CC">TP71 -12V</text>
+<line x1="200" y1="432" x2="700" y2="432" stroke="#0000CC" stroke-width="3"/>
+<text x="710" y="435" class="v" text-anchor="start" font-size="9" fill="#0000CC">→ Power header -12V</text>
+<text x="60" y="460" class="v" text-anchor="start" font-size="9" fill="#1a1a1a">TP72 GND</text>
+<line x1="200" y1="457" x2="700" y2="457" stroke="#1a1a1a" stroke-width="3"/>
+<text x="710" y="460" class="v" text-anchor="start" font-size="9" fill="#1a1a1a">→ Power header GND</text>
+<text x="450" y="510" class="v" text-anchor="middle" font-size="9" fill="#333">Wire Gauge: Signals = 24AWG | Power = 22AWG</text>
+<text x="450" y="530" class="v" text-anchor="middle" font-size="8" fill="#333">All series resistors mounted on Breakout PCB for protection</text>
+</svg>

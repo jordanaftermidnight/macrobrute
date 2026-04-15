@@ -114,7 +114,7 @@ anti-latch-up protection with full range access.
 
 ---
 
-## DSO138/DSO130 Deep Mods
+## DSO138/DSO138 Deep Mods
 
 ### DAC Output for Function Generator
 

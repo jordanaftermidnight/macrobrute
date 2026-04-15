@@ -15,7 +15,7 @@
 |----------|---------|-------|
 | `MACROBRUTE_COMPREHENSIVE_RESEARCH.md` | **Complete technical research** — all component values, circuits, pinouts, protocols | ~800 |
 | `MACROBRUTE_FINAL_ARCHITECTURE.md` | **Current system design** — panel layout, DB-9 pinout, build phases | ~520 |
-| `MACROBRUTE_CCLI_HANDOFF.md` | **Original CCLI handoff** — detailed specs before expander expansion | ~680 |
+| `MACROBRUTE_PROJECT_HANDOFF.md` | **Legacy project handoff** — detailed specs before expander expansion | ~680 |
 
 ### SUBSYSTEM DOCUMENTS
 
@@ -33,7 +33,7 @@
 | `breakout_pcb.md` | Internal PCB: buffers, gate, LEDs, vactrol, CV protection |
 | `expander_circuits.md` | Noise, LFO, clock divider, S&H, slew, attenuverter, mult |
 | `jf33_cv_control.md` | PT2399 anti-latch-up, delay time CV, feedback CV, level matching |
-| `dso130_input_protection.md` | Input protection, CD4051 mux, power |
+| `dso130_input_protection.md` | **(Proposed/Not Used)** Input protection, CD4051 mux, power — Alternative oscilloscope design not implemented |
 | `wiring_diagram.md` | Complete signal flow: test points → DB-9 → expander |
 | `pico_pinout.md` | Pico H GPIO assignments and peripheral allocation |
 | `touch_plates.md` | Resistive, capacitive, MPR121 touch interfaces |
@@ -95,7 +95,7 @@
 | Panel mods | Minimal — OLED, encoder, button, LEDs, 2-4 switches |
 | Body jacks | 4 positions: Envelope Out, LFO Out, Ultrasaw Out, PWM Out |
 | All patching | Via Eurorack expander |
-| Expander size | ~50HP (includes DSO130 + JF-33 delay) |
+| Expander size | ~50HP (includes DSO138 + JF-33 delay) |
 | Power isolation | Separate supplies, signal ground only via DB-9 |
 | Nano | Parked — Pico handles everything |
 | Scope signal select | 6-position rotary switch |
@@ -115,7 +115,7 @@
 - 2× DB-9 connectors
 - LEDs + LDRs
 - IC kit (NE555×20, LM358×10, etc.)
-- DSO130 oscilloscope kit (built)
+- DSO138 oscilloscope kit (built)
 - Joyo JF-33 delay PCB (extracted)
 - 6U 84HP Eurorack case
 
@@ -168,7 +168,7 @@
 - [ ] Design/layout expander PCB
 - [ ] Build buffer section (TL074 × 3)
 - [ ] Build utilities (noise, LFO, clock div, S&H, slew)
-- [ ] Install DSO130 with input protection
+- [ ] Install DSO138 with input protection
 - [ ] Install JF-33 with level matching + CV control
 - [ ] Wire all jacks
 - [ ] Mount in panel
@@ -189,13 +189,13 @@
 
 ---
 
-## CCLI Task Queue
+## Task Queue
 
 ### Immediate (Schematics)
 1. Breakout PCB schematic — Pico mount, buffers, LED drivers
 2. Panel drilling template SVG
 3. Expander main schematic
-4. DSO130 input protection circuit
+4. DSO138 input protection circuit
 5. JF-33 CV control circuit (with anti-latch-up)
 
 ### Documentation
@@ -234,7 +234,7 @@ Previous session transcripts:
 - MKNielsen2000 Add-ons: https://github.com/MKNielsen2000/MicroBrute-Add-ons
 - SysEx RE: https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html
 
-### DSO130/138
+### DSO138/138
 - DLO-138 firmware: https://github.com/ardyesp/DLO-138
 
 ### PT2399/Delay
