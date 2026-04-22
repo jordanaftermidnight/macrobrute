@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" width="1000" height="780">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="1000" height="780" fill="#FEFEFE"/>
+<text x="500" y="25" class="title" text-anchor="middle">2× DB-9 Interconnect Detail</text>
+<text x="500" y="42" class="subtitle" text-anchor="middle">MicroBrute ↔ 42HP Eurorack expander — 18 signals + shield</text>
+<path d="M110,90 L250,90 L240,310 L120,310 Z" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="2"/>
+<text x="180" y="70" class="label" text-anchor="middle" font-size="12" fill="#0066CC">DB-9 A — OUTPUTS (MB → Expander)</text>
+<circle cx="130" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="130" y="112" class="value" text-anchor="middle" font-size="9" fill="#FFF">1</text>
+<circle cx="155" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="155" y="112" class="value" text-anchor="middle" font-size="9" fill="#FFF">2</text>
+<circle cx="180" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="180" y="112" class="value" text-anchor="middle" font-size="9" fill="#FFF">3</text>
+<circle cx="205" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="205" y="112" class="value" text-anchor="middle" font-size="9" fill="#FFF">4</text>
+<circle cx="230" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="230" y="112" class="value" text-anchor="middle" font-size="9" fill="#FFF">5</text>
+<circle cx="143" cy="160" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="143" y="152" class="value" text-anchor="middle" font-size="9" fill="#FFF">6</text>
+<circle cx="168" cy="160" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="168" y="152" class="value" text-anchor="middle" font-size="9" fill="#FFF">7</text>
+<circle cx="193" cy="160" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="193" y="152" class="value" text-anchor="middle" font-size="9" fill="#FFF">8</text>
+<circle cx="218" cy="160" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="218" y="152" class="value" text-anchor="middle" font-size="9" fill="#FFF">9</text>
+<text x="180" y="280" class="value" text-anchor="middle" fill="#CCC" font-size="8">SHELL → shield drain (MB end only)</text>
+<path d="M110,430 L250,430 L240,650 L120,650 Z" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="2"/>
+<text x="180" y="410" class="label" text-anchor="middle" font-size="12" fill="#CC6600">DB-9 B — INPUTS + POWER (Expander → MB)</text>
+<circle cx="130" cy="460" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="130" y="452" class="value" text-anchor="middle" font-size="9" fill="#FFF">1</text>
+<circle cx="155" cy="460" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="155" y="452" class="value" text-anchor="middle" font-size="9" fill="#FFF">2</text>
+<circle cx="180" cy="460" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="180" y="452" class="value" text-anchor="middle" font-size="9" fill="#FFF">3</text>
+<circle cx="205" cy="460" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="205" y="452" class="value" text-anchor="middle" font-size="9" fill="#FFF">4</text>
+<circle cx="230" cy="460" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="230" y="452" class="value" text-anchor="middle" font-size="9" fill="#FFF">5</text>
+<circle cx="143" cy="500" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="143" y="492" class="value" text-anchor="middle" font-size="9" fill="#FFF">6</text>
+<circle cx="168" cy="500" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="168" y="492" class="value" text-anchor="middle" font-size="9" fill="#FFF">7</text>
+<circle cx="193" cy="500" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="193" y="492" class="value" text-anchor="middle" font-size="9" fill="#FFF">8</text>
+<circle cx="218" cy="500" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
+<text x="218" y="492" class="value" text-anchor="middle" font-size="9" fill="#FFF">9</text>
+<text x="180" y="620" class="value" text-anchor="middle" fill="#CCC" font-size="8">SHELL → shield drain (MB end only)</text>
+<text x="330" y="110" class="label" font-size="12" fill="#0066CC">DB-9 A — Outputs from MicroBrute</text>
+<rect x="330" y="120" width="640" height="25" fill="#E3F2FD" stroke="#0066CC" stroke-width="0.5"/>
+<text x="345" y="137" class="label" font-size="9">Pin</text>
+<text x="390" y="137" class="label" font-size="9">Signal</text>
+<text x="500" y="137" class="label" font-size="9">Source</text>
+<text x="700" y="137" class="label" font-size="9">Protection / Series R</text>
+<text x="900" y="137" class="label" font-size="9">Wire</text>
+<rect x="330" y="148" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="156" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="159" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">1</text>
+<text x="390" y="160" class="label" font-size="9" fill="#4A4">Gate Out</text>
+<text x="500" y="160" class="value" font-size="8">TP83 → CD40106 + CD4049UBE</text>
+<text x="700" y="160" class="value" font-size="8">10kΩ pull-up</text>
+<text x="900" y="160" class="value" font-size="8">White</text>
+<circle cx="348" cy="174" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="177" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">2</text>
+<text x="390" y="178" class="label" font-size="9" fill="#CC6600">Pitch CV Out</text>
+<text x="500" y="178" class="value" font-size="8">Rear jack (stock buffered)</text>
+<text x="700" y="178" class="value" font-size="8">—</text>
+<text x="900" y="178" class="value" font-size="8">Yellow</text>
+<rect x="330" y="184" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="192" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="195" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">3</text>
+<text x="390" y="196" class="label" font-size="9" fill="#CC6600">Envelope Out</text>
+<text x="500" y="196" class="value" font-size="8">TL072 A follower from TP5</text>
+<text x="700" y="196" class="value" font-size="8">10kΩ series</text>
+<text x="900" y="196" class="value" font-size="8">Orange</text>
+<circle cx="348" cy="210" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="213" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">4</text>
+<text x="390" y="214" class="label" font-size="9" fill="#4A4">LFO Out</text>
+<text x="500" y="214" class="value" font-size="8">TL072 B follower</text>
+<text x="700" y="214" class="value" font-size="8">10kΩ series</text>
+<text x="900" y="214" class="value" font-size="8">Green</text>
+<rect x="330" y="220" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="228" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="231" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">5</text>
+<text x="390" y="232" class="label" font-size="9" fill="#0066CC">VCO Mix Out</text>
+<text x="500" y="232" class="value" font-size="8">TL074 C from TP30 (MIXER_OUT)</text>
+<text x="700" y="232" class="value" font-size="8">1kΩ series</text>
+<text x="900" y="232" class="value" font-size="8">Blue</text>
+<circle cx="348" cy="246" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="249" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">6</text>
+<text x="390" y="250" class="label" font-size="9" fill="#6600CC">VCF Out</text>
+<text x="500" y="250" class="value" font-size="8">TL074 D from TP19</text>
+<text x="700" y="250" class="value" font-size="8">1kΩ series</text>
+<text x="900" y="250" class="value" font-size="8">Purple</text>
+<rect x="330" y="256" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="264" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="267" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">7</text>
+<text x="390" y="268" class="label" font-size="9" fill="#D44">Saw Out</text>
+<text x="500" y="268" class="value" font-size="8">TL074 A from TP94</text>
+<text x="700" y="268" class="value" font-size="8">1kΩ series</text>
+<text x="900" y="268" class="value" font-size="8">Red</text>
+<circle cx="348" cy="282" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="285" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">8</text>
+<text x="390" y="286" class="label" font-size="9" fill="#663300">Square Out</text>
+<text x="500" y="286" class="value" font-size="8">TL074 B from TP93</text>
+<text x="700" y="286" class="value" font-size="8">1kΩ series</text>
+<text x="900" y="286" class="value" font-size="8">Brown</text>
+<rect x="330" y="292" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="300" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="303" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">9</text>
+<text x="390" y="304" class="label" font-size="9" fill="#1a1a1a">GND (signal)</text>
+<text x="500" y="304" class="value" font-size="8">Star ground at TP72</text>
+<text x="700" y="304" class="value" font-size="8">—</text>
+<text x="900" y="304" class="value" font-size="8">Black</text>
+<text x="330" y="450" class="label" font-size="12" fill="#CC6600">DB-9 B — Inputs + Power to MicroBrute</text>
+<rect x="330" y="460" width="640" height="25" fill="#FFF3E0" stroke="#CC6600" stroke-width="0.5"/>
+<text x="345" y="477" class="label" font-size="9">Pin</text>
+<text x="390" y="477" class="label" font-size="9">Signal</text>
+<text x="500" y="477" class="label" font-size="9">Source</text>
+<text x="700" y="477" class="label" font-size="9">Protection / Series R</text>
+<text x="900" y="477" class="label" font-size="9">Wire</text>
+<rect x="330" y="488" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="496" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="499" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">1</text>
+<text x="390" y="500" class="label" font-size="9" fill="#6600CC">Filter CV In</text>
+<text x="500" y="500" class="value" font-size="8">Summing node U8A (R67)</text>
+<text x="700" y="500" class="value" font-size="8">BAT54S clamp · 220kΩ</text>
+<text x="900" y="500" class="value" font-size="8">White</text>
+<circle cx="348" cy="514" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="517" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">2</text>
+<text x="390" y="518" class="label" font-size="9" fill="#CC6600">VCA CV In</text>
+<text x="500" y="518" class="value" font-size="8">TP10/TP11</text>
+<text x="700" y="518" class="value" font-size="8">BAT54S clamp · 100kΩ</text>
+<text x="900" y="518" class="value" font-size="8">Yellow</text>
+<rect x="330" y="524" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="532" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="535" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">3</text>
+<text x="390" y="536" class="label" font-size="9" fill="#CC6600">Resonance CV In</text>
+<text x="500" y="536" class="value" font-size="8">Vactrol LED via 2N3904</text>
+<text x="700" y="536" class="value" font-size="8">1kΩ current limit</text>
+<text x="900" y="536" class="value" font-size="8">Orange</text>
+<circle cx="348" cy="550" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="553" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">4</text>
+<text x="390" y="554" class="label" font-size="9" fill="#4A4">Sync In</text>
+<text x="500" y="554" class="value" font-size="8">VCO sync node (direct)</text>
+<text x="700" y="554" class="value" font-size="8">—</text>
+<text x="900" y="554" class="value" font-size="8">Green</text>
+<rect x="330" y="560" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="568" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="571" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">5</text>
+<text x="390" y="572" class="label" font-size="9" fill="#0066CC">Gate In</text>
+<text x="500" y="572" class="value" font-size="8">Gate circuit via 1N4148</text>
+<text x="700" y="572" class="value" font-size="8">—</text>
+<text x="900" y="572" class="value" font-size="8">Blue</text>
+<circle cx="348" cy="586" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="589" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">6</text>
+<text x="390" y="590" class="label" font-size="9" fill="#6600CC">Ext Audio In</text>
+<text x="500" y="590" class="value" font-size="8">Mixer ext in (attenuated)</text>
+<text x="700" y="590" class="value" font-size="8">—</text>
+<text x="900" y="590" class="value" font-size="8">Purple</text>
+<rect x="330" y="596" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="604" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="607" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">7</text>
+<text x="390" y="608" class="label" font-size="9" fill="#D44">+12V</text>
+<text x="500" y="608" class="value" font-size="8">Breakout +12V rail</text>
+<text x="700" y="608" class="value" font-size="8">1N5817 + ferrite bead</text>
+<text x="900" y="608" class="value" font-size="8">Red</text>
+<circle cx="348" cy="622" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="625" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">8</text>
+<text x="390" y="626" class="label" font-size="9" fill="#44D">-12V</text>
+<text x="500" y="626" class="value" font-size="8">Breakout -12V rail</text>
+<text x="700" y="626" class="value" font-size="8">1N5817 + ferrite bead</text>
+<text x="900" y="626" class="value" font-size="8">Brn/Str</text>
+<rect x="330" y="632" width="640" height="18" fill="#F8F8F8"/>
+<circle cx="348" cy="640" r="5" fill="gold" stroke="#B8860B"/>
+<text x="348" y="643" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">9</text>
+<text x="390" y="644" class="label" font-size="9" fill="#1a1a1a">GND (power)</text>
+<text x="500" y="644" class="value" font-size="8">Star ground at TP72</text>
+<text x="700" y="644" class="value" font-size="8">—</text>
+<text x="900" y="644" class="value" font-size="8">Black</text>
+<rect x="50" y="680" width="920" height="80" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
+<text x="65" y="700" class="value" font-size="9">• Ground strategy: single return at TP72 via DB-9 B pin 9. Do not duplicate ground via DB-9 A pin 9 (avoid loop).</text>
+<text x="65" y="716" class="value" font-size="9">• DB-9 shells: tied to shield drain on MicroBrute side only. Expander shells left floating to prevent ground loop.</text>
+<text x="65" y="732" class="value" font-size="9">• VGA HD-15 rejected — commodity VGA cables short pins 6/7/8 to GND, which would collide with our output signal assignments.</text>
+<text x="65" y="748" class="value" font-size="9">• All audio outputs buffered (TL072/TL074, unity gain). All CV inputs clamped to ±5V via BAT54S before op-amp stage.</text></svg>

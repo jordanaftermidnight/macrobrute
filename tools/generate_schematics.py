@@ -2499,10 +2499,332 @@ def generate_pico_pinout_diagram() -> str:
     return r.render()
 
 
+def generate_lpc2361_pinout_diagram() -> str:
+    """Generate LPC2361 (ARM7, 100-LQFP) pinout — focused on documented MACROBRUTE usage."""
+    r = SchematicRenderer(950, 650, "NXP LPC2361 Pinout (MACROBRUTE usage)", "100-LQFP ARM7TDMI-S — Stock Arturia firmware, Pico bridge via UART1")
+
+    # IC body (LQFP rendered as rounded rect)
+    ic_x, ic_y, ic_w, ic_h = 350, 140, 250, 340
+    r.elements.append(f'<rect x="{ic_x}" y="{ic_y}" width="{ic_w}" height="{ic_h}" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="8"/>')
+    r.elements.append(f'<circle cx="{ic_x+16}" cy="{ic_y+16}" r="4" fill="gold"/>')
+    r.elements.append(f'<text x="{ic_x+ic_w/2}" y="{ic_y+ic_h/2-10}" class="label" text-anchor="middle" fill="#FFF" font-size="16">LPC2361</text>')
+    r.elements.append(f'<text x="{ic_x+ic_w/2}" y="{ic_y+ic_h/2+10}" class="value" text-anchor="middle" fill="#CCC" font-size="10">ARM7TDMI-S @ 72 MHz</text>')
+    r.elements.append(f'<text x="{ic_x+ic_w/2}" y="{ic_y+ic_h/2+26}" class="value" text-anchor="middle" fill="#AAA" font-size="9">128KB Flash · 34KB SRAM · 100-LQFP</text>')
+
+    # Documented pins (left side — bridge)
+    bridge_pins = [
+        ("P0.15 (pin 97)", "TXD1 — UART1 TX", "→ Pico GP1 (RX) @ 115200", "#44D", 170),
+        ("P0.16 (pin 96)", "RXD1 — UART1 RX", "← Pico GP0 (TX) @ 115200", "#44D", 210),
+    ]
+    for pin, func, note, color, y in bridge_pins:
+        r.elements.append(f'<circle cx="{ic_x-5}" cy="{y}" r="3" fill="gold"/>')
+        r.elements.append(f'<line x1="{ic_x-5}" y1="{y}" x2="{ic_x-80}" y2="{y}" stroke="{color}" stroke-width="1.5"/>')
+        r.elements.append(f'<text x="{ic_x-85}" y="{y-2}" class="label" text-anchor="end" font-size="10">{pin}</text>')
+        r.elements.append(f'<text x="{ic_x-85}" y="{y+10}" class="value" text-anchor="end" font-size="9" fill="{color}">{func}</text>')
+        r.elements.append(f'<text x="{ic_x-85}" y="{y+22}" class="value" text-anchor="end" font-size="8">{note}</text>')
+
+    # ISP / RESET (right side)
+    ctrl_pins = [
+        ("P2.10 (pin 53)", "ISP ENTRY", "Pull LOW during reset → bootloader", "#CC6600", 170),
+        ("Pin 17", "nRESET", "Active-low system reset", "#D44", 230),
+    ]
+    for pin, func, note, color, y in ctrl_pins:
+        r.elements.append(f'<circle cx="{ic_x+ic_w+5}" cy="{y}" r="3" fill="gold"/>')
+        r.elements.append(f'<line x1="{ic_x+ic_w+5}" y1="{y}" x2="{ic_x+ic_w+80}" y2="{y}" stroke="{color}" stroke-width="1.5"/>')
+        r.elements.append(f'<text x="{ic_x+ic_w+85}" y="{y-2}" class="label" font-size="10">{pin}</text>')
+        r.elements.append(f'<text x="{ic_x+ic_w+85}" y="{y+10}" class="value" font-size="9" fill="{color}">{func}</text>')
+        r.elements.append(f'<text x="{ic_x+ic_w+85}" y="{y+22}" class="value" font-size="8">{note}</text>')
+
+    # Other UART for reference
+    other = [("P0.2 (pin 98)", "TXD0", "stock — not used by bridge", 300),
+             ("P0.3 (pin 99)", "RXD0", "stock — not used by bridge", 330)]
+    for pin, func, note, y in other:
+        r.elements.append(f'<circle cx="{ic_x-5}" cy="{y}" r="3" fill="#888"/>')
+        r.elements.append(f'<line x1="{ic_x-5}" y1="{y}" x2="{ic_x-80}" y2="{y}" stroke="#888" stroke-width="1"/>')
+        r.elements.append(f'<text x="{ic_x-85}" y="{y-2}" class="label" text-anchor="end" font-size="9" fill="#888">{pin}</text>')
+        r.elements.append(f'<text x="{ic_x-85}" y="{y+10}" class="value" text-anchor="end" font-size="8">{func} — {note}</text>')
+
+    # TODO block for undocumented pins
+    r.elements.append(f'<rect x="50" y="500" width="850" height="120" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append(f'<text x="475" y="520" class="label" text-anchor="middle" fill="#E65100" font-size="12">⚠ Undocumented Pin Usage — requires firmware RE</text>')
+    todos = [
+        "DAC output pin(s) for synth audio — search Ghidra labels for DACR writes",
+        "Keyboard matrix scan pins — stock firmware scans via GPIO (to be identified)",
+        "Panel encoder, buttons, mode LEDs — routed via port expander or direct GPIO (unknown)",
+        "MIDI UART (5-pin DIN @ 31250 baud) — may reuse UART0 or separate pins",
+        "Note: LPC2361 has CRP enabled. Firmware extraction blocked by Code Read Protection.",
+    ]
+    for i, line in enumerate(todos):
+        r.elements.append(f'<text x="70" y="{540 + i*15}" class="value" font-size="9">• {line}</text>')
+
+    # Bridge explainer
+    r.elements.append(f'<text x="475" y="120" class="anno" text-anchor="middle" font-size="10">Pico ↔ LPC bridge frames: 0xAA [msg_type] [counter] [len] [payload] ...</text>')
+
+    return r.render()
+
+
+def generate_db9_connector_diagram() -> str:
+    """Generate 2×DB-9 interconnect detail — full 18-pin map (A: outputs, B: inputs+power)."""
+    r = SchematicRenderer(1000, 780, "2× DB-9 Interconnect Detail", "MicroBrute ↔ 42HP Eurorack expander — 18 signals + shield")
+
+    def draw_db9(cx, cy, pins, title, color):
+        # DB-9 trapezoid shell
+        r.elements.append(f'<path d="M{cx-70},{cy-110} L{cx+70},{cy-110} L{cx+60},{cy+110} L{cx-60},{cy+110} Z" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="2"/>')
+        r.elements.append(f'<text x="{cx}" y="{cy-130}" class="label" text-anchor="middle" font-size="12" fill="{color}">{title}</text>')
+        # 5 pins top row, 4 pins bottom row (standard DB-9)
+        top_pins = [1, 2, 3, 4, 5]
+        bot_pins = [6, 7, 8, 9]
+        for i, pn in enumerate(top_pins):
+            px = cx - 50 + i * 25
+            py = cy - 80
+            r.elements.append(f'<circle cx="{px}" cy="{py}" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>')
+            r.elements.append(f'<text x="{px}" y="{py-8}" class="value" text-anchor="middle" font-size="9" fill="#FFF">{pn}</text>')
+        for i, pn in enumerate(bot_pins):
+            px = cx - 37 + i * 25
+            py = cy - 40
+            r.elements.append(f'<circle cx="{px}" cy="{py}" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>')
+            r.elements.append(f'<text x="{px}" y="{py-8}" class="value" text-anchor="middle" font-size="9" fill="#FFF">{pn}</text>')
+        # Shell label
+        r.elements.append(f'<text x="{cx}" y="{cy+80}" class="value" text-anchor="middle" fill="#CCC" font-size="8">SHELL → shield drain (MB end only)</text>')
+
+    # DB-9 A (left)
+    draw_db9(180, 200, [], "DB-9 A — OUTPUTS (MB → Expander)", "#0066CC")
+    # DB-9 B (right)
+    draw_db9(180, 540, [], "DB-9 B — INPUTS + POWER (Expander → MB)", "#CC6600")
+
+    # Pin tables
+    pinA = [
+        (1, "Gate Out",        "TP83 → CD40106 + CD4049UBE",   "10kΩ pull-up",    "White",  "#4A4"),
+        (2, "Pitch CV Out",    "Rear jack (stock buffered)",   "—",               "Yellow", "#CC6600"),
+        (3, "Envelope Out",    "TL072 A follower from TP5",    "10kΩ series",     "Orange", "#CC6600"),
+        (4, "LFO Out",         "TL072 B follower",             "10kΩ series",     "Green",  "#4A4"),
+        (5, "VCO Mix Out",     "TL074 C from TP30 (MIXER_OUT)","1kΩ series",      "Blue",   "#0066CC"),
+        (6, "VCF Out",         "TL074 D from TP19",            "1kΩ series",      "Purple", "#6600CC"),
+        (7, "Saw Out",         "TL074 A from TP94",            "1kΩ series",      "Red",    "#D44"),
+        (8, "Square Out",      "TL074 B from TP93",            "1kΩ series",      "Brown",  "#663300"),
+        (9, "GND (signal)",    "Star ground at TP72",          "—",               "Black",  "#1a1a1a"),
+    ]
+    pinB = [
+        (1, "Filter CV In",    "Summing node U8A (R67)",       "BAT54S clamp · 220kΩ", "White",  "#6600CC"),
+        (2, "VCA CV In",       "TP10/TP11",                    "BAT54S clamp · 100kΩ", "Yellow", "#CC6600"),
+        (3, "Resonance CV In", "Vactrol LED via 2N3904",       "1kΩ current limit",    "Orange", "#CC6600"),
+        (4, "Sync In",         "VCO sync node (direct)",        "—",                    "Green",  "#4A4"),
+        (5, "Gate In",         "Gate circuit via 1N4148",       "—",                    "Blue",   "#0066CC"),
+        (6, "Ext Audio In",    "Mixer ext in (attenuated)",     "—",                    "Purple", "#6600CC"),
+        (7, "+12V",            "Breakout +12V rail",            "1N5817 + ferrite bead","Red",    "#D44"),
+        (8, "-12V",            "Breakout -12V rail",            "1N5817 + ferrite bead","Brn/Str","#44D"),
+        (9, "GND (power)",     "Star ground at TP72",           "—",                    "Black",  "#1a1a1a"),
+    ]
+
+    # A table
+    r.elements.append(f'<text x="330" y="110" class="label" font-size="12" fill="#0066CC">DB-9 A — Outputs from MicroBrute</text>')
+    r.elements.append(f'<rect x="330" y="120" width="640" height="25" fill="#E3F2FD" stroke="#0066CC" stroke-width="0.5"/>')
+    headers = [("Pin", 345), ("Signal", 390), ("Source", 500), ("Protection / Series R", 700), ("Wire", 900)]
+    for t, x in headers:
+        r.elements.append(f'<text x="{x}" y="137" class="label" font-size="9">{t}</text>')
+    for i, (pn, sig, src, prot, wire, col) in enumerate(pinA):
+        yy = 160 + i * 18
+        if i % 2 == 0:
+            r.elements.append(f'<rect x="330" y="{yy-12}" width="640" height="18" fill="#F8F8F8"/>')
+        r.elements.append(f'<circle cx="348" cy="{yy-4}" r="5" fill="gold" stroke="#B8860B"/>')
+        r.elements.append(f'<text x="348" y="{yy-1}" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">{pn}</text>')
+        r.elements.append(f'<text x="390" y="{yy}" class="label" font-size="9" fill="{col}">{sig}</text>')
+        r.elements.append(f'<text x="500" y="{yy}" class="value" font-size="8">{src}</text>')
+        r.elements.append(f'<text x="700" y="{yy}" class="value" font-size="8">{prot}</text>')
+        r.elements.append(f'<text x="900" y="{yy}" class="value" font-size="8">{wire}</text>')
+
+    # B table
+    r.elements.append(f'<text x="330" y="450" class="label" font-size="12" fill="#CC6600">DB-9 B — Inputs + Power to MicroBrute</text>')
+    r.elements.append(f'<rect x="330" y="460" width="640" height="25" fill="#FFF3E0" stroke="#CC6600" stroke-width="0.5"/>')
+    for t, x in headers:
+        r.elements.append(f'<text x="{x}" y="477" class="label" font-size="9">{t}</text>')
+    for i, (pn, sig, src, prot, wire, col) in enumerate(pinB):
+        yy = 500 + i * 18
+        if i % 2 == 0:
+            r.elements.append(f'<rect x="330" y="{yy-12}" width="640" height="18" fill="#F8F8F8"/>')
+        r.elements.append(f'<circle cx="348" cy="{yy-4}" r="5" fill="gold" stroke="#B8860B"/>')
+        r.elements.append(f'<text x="348" y="{yy-1}" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">{pn}</text>')
+        r.elements.append(f'<text x="390" y="{yy}" class="label" font-size="9" fill="{col}">{sig}</text>')
+        r.elements.append(f'<text x="500" y="{yy}" class="value" font-size="8">{src}</text>')
+        r.elements.append(f'<text x="700" y="{yy}" class="value" font-size="8">{prot}</text>')
+        r.elements.append(f'<text x="900" y="{yy}" class="value" font-size="8">{wire}</text>')
+
+    # Notes
+    r.elements.append(f'<rect x="50" y="680" width="920" height="80" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>')
+    notes = [
+        "• Ground strategy: single return at TP72 via DB-9 B pin 9. Do not duplicate ground via DB-9 A pin 9 (avoid loop).",
+        "• DB-9 shells: tied to shield drain on MicroBrute side only. Expander shells left floating to prevent ground loop.",
+        "• VGA HD-15 rejected — commodity VGA cables short pins 6/7/8 to GND, which would collide with our output signal assignments.",
+        "• All audio outputs buffered (TL072/TL074, unity gain). All CV inputs clamped to ±5V via BAT54S before op-amp stage.",
+    ]
+    for i, line in enumerate(notes):
+        r.elements.append(f'<text x="65" y="{700 + i*16}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
+def generate_power_regulation_diagram() -> str:
+    """Generate power distribution chain: Eurorack → breakout → Pico + expander."""
+    r = SchematicRenderer(1050, 600, "Power Regulation Chain", "Eurorack bus → breakout PCB → Pico VSYS + expander +5V")
+
+    def draw_stage(x, y, w, h, title, detail, color):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{color}" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+w/2}" y="{y+22}" class="label" text-anchor="middle" fill="#FFF" font-size="11">{title}</text>')
+        for i, line in enumerate(detail):
+            r.elements.append(f'<text x="{x+w/2}" y="{y+40 + i*13}" class="value" text-anchor="middle" fill="#FFF" font-size="9">{line}</text>')
+
+    def draw_arrow(x1, y1, x2, y2, label=""):
+        r.elements.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>')
+        if label:
+            mx, my = (x1+x2)/2, (y1+y2)/2
+            r.elements.append(f'<text x="{mx}" y="{my-6}" class="anno" text-anchor="middle" font-size="9">{label}</text>')
+
+    # Stage 1: Eurorack bus
+    draw_stage(40, 90, 180, 120, "Eurorack Bus", ["+12V / -12V / +5V", "16-pin IDC or Doepfer", "2A typical peak"], "#555")
+    # Stage 2: DB-9 reverse protection
+    draw_stage(280, 90, 180, 120, "DB-9 B Protection", ["1N5817 diodes", "Ferrite bead 100Ω", "100µF/25V + 100nF"], "#0066CC")
+    # Stage 3a: +12V_BRK rail (top)
+    draw_stage(520, 40, 180, 90, "+12V_BRK Rail", ["To op-amps, CD40106", "~200mA budget"], "#D44")
+    # Stage 3b: -12V_BRK rail (middle)
+    draw_stage(520, 150, 180, 90, "-12V_BRK Rail", ["To op-amps", "~200mA budget"], "#44D")
+    # Stage 4: +5V from LM78L05
+    draw_stage(520, 260, 180, 90, "LM78L05 → +5V", ["Input: +12V_BRK", "~100mA (CD4024, gates)"], "#CC6600")
+    # Stage 5: Pico VSYS
+    draw_stage(760, 40, 230, 90, "Pico VSYS (pin 39)", ["Fed from MB +5V rail", "via 1N5817 + 100nF", "3.7-5.5V input"], "#6600CC")
+    # Stage 6: Pico 3V3
+    draw_stage(760, 150, 230, 90, "Pico 3V3 (pin 36)", ["Internal LDO", "~50mA (OLED, encoder)", "Powers I2C pull-ups"], "#4A4")
+    # Stage 7: expander rails
+    draw_stage(760, 260, 230, 90, "Expander Utilities", ["+12V/-12V: op-amps, LFO", "+5V: clock divider", "GND: star node"], "#009933")
+
+    # Arrows
+    draw_arrow(220, 150, 280, 150, "DB-9 B:7/8")
+    draw_arrow(460, 110, 520, 85, "+12V")
+    draw_arrow(460, 170, 520, 195, "-12V")
+    draw_arrow(460, 200, 520, 305, "+12V→78L05")
+    draw_arrow(700, 85, 760, 85, "+5V")
+    draw_arrow(875, 130, 875, 150, "")
+    draw_arrow(700, 305, 760, 305, "rails")
+
+    # Call-out: LPC2361 power
+    r.elements.append(f'<rect x="40" y="400" width="470" height="150" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append(f'<text x="275" y="420" class="label" text-anchor="middle" fill="#E65100" font-size="11">LPC2361 Power (stock Arturia)</text>')
+    lpc_notes = [
+        "• VDD (3.3V) — internal to MicroBrute main PCB, supplied by stock regulator (not tapped by mod)",
+        "• VDDA (analog 3.3V) — separate pin, derived on-board",
+        "• Core 1.8V — generated internally by LPC2361 DC/DC",
+        "• MOD does NOT modify stock MicroBrute power — breakout only adds rails FOR mods, shares GND at TP72.",
+        "• Mod current budget: Pico ≤150mA + expander ≤500mA = ~650mA added on Eurorack ±12V.",
+    ]
+    for i, line in enumerate(lpc_notes):
+        r.elements.append(f'<text x="55" y="{445 + i*17}" class="value" font-size="9">{line}</text>')
+
+    # Call-out: safety + current budget
+    r.elements.append(f'<rect x="540" y="400" width="470" height="150" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>')
+    r.elements.append(f'<text x="775" y="420" class="label" text-anchor="middle" fill="#1B5E20" font-size="11">Protection &amp; Budget</text>')
+    safety_notes = [
+        "• 1N5817 Schottky on ±12V and +5V inputs: reverse-polarity protection (0.3V drop).",
+        "• Ferrite bead (100Ω @ 100MHz) in series with each rail: suppresses HF noise from Eurorack bus.",
+        "• 100µF electrolytic + 100nF ceramic per rail: bulk + HF decoupling.",
+        "• Star ground at TP72 — single return path for audio, CV, gate, and power.",
+        "• UNDOCUMENTED: actual current draw by LPC2361 DAC/keyboard matrix (not measured).",
+    ]
+    for i, line in enumerate(safety_notes):
+        r.elements.append(f'<text x="555" y="{445 + i*17}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
+def generate_testpoints_map() -> str:
+    """Generate MicroBrute test-points map — 18 documented TPs organized by board + function."""
+    r = SchematicRenderer(1050, 780, "MicroBrute Test-Points Map", "18 documented test points used by MACROBRUTE mod — front board, rear board, power")
+
+    def tp_group(x, y, w, h, title, subtitle, color, rows):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="#F8F8F8" stroke="{color}" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+12}" y="{y+22}" class="label" font-size="12" fill="{color}">{title}</text>')
+        r.elements.append(f'<text x="{x+12}" y="{y+38}" class="value" font-size="9">{subtitle}</text>')
+        for i, (tp, sig, usage) in enumerate(rows):
+            yy = y + 60 + i * 20
+            r.elements.append(f'<circle cx="{x+22}" cy="{yy-4}" r="8" fill="{color}" stroke="#1a1a1a"/>')
+            r.elements.append(f'<text x="{x+22}" y="{yy-1}" class="value" text-anchor="middle" font-size="8" fill="#FFF" font-weight="bold">{tp}</text>')
+            r.elements.append(f'<text x="{x+42}" y="{yy}" class="label" font-size="9">{sig}</text>')
+            r.elements.append(f'<text x="{x+160}" y="{yy}" class="value" font-size="9">{usage}</text>')
+
+    # Rear board — waveform outputs
+    rear_waves = [
+        ("TP93",  "Square (raw)",        "DB-9 A:8 · touch-bend T5"),
+        ("TP94",  "Sawtooth (raw)",      "DB-9 A:7"),
+        ("TP102", "Sub osc",             "spare body jack"),
+        ("TP109", "Metalizer pre-mix",   "body jack / touch bend"),
+        ("TP110", "Metalizer post-mix",  "touch-bend T6 (feedback)"),
+        ("TP124", "Triangle (raw)",      "2× gain → body jack"),
+    ]
+    tp_group(30, 70, 320, 210, "Rear Board — Waveforms (~10Vpp)", "Buffered via TL074 @ unity or 2× gain", "#D44", rear_waves)
+
+    # Front board — filter/control
+    front_ctrl = [
+        ("TP5",  "Envelope 2 Out",      "DB-9 A:3 (TL072 follower, 10kΩ)"),
+        ("TP19", "VCF Out",             "DB-9 A:6 (TL074, 1kΩ)"),
+        ("TP26", "Filter CV inject",    "DB-9 B:1 via R67 summing"),
+        ("TP30", "VCO Mix (MIXER_OUT)", "DB-9 A:5 (TL074, 1kΩ)"),
+    ]
+    tp_group(370, 70, 320, 150, "Front Board — Filter / Control", "Summing node access, pre- and post-filter", "#0066CC", front_ctrl)
+
+    # CV injection points
+    cv_inject = [
+        ("TP10", "CV1 (VCA)",            "panel jack — 100kΩ already in circuit"),
+        ("TP11", "CV2 (VCA)",            "alternate VCA CV input"),
+        ("TP12", "Misc Amplitude",       "DB-9 B:2 via 100kΩ"),
+    ]
+    tp_group(710, 70, 320, 130, "Front Board — CV Injection", "Use existing 100kΩ series resistance", "#6600CC", cv_inject)
+
+    # Gate
+    gate_row = [
+        ("TP83", "Gate from µC", "DB-9 A:1 (CD40106 + CD4049UBE buffer chain, 100kΩ source Z)"),
+    ]
+    tp_group(370, 240, 660, 70, "Rear Board — Gate", "High source impedance → needs Schmitt + level shift before DB-9", "#4A4", gate_row)
+
+    # Power taps
+    power_taps = [
+        ("TP70", "+12V",  "Breakout +12V rail (22AWG + 1N5817 + ferrite)"),
+        ("TP71", "-12V",  "Breakout -12V rail (22AWG + 1N5817 + ferrite)"),
+        ("TP72", "GND",   "⭐ Star ground — single return for DB-9, breakout, expander"),
+    ]
+    tp_group(30, 330, 660, 130, "Power Taps (shared with stock Arturia rails)", "22AWG stranded · 1N5817 Schottky reverse-polarity on each rail", "#CC6600", power_taps)
+
+    # Touch bends
+    touch_bends = [
+        ("T1", "PITCH (R309 area)",        "10kΩ safety · vibrato"),
+        ("T2", "CRUNCH (C111)",            "4.7kΩ · wavefolder sweep"),
+        ("T3", "WAH (filter CV input)",    "22kΩ · manual sweep"),
+        ("T4", "DISTORT (TP4 feedback)",   "15kΩ · self-oscillation"),
+        ("T5", "HARM (C106 + C107)",       "10kΩ each · cross-coupled"),
+        ("T6", "GATE (Metalizer loop)",    "1kΩ · feedback closure"),
+    ]
+    tp_group(710, 330, 320, 210, "Touch Bends (6 of 8 tested)", "Body-resistance CV mod · Brass M3 bolts through panel", "#CC6600", touch_bends)
+
+    # Footnotes
+    r.elements.append(f'<rect x="30" y="570" width="1000" height="190" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append(f'<text x="530" y="592" class="label" text-anchor="middle" fill="#E65100" font-size="12">Physical Location &amp; Assembly Notes</text>')
+    footnotes = [
+        "• Rear board TPs (waveforms, gate, power): accessible with the case open — remove 4 screws + encoder knob. No panel disassembly needed.",
+        "• Front board TPs (filter, CV): require lifting the front panel to access. Use a thin hooked probe.",
+        "• TP26 (filter CV inject) is the designated mod point for external filter modulation — R67 (220kΩ) is the summing resistor.",
+        "• TP72 is the ONLY ground point the mod taps. All GND returns (DB-9 A:9, DB-9 B:9, breakout, LED driver) converge here.",
+        "• Touch bends breadboarded before final panel install — test all 8 candidates, select 6 based on musical effect (documented in touch_bend_specs.md).",
+        "• After soldering taps, wrap each wire at the PCB exit with heatshrink + strain relief (hot-glue drop on stranded AWG24 or AWG22).",
+        "• DO NOT tap TP1-TP4 on the rear board without the bend table — those are raw oscillator cores and short-circuiting will damage the LPC2361 DAC.",
+        "• All TPs retain stock functionality — mods are non-destructive and reversible if wire is cut at the solder joint (no PCB traces cut).",
+    ]
+    for i, line in enumerate(footnotes):
+        r.elements.append(f'<text x="45" y="{612 + i*18}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
 def main():
     """Generate all schematics."""
     os.makedirs("schematics", exist_ok=True)
-    
+
     schematics = [
         ("noise_generator_schematic.svg", generate_noise_schematic),
         ("lfo_schematic.svg", generate_lfo_schematic),
@@ -2525,6 +2847,10 @@ def main():
         ("cd4051_multiplexer.svg", generate_cd4051_multiplexer),
         ("cv_input_protection_diagram.svg", generate_cv_input_protection_diagram),
         ("pico_pinout_diagram.svg", generate_pico_pinout_diagram),
+        ("lpc2361_pinout_diagram.svg", generate_lpc2361_pinout_diagram),
+        ("db9_connector_diagram.svg", generate_db9_connector_diagram),
+        ("power_regulation_diagram.svg", generate_power_regulation_diagram),
+        ("testpoints_map.svg", generate_testpoints_map),
     ]
     
     for filename, generator in schematics:

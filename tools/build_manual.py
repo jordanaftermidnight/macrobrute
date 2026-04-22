@@ -31,6 +31,8 @@ SVG_MAP = {
         "schematics/wiring_internal.svg",
         "schematics/wiring_power_distribution.svg",
         "schematics/interconnect_wiring.svg",
+        "schematics/db9_connector_diagram.svg",
+        "schematics/testpoints_map.svg",
     ],
     "schematics/breakout_pcb.md": [
         "schematics/wiring_output_buffer.svg",
@@ -40,9 +42,11 @@ SVG_MAP = {
         "schematics/breakout_layout.svg",
         "schematics/power_distribution.svg",
         "schematics/output_buffer_board.svg",
+        "schematics/power_regulation_diagram.svg",
     ],
     "schematics/pico_pinout.md": [
         "schematics/pico_pinout_diagram.svg",
+        "schematics/lpc2361_pinout_diagram.svg",
     ],
     "schematics/ic_pinout_reference.md": [
         "schematics/ic_pinout_tl074.svg",
@@ -57,7 +61,6 @@ SVG_MAP = {
     "schematics/breakout_stripboard.md": [
         "schematics/breakout_layout.svg",
         "schematics/zone_layout_stripboard.svg",
-        "schematics/zone_layout_new.svg",
     ],
     "schematics/expander_circuits.md": [
         "schematics/noise_generator_schematic.svg",
@@ -93,9 +96,6 @@ SVG_MAP = {
     ],
     "schematics/jf33_cv_control.md": [
         "schematics/pt2399_cv_control_schematic.svg",
-    ],
-    "schematics/expander_block_diagram.md": [
-        "schematics/expander_block_diagram.svg",
     ],
 }
 

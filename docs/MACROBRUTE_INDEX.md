@@ -64,7 +64,11 @@
 - `jf33_cv_control.md` — PT2399 anti-latch-up + CV control (Phase 7A)
 - `dso138_input_protection.md` — DSO138 protection + CD4051 mux (Phase 7B)
 - `touch_plates.md` + `touch_test_board.svg` — 8-channel test board → 6 final bolts
-- `pico_pinout.md` + `pico_pinout_diagram.svg` — GPIO allocation
+- `pico_pinout.md` + `pico_pinout_diagram.svg` — Pico WH GPIO allocation
+- `lpc2361_pinout_diagram.svg` — LPC2361 pinout (documented pins + RE gaps flagged)
+- `db9_connector_diagram.svg` — full 18-pin DB-9 A/B interconnect map
+- `power_regulation_diagram.svg` — Eurorack → breakout → Pico/expander rail chain
+- `testpoints_map.svg` — 18 MicroBrute test points (waveforms, CV, gate, power, touch bends)
 - `wiring_diagram.md` + `wiring_*.svg` — complete signal flow
 
 ### Firmware
