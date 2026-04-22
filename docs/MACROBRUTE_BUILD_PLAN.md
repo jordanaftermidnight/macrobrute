@@ -12,7 +12,7 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 |----------|--------|
 | Connector | 2× DB-9 (VGA HD-15 rejected — cable wiring shorts pins 6-8 to ground) |
 | OLED (primary) | **1.3" SH1106 I²C** on GP4/GP5 (SDA/SCL). Driver: `SH1106_I2C` in `firmware/pico/display.py`. |
-| OLED (fallbacks) | 0.96" SSD1306 I²C — same pins, set `OLED_COL_OFFSET = 0`. 24×2 I²C LCD — needs separate driver. |
+| OLED (fallbacks) | 0.96" SSD1306 I²C — same pins, set `OLED_COL_OFFSET = 0`. 16×2 1602 I²C LCD — needs separate driver. |
 | MIDI path | Pico ↔ LPC2361 UART bridge (UART0, 115200 baud, GP0/GP1). No direct 31250-baud MIDI. |
 | CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
 | RGB LED | Common-cathode, replaces 3 discrete LEDs (saves 2 panel holes, same GPIO GP8/9/10) |

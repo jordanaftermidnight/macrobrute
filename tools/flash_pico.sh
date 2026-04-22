@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# MACROBRUTE — Flash all firmware modules to Pico H via mpremote
+# MACROBRUTE — Flash all firmware modules to Pico WH via mpremote
 # Usage: ./tools/flash_pico.sh [port]
 #
 # Prerequisites:
 #   pip3 install mpremote
-#   MicroPython already flashed to Pico H (hold BOOTSEL, drag .uf2)
+#   MicroPython already flashed to Pico WH (hold BOOTSEL, drag .uf2)
 #
 # If port is omitted, mpremote auto-detects.
 # Example: ./tools/flash_pico.sh /dev/tty.usbmodem1101

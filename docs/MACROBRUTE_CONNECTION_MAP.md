@@ -4,7 +4,7 @@ Every signal, mod, bend, and wire in the system. This is the master
 wiring reference for building, debugging, and expanding.
 
 **Connector:** 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND)
-**OLED:** 1.3" SH1106 I²C 128×64 (driver `SH1106_I2C` in `firmware/pico/display.py`). Fallback: 0.96" SSD1306 I²C or 24×2 I²C LCD.
+**OLED:** 1.3" SH1106 I²C 128×64 (driver `SH1106_I2C` in `firmware/pico/display.py`). Fallback: 0.96" SSD1306 I²C or 16×2 1602 I²C LCD.
 **MIDI path:** Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
 **Firmware:** Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)
 

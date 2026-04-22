@@ -279,16 +279,16 @@
 <circle cx="435" cy="132" r="14" fill="#C0C0C0" stroke="#888" stroke-width="1.5"/>
 <circle cx="435" cy="132" r="3" fill="#666"/>
 <text x="435" y="114" class="comp">1</text>
-<text x="435" y="133" class="comp" font-size="7">RISE</text>
+<text x="435" y="133" class="comp" font-size="9">RISE</text>
 <line x1="405" y1="146" x2="405" y2="160" stroke="#888" stroke-width="1.5"/>
 <line x1="435" y1="146" x2="435" y2="160" stroke="#888" stroke-width="1.5"/>
 <line x1="465" y1="146" x2="465" y2="160" stroke="#888" stroke-width="1.5"/>
 <circle cx="405" cy="160" r="3" fill="#888"/>
 <circle cx="435" cy="160" r="3" fill="#D80"/>
 <circle cx="465" cy="160" r="3" fill="#888"/>
-<text x="405" y="172" class="comp" font-size="7">1M log</text>
-<text x="435" y="172" class="comp" font-size="7" fill="#D80">W</text>
-<text x="465" y="172" class="comp" font-size="7">CCW</text>
+<text x="405" y="172" class="comp" font-size="9">1M log</text>
+<text x="435" y="172" class="comp" font-size="9" fill="#D80">W</text>
+<text x="465" y="172" class="comp" font-size="9">CCW</text>
 <line x1="345" y1="160" x2="354" y2="160" stroke="#666" stroke-width="1.5"/>
 <polygon points="354,155 354,165 364,160" fill="#333"/>
 <line x1="364" y1="155" x2="364" y2="165" stroke="#333" stroke-width="2"/>
@@ -297,16 +297,16 @@
 <circle cx="435" cy="222" r="14" fill="#C0C0C0" stroke="#888" stroke-width="1.5"/>
 <circle cx="435" cy="222" r="3" fill="#666"/>
 <text x="435" y="204" class="comp">1</text>
-<text x="435" y="223" class="comp" font-size="7">FALL</text>
+<text x="435" y="223" class="comp" font-size="9">FALL</text>
 <line x1="405" y1="236" x2="405" y2="250" stroke="#888" stroke-width="1.5"/>
 <line x1="435" y1="236" x2="435" y2="250" stroke="#888" stroke-width="1.5"/>
 <line x1="465" y1="236" x2="465" y2="250" stroke="#888" stroke-width="1.5"/>
 <circle cx="405" cy="250" r="3" fill="#888"/>
 <circle cx="435" cy="250" r="3" fill="#D80"/>
 <circle cx="465" cy="250" r="3" fill="#888"/>
-<text x="405" y="262" class="comp" font-size="7">1M log</text>
-<text x="435" y="262" class="comp" font-size="7" fill="#D80">W</text>
-<text x="465" y="262" class="comp" font-size="7">CCW</text>
+<text x="405" y="262" class="comp" font-size="9">1M log</text>
+<text x="435" y="262" class="comp" font-size="9" fill="#D80">W</text>
+<text x="465" y="262" class="comp" font-size="9">CCW</text>
 <line x1="345" y1="250" x2="354" y2="250" stroke="#666" stroke-width="1.5"/>
 <polygon points="354,245 354,255 364,250" fill="#333"/>
 <line x1="364" y1="245" x2="364" y2="255" stroke="#333" stroke-width="2"/>

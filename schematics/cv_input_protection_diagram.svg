@@ -1,62 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" width="700" height="500">
 <defs>
-  <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-    <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
   </marker>
 </defs>
-<style>
-  .t { font: bold 14px sans-serif; fill: #1a1a1a; }
-  .st { font: 10px sans-serif; fill: #555; }
-  .l { font: bold 10px sans-serif; fill: #1a1a1a; }
-  .v { font: 9px sans-serif; fill: #333; }
-  .vl { font: 8px sans-serif; fill: #666; }
-</style>
-<rect width="600" height="450" fill="#FEFEFE"/>
-<text x="300" y="25" class="t" text-anchor="middle">CV Input Protection</text>
-<text x="300" y="42" class="st" text-anchor="middle">BAT54S Schottky Clamping for DB-9 B Inputs</text>
-<circle cx="60" cy="200" r="6" fill="none" stroke="#333" stroke-width="1.5"/>
-<text x="60" y="225" class="l" text-anchor="middle" font-size="9">CV IN</text>
-<text x="60" y="238" class="vl" text-anchor="middle" font-size="7">±12V max</text>
-<line x1="66" y1="200" x2="120" y2="200" stroke="#333" stroke-width="1.5"/>
-<path d="M120,200 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,0" stroke="#CD853F" stroke-width="2" fill="none"/>
-<text x="145" y="190" class="l" text-anchor="middle" font-size="8">R1</text>
-<text x="145" y="215" class="vl" text-anchor="middle" font-size="7">100kΩ</text>
-<text x="145" y="225" class="vl" text-anchor="middle" font-size="7">(protection)</text>
-<line x1="170" y1="200" x2="200" y2="200" stroke="#333" stroke-width="1.5"/>
-<circle cx="200" cy="200" r="3" fill="#0066CC"/>
-<line x1="200" y1="200" x2="240" y2="200" stroke="#333" stroke-width="1.5"/>
-<path d="M240,200 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,0" stroke="#CD853F" stroke-width="2" fill="none"/>
-<text x="265" y="190" class="l" text-anchor="middle" font-size="8">ATTEN</text>
-<text x="265" y="215" class="vl" text-anchor="middle" font-size="7">100kΩ</text>
-<line x1="290" y1="200" x2="320" y2="200" stroke="#333" stroke-width="1.5"/>
-<path d="M320,200 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,-5 l5,5 l5,0" stroke="#CD853F" stroke-width="2" fill="none"/>
-<text x="345" y="190" class="l" text-anchor="middle" font-size="8">Rs</text>
-<text x="345" y="215" class="vl" text-anchor="middle" font-size="7">10kΩ</text>
-<line x1="370" y1="200" x2="400" y2="200" stroke="#333" stroke-width="1.5"/>
-<circle cx="400" cy="200" r="3" fill="#0066CC"/>
-<line x1="400" y1="200" x2="520" y2="200" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
-<text x="460" y="190" class="l" text-anchor="middle" font-size="8">To MicroBrute</text>
-<text x="460" y="215" class="vl" text-anchor="middle" font-size="7">CV input node</text>
-<line x1="400" y1="200" x2="400" y2="120" stroke="#D44" stroke-width="1.5"/>
-<line x1="400" y1="120" x2="380" y2="120" stroke="#D44" stroke-width="1.5"/>
-<polygon points="380,110 380,130 400,120" fill="none" stroke="#D44" stroke-width="1.5"/>
-<line x1="380" y1="110" x2="380" y2="130" stroke="#D44" stroke-width="1.5"/>
-<line x1="380" y1="110" x2="380" y2="80" stroke="#D44" stroke-width="1.5"/>
-<line x1="370" y1="80" x2="390" y2="80" stroke="#D44" stroke-width="2"/>
-<text x="400" y="75" class="vl" fill="#D44" font-size="8">+5V</text>
-<text x="415" y="125" class="vl" fill="#D44" font-size="7">BAT54S</text>
-<line x1="400" y1="200" x2="400" y2="280" stroke="#44D" stroke-width="1.5"/>
-<line x1="400" y1="280" x2="420" y2="280" stroke="#44D" stroke-width="1.5"/>
-<polygon points="420,270 420,290 400,280" fill="none" stroke="#44D" stroke-width="1.5"/>
-<line x1="420" y1="270" x2="420" y2="290" stroke="#44D" stroke-width="1.5"/>
-<line x1="420" y1="290" x2="420" y2="320" stroke="#44D" stroke-width="1.5"/>
-<line x1="410" y1="320" x2="430" y2="320" stroke="#44D" stroke-width="2"/>
-<line x1="414" y1="324" x2="426" y2="324" stroke="#44D" stroke-width="1.5"/>
-<text x="445" y="325" class="vl" fill="#44D" font-size="8">GND</text>
-<rect x="50" y="360" width="500" height="80" fill="#E3F2FD" stroke="#2196F3" stroke-width="1" rx="4"/>
-<text x="300" y="380" class="l" text-anchor="middle" font-size="9" fill="#0D47A1">Circuit Operation</text>
-<text x="70" y="400" class="v" font-size="8">• 100kΩ input resistor limits current during faults</text>
-<text x="70" y="415" class="v" font-size="8">• BAT54S dual Schottky clamps to +5V/GND (actually ~0.3V/5.3V)</text>
-<text x="70" y="430" class="v" font-size="8">• 10kΩ series resistor + attenuator form voltage divider</text>
-</svg>
+<rect width="700" height="500" fill="#FEFEFE"/>
+<text x="350" y="25" class="title" text-anchor="middle">CV Input Protection Circuit</text>
+<text x="350" y="42" class="subtitle" text-anchor="middle">±12V to 0-5V Scaling with Clamping</text>
+<circle cx="80" cy="200" r="8" class="component"/>
+<line x1="80" y1="200" x2="100" y2="200" class="wire"/>
+<text x="80" y="222" class="label" text-anchor="middle">CV IN ±12V</text>
+<line x1="100" y1="200" x2="150" y2="200" class="wire"/>
+<path d="M145,200 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="170" y="182" class="label" text-anchor="middle">R1</text>
+<text x="170" y="222" class="value" text-anchor="middle">100kΩ</text>
+<line x1="190" y1="200" x2="220" y2="200" class="wire"/>
+<text x="250" y="150" class="label" font-size="10">Clamping to ±5V</text>
+<line x1="220" y1="200" x2="220" y2="170" class="wire"/>
+<line x1="220" y1="170" x2="280" y2="170" class="wire"/>
+<polygon points="280,160 280,180 300,170" fill="none" stroke="#D44" stroke-width="1.5"/>
+<line x1="300" y1="160" x2="300" y2="180" stroke="#D44" stroke-width="1.5"/>
+<line x1="300" y1="170" x2="350" y2="170" class="wire"/>
+<line x1="350" y1="170" x2="350" y2="158" class="wire" stroke="#D44" stroke-width="2"/>
+<text x="354" y="164" class="value" fill="#D44">+5V</text>
+<line x1="220" y1="200" x2="220" y2="230" class="wire"/>
+<line x1="220" y1="230" x2="280" y2="230" class="wire"/>
+<polygon points="300,220 300,240 280,230" fill="none" stroke="#44D" stroke-width="1.5"/>
+<line x1="280" y1="220" x2="280" y2="240" stroke="#44D" stroke-width="1.5"/>
+<line x1="280" y1="245" x2="280" y2="280" class="wire"/>
+<line x1="280" y1="280" x2="350" y2="280" stroke="#44D" stroke-width="2"/>
+<text x="360" y="283" class="value" fill="#44D" font-size="8">-5V</text>
+<line x1="220" y1="200" x2="320" y2="200" class="wire"/>
+<line x1="320" y1="200" x2="320" y2="240" class="wire"/>
+<polygon points="370,240 370,300 430,270" class="component"/>
+<text x="400" y="275" class="label" text-anchor="middle" font-size="9">TL072 A</text>
+<text x="367" y="252" class="pin" text-anchor="end">-</text>
+<text x="367" y="288" class="pin" text-anchor="end">+</text>
+<line x1="320" y1="240" x2="320" y2="252" class="wire"/>
+<line x1="320" y1="252" x2="370" y2="252" class="wire"/>
+<path d="M320,252 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="345" y="234" class="label" text-anchor="middle">R2</text>
+<text x="345" y="274" class="value" text-anchor="middle">100kΩ</text>
+<line x1="320" y1="288" x2="320" y2="350" class="wire"/>
+<path d="M320,295 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l-6,5 l6,5 l0,5" class="component"/>
+<text x="300" y="315" class="label" text-anchor="end">R3</text>
+<text x="332" y="320" class="value">100kΩ</text>
+<line x1="320" y1="350" x2="320" y2="362" class="wire"/>
+<line x1="310" y1="362" x2="330" y2="362" class="wire" stroke-width="2"/>
+<line x1="314" y1="366" x2="326" y2="366" class="wire" stroke-width="1.5"/>
+<line x1="430" y1="270" x2="480" y2="270" class="wire"/>
+<line x1="480" y1="270" x2="480" y2="200" class="wire"/>
+<line x1="480" y1="200" x2="400" y2="200" class="wire"/>
+<line x1="400" y1="200" x2="400" y2="240" class="wire"/>
+<path d="M415,200 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
+<text x="440" y="182" class="label" text-anchor="middle">R4</text>
+<text x="440" y="222" class="value" text-anchor="middle">47kΩ</text>
+<line x1="430" y1="270" x2="550" y2="270" class="wire"/>
+<rect x="560.0" y="250.0" width="80" height="40" class="component" fill="#f5f5f5"/>
+<text x="600" y="270" class="label" text-anchor="middle">To Filter</text>
+<text x="600" y="282" class="value" text-anchor="middle">CV Input</text>
+<rect x="50" y="350" width="600" height="130" fill="#E3F2FD" stroke="#2196F3" stroke-width="1" rx="4"/>
+<text x="350" y="375" class="label" text-anchor="middle" fill="#0D47A1">Protection Circuit Operation</text>
+<text x="70" y="395" class="label" font-size="8" fill="#1565C0">Input Range:</text>
+<text x="170" y="395" class="value" font-size="8">±12V (Eurorack standard)</text>
+<text x="70" y="412" class="label" font-size="8" fill="#1565C0">Clamping:</text>
+<text x="170" y="412" class="value" font-size="8">BAT54S diodes limit to ±5V (safe for op-amp)</text>
+<text x="70" y="429" class="label" font-size="8" fill="#1565C0">Attenuation:</text>
+<text x="170" y="429" class="value" font-size="8">Gain = -0.47 (47k/100k), ±5V → ±2.35V</text>
+<text x="70" y="446" class="label" font-size="8" fill="#1565C0">Output:</text>
+<text x="170" y="446" class="value" font-size="8">0-5V range suitable for MicroBrute CV inputs</text>
+<text x="70" y="463" class="label" font-size="8" fill="#1565C0">Current Limit:</text>
+<text x="170" y="463" class="value" font-size="8">100kΩ input resistor protects against shorts</text></svg>

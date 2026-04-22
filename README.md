@@ -60,13 +60,13 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C OLED (primary), 0.96" SSD1306 + 24×2 I²C LCD (fallbacks), HW040 encoder, 2× DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case
+MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C OLED (primary), 0.96" SSD1306 + 16×2 1602 I²C LCD (fallbacks), HW040 encoder, 2× DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case
 
 ### Key Decisions
 | Decision | Choice |
 |----------|--------|
 | Connector | 2× DB-9 (18 pins total) |
-| OLED | 1.3" SH1106 I²C primary, 0.96" SSD1306 + 24×2 LCD fallbacks |
+| OLED | 1.3" SH1106 I²C primary, 0.96" SSD1306 + 16×2 1602 LCD fallbacks |
 | Panel mods | OLED + encoder + tap button + RGB LED + 3 insert jacks + 3 toggles + 6 touch bolts |
 | All patching | Via 42HP Eurorack expander |
 | MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (frees GP4/5 for OLED) |

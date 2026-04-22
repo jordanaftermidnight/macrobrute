@@ -1,68 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 450" width="850" height="450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="900" height="650">
 <defs>
-  <filter id="ts">
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
     <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
-    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="d"/>
-    <feComposite in="bg" in2="d" operator="in" result="s"/>
-    <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
-  <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-    <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
   </marker>
 </defs>
-<style>
-  .t { font: bold 16px sans-serif; fill: #1a1a1a; filter: url(#ts); }
-  .st { font: 11px sans-serif; fill: #555; filter: url(#ts); }
-  .l { font: bold 10px sans-serif; fill: #1a1a1a; filter: url(#ts); }
-  .v { font: 9px sans-serif; fill: #555; filter: url(#ts); }
-  .sl { font: bold 9px sans-serif; fill: #FFF; text-anchor: middle; }
-</style>
-<rect width="850" height="450" fill="#FEFEFE"/>
-<text x="425" y="25" class="t" text-anchor="middle">Audio Signal Flow</text>
-<text x="425" y="45" class="st" text-anchor="middle">VCO → Mixer → Filter → VCA → Output</text>
-<rect x="30" y="50" width="80" height="28" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="70.0" y="62.0" class="sl" font-size="10">Saw</text>
-<text x="70.0" y="76.0" class="sl" font-size="8">-5/+5V</text>
-<rect x="30" y="85" width="80" height="28" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="70.0" y="97.0" class="sl" font-size="10">Square</text>
-<text x="70.0" y="111.0" class="sl" font-size="8">0/+5V</text>
-<rect x="30" y="120" width="80" height="28" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="70.0" y="132.0" class="sl" font-size="10">Sub</text>
-<text x="70.0" y="146.0" class="sl" font-size="8">-5/+5V</text>
-<rect x="30" y="155" width="80" height="28" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="70.0" y="167.0" class="sl" font-size="10">Ext In</text>
-<text x="70.0" y="181.0" class="sl" font-size="8">Line</text>
-<rect x="30" y="190" width="80" height="28" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="70.0" y="202.0" class="sl" font-size="10">Noise</text>
-<text x="70.0" y="216.0" class="sl" font-size="8">White</text>
-<rect x="170" y="110" width="90" height="50" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="215.0" y="133.0" class="sl" font-size="10">5-Input</text>
-<text x="215.0" y="147.0" class="sl" font-size="8">Mixer</text>
-<line x1="110" y1="64" x2="170" y2="135" stroke="#E91E63" stroke-width="2"/>
-<line x1="110" y1="99" x2="170" y2="135" stroke="#E91E63" stroke-width="2"/>
-<line x1="110" y1="134" x2="170" y2="135" stroke="#E91E63" stroke-width="2"/>
-<line x1="110" y1="169" x2="170" y2="135" stroke="#E91E63" stroke-width="2"/>
-<line x1="110" y1="204" x2="170" y2="135" stroke="#E91E63" stroke-width="2"/>
-<rect x="320" y="115" width="80" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="360.0" y="135.5" class="sl" font-size="10">VCF</text>
-<text x="360.0" y="149.5" class="sl" font-size="8">Filter</text>
-<line x1="260" y1="135" x2="320" y2="137" stroke="#FF9800" stroke-width="3"/>
-<rect x="460" y="115" width="80" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="500.0" y="135.5" class="sl" font-size="10">VCA</text>
-<text x="500.0" y="149.5" class="sl" font-size="8">ADSR</text>
-<line x1="400" y1="137" x2="460" y2="137" stroke="#2196F3" stroke-width="3"/>
-<rect x="600" y="115" width="90" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="645.0" y="135.5" class="sl" font-size="10">MAIN</text>
-<text x="645.0" y="149.5" class="sl" font-size="8">Output</text>
-<line x1="540" y1="137" x2="600" y2="137" stroke="#4CAF50" stroke-width="3"/>
-<text x="425" y="185" class="v" text-anchor="middle" font-size="8" fill="#333">Test Points: TP94 (Saw), TP93 (Sqr), TP30 (Mix), TP19 (VCF), TP10/11 (VCA)</text>
-<rect x="30" y="220" width="790" height="130" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
-<text x="425" y="240" class="l" text-anchor="middle" font-size="10" fill="#1B5E20">Notes</text>
-<text x="50" y="265" class="v" text-anchor="start" font-size="9" fill="#333">Path: Saw/Square/Sub/Ext/Noise → Mixer → VCF → VCA → Main Out</text>
-<text x="50" y="285" class="v" text-anchor="start" font-size="9" fill="#333">Mixer: Passive with 5 inputs including noise | VCF: Steiner-Parker 12dB/oct</text>
-<text x="50" y="305" class="v" text-anchor="start" font-size="9" fill="#333">All test points buffered with 1kΩ + TL074 for protection</text>
-<text x="140" y="100" class="v" text-anchor="middle" font-size="7" fill="#666">1kΩ+buf</text>
-<text x="290" y="100" class="v" text-anchor="middle" font-size="7" fill="#666">1kΩ+buf</text>
-<text x="430" y="100" class="v" text-anchor="middle" font-size="7" fill="#666">1kΩ+buf</text>
-</svg>
+<rect width="900" height="650" fill="#FEFEFE"/>
+<text x="450" y="25" class="title" text-anchor="middle">Audio Signal Flow</text>
+<text x="450" y="42" class="subtitle" text-anchor="middle">From VCO Through Filter to Outputs</text>
+<rect x="50" y="80" width="100" height="50" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="100.0" y="100.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">Saw VCO</text>
+<text x="100.0" y="117.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">-5V to +5V</text>
+<rect x="50" y="150" width="100" height="50" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="100.0" y="170.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">Square VCO</text>
+<text x="100.0" y="187.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">0V to +5V</text>
+<rect x="50" y="220" width="100" height="50" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="100.0" y="240.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">Sub Osc</text>
+<text x="100.0" y="257.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">-5V to +5V</text>
+<rect x="50" y="290" width="100" height="50" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="100.0" y="310.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">Ext In</text>
+<text x="100.0" y="327.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">Line Level</text>
+<rect x="50" y="360" width="100" height="50" fill="#E91E63" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="100.0" y="380.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">Noise</text>
+<text x="100.0" y="397.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">White/Pink</text>
+<rect x="220" y="200" width="110" height="70" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="275.0" y="230.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">MIXER</text>
+<text x="275.0" y="247.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">Ultrafaux</text>
+<path d="M150,105 L185,105 L185,220 L220,220" stroke="#E91E63" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M150,175 L190,175 L190,230 L230,230" stroke="#E91E63" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M150,245 L195,245 L195,240 L240,240" stroke="#E91E63" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M150,315 L200,315 L200,250 L250,250" stroke="#E91E63" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M150,385 L205,385 L205,260 L260,260" stroke="#E91E63" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<rect x="400" y="200" width="110" height="70" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="455.0" y="230.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">VCF</text>
+<text x="455.0" y="247.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">Steiner-Parker</text>
+<path d="M330,235 L365,235 L365,235 L400,235" stroke="#FF9800" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<text x="365" y="230" class="value" text-anchor="middle" fill="#666" font-size="7">Mix Out</text>
+<rect x="580" y="200" width="110" height="70" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="635.0" y="230.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">VCA</text>
+<text x="635.0" y="247.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">ADSR Controlled</text>
+<path d="M510,235 L545,235 L545,235 L580,235" stroke="#2196F3" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<text x="545" y="230" class="value" text-anchor="middle" fill="#666" font-size="7">Filter Out</text>
+<rect x="760" y="200" width="110" height="70" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="815.0" y="230.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">MAIN OUT</text>
+<text x="815.0" y="247.0" class="value" text-anchor="middle" fill="#FFF" font-size="8">Line Level</text>
+<path d="M690,235 L725,235 L725,235 L760,235" stroke="#4CAF50" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<text x="450" y="310" class="label" text-anchor="middle" font-size="10">Buffered Test Point Outputs</text>
+<circle cx="100" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="100" y="358" class="value" text-anchor="middle" font-size="7">TP94 Saw</text>
+<circle cx="200" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="200" y="358" class="value" text-anchor="middle" font-size="7">TP93 Square</text>
+<circle cx="320" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="320" y="358" class="value" text-anchor="middle" font-size="7">TP30 Mix</text>
+<circle cx="455" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="455" y="358" class="value" text-anchor="middle" font-size="7">TP19 VCF</text>
+<circle cx="595" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="595" y="358" class="value" text-anchor="middle" font-size="7">TP10/11 VCA</text>
+<circle cx="760" cy="340" r="5" fill="#666" stroke="#333" stroke-width="1"/>
+<text x="760" y="358" class="value" text-anchor="middle" font-size="7">Main Line Out</text>
+<line x1="100" y1="335" x2="100" y2="130" stroke="#666" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="85" y="270" class="value" font-size="8" fill="#666">via buffer</text>
+<line x1="200" y1="335" x2="200" y2="175" stroke="#666" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="185" y="270" class="value" font-size="8" fill="#666">via buffer</text>
+<line x1="320" y1="335" x2="320" y2="270" stroke="#666" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="300" y="310" class="value" font-size="8" fill="#666">1kΩ + TL074</text>
+<line x1="455" y1="335" x2="455" y2="270" stroke="#666" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="435" y="310" class="value" font-size="8" fill="#666">1kΩ + TL074</text>
+<line x1="595" y1="335" x2="595" y2="270" stroke="#666" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="575" y="310" class="value" font-size="8" fill="#666">1kΩ + TL074</text>
+<line x1="760" y1="335" x2="760" y2="270" stroke="#666" stroke-width="1.5"/>
+<text x="740" y="310" class="value" font-size="8" fill="#666">Direct</text>
+<rect x="50" y="380" width="800" height="250" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
+<text x="450" y="405" class="label" text-anchor="middle" fill="#1B5E20">Signal Flow & Test Point Notes</text>
+<text x="70" y="430" class="label" font-size="8" fill="#1B5E20">Signal Path:</text>
+<text x="160" y="430" class="value" font-size="8">Saw/Square/Sub/Ext/Noise → Mixer → VCF → VCA → Main Out</text>
+<text x="70" y="450" class="label" font-size="8" fill="#1B5E20">VCO Outputs:</text>
+<text x="160" y="450" class="value" font-size="8">Raw waveforms (-5V to +5V, ~10Vpp) available at TP94, TP93 via buffers</text>
+<text x="70" y="470" class="label" font-size="8" fill="#1B5E20">Mixer Stage:</text>
+<text x="160" y="470" class="value" font-size="8">Ultrafaux passive mixer with 5 inputs and individual level controls</text>
+<text x="70" y="490" class="label" font-size="8" fill="#1B5E20">VCF Stage:</text>
+<text x="160" y="490" class="value" font-size="8">Steiner-Parker filter (12dB/octave) with resonance control via RP13</text>
+<text x="70" y="510" class="label" font-size="8" fill="#1B5E20">VCA Stage:</text>
+<text x="160" y="510" class="value" font-size="8">Controlled by ADSR envelope (attack, decay, sustain, release)</text>
+<text x="70" y="530" class="label" font-size="8" fill="#1B5E20">Test Points:</text>
+<text x="160" y="530" class="value" font-size="8">All TPs have 1kΩ series resistor + TL074 buffer for safe external patching</text>
+<text x="70" y="550" class="label" font-size="8" fill="#1B5E20">Protection:</text>
+<text x="160" y="550" class="value" font-size="8">Outputs are current-limited and buffered - safe for Eurorack/modular systems</text>
+<text x="70" y="570" class="label" font-size="8" fill="#1B5E20">Buffering:</text>
+<text x="160" y="570" class="value" font-size="8">Required because direct wiring causes oscillator loading and signal degradation</text></svg>

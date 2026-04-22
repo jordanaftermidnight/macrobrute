@@ -224,7 +224,7 @@ Search terms and recommended items:
 
 ## OLED Display — user already has 1.3" + 0.96"
 
-The user has a 1.3" SH1106 I²C (primary) and a 0.96" SSD1306 I²C (fallback) on hand, plus a 24×2 I²C LCD module. No purchase required.
+The user has a 1.3" SH1106 I²C (primary) and a 0.96" SSD1306 I²C (fallback) on hand, plus a 16×2 1602 I²C LCD module. No purchase required.
 
 If an OLED module does need to be sourced:
 
@@ -330,7 +330,7 @@ If an OLED module does need to be sourced:
 
 ## ☐ AliExpress Order (~€50)
 ```
-□ (OLED not needed — 1.3" SH1106 + 0.96" SSD1306 + 24x2 LCD already on hand)
+□ (OLED not needed — 1.3" SH1106 + 0.96" SSD1306 + 16x2 1602 LCD already on hand)
 □ JST PH connector kit
 □ 28AWG silicone wire set
 □ 22AWG wire red/black

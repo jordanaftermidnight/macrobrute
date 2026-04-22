@@ -1,4 +1,4 @@
-# MACROBRUTE — Pico H GPIO Pinout (Final)
+# MACROBRUTE — Pico WH GPIO Pinout (Final)
 
 Matches `firmware/pico/config.py`. All assignments verified against
 RP2040 datasheet for peripheral conflicts.

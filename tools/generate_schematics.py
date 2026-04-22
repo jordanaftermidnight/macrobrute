@@ -68,7 +68,7 @@ class SchematicRenderer:
     .subtitle {{ font: 11px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
     .label {{ font: bold 10px "SF Mono", Consolas, monospace; fill: {self.C_TEXT}; filter: url(#textshadow); }}
     .value {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
-    .pin {{ font: 8px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
+    .pin {{ font: 10px "SF Mono", Consolas, monospace; fill: {self.C_TEXT_LIGHT}; filter: url(#textshadow); }}
     .anno {{ font: 9px "SF Mono", Consolas, monospace; fill: {self.C_ANNOTATION}; filter: url(#textshadow); }}
     .wire {{ stroke: {self.C_WIRE}; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }}
     .wire:hover {{ stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }}
@@ -1779,27 +1779,27 @@ def generate_audio_signal_flow() -> str:
     # Connect TPs to their stages with vertical lines
     # Saw TP - goes up to Saw VCO (with buffer)
     r.elements.append(f'<line x1="100" y1="{tp_y-5}" x2="100" y2="130" stroke="{C_TP}" stroke-width="1" stroke-dasharray="4,2"/>')
-    r.elements.append(f'<text x="85" y="270" class="value" font-size="6" fill="{C_TP}">via buffer</text>')
+    r.elements.append(f'<text x="85" y="270" class="value" font-size="8" fill="{C_TP}">via buffer</text>')
     
     # Square TP
     r.elements.append(f'<line x1="200" y1="{tp_y-5}" x2="200" y2="175" stroke="{C_TP}" stroke-width="1" stroke-dasharray="4,2"/>')
-    r.elements.append(f'<text x="185" y="270" class="value" font-size="6" fill="{C_TP}">via buffer</text>')
+    r.elements.append(f'<text x="185" y="270" class="value" font-size="8" fill="{C_TP}">via buffer</text>')
     
     # Mix TP - from mixer
     r.elements.append(f'<line x1="320" y1="{tp_y-5}" x2="320" y2="270" stroke="{C_TP}" stroke-width="1" stroke-dasharray="4,2"/>')
-    r.elements.append(f'<text x="300" y="310" class="value" font-size="6" fill="{C_TP}">1kΩ + TL074</text>')
+    r.elements.append(f'<text x="300" y="310" class="value" font-size="8" fill="{C_TP}">1kΩ + TL074</text>')
     
     # VCF TP - from VCF
     r.elements.append(f'<line x1="455" y1="{tp_y-5}" x2="455" y2="270" stroke="{C_TP}" stroke-width="1" stroke-dasharray="4,2"/>')
-    r.elements.append(f'<text x="435" y="310" class="value" font-size="6" fill="{C_TP}">1kΩ + TL074</text>')
+    r.elements.append(f'<text x="435" y="310" class="value" font-size="8" fill="{C_TP}">1kΩ + TL074</text>')
     
     # VCA TP - from VCA
     r.elements.append(f'<line x1="595" y1="{tp_y-5}" x2="595" y2="270" stroke="{C_TP}" stroke-width="1" stroke-dasharray="4,2"/>')
-    r.elements.append(f'<text x="575" y="310" class="value" font-size="6" fill="{C_TP}">1kΩ + TL074</text>')
+    r.elements.append(f'<text x="575" y="310" class="value" font-size="8" fill="{C_TP}">1kΩ + TL074</text>')
     
     # Main Out - direct from output
     r.elements.append(f'<line x1="760" y1="{tp_y-5}" x2="760" y2="270" stroke="{C_TP}" stroke-width="1.5"/>')
-    r.elements.append(f'<text x="740" y="310" class="value" font-size="6" fill="{C_TP}">Direct</text>')
+    r.elements.append(f'<text x="740" y="310" class="value" font-size="8" fill="{C_TP}">Direct</text>')
     
     # === NOTES BOX (Bottom, clear placement) ===
     r.elements.append(f'<rect x="50" y="380" width="800" height="250" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>')
@@ -1844,7 +1844,7 @@ def generate_cv_control_flow() -> str:
         path = f'M{x1},{y1} L{mid_x},{y1} L{mid_x},{y2} L{x2},{y2}'
         r.elements.append(f'<path d="{path}" stroke="{color}" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>')
         if label:
-            r.elements.append(f'<text x="{mid_x}" y="{y1-3}" class="value" text-anchor="middle" fill="{color}" font-size="6">{label}</text>')
+            r.elements.append(f'<text x="{mid_x}" y="{y1-3}" class="value" text-anchor="middle" fill="{color}" font-size="8">{label}</text>')
 
     # === SECTION LABELS ===
     r.elements.append(f'<text x="120" y="45" class="label" font-size="11" fill="{C_MOD}">Modulation Sources</text>')
@@ -2186,7 +2186,7 @@ def generate_cd4051_multiplexer() -> str:
         r.elements.append(f'<line x1="{x+5}" y1="{y-3}" x2="300" y2="{y-3}" stroke="#1a1a1a" stroke-width="1.5"/>')
         # Series resistor
         r.elements.append(f'<rect x="{x+15}" y="{y-8}" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>')
-        r.elements.append(f'<text x="{x+25}" y="{y-1}" class="value" text-anchor="middle" font-size="6">1kΩ</text>')
+        r.elements.append(f'<text x="{x+25}" y="{y-1}" class="value" text-anchor="middle" font-size="8">1kΩ</text>')
     
     # Common output (right side)
     r.elements.append(f'<text x="570" y="300" class="value" font-size="9">COM (Output)</text>')
@@ -2345,8 +2345,8 @@ def generate_cv_input_protection_diagram() -> str:
 
 
 def generate_pico_pinout_diagram() -> str:
-    """Generate visual Pico H pinout diagram with aligned pin rows."""
-    r = SchematicRenderer(950, 700, "Raspberry Pi Pico H Pinout", "MACROBRUTE Hardware Configuration")
+    """Generate visual Pico WH pinout diagram with aligned pin rows."""
+    r = SchematicRenderer(950, 700, "Raspberry Pi Pico WH Pinout", "MACROBRUTE Hardware Configuration")
 
     # Colors for different function types
     C_OLED = "#2196F3"      # Blue
@@ -2363,7 +2363,7 @@ def generate_pico_pinout_diagram() -> str:
     board_x, board_y = 325, 80
     board_w, board_h = 300, 540
     r.elements.append(f'<rect x="{board_x}" y="{board_y}" width="{board_w}" height="{board_h}" fill="#1a1a1a" stroke="#555" stroke-width="3" rx="10"/>')
-    r.elements.append(f'<text x="{board_x + board_w/2}" y="{board_y + 30}" class="label" text-anchor="middle" fill="#FFF" font-size="14">Raspberry Pi Pico H</text>')
+    r.elements.append(f'<text x="{board_x + board_w/2}" y="{board_y + 30}" class="label" text-anchor="middle" fill="#FFF" font-size="14">Raspberry Pi Pico WH</text>')
 
     # USB connector at top
     r.elements.append(f'<rect x="{board_x + 100}" y="{board_y - 15}" width="100" height="20" fill="#333" stroke="#666" stroke-width="1"/>')
@@ -2413,7 +2413,7 @@ def generate_pico_pinout_diagram() -> str:
             r.elements.append(f'<text x="{box_x + box_w/2}" y="{y + 3}" class="label" text-anchor="middle" fill="#FFF" font-size="7">{func}</text>')
 
             if detail:
-                r.elements.append(f'<text x="{box_x - 5}" y="{y + 3}" class="value" text-anchor="end" fill="#666" font-size="6">{detail}</text>')
+                r.elements.append(f'<text x="{box_x - 5}" y="{y + 3}" class="value" text-anchor="end" fill="#666" font-size="8">{detail}</text>')
 
     # Right side pins (GP16-GP28) - aligned in a column
     right_pins = [
@@ -2474,7 +2474,7 @@ def generate_pico_pinout_diagram() -> str:
         # Function box (above)
         if func and color:
             r.elements.append(f'<rect x="{pin_x - 40}" y="{bottom_y - 35}" width="80" height="14" fill="{color}" stroke="#333" stroke-width="1" rx="2"/>')
-            r.elements.append(f'<text x="{pin_x}" y="{bottom_y - 25}" class="label" text-anchor="middle" fill="#FFF" font-size="6">{func}</text>')
+            r.elements.append(f'<text x="{pin_x}" y="{bottom_y - 25}" class="label" text-anchor="middle" fill="#FFF" font-size="8">{func}</text>')
 
     # Legend at bottom
     r.elements.append(f'<rect x="50" y="640" width="850" height="50" fill="#F5F5F5" stroke="#999" stroke-width="1" rx="4"/>')

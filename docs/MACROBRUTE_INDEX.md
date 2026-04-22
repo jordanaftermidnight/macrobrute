@@ -21,7 +21,7 @@
 | Decision | Choice |
 |----------|--------|
 | Connector | 2× DB-9 (18 pins total) — VGA HD-15 rejected |
-| OLED | **1.3" SH1106 I²C** on GP4 (SDA) / GP5 (SCL). Fallbacks: 0.96" SSD1306 I²C, 24×2 I²C LCD |
+| OLED | **1.3" SH1106 I²C** on GP4 (SDA) / GP5 (SCL). Fallbacks: 0.96" SSD1306 I²C, 16×2 1602 I²C LCD |
 | MIDI path | **Pico ↔ LPC2361 UART bridge** over UART0 (GP0/GP1) @ 115200 baud. No direct 31250-baud MIDI from Pico. |
 | CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
 | RGB LED (common cathode) | GP8=R/clock, GP9=G/gate, GP10=B/mode. Replaces 3 discrete LEDs. |

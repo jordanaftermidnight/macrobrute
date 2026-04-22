@@ -27,8 +27,8 @@ def generate_ic_pinout(name: str, pins_left: list, pins_right: list, package: st
     .label {{ font: bold 11px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }}
     .value {{ font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }}
     .pin {{ font: 9px "SF Mono", Consolas, monospace; fill: #FFF; }}
-    .pin-num {{ font: 8px "SF Mono", Consolas, monospace; fill: gold; font-weight: bold; }}
-    .pin-func {{ font: 8px "SF Mono", Consolas, monospace; fill: #FFF; }}
+    .pin-num {{ font: 10px "SF Mono", Consolas, monospace; fill: gold; font-weight: bold; }}
+    .pin-func {{ font: 10px "SF Mono", Consolas, monospace; fill: #FFF; }}
   </style>
 </defs>
 <rect width="{width}" height="{height}" fill="#FEFEFE"/>

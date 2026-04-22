@@ -1,7 +1,7 @@
 """MACROBRUTE Pico WH — Hardware configuration and pin assignments."""
 
 # --- OLED Display (SH1106 1.3" I2C, 128x64) ---
-# Fallbacks: 0.96" SSD1306 I2C (same pins, swap driver), 24x2 I2C LCD (different driver)
+# Fallbacks: 0.96" SSD1306 I2C (same pins, swap driver), 16x2 1602 I2C LCD (different driver)
 OLED_I2C_ID = 0
 OLED_WIDTH = 128
 OLED_HEIGHT = 64

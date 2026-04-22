@@ -1,28 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550">
 <style>
-.title{font:bold 17px sans-serif;fill:#eee}
-.subtitle{font:11px sans-serif;fill:#aaa}
-.section-head{font:bold 13px sans-serif;fill:#FF9800}
-.label{font:10px sans-serif;fill:#ccc}
-.val{font:9px sans-serif;fill:#999}
-.func{font:bold 9px sans-serif;fill:#4CAF50}
-.resist{fill:none;stroke:#ccc;stroke-width:1}
-.wire{stroke:#888;stroke-width:1;fill:none}
-.wire-r{stroke:#F44336;stroke-width:1;fill:none}
-.wire-b{stroke:#2196F3;stroke-width:1;fill:none}
-.wire-g{stroke:#4CAF50;stroke-width:1;fill:none}
-.wire-o{stroke:#FF9800;stroke-width:1;fill:none}
-.wire-p{stroke:#9C27B0;stroke-width:1;fill:none}
-.pad{fill:#b87333;stroke:#d4a44a;stroke-width:1.5}
-.ic-box{fill:#1a1a2a;stroke:#9C27B0;stroke-width:1.5;rx:4}
-.res-box{fill:#1a1a1a;stroke:#888;stroke-width:1;rx:2}
-.comp-label{font:bold 10px sans-serif;fill:#fff}
-.sub-label{font:9px sans-serif;fill:#aaa}
-.divider{stroke:#555;stroke-width:0.5;stroke-dasharray:4,4}
-.bolt{fill:#b87333;stroke:#d4a44a;stroke-width:1}
-.panel{fill:#333;stroke:#666;stroke-width:1}
+.title{font:bold 16px "SF Mono", Consolas, monospace;fill:#1a1a1a}
+.subtitle{font:11px "SF Mono", Consolas, monospace;fill:#555}
+.section-head{font:bold 12px "SF Mono", Consolas, monospace;fill:#0066CC}
+.label{font:bold 10px "SF Mono", Consolas, monospace;fill:#1a1a1a}
+.val{font:9px "SF Mono", Consolas, monospace;fill:#555}
+.func{font:bold 9px "SF Mono", Consolas, monospace;fill:#fff}
+.resist{fill:none;stroke:#1a1a1a;stroke-width:1}
+.wire{stroke:#1a1a1a;stroke-width:1.5;fill:none}
+.wire-r{stroke:#D44;stroke-width:1.5;fill:none}
+.wire-b{stroke:#0066CC;stroke-width:1.5;fill:none}
+.wire-g{stroke:#4A4;stroke-width:1.5;fill:none}
+.wire-o{stroke:#CC6600;stroke-width:1.5;fill:none}
+.wire-p{stroke:#6600CC;stroke-width:1.5;fill:none}
+.pad{fill:#B87333;stroke:#8B4513;stroke-width:1.5}
+.ic-box{fill:#F0F0F5;stroke:#6600CC;stroke-width:1.5;rx:4}
+.res-box{fill:#FFFBE6;stroke:#999;stroke-width:1;rx:2}
+.comp-label{font:bold 10px "SF Mono", Consolas, monospace;fill:#1a1a1a}
+.sub-label{font:9px "SF Mono", Consolas, monospace;fill:#555}
+.divider{stroke:#999;stroke-width:0.5;stroke-dasharray:4,4}
+.bolt{fill:#B87333;stroke:#8B4513;stroke-width:1}
+.panel{fill:#DDD;stroke:#999;stroke-width:1}
 </style>
-<rect width="800" height="550" fill="#111"/>
+<rect width="800" height="550" fill="#FEFEFE"/>
 <text x="400" y="22" text-anchor="middle" class="title">Touch Plate Redesign</text>
 <text x="400" y="38" text-anchor="middle" class="subtitle">Resistive Body Contact + Capacitive MPR121</text>
 
@@ -34,7 +34,7 @@
 
 <!-- +3.3V supply rail -->
 <line x1="50" y1="75" x2="330" y2="75" class="wire-r"/>
-<text x="45" y="72" text-anchor="end" font-size="9" fill="#F44336" font-family="sans-serif">+3.3V</text>
+<text x="45" y="72" text-anchor="end" font-size="9" fill="#D44" font-family="'SF Mono', Consolas, monospace">+3.3V</text>
 
 <!-- Touch pad 1: Pitch Shimmer -->
 <g transform="translate(70,85)">
@@ -106,21 +106,21 @@
 </g>
 
 <!-- Circuit description for resistive -->
-<rect x="50" y="330" width="290" height="60" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
-<text x="195" y="348" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Circuit: +3.3V → R Pad → junction</text>
-<text x="195" y="360" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Junction → Pico ADC input</text>
-<text x="195" y="372" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Touching pad adds body resistance to GND</text>
-<text x="195" y="384" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Voltage divider: Vout = 3.3V × Rbody/(R+Rbody)</text>
+<rect x="50" y="330" width="290" height="60" fill="#F7F3E8" stroke="#555" stroke-width="0.5" rx="4"/>
+<text x="195" y="348" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">Circuit: +3.3V → R Pad → junction</text>
+<text x="195" y="360" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">Junction → Pico ADC input</text>
+<text x="195" y="372" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">Touching pad adds body resistance to GND</text>
+<text x="195" y="384" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">Voltage divider: Vout = 3.3V × Rbody/(R+Rbody)</text>
 
 <!-- GND rail -->
 <line x1="50" y1="395" x2="330" y2="395" class="wire-g"/>
-<text x="45" y="392" text-anchor="end" font-size="9" fill="#9E9E9E" font-family="sans-serif">GND</text>
+<text x="45" y="392" text-anchor="end" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">GND</text>
 
 <!-- ========== RIGHT SIDE: Capacitive Touch (MPR121) ========== -->
 <text x="590" y="58" text-anchor="middle" class="section-head">Capacitive Touch (MPR121)</text>
 
 <!-- Pico -->
-<rect x="415" y="75" width="90" height="55" fill="#1a1a2a" stroke="#9C27B0" stroke-width="1.5" rx="4"/>
+<rect x="415" y="75" width="90" height="55" fill="#F0F0F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>
 <text x="460" y="95" text-anchor="middle" class="comp-label">Pico</text>
 <text x="460" y="108" text-anchor="middle" class="sub-label">RP2040</text>
 <text x="435" y="122" text-anchor="middle" class="val">GP2</text>
@@ -134,7 +134,7 @@
 <text x="525" y="107" text-anchor="middle" class="val">SCL</text>
 
 <!-- MPR121 -->
-<rect x="545" y="70" width="100" height="70" class="ic-box"/>
+<rect x="545" y="70" width="100" height="70" fill="#F0F0F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>
 <text x="595" y="95" text-anchor="middle" class="comp-label">MPR121</text>
 <text x="595" y="108" text-anchor="middle" class="sub-label">I²C addr 0x5A</text>
 <text x="595" y="120" text-anchor="middle" class="val">Cap touch controller</text>
@@ -177,11 +177,11 @@
 </g>
 
 <!-- MPR121 description -->
-<rect x="415" y="165" width="330" height="55" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
-<text x="580" y="182" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">I²C: SDA (GP2), SCL (GP3) at 100kHz</text>
-<text x="580" y="194" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">IRQ: active-low on GP6, alerts Pico on touch</text>
-<text x="580" y="206" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">6 channels for expander panel touch plates</text>
-<text x="580" y="218" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Touch threshold: 12, release threshold: 6</text>
+<rect x="415" y="165" width="330" height="55" fill="#F7F3E8" stroke="#555" stroke-width="0.5" rx="4"/>
+<text x="580" y="182" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">I²C: SDA (GP2), SCL (GP3) at 100kHz</text>
+<text x="580" y="194" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">IRQ: active-low on GP6, alerts Pico on touch</text>
+<text x="580" y="206" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">6 channels for expander panel touch plates</text>
+<text x="580" y="218" text-anchor="middle" font-size="9" fill="#555" font-family="'SF Mono', Consolas, monospace">Touch threshold: 12, release threshold: 6</text>
 
 <!-- I2C pullup resistors -->
 <rect x="505" y="125" width="35" height="10" class="res-box"/>
@@ -192,7 +192,7 @@
 <text x="523" y="146" text-anchor="middle" class="val">4.7kΩ</text>
 
 <!-- ========== BOTTOM: Construction ========== -->
-<rect x="10" y="410" width="780" height="130" fill="#0a0a0a" stroke="#FF9800" stroke-width="1" rx="5"/>
+<rect x="10" y="410" width="780" height="130" fill="#FFFBE6" stroke="#CC6600" stroke-width="1" rx="5"/>
 <text x="400" y="430" text-anchor="middle" class="section-head">Construction — Brass M3 Bolt Touch Points</text>
 
 <!-- Cross-section diagram -->
@@ -251,8 +251,8 @@
 <text x="448" y="505" class="func" font-size="8">Mod</text>
 
 <!-- Safety note -->
-<rect x="520" y="440" width="260" height="85" fill="#1a0a0a" stroke="#F44336" stroke-width="0.8" rx="4"/>
-<text x="650" y="458" text-anchor="middle" font-size="10" fill="#F44336" font-family="sans-serif" font-weight="bold">Safety Notes</text>
+<rect x="520" y="440" width="260" height="85" fill="#FFF0F0" stroke="#D44" stroke-width="0.8" rx="4"/>
+<text x="650" y="458" text-anchor="middle" font-size="10" fill="#D44" font-family="'SF Mono', Consolas, monospace" font-weight="bold">Safety Notes</text>
 <text x="530" y="473" class="val">• 10kΩ current-limiting on every touch pad</text>
 <text x="530" y="485" class="val">• Maximum touch current: 3.3V/10kΩ = 0.33mA</text>
 <text x="530" y="497" class="val">• MPR121: built-in ESD, no external needed</text>

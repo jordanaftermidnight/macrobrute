@@ -293,7 +293,7 @@ def svg_transistor(row, col, label, cut_collector=False):
     cx, cy = xy(row, col)
     lines = [
         f'<circle cx="{cx}" cy="{cy}" r="9" fill="#DDD" stroke="#666" stroke-width="1"/>',
-        f'<text x="{cx}" y="{cy + 1}" class="comp" font-size="7">{label}</text>',
+        f'<text x="{cx}" y="{cy + 1}" class="comp" font-size="9">{label}</text>',
     ]
     if cut_collector:
         # Draw 3 leads: E (bottom), B (left), C (top) with snip mark on C
@@ -380,12 +380,12 @@ def svg_decoupling(row_vp, row_vn, col, cols):
     cx, cy = xy(row_vp, col + 1)
     lines.append(f'<rect x="{cx - 5}" y="{cy - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx}" y="{cy + 12}" class="comp" font-size="6">100n</text>')
+    lines.append(f'<text x="{cx}" y="{cy + 12}" class="comp" font-size="8">100n</text>')
     # V- cap
     cx2, cy2 = xy(row_vn, col + 1)
     lines.append(f'<rect x="{cx2 - 5}" y="{cy2 - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx2}" y="{cy2 + 12}" class="comp" font-size="6">100n</text>')
+    lines.append(f'<text x="{cx2}" y="{cy2 + 12}" class="comp" font-size="8">100n</text>')
     return lines
 
 
@@ -408,7 +408,7 @@ def svg_pot(row, col, label, value, pin1_label="CW", pin2_label="W", pin3_label=
         f'<circle cx="{body_cx}" cy="{body_y}" r="3" fill="#666"/>',
         # Value + label
         f'<text x="{body_cx}" y="{body_y - 18}" class="comp">{label}</text>',
-        f'<text x="{body_cx}" y="{body_y + 1}" class="comp" font-size="7">{value}</text>',
+        f'<text x="{body_cx}" y="{body_y + 1}" class="comp" font-size="9">{value}</text>',
         # 3 wires from pot body down to board holes
         f'<line x1="{x1}" y1="{body_y + 14}" x2="{x1}" y2="{y1}" stroke="#888" stroke-width="1.5"/>',
         f'<line x1="{x2}" y1="{body_y + 14}" x2="{x2}" y2="{y1}" stroke="#888" stroke-width="1.5"/>',
@@ -418,9 +418,9 @@ def svg_pot(row, col, label, value, pin1_label="CW", pin2_label="W", pin3_label=
         f'<circle cx="{x2}" cy="{y1}" r="3" fill="#D80"/>',  # wiper highlighted
         f'<circle cx="{x3}" cy="{y1}" r="3" fill="#888"/>',
         # Pin labels below
-        f'<text x="{x1}" y="{y1 + 12}" class="comp" font-size="7">{pin1_label}</text>',
-        f'<text x="{x2}" y="{y1 + 12}" class="comp" font-size="7" fill="#D80">{pin2_label}</text>',
-        f'<text x="{x3}" y="{y1 + 12}" class="comp" font-size="7">{pin3_label}</text>',
+        f'<text x="{x1}" y="{y1 + 12}" class="comp" font-size="9">{pin1_label}</text>',
+        f'<text x="{x2}" y="{y1 + 12}" class="comp" font-size="9" fill="#D80">{pin2_label}</text>',
+        f'<text x="{x3}" y="{y1 + 12}" class="comp" font-size="9">{pin3_label}</text>',
     ]
     return lines
 
@@ -505,7 +505,7 @@ def generate_breakout():
         lines.append(f'<circle cx="{cx}" cy="{cy}" r="3" fill="#FFA500" '
                      f'stroke="#C80" stroke-width="0.5"/>')
         lines.append(f'<text x="{cx}" y="{cy - 10}" class="comp" '
-                     f'font-size="7">{lbl}</text>')
+                     f'font-size="9">{lbl}</text>')
 
     # Bulk decoupling caps near right edge (rail → GND)
     lines += svg_cap_v(3, 5, 26, "100µF", electrolytic=True)  # +12V → GND
@@ -524,11 +524,11 @@ def generate_breakout():
     cx1, cy1 = xy(9, 9)  # one col left of IC left pin
     lines.append(f'<rect x="{cx1 - 5}" y="{cy1 - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx1}" y="{cy1 + 12}" class="comp" font-size="6">100n V+</text>')
+    lines.append(f'<text x="{cx1}" y="{cy1 + 12}" class="comp" font-size="8">100n V+</text>')
     cx2, cy2 = xy(9, 14)  # one col right of IC right pin
     lines.append(f'<rect x="{cx2 - 5}" y="{cy2 - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx2}" y="{cy2 + 12}" class="comp" font-size="6">100n V-</text>')
+    lines.append(f'<text x="{cx2}" y="{cy2 + 12}" class="comp" font-size="8">100n V-</text>')
 
     # U1 power: V+ (pin 4, row 9, col 10 left strip) → +12V, V- (pin 11, row 9, col 13 right strip) → -12V
     lines += svg_jumper(3, 9, 9, 9, 0)    # +12V rail → V+ via left strip col 9
@@ -713,7 +713,7 @@ def generate_breakout():
         lines += svg_track_cut(r, 24)
 
     # --- Pico connection header ---
-    lines += svg_header_block(20, 1, 6, "J_PICO (to Pico H via ribbon)")
+    lines += svg_header_block(20, 1, 6, "J_PICO (to Pico WH via ribbon)")
     lines += svg_header_block(20, 8, 13, "J_OUT (to DB-9 A)")
     lines += svg_header_block(20, 15, 20, "J_IN (from DB-9 B)")
     lines += svg_header_block(20, 22, 24, "+5V/VSYS")
@@ -950,7 +950,7 @@ def generate_expander_clockdiv():
     cx, cy = xy(1, 12)
     lines.append(f'<rect x="{cx + 2}" y="{cy - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx + 7}" y="{cy - 7}" class="comp" font-size="7">100n</text>')
+    lines.append(f'<text x="{cx + 7}" y="{cy - 7}" class="comp" font-size="9">100n</text>')
 
     # --- Input conditioning ---
     lines += svg_zone_label(3, 10, "Input conditioning")
@@ -967,7 +967,7 @@ def generate_expander_clockdiv():
     lines.append(f'<text x="{(x1 + x2) // 2 + 3}" y="{(y1 + y2) // 2 - 5}" '
                  f'class="ic-name" font-size="8">CD40106</text>')
     lines.append(f'<text x="{(x1 + x2) // 2 + 3}" y="{(y1 + y2) // 2 + 7}" '
-                 f'class="ic-type" font-size="7">1 gate used</text>')
+                 f'class="ic-type" font-size="9">1 gate used</text>')
 
     # --- CD4024 binary counter (rows 5-11, cols 5-8) ---
     # CD4024 pinout:
@@ -993,7 +993,7 @@ def generate_expander_clockdiv():
     # Reset button (momentary to +5V)
     cx, cy = xy(6, 13)
     lines.append(f'<rect x="{cx - 8}" y="{cy - 6}" width="16" height="12" fill="#CC4444" rx="2"/>')
-    lines.append(f'<text x="{cx}" y="{cy + 1}" class="comp" fill="white" font-size="7">RST</text>')
+    lines.append(f'<text x="{cx}" y="{cy + 1}" class="comp" fill="white" font-size="9">RST</text>')
     lines += svg_jumper(6, 14, 1, 14, 4)   # button to +5V
 
     # VDD (pin 14, row 5, col 8 RIGHT strip) → +5V rail
@@ -1073,7 +1073,7 @@ def generate_expander_sah():
     cx_vp, cy_vp = xy(7, 9)
     lines.append(f'<rect x="{cx_vp - 5}" y="{cy_vp - 4}" width="10" height="8" fill="{C_CAP_CER}" '
                  f'rx="1" stroke="#333" stroke-width="0.5" opacity="0.8"/>')
-    lines.append(f'<text x="{cx_vp}" y="{cy_vp + 12}" class="comp" font-size="6">100n</text>')
+    lines.append(f'<text x="{cx_vp}" y="{cy_vp + 12}" class="comp" font-size="8">100n</text>')
 
     # Feedback: OUT (pin 7, row 5, col 7) → IN- (pin 2, row 5, col 4)
     lines += svg_jumper(5, 7, 5, 4, 0)
@@ -1085,7 +1085,7 @@ def generate_expander_sah():
     lines += svg_header_block(6, 1, 1, "IN")
     lines += svg_resistor_h(6, 2, 3, "")
     cx_r, cy_r = xy(6, 2)
-    lines.append(f'<text x="{(cx_r + xy(6,3)[0])//2}" y="{cy_r + 12}" class="comp" font-size="7">10kΩ</text>')
+    lines.append(f'<text x="{(cx_r + xy(6,3)[0])//2}" y="{cy_r + 12}" class="comp" font-size="9">10kΩ</text>')
 
     # Clock/trigger input: L/S (pin 8, row 4, col 7) — header on right
     lines += svg_header_block(4, 10, 11, "CLK")
@@ -1319,7 +1319,7 @@ def generate_touch_test():
         lines += svg_resistor_h(row_idx, 6, 8, "")
         cx_opt = (xy(row_idx, 6)[0] + xy(row_idx, 8)[0]) // 2
         lines.append(f'<text x="{cx_opt}" y="{cy_t + 14}" class="comp" '
-                     f'font-size="6" fill="#999">opt divider</text>')
+                     f'font-size="8" fill="#999">opt divider</text>')
 
         # Col 7: Track cut (optional R isolation)
         lines += svg_track_cut(row_idx, 7)
@@ -1330,7 +1330,7 @@ def generate_touch_test():
         # Channel label (left margin)
         cx_lbl, cy_lbl = xy(row_idx, 1)
         lines.append(f'<text x="{cx_lbl - 36}" y="{cy_lbl}" class="zone-label" '
-                     f'font-size="7">{name}</text>')
+                     f'font-size="9">{name}</text>')
 
     # Legend
     legend_y = MARGIN_T + ROWS * CELL + PAD + 10
