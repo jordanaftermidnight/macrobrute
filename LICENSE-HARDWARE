@@ -1,0 +1,32 @@
+MACROBRUTE Hardware Designs — CERN Open Hardware Licence Strongly Reciprocal v2
+
+SPDX-License-Identifier: CERN-OHL-S-2.0
+
+Copyright (c) 2026 jordanaftermidnight
+
+The hardware portions of the MACROBRUTE project are licensed under the
+CERN Open Hardware Licence Version 2 — Strongly Reciprocal (CERN-OHL-S-2.0).
+
+SCOPE — this license covers:
+
+  - schematics/       (ASCII schematics, SVG diagrams, stripboard layouts)
+  - kicad/            (KiCad schematic projects: breakout, expander, jf33, dso_input)
+  - panel/            (Panel drilling templates, Eurorack HP layouts)
+  - docs/             (Hardware portions of: BOM, shopping list, mod guides,
+                       connection map, circuit review, touch-bend specs)
+
+For the full license text, see LICENSES/CERN-OHL-S-2.0.txt (bundled with
+this repository) or the canonical source:
+https://ohwr.org/cern_ohl_s_v2.txt
+
+SOFTWARE PORTIONS
+
+The firmware (firmware/pico/, firmware/lpc2361/) and tooling (tools/)
+are licensed separately under the MIT License — see LICENSE.
+
+NOTE ON ARTURIA FIRMWARE BINARIES
+
+The MicroBrute firmware files under firmware/*.mbf are Arturia's copyrighted
+work, included for interoperability research purposes under the EU Software
+Directive 2009/24/EC Article 6 (decompilation for interoperability). They
+are not covered by either license above and remain the property of Arturia.

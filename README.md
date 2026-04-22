@@ -19,7 +19,7 @@ Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM 
 - **CV injection** — Filter, VCA, resonance (vactrol), sync, PWM inputs
 - **Eurorack expander** (~42HP) — Full patchbay, LFO, noise, clock divider, S&H, slew, attenuverter
 - **DB-9 interconnect** — 2x DB-9 (18 pins) connecting MicroBrute to expander
-- **Pico WH firmware** — OLED menu, clock gen/detect, tap tempo, MIDI SysEx bridge
+- **Pico WH firmware** — OLED menu, clock gen/detect, tap tempo, LPC2361 UART bridge
 - **OLED menu** — 1.3" SH1106 I²C 128×64 for BPM, clock status, and menu system
 - **JF-33 analog delay** — Separate Eurorack module with CV-controlled delay time (optional, Phase 7)
 - **DSO138 oscilloscope** — Separate Eurorack module with input protection + CD4051 mux (optional, Phase 7)
@@ -46,14 +46,15 @@ macrobrute/
 │   │   ├── linker/          #   Memory layout (128KB flash, 34KB SRAM)
 │   │   └── tools/           #   flash.sh, monitor.sh
 │   └── *.mbf                # Arturia firmware files (encrypted, under analysis)
-├── schematics/              # Circuit designs — ASCII schematics (7 docs)
+├── schematics/              # 8 ASCII circuit docs + ~60 SVGs (stripboards, pinouts, wiring)
 ├── kicad/                   # KiCad 8 schematic projects
 │   ├── breakout/            #   Internal breakout PCB
 │   ├── expander/            #   42HP Eurorack expander module
-│   ├── jf33/                #   JF-33 CV control & level matching
-│   └── dso_input/           #   DSO138 input protection & mux
-├── panel/                   # Panel templates (SVG)
-└── tools/                   # Flash scripts, utilities
+│   ├── jf33/                #   JF-33 CV control & level matching (Phase 7A)
+│   └── dso_input/           #   DSO138 input protection & mux (Phase 7B)
+├── panel/                   # Panel templates (SVG): MicroBrute + 42HP expander
+└── tools/                   # Flash, RE, doc-build, diagram generators
+    └── ghidra/              # Ghidra label tooling for LPC2361 analysis
 ```
 
 ## Hardware
@@ -64,10 +65,11 @@ MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C O
 ### Key Decisions
 | Decision | Choice |
 |----------|--------|
-| Connector | 2x DB-9 (18 pins total) |
-| Panel mods | Minimal — OLED, encoder, button, LEDs, 2-4 switches |
-| All patching | Via Eurorack expander |
-| Expander size | ~42HP |
+| Connector | 2× DB-9 (18 pins total) |
+| OLED | 1.3" SH1106 I²C primary, 0.96" SSD1306 + 24×2 LCD fallbacks |
+| Panel mods | OLED + encoder + tap button + RGB LED + 3 insert jacks + 3 toggles + 6 touch bolts |
+| All patching | Via 42HP Eurorack expander |
+| MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (frees GP4/5 for OLED) |
 | Power | Separate supplies, signal ground only via DB-9 |
 | Nano | Parked — Pico handles everything |
 
@@ -77,12 +79,13 @@ MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C O
 |------|--------|-------|
 | Pico firmware | Complete — 9 MicroPython modules (untested on HW) | `firmware/pico/` |
 | LPC2361 firmware | Skeleton — 48 C files, needs ARM toolchain | `firmware/lpc2361/` |
-| Schematics | Complete — 7 ASCII docs + 4 KiCad projects | `schematics/`, `kicad/` |
+| Schematics | Complete — 8 ASCII docs + ~60 SVGs + 4 KiCad projects | `schematics/`, `kicad/` |
 | Panel templates | Complete — MB panel + 42HP expander SVGs | `panel/` |
-| Circuit review | Complete — 13 sections reviewed, 5 corrections | `schematics/CIRCUIT_REVIEW.md` |
+| Circuit review | Complete — 13 sections reviewed, 5 corrections applied | `schematics/CIRCUIT_REVIEW.md` |
 | Firmware RE | ~98% complete — .mbf cracked, 43 SysEx cmds + 427 fns mapped in Ghidra | `docs/research/mbf_analysis.md` |
 | Mods & bending | Complete — 4 guides covering all techniques | `docs/mods/` |
-| Touch plates | Complete — resistive + capacitive + MPR121 designs | `schematics/touch_plates.md` |
+| Touch plates | Complete — 6 resistive touch bolts selected from 8 candidates | `docs/mods/touch_bend_specs.md` |
+| Hardware build | Not started — Phase 0 bench validation next | — |
 
 ## Resources
 
@@ -98,5 +101,12 @@ MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C O
 
 ## License
 
-Hardware designs: CERN-OHL-S-2.0
-Firmware: MIT
+Dual-licensed:
+
+- **Firmware, tools, and documentation** — [MIT](./LICENSE)
+  - Covers `firmware/`, `tools/`, `docs/`
+- **Hardware designs** — [CERN-OHL-S-2.0](./LICENSE-HARDWARE) (strongly reciprocal)
+  - Covers `schematics/`, `kicad/`, `panel/` and hardware-specific content in `docs/`
+  - Full license text bundled at [`LICENSES/CERN-OHL-S-2.0.txt`](./LICENSES/CERN-OHL-S-2.0.txt)
+
+**Arturia firmware binaries** (`firmware/*.mbf`) remain © Arturia — included for interoperability research under EU Software Directive 2009/24/EC Art. 6. Not covered by either license above.
