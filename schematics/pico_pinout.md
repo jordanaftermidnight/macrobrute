@@ -9,8 +9,8 @@ RP2040 datasheet for peripheral conflicts.
 |------|------|----------|-----------|-----------|-------|
 | GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16) |
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15) |
-| GP4 | 6 | OLED SDA | I2C0 | In/Out | SSD1306 0.91" display |
-| GP5 | 7 | OLED SCL | I2C0 | Out | SSD1306 0.91" display |
+| GP4 | 6 | OLED SDA | I2C0 | In/Out | SH1106 1.3" display (0.96" SSD1306 fallback) |
+| GP5 | 7 | OLED SCL | I2C0 | Out | SH1106 1.3" display (0.96" SSD1306 fallback) |
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
 | GP9 | 12 | LED Gate | PWM4B | Out | Gate activity indicator |
 | GP10 | 14 | LED Mode | PWM5A | Out | Mode indicator |
@@ -29,7 +29,7 @@ RP2040 datasheet for peripheral conflicts.
 | Peripheral | Usage | Pins |
 |------------|-------|------|
 | UART0 | LPC2361 Pico Bridge (115200 baud) | GP0, GP1 |
-| I2C0 | OLED display (SSD1306, 0x3C) | GP4, GP5 |
+| I2C0 | OLED display (SH1106, 0x3C) | GP4, GP5 |
 | PIO SM0 | Clock output | GP22 |
 | ADC | CV reading (spare) | GP26-28 |
 | PWM4 | LEDs (clock, gate) | GP8, GP9 |

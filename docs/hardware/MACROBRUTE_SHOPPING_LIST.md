@@ -148,7 +148,7 @@ Copy these part numbers directly into TME search:
 | Mouser Part # | Description | Qty | Price |
 |---------------|-------------|-----|-------|
 | 358-SC0915 | Raspberry Pi Pico (RP2040) | 1 | ~€4.50 |
-| 358-SC0918 | Raspberry Pi Pico H (with headers) | 1 | ~€5.50 |
+| 358-SC0918 | Raspberry Pi Pico WH (with headers) | 1 | ~€5.50 |
 
 **Note:** Get the "H" version if you want pre-soldered headers
 
@@ -222,16 +222,19 @@ Go to: https://www.thonk.co.uk/shop/
 
 Search terms and recommended items:
 
-## OLED Display (CRITICAL - verify dimensions!)
+## OLED Display — user already has 1.3" + 0.96"
 
-**Search:** "2.08 inch OLED 256x64 SH1122 SPI"
+The user has a 1.3" SH1106 I²C (primary) and a 0.96" SSD1306 I²C (fallback) on hand, plus a 24×2 I²C LCD module. No purchase required.
+
+If an OLED module does need to be sourced:
+
+**Search:** "1.3 inch OLED 128x64 SH1106 I2C"
 
 | Item | Specs | Qty | Price |
 |------|-------|-----|-------|
-| 2.08" OLED SH1122 | 256×64, SPI, white/blue | 1 | ~€8-12 |
+| 1.3" OLED SH1106 | 128×64, I²C, white/blue | 1 | ~€4-7 |
 
-**CHECK:** Module PCB dimensions should be ~75.5 × 19.35 mm
-**Sellers:** DWEII, HiLetgo, MELIFE are reputable brands
+**CHECK:** Module should expose VCC/GND/SCL/SDA headers and advertise SH1106 (some listings mislabel SSD1306 driver chips).
 
 ## Connectors
 
@@ -310,7 +313,7 @@ Search terms and recommended items:
 ## ☐ Mouser/Farnell Order (~€45)
 ```
 □ J-Link EDU Mini (8.08.91)
-□ Raspberry Pi Pico (or Pico H)
+□ Raspberry Pi Pico (or Pico WH)
 □ Bourns 3296 trimmers 10k x4
 □ Bourns 3296 trimmers 100k x4
 ```
@@ -327,7 +330,7 @@ Search terms and recommended items:
 
 ## ☐ AliExpress Order (~€50)
 ```
-□ 2.08" OLED SH1122 256x64 SPI
+□ (OLED not needed — 1.3" SH1106 + 0.96" SSD1306 + 24x2 LCD already on hand)
 □ JST PH connector kit
 □ 28AWG silicone wire set
 □ 22AWG wire red/black

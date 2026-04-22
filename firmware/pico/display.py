@@ -1,4 +1,8 @@
-"""MACROBRUTE Pico H — OLED display driver (SSD1306 I2C, 0.91" 128x64)."""
+"""MACROBRUTE Pico WH — OLED display driver (SH1106 1.3" I2C, 128x64).
+
+Primary target is the SH1106 1.3" module. The driver also works with the
+0.96" SSD1306 fallback — set OLED_COL_OFFSET = 0 in config.py for that.
+"""
 
 from machine import Pin, I2C
 import framebuf
@@ -6,14 +10,20 @@ import time
 import config
 
 
-class SSD1306_I2C:
-    """SSD1306 128x64 OLED driver over I2C."""
+class SH1106_I2C:
+    """SH1106 128x64 OLED driver over I2C (page addressing mode).
+
+    SH1106 uses page addressing with a 2-column offset (visible area starts
+    at column 2). SSD1306 is addressable from column 0 in horizontal mode.
+    Set config.OLED_COL_OFFSET to switch between them.
+    """
 
     def __init__(self):
         self.width = config.OLED_WIDTH
         self.height = config.OLED_HEIGHT
         self.pages = self.height // 8
         self.addr = config.OLED_ADDR
+        self.col_offset = config.OLED_COL_OFFSET
 
         self.i2c = I2C(
             config.OLED_I2C_ID,
@@ -29,20 +39,19 @@ class SSD1306_I2C:
     def _init_display(self):
         init_cmds = [
             0xAE,        # Display OFF
-            0xD5, 0x80,  # Clock div ratio
-            0xA8, 0x3F,  # Multiplex ratio (64-1)
-            0xD3, 0x00,  # Display offset
-            0x40,        # Start line 0
-            0x8D, 0x14,  # Charge pump ON
-            0x20, 0x00,  # Horizontal addressing
-            0xA1,        # Segment remap
-            0xC8,        # COM scan direction
-            0xDA, 0x12,  # COM pins config
-            0x81, 0xCF,  # Contrast
-            0xD9, 0xF1,  # Pre-charge period
-            0xDB, 0x40,  # VCOMH deselect level
-            0xA4,        # Display from RAM
-            0xA6,        # Normal display
+            0xD5, 0x80,  # Clock divide ratio / oscillator freq
+            0xA8, 0x3F,  # Multiplex ratio (64 rows - 1)
+            0xD3, 0x00,  # Display offset = 0
+            0x40,        # Display start line = 0
+            0xAD, 0x8B,  # SH1106 DC-DC charge pump enable (SSD1306 ignores; use 0x8D,0x14 for SSD1306)
+            0xA1,        # Segment remap (flip horizontal)
+            0xC8,        # COM output scan direction (flip vertical)
+            0xDA, 0x12,  # COM pins hardware config
+            0x81, 0x80,  # Contrast
+            0xD9, 0x22,  # Pre-charge period
+            0xDB, 0x35,  # VCOM deselect level
+            0xA4,        # Entire display ON from RAM (not forced)
+            0xA6,        # Normal (non-inverted) display
             0xAF,        # Display ON
         ]
         for cmd in init_cmds:
@@ -55,10 +64,12 @@ class SSD1306_I2C:
         self.i2c.writeto(self.addr, b'\x40' + buf)
 
     def show(self):
+        col_lo = self.col_offset & 0x0F
+        col_hi = 0x10 | ((self.col_offset >> 4) & 0x0F)
         for page in range(self.pages):
             self._cmd(0xB0 + page)
-            self._cmd(0x02)
-            self._cmd(0x10)
+            self._cmd(col_lo)
+            self._cmd(col_hi)
             start = page * self.width
             self._data(self.buf[start:start + self.width])
 
@@ -101,7 +112,7 @@ class Display:
     """High-level display manager with dirty-flag rendering."""
 
     def __init__(self):
-        self.oled = SSD1306_I2C()
+        self.oled = SH1106_I2C()
         self._dirty = True
         self._last_render = 0
         self._frame_interval_ms = 1000 // config.DISPLAY_FPS
@@ -112,7 +123,7 @@ class Display:
         self._dirty = True
         self._idle_since = time.ticks_ms()
         if self._dimmed:
-            self.oled.contrast(0xCF)
+            self.oled.contrast(0x80)
             self._dimmed = False
 
     def needs_render(self):

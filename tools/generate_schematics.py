@@ -2197,9 +2197,9 @@ def generate_cd4051_multiplexer() -> str:
     r.elements.append(f'<text x="610" y="297" class="label" text-anchor="middle" fill="#FFF" font-size="8">TL072</text>')
     r.elements.append(f'<text x="610" y="308" class="value" text-anchor="middle" fill="#FFF" font-size="7">Buffer</text>')
     
-    # To DSO130
+    # To DSO138
     r.elements.append(f'<line x1="640" y1="297" x2="700" y2="297" stroke="#1a1a1a" stroke-width="2"/>')
-    r.elements.append(f'<text x="710" y="300" class="label" font-size="9">To DSO130 IN</text>')
+    r.elements.append(f'<text x="710" y="300" class="label" font-size="9">To DSO138 IN</text>')
     
     # Address pins (bottom)
     address_pins = [
@@ -2250,7 +2250,7 @@ def generate_cd4051_multiplexer() -> str:
         "3. Selected channel →",
         "   COM output",
         "4. TL072 buffers signal",
-        "   to DSO130",
+        "   to DSO138",
         "5. 1kΩ resistors protect",
         "   inputs from shorts",
     ]

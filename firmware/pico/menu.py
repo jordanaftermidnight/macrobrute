@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico H — Menu system for OLED + encoder navigation."""
+"""MACROBRUTE Pico WH — Menu system for OLED + encoder navigation."""
 
 import config
 

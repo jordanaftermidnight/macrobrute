@@ -414,7 +414,7 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 
 ---
 
-## Area 6: Raspberry Pi Pico H Integration
+## Area 6: Raspberry Pi Pico WH Integration
 
 ### 6A. OLED Display and Menu System
 

@@ -2,11 +2,15 @@
 
 **Arturia MicroBrute Deep Modification Project**
 
-Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico H digital brain, Eurorack expander module, integrated oscilloscope, CV-controlled delay, and firmware reverse engineering.
+Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico WH digital brain, a 42HP Eurorack expander, firmware reverse engineering, and two optional companion modules (JF-33 delay, DSO138 scope).
 
-## Documentation
+## Documentation — start here
 
-- 📖 **[Full Build Manual](./Macrobrute%20Manual.html)** — Complete reference with wiring diagrams, schematics, BOM, and mod guides
+- 🛠 **[Build Plan](./docs/MACROBRUTE_BUILD_PLAN.md)** — canonical 7-phase roadmap from bench validation to full integration
+- 🔌 **[Connection Map](./docs/MACROBRUTE_CONNECTION_MAP.md)** — every signal, pin, GPIO, and wire in the system
+- 🎛 **[Mod Selection](./docs/MACROBRUTE_MOD_SELECTION.md)** — the 12 panel mods + 6 touch bolts curated from 130+ audited
+- 📇 **[Master Index](./docs/MACROBRUTE_INDEX.md)** — directory of all docs, firmware, schematics, and research
+- 📖 **[Macrobrute Manual.html](./Macrobrute%20Manual.html)** — offline single-file build manual (~1.7MB, regenerated from all docs above via `tools/build_manual.py`)
 
 ## Project Scope
 
@@ -15,11 +19,12 @@ Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM 
 - **CV injection** — Filter, VCA, resonance (vactrol), sync, PWM inputs
 - **Eurorack expander** (~42HP) — Full patchbay, LFO, noise, clock divider, S&H, slew, attenuverter
 - **DB-9 interconnect** — 2x DB-9 (18 pins) connecting MicroBrute to expander
-- **Pico H firmware** — OLED menu, clock gen/detect, tap tempo, MIDI SysEx bridge
-- **OLED visualization** — 2.08" SH1122 256x64 display for signal monitoring and menu system (replaces proposed DSO130 oscilloscope)
-- **JF-33 analog delay** — CV control of delay time and feedback, Eurorack level matching
-- **LPC2361 firmware RE** — CRP detection, potential dump/analysis/modification
-- **Circuit bending** — Touch plates, body contacts, IC-level bend switches
+- **Pico WH firmware** — OLED menu, clock gen/detect, tap tempo, MIDI SysEx bridge
+- **OLED menu** — 1.3" SH1106 I²C 128×64 for BPM, clock status, and menu system
+- **JF-33 analog delay** — Separate Eurorack module with CV-controlled delay time (optional, Phase 7)
+- **DSO138 oscilloscope** — Separate Eurorack module with input protection + CD4051 mux (optional, Phase 7)
+- **LPC2361 firmware RE** — ~98% complete via .mbf decryption. 43 SysEx commands mapped. Pico↔LPC UART bridge planned.
+- **Circuit bending** — 6 touch bolts + 3 toggle mods + 3 panel jacks (curated from 130+ mods)
 
 ## Repository Structure
 
@@ -33,7 +38,7 @@ macrobrute/
 │   ├── research/            # Firmware RE findings, .mbf analysis, PT2399/DSO138
 │   └── legacy/              # Earlier spec revisions
 ├── firmware/
-│   ├── pico/                # Pico H MicroPython firmware (8 modules)
+│   ├── pico/                # Pico WH MicroPython firmware (9 modules)
 │   ├── lpc2361/             # LPC2361 ARM7 C firmware skeleton (48 files)
 │   │   ├── src/             #   core, drivers, synth, midi, ui, utils
 │   │   ├── include/         #   LPC2361 register definitions
@@ -54,7 +59,7 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 2.08" OLED (SH1122), HW040 encoder, 2x DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, 6U 84HP Eurorack case (Note: DSO130 oscilloscope available but not used in final design)
+MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C OLED (primary), 0.96" SSD1306 + 24×2 I²C LCD (fallbacks), HW040 encoder, 2× DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case
 
 ### Key Decisions
 | Decision | Choice |
@@ -70,12 +75,12 @@ MicroBrute, Pico H, Arduino Nano, PL2303HX USB-TTL, 2.08" OLED (SH1122), HW040 e
 
 | Area | Status | Files |
 |------|--------|-------|
-| Pico firmware | Complete — 8 MicroPython modules | `firmware/pico/` |
+| Pico firmware | Complete — 9 MicroPython modules (untested on HW) | `firmware/pico/` |
 | LPC2361 firmware | Skeleton — 48 C files, needs ARM toolchain | `firmware/lpc2361/` |
 | Schematics | Complete — 7 ASCII docs + 4 KiCad projects | `schematics/`, `kicad/` |
 | Panel templates | Complete — MB panel + 42HP expander SVGs | `panel/` |
 | Circuit review | Complete — 13 sections reviewed, 5 corrections | `schematics/CIRCUIT_REVIEW.md` |
-| Firmware RE | In progress — .mbf encryption identified, block structure decoded | `docs/research/` |
+| Firmware RE | ~98% complete — .mbf cracked, 43 SysEx cmds + 427 fns mapped in Ghidra | `docs/research/mbf_analysis.md` |
 | Mods & bending | Complete — 4 guides covering all techniques | `docs/mods/` |
 | Touch plates | Complete — resistive + capacitive + MPR121 designs | `schematics/touch_plates.md` |
 

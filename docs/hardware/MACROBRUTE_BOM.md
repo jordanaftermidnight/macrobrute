@@ -27,7 +27,7 @@
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
 | 1 | Raspberry Pi Pico (standard, NOT W) | 1 | €4.00 | €4.00 | Mouser/Pimoroni |
-| 2 | 2.08" 256x64 OLED SH1122 (SPI, white) | 1 | €10.00 | €10.00 | AliExpress/Amazon |
+| 2 | 1.3" 128x64 OLED SH1106 I²C (on hand) — fallback: 0.96" SSD1306 I²C or 24x2 I²C LCD (all on hand) | 1 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -406,13 +406,13 @@ Pico GPIO (PWM)
 - Knobs
 
 ### Order 3: AliExpress (China, budget)
-- Raspberry Pi Pico
-- 2.08" SH1122 OLED
+- Raspberry Pi Pico (if Pico WH not already on hand)
 - JST-PH connectors
 - Wire assortment
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
+- (OLED already on hand — 1.3" SH1106, 0.96" SSD1306, 24x2 LCD)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)

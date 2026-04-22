@@ -4,41 +4,39 @@ Every signal, mod, bend, and wire in the system. This is the master
 wiring reference for building, debugging, and expanding.
 
 **Connector:** 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND)
-**OLED:** 1.3" SH1106 SPI (firmware driver SH1106_SPI)
-**Firmware:** Pico H MicroPython (8 modules), LPC2361 ARM7 (stock + future bridge)
+**OLED:** 1.3" SH1106 I²C 128×64 (driver `SH1106_I2C` in `firmware/pico/display.py`). Fallback: 0.96" SSD1306 I²C or 24×2 I²C LCD.
+**MIDI path:** Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
+**Firmware:** Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)
 
 ---
 
-## 1. Pico H GPIO Allocation
+## 1. Pico WH GPIO Allocation
+
+Canonical source: `firmware/pico/config.py`. Update this table AND that file together.
 
 | GPIO | Pico Pin | Function | Direction | Notes |
 |------|----------|----------|-----------|-------|
-| GP0 | 1 | LPC2361 UART0 TX | OUT | Future Pico↔LPC bridge |
-| GP1 | 2 | LPC2361 UART0 RX | IN | Future Pico↔LPC bridge |
-| GP4 | 6 | MIDI TX (UART1) | OUT | 31250 baud to MB MIDI IN |
-| GP5 | 7 | MIDI RX (UART1) | IN | 31250 baud from MB MIDI OUT |
-| GP8 | 11 | RGB LED Red / Clock | OUT | PWM, common cathode RGB |
-| GP9 | 12 | RGB LED Green / Gate | OUT | PWM, common cathode RGB |
-| GP10 | 14 | RGB LED Blue / Mode | OUT | PWM, common cathode RGB |
+| GP0 | 1 | LPC2361 UART0 TX | OUT | 115200 baud, to LPC RXD1 via level shifter |
+| GP1 | 2 | LPC2361 UART0 RX | IN | 115200 baud, from LPC TXD1 via divider |
+| GP4 | 6 | OLED I²C0 SDA | I/O | 1.3" SH1106 @ 0x3C |
+| GP5 | 7 | OLED I²C0 SCL | OUT | 400 kHz |
+| GP8 | 11 | RGB LED Red / Clock | OUT | PWM, common-cathode RGB, owned by `leds.LEDManager` |
+| GP9 | 12 | RGB LED Green / Gate | OUT | PWM, common-cathode RGB |
+| GP10 | 14 | RGB LED Blue / Mode | OUT | PWM, common-cathode RGB |
 | GP12 | 16 | Tap Tempo Button | IN | Pull-up, active low |
-| GP13 | 17 | Encoder Switch | IN | Pull-up, active low, long-press=back |
+| GP13 | 17 | Encoder Switch | IN | Pull-up, active low, long-press = back |
 | GP14 | 19 | Encoder CLK (A) | IN | Pull-up, IRQ on both edges |
 | GP15 | 20 | Encoder DT (B) | IN | Pull-up |
-| GP16 | 21 | OLED DC | OUT | SPI0 Data/Command |
-| GP17 | 22 | OLED CS | OUT | SPI0 Chip Select (active low) |
-| GP18 | 24 | OLED SCK | OUT | SPI0 Clock |
-| GP19 | 25 | OLED MOSI | OUT | SPI0 Data |
-| GP20 | 26 | OLED RST | OUT | OLED hardware reset |
 | GP21 | 27 | Clock Input | IN | Pull-down, ext sync detect IRQ |
-| GP22 | 29 | Clock Output | OUT | Master clock to expander |
+| GP22 | 29 | Clock Output | OUT | Master clock to expander (3.3V) |
 | GP26 | 31 | ADC0 | IN | Spare (touch plates future) |
 | GP27 | 32 | ADC1 | IN | Spare (touch plates future) |
 | GP28 | 34 | ADC2 | IN | Spare (touch plates future) |
-| 3V3 | 36 | +3.3V | PWR | To OLED, encoder, level shifter |
-| VSYS | 39 | +5V input | PWR | From MB +5V via 1N5817 |
+| 3V3 | 36 | +3.3V | PWR | To OLED, encoder, level shifter VDD |
+| VSYS | 39 | +5V input | PWR | From MB +5V via 1N5817 (≈4.7V at VSYS) |
 | GND | 3,8,13,18,23,28,33,38 | Ground | — | Multiple pins |
 
-**Free GPIOs:** GP2, GP3, GP6, GP7, GP11, GP23-25 (8 spare)
+**Free GPIOs:** GP2, GP3, GP6, GP7, GP11, GP16–20, GP23–25 (13 spare — GP16–20 freed by using I²C OLED instead of SPI)
 
 ---
 
@@ -131,12 +129,21 @@ All taps use 24AWG wire, soldered to test point pad.
 | TP72 (GND) | 22AWG Black | Breakout star ground + DB-9 pin 9 |
 | +5V rail | 22AWG Orange | D3 1N5817 → Pico VSYS (pin 39) |
 
-### 5.4 MIDI Wiring
+### 5.4 LPC Bridge Wiring (replaces direct MIDI)
+
+Pico speaks a custom framed protocol to the LPC2361 over UART0 at 115200 baud.
+The LPC firmware (modified via .mbf re-encryption) translates protocol messages
+into internal MIDI SysEx, avoiding the 31250-baud MIDI path entirely and freeing
+GP4/GP5 for the I²C OLED.
 
 | From | To | Notes |
 |------|----|-------|
-| Pico GP4 (UART1 TX) | MB MIDI IN circuit | 31250 baud, SysEx bridge |
-| MB MIDI OUT circuit | Pico GP5 (UART1 RX) | SysEx responses |
+| Pico GP0 (UART0 TX) | LPC2361 P0.16 (RXD1) | Via 1kΩ+2kΩ divider or CD4049UBE |
+| LPC2361 P0.15 (TXD1) | Pico GP1 (UART0 RX) | Direct (LPC runs 3.3V I/O) |
+| Pico GND | LPC2361 GND | Shared ground reference |
+
+Protocol framing: `0xAA [msg_type] [counter] [len] [payload…]` — see
+`firmware/pico/midi.py` for the bridge implementation and message codes.
 
 ---
 
@@ -200,7 +207,7 @@ Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GN
 | J_IN | 8 | Flying leads from MB test points |
 | J_OUT | 9 | DB-9 A solder cups |
 | J_CV_IN | 6 | DB-9 B solder cups (CV inputs) |
-| J_PICO | 12 | Ribbon to Pico H |
+| J_PICO | 12 | Ribbon to Pico WH |
 
 ---
 
@@ -404,7 +411,7 @@ Bought locally in Kaunas, April 2026:
 | 10µF/63V electrolytic | 10 | ✓ Have |
 | 100kΩ pots | 4 | ✓ Have |
 | 3.5mm jacks | 25 | ✓ Have |
-| Pico H | 1 | ✓ Have |
+| Pico WH | 1 | ✓ Have |
 | 1.3" SH1106 OLED | 1 | ✓ Have |
 | HW040 encoder | 1 | ✓ Have |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare) |

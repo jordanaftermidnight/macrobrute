@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico H — LPC2361 bridge for MicroBrute parameter control.
+"""MACROBRUTE Pico WH — LPC2361 bridge for MicroBrute parameter control.
 
 Pico sends commands to LPC2361 over UART0 (GP0/GP1 at 115200 baud).
 LPC firmware translates these into MIDI SysEx messages sent to the

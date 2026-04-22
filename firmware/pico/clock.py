@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico H — Clock generator, tap tempo, and external clock detection."""
+"""MACROBRUTE Pico WH — Clock generator, tap tempo, and external clock detection."""
 
 from machine import Pin, Timer
 import time
@@ -42,10 +42,12 @@ class Clock:
         # Internal clock deferred tick
         self._tick_pending = False  # Set in timer ISR, fires tick in update()
 
-        # LED pin for clock pulse
-        self._led = Pin(config.LED_CLOCK, Pin.OUT, value=0)
+        # LED_CLOCK (GP8) is owned by leds.LEDManager — the main loop's
+        # on_tick callback pulses it. Do not drive it from here.
 
     # --- BPM / Tempo ---
+    # `bpm` returns the *displayed* value (external if synced, internal otherwise).
+    # `internal_bpm` always targets the internal clock rate — adjust this from UI.
 
     @property
     def bpm(self):
@@ -53,13 +55,24 @@ class Clock:
 
     @bpm.setter
     def bpm(self, val):
+        # Setting bpm always writes internal — keeps UI rotate consistent even
+        # when ext-sync is active (change takes effect when ext-sync is disabled).
+        self.internal_bpm = val
+
+    @property
+    def internal_bpm(self):
+        return self._bpm
+
+    @internal_bpm.setter
+    def internal_bpm(self, val):
         self._bpm = max(config.MIN_BPM, min(config.MAX_BPM, val))
         if self._running and not self._ext_sync:
             self._restart_timer()
 
     @property
     def period_ms(self):
-        return int(60_000 / self.bpm)
+        active_bpm = self.bpm if self.bpm > 0 else self._bpm
+        return int(60_000 / active_bpm)
 
     @property
     def running(self):
@@ -81,7 +94,6 @@ class Clock:
         self._running = False
         self._timer.deinit()
         self._clock_out.value(0)
-        self._led.value(0)
 
     def toggle(self):
         if self._running:
@@ -108,9 +120,8 @@ class Clock:
     def _fire_tick(self):
         self._tick_count += 1
 
-        # Pulse clock output
+        # Pulse clock output (LED is handled by the on_tick callback via LEDManager)
         self._clock_out.value(1)
-        self._led.value(1)
         self._gate_off_time = time.ticks_add(time.ticks_ms(), config.CLOCK_GATE_MS)
 
         if self._on_tick:
@@ -148,7 +159,6 @@ class Clock:
         now = time.ticks_ms()
         if self._gate_off_time > 0 and time.ticks_diff(now, self._gate_off_time) >= 0:
             self._clock_out.value(0)
-            self._led.value(0)
             self._gate_off_time = 0
 
     # --- External clock detection ---

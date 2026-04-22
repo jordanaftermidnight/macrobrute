@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico H — Rotary encoder + button driver (interrupt-driven)."""
+"""MACROBRUTE Pico WH — Rotary encoder + button driver (interrupt-driven)."""
 
 from machine import Pin
 import time

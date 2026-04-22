@@ -1,5 +1,5 @@
 """
-MACROBRUTE — Pico H Firmware
+MACROBRUTE — Pico WH Firmware
 Arturia MicroBrute Expansion Controller
 
 Handles: OLED display, encoder navigation, clock generation/detection,
@@ -46,7 +46,7 @@ def build_menus():
     clock_menu = Menu("CLOCK", [
         MenuItem("BPM",
                  value_fn=lambda: clock.bpm,
-                 adjust_fn=lambda d: setattr(clock, 'bpm', clock.bpm + d)),
+                 adjust_fn=lambda d: setattr(clock, 'internal_bpm', clock.internal_bpm + d)),
         MenuItem("Run/Stop", action=clock.toggle),
         MenuItem("Tap Tempo", action=clock.tap),
         MenuItem("Ext Sync",
@@ -74,7 +74,7 @@ def build_menus():
     info_menu = Menu("INFO", [
         MenuItem("MACROBRUTE"),
         MenuItem("FW v" + VERSION),
-        MenuItem("Pico H RP2040"),
+        MenuItem("Pico WH RP2040"),
     ])
 
     # Root menu
@@ -162,8 +162,9 @@ def main():
         if in_menu:
             menu_sys.on_rotate(delta)
         else:
-            # Adjust BPM from home screen
-            clock.bpm = clock.bpm + delta
+            # Home screen: adjust internal BPM. When ext-sync is active, this
+            # changes the rate that takes effect after leaving sync mode.
+            clock.internal_bpm = clock.internal_bpm + delta
         display.invalidate()
 
     def on_press():

@@ -1,256 +1,141 @@
-# MACROBRUTE Project — Master Index
+# MACROBRUTE — Master Index
 
-**Project:** Arturia MicroBrute Deep Modification  
-**Codename:** MACROBRUTE  
-**Date:** April 2026  
-**Status:** Design Complete
-
----
-
-## Document Hierarchy
-
-### PRIMARY REFERENCE (Start Here)
-
-| Document | Purpose | Lines |
-|----------|---------|-------|
-| `MACROBRUTE_COMPREHENSIVE_RESEARCH.md` | **Complete technical research** — all component values, circuits, pinouts, protocols | ~800 |
-| `MACROBRUTE_FINAL_ARCHITECTURE.md` | **Current system design** — panel layout, DB-9 pinout, build phases | ~520 |
-| `MACROBRUTE_PROJECT_HANDOFF.md` | **Legacy project handoff** — detailed specs before expander expansion | ~680 |
-
-### SUBSYSTEM DOCUMENTS
-
-| Document | Covers |
-|----------|--------|
-| `MACROBRUTE_COMPLETE_EXPANSION_MAP.md` | All signal taps, CV injection points, circuit bending locations |
-| `MACROBRUTE_FIRMWARE_PROJECT.md` | LPC2361 firmware project structure + code snippets |
-| `MACROBRUTE_BOM.md` | Bill of materials with part numbers |
-| `MACROBRUTE_SHOPPING_LIST.md` | What to buy, what's already owned |
-
-### SCHEMATICS (`../schematics/`)
-
-| Document | Covers |
-|----------|--------|
-| `breakout_pcb.md` | Internal PCB: buffers, gate, LEDs, vactrol, CV protection |
-| `expander_circuits.md` | Noise, LFO, clock divider, S&H, slew, attenuverter, mult |
-| `jf33_cv_control.md` | PT2399 anti-latch-up, delay time CV, feedback CV, level matching |
-| `dso130_input_protection.md` | **(Proposed/Not Used)** Input protection, CD4051 mux, power — Alternative oscilloscope design not implemented |
-| `wiring_diagram.md` | Complete signal flow: test points → DB-9 → expander |
-| `pico_pinout.md` | Pico H GPIO assignments and peripheral allocation |
-| `touch_plates.md` | Resistive, capacitive, MPR121 touch interfaces |
-| `CIRCUIT_REVIEW.md` | Systematic review of all 13 circuit sections |
-
-### RESEARCH (`research/`)
-
-| Document | Covers |
-|----------|--------|
-| `firmware_re_findings.md` | CRP bypass methods, tools, KeyStep RE reference, open source tools |
-| `mbf_analysis.md` | .mbf file encryption analysis: 360-byte block structure, differential, binary strings |
-| `pt2399_dso138_findings.md` | Bergman BMC 83, CD2399 clone, DLO-138 firmware, serial export |
-| `additional_mods_findings.md` | Soft sync broken, triangle 2x gain, VCA offset, through-zero PWM |
-
-### MODS (`mods/`)
-
-| Document | Covers |
-|----------|--------|
-| `microbrute_mods_guide.md` | Standard mods: test point breakouts, oscillator, filter, portamento |
-| `microbrute_circuit_bending_guide.md` | Body contacts, touch points, creative short circuits |
-| `deep_circuit_bending.md` | Advanced: PT2399 deep bends, DSO138 exploitation, cross-device |
-| `ultimate_microbrute_project.md` | Comprehensive project overview |
-
-### FIRMWARE
-
-| Location | Covers |
-|----------|--------|
-| `firmware/lpc2361_investigation_guide.md` | Step-by-step ISP connection, CRP detection, Ghidra setup |
-| `firmware/MACROBRUTE_FIRMWARE_PROJECT.md` | LPC2361 C firmware reference (code in `firmware/lpc2361/`) |
-| `../firmware/pico/` | 8 MicroPython modules: display, encoder, clock, menu, midi, leds, main, config |
-| `../firmware/lpc2361/` | 48 C files: drivers, synth, midi, Pico comm, ARM startup, Makefile |
-
-### KICAD (`../kicad/`)
-
-| Project | Covers |
-|---------|--------|
-| `breakout/` | Internal breakout PCB schematic |
-| `expander/` | 42HP Eurorack expander module |
-| `jf33/` | JF-33 delay CV control & level matching |
-| `dso_input/` | DSO138 input protection & CD4051 multiplexer |
-
-### LEGACY/REFERENCE (May Have Outdated Info)
-
-| Document | Notes |
-|----------|-------|
-| `MACROBRUTE_MASTER_PLAN.md` | Early planning document |
-| `MACROBRUTE_V2_SPEC.md` | Earlier spec revision |
-| `MACROBRUTE_REVISED_SPEC.md` | DB-9 correction (from DB-25 hallucination) |
-| `MACROBRUTE_EXPANDER_DB37_PINOUT.md` | **OBSOLETE** — predates DB-9 decision (moved here from `docs/hardware/`) |
+**Project:** Arturia MicroBrute Deep Modification
+**Status:** Design + firmware RE complete. Hardware build: 0% (bench validation next).
+**Last reconciliation:** 2026-04-22
 
 ---
 
-## Key Decisions Summary
+## Start Here
+
+| Document | Purpose |
+|----------|---------|
+| `README.md` | Project overview, status matrix, hardware summary |
+| `MACROBRUTE_BUILD_PLAN.md` | **Canonical roadmap** — 7 phases, bench → integration |
+| `MACROBRUTE_CONNECTION_MAP.md` | **Canonical wiring** — every signal, pin, and mod |
+| `MACROBRUTE_MOD_SELECTION.md` | Curated 12 mods + 6 touch bolts from 130+ audited |
+| `Macrobrute Manual.html` | Single-file rendered build manual (built from `tools/build_manual.py`) |
+
+## Key Decisions (authoritative)
 
 | Decision | Choice |
 |----------|--------|
-| Project name | MACROBRUTE (renamed from ÜBERBRUTE) |
-| Connector | 2× DB-9 (18 pins total) |
-| Panel mods | Minimal — OLED, encoder, button, LEDs, 2-4 switches |
-| Body jacks | 4 positions: Envelope Out, LFO Out, Ultrasaw Out, PWM Out |
-| All patching | Via Eurorack expander |
-| Expander size | ~50HP (includes DSO138 + JF-33 delay) |
-| Power isolation | Separate supplies, signal ground only via DB-9 |
-| Nano | Parked — Pico handles everything |
-| Scope signal select | 6-position rotary switch |
+| Connector | 2× DB-9 (18 pins total) — VGA HD-15 rejected |
+| OLED | **1.3" SH1106 I²C** on GP4 (SDA) / GP5 (SCL). Fallbacks: 0.96" SSD1306 I²C, 24×2 I²C LCD |
+| MIDI path | **Pico ↔ LPC2361 UART bridge** over UART0 (GP0/GP1) @ 115200 baud. No direct 31250-baud MIDI from Pico. |
+| CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
+| RGB LED (common cathode) | GP8=R/clock, GP9=G/gate, GP10=B/mode. Replaces 3 discrete LEDs. |
+| CD4049UBE | 5V→3.3V level shifting (CD40106 → Pico) |
+| Touch mods | 6 body-contact bends (PITCH, CRUNCH, WAH, DISTORT, HARM, GATE), selected from 8 tested |
+| Panel jacks | 3 (VCF insert, Metalizer insert, VCA CV in) |
+| Panel toggles | 3 (Envelope bypass, Metalizer boost, VCA drone) |
+| Expander size | **42HP** |
+| JF-33 delay | **Separate Eurorack module** (Phase 7A, optional) |
+| DSO138 oscilloscope | **Separate Eurorack module** (Phase 7B, optional) |
+| Power | Separate supplies, signal ground only via DB-9 |
 
 ---
 
-## Hardware Summary
+## Document Map
 
-### Already Have
-- MicroBrute
-- Pico H
-- Arduino Nano (parked)
-- PL2303HX USB-TTL
-- 1.3" OLED (SPI/I²C)
-- 0.96" SSD1306 I²C (ordered)
-- HW040 encoder
-- 2× DB-9 connectors
-- LEDs + LDRs
-- IC kit (NE555×20, LM358×10, etc.)
-- DSO138 oscilloscope kit (built)
-- Joyo JF-33 delay PCB (extracted)
-- 6U 84HP Eurorack case
+### Primary (current)
+- `docs/MACROBRUTE_BUILD_PLAN.md` — 7-phase build plan
+- `docs/MACROBRUTE_CONNECTION_MAP.md` — full wiring reference
+- `docs/MACROBRUTE_MOD_SELECTION.md` — mod curation
+- `docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md` — LPC2361 custom firmware plan
 
-### Need to Acquire
-- 3.5mm mono jacks (35+)
-- SPST toggle switches (4-6)
-- 100kΩ pots 9mm (8+)
-- 6-position rotary switch
-- TL074 (4), TL072 (3)
-- CD4024 (2), CD4066 (2), CD4051 (1)
-- CD40106 (2)
-- 2N3904 (10)
-- SSI2164 (1) — for delay CV control
-- Perfboard / PCB blanks
-- 42-50HP Eurorack panel blank
-- Heat shrink 6mm black (for vactrols)
+### Architecture & Research
+- `docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md` — every tap/inject/bend point
+- `docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md` — component/circuit research
+- `docs/research/mbf_analysis.md` — .mbf firmware decryption + Ghidra findings (43 SysEx cmds, 427 fns)
+- `docs/research/firmware_re_findings.md` — CRP bypass methods, tools
+- `docs/research/pt2399_dso138_findings.md` — delay + scope deep dive
+- `docs/research/additional_mods_findings.md` — soft sync, triangle gain, VCA offset, PWM
 
----
+### Hardware
+- `docs/hardware/MACROBRUTE_BOM.md` — bill of materials
+- `docs/hardware/MACROBRUTE_SHOPPING_LIST.md` — what to buy
+- `docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md` — verified TPs with photos
 
-## Build Phases
-
-### Phase 0: Preparation
-- [ ] Open MicroBrute, photograph PCBs
-- [ ] Probe test points with multimeter
-- [ ] Breadboard Pico + OLED + encoder
-- [ ] Connect PL2303HX to LPC2361, check CRP level
-- [ ] Measure panel clearance for OLED cutout
-
-### Phase 1: Internal Wiring (No Drilling)
-- [ ] Build breakout PCB (Pico mount, buffers, LED drivers)
-- [ ] Wire test point taps (flying leads)
-- [ ] Wire DB-9 connectors (loose)
-- [ ] Build vactrol, test resonance CV
-- [ ] Test all signals
-
-### Phase 2: MicroBrute Panel
-- [ ] Create drilling template
-- [ ] Cut OLED window
-- [ ] Drill holes (encoder, button, LEDs, switches)
-- [ ] Mount components
-- [ ] Final wiring
-
-### Phase 3: Rear Panel
-- [ ] Drill for 2× DB-9
-- [ ] Mount connectors
-- [ ] Build interconnect cable
-- [ ] Test signal pass-through
-
-### Phase 4: Expander Build
-- [ ] Design/layout expander PCB
-- [ ] Build buffer section (TL074 × 3)
-- [ ] Build utilities (noise, LFO, clock div, S&H, slew)
-- [ ] Install DSO138 with input protection
-- [ ] Install JF-33 with level matching + CV control
-- [ ] Wire all jacks
-- [ ] Mount in panel
-
-### Phase 5: Pico Firmware
-- [ ] OLED driver + basic display
-- [ ] Encoder menu system
-- [ ] Clock generator (tap tempo)
-- [ ] Clock input detection
-- [ ] LED indicators
-- [ ] MIDI SysEx bridge
-
-### Phase 6: Advanced
-- [ ] Touch plate construction
-- [ ] Circuit bending switches
-- [ ] LPC2361 investigation
-- [ ] Delay glitch mods
-
----
-
-## Task Queue
-
-### Immediate (Schematics)
-1. Breakout PCB schematic — Pico mount, buffers, LED drivers
-2. Panel drilling template SVG
-3. Expander main schematic
-4. DSO138 input protection circuit
-5. JF-33 CV control circuit (with anti-latch-up)
-
-### Documentation
-6. Wiring diagrams (internal + DB-9)
-7. Pico GPIO pinout diagram
-8. Expander panel layout (50HP)
+### Schematics (`schematics/`)
+- `CIRCUIT_REVIEW.md` — systematic review of all 13 circuit sections + corrections
+- `breakout_pcb.md` + `breakout_stripboard.md` + `breakout_layout.svg` — internal PCB
+- `expander_circuits.md` + `expander_stripboard.md` + per-module SVGs (LFO, noise, clock, S&H, slew, attenuverter)
+- `jf33_cv_control.md` — PT2399 anti-latch-up + CV control (Phase 7A)
+- `dso138_input_protection.md` — DSO138 protection + CD4051 mux (Phase 7B)
+- `touch_plates.md` + `touch_test_board.svg` — 8-channel test board → 6 final bolts
+- `pico_pinout.md` + `pico_pinout_diagram.svg` — GPIO allocation
+- `wiring_diagram.md` + `wiring_*.svg` — complete signal flow
 
 ### Firmware
-9. Pico firmware scaffold (MicroPython)
-10. OLED menu system
-11. Clock gen/detect module
+- `firmware/pico/` — MicroPython modules: main, config, display (SH1106), encoder, clock, menu, midi (LPC bridge), leds, test_hw
+- `firmware/lpc2361/` — C skeleton (48 files): drivers, synth, midi, ui, utils, ARM startup, Makefile
+- `firmware/*.hex / *.bin / *.mbf` — Arturia firmware (decrypted + encrypted forms)
+- `firmware/labels_export.csv` + `tools/ghidra/` — Ghidra label tooling
+- `docs/firmware/lpc2361_investigation_guide.md` — ISP connection + CRP check procedure
+- `docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md` — C firmware reference
 
-### Research
-12. LPC2361 ISP pin locations on physical PCB
-13. Ghidra project setup for ARM7TDMI
+### KiCad (`kicad/`)
+- `breakout/` — internal breakout PCB schematic
+- `expander/` — 42HP Eurorack expander module
+- `jf33/` — JF-33 delay CV control (Phase 7A)
+- `dso_input/` — DSO138 input protection (Phase 7B)
+
+### Panel (`panel/`)
+- `microbrute_panel_template.svg` — MB drilling template
+- `expander_42hp.svg` — expander panel layout
+
+### Mods (`docs/mods/`)
+- `touch_bend_specs.md` — 8 circuit bends with specs (select 6)
+- `microbrute_mods_guide.md` — standard mods reference
+- `microbrute_circuit_bending_guide.md` — body contacts, shorts
+- `deep_circuit_bending.md` — advanced techniques
+- `ultimate_microbrute_project.md` — comprehensive overview
+
+### Tools (`tools/`)
+- `mbf_decrypt.py` / `mbf_encrypt.py` — XOR cipher, roundtrip verified (52 tests)
+- `build_manual.py` — generates `Macrobrute Manual.html`
+- `flash_pico.sh` — Pico firmware deploy wrapper
+- `generate_*.py` — schematic/diagram SVG generators
+- `analyze_firmware.py` + `ghidra_label_firmware.py` + `LabelMicroBruteFirmware.java` — legacy RE helpers
+- `ghidra/` — current Ghidra labeling toolchain
+
+### Legacy (`docs/legacy/`) — superseded, kept for reference
+- `MACROBRUTE_FINAL_ARCHITECTURE.md` — pre-reconciliation architecture draft (Apr 15)
+- `MACROBRUTE_PROJECT_HANDOFF.md` — early handoff doc
+- `MACROBRUTE_EXPANDER_DB37_PINOUT.md` — obsolete DB-37 design (pre-DB-9 decision)
+- `MACROBRUTE_MASTER_PLAN.md` — early planning
+- `MACROBRUTE_V2_SPEC.md` / `MACROBRUTE_V2_COMPLETE_SPEC.md` — earlier spec revisions
+- `MACROBRUTE_REVISED_SPEC.md` — DB-9 correction from DB-25
 
 ---
 
-## File Locations
+## Build Phase Summary
 
-All documents are in:
-- `/mnt/user-data/outputs/MACROBRUTE_*.md`
-- `/mnt/user-data/outputs/MACROBRUTE_BOM.docx`
+See `MACROBRUTE_BUILD_PLAN.md` for task-level detail.
 
-Previous session transcripts:
-- `/mnt/transcripts/` (see journal.txt)
+| Phase | Scope | Status |
+|-------|-------|--------|
+| 0 | Bench validation (Pico + OLED + encoder on breadboard) | Not started |
+| 1 | Breakout PCB stripboard build | Not started |
+| 1B | Touch test board (8 bends → pick 6) | Not started |
+| 2 | Internal wiring to MicroBrute test points | Not started |
+| 3 | Panel drilling (OLED cutout, encoder, RGB LED, touch bolts, DB-9) | Not started |
+| 4 | 42HP expander build (all utilities) | Not started |
+| 5 | System integration + ground-loop audit | Not started |
+| 6 | LPC2361 UART bridge + custom firmware | Firmware RE ~98% done; hardware bridge pending |
+| 7A | JF-33 delay module (optional, separate) | Not started |
+| 7B | DSO138 scope module (optional, separate) | Not started |
 
 ---
 
-## Key Resources
+## External Resources
 
-### MicroBrute
-- Schematics: https://hackabrute.yusynth.net/MICROBRUTE/schematics_en.html
+- Hackabrute schematics: https://hackabrute.yusynth.net/MICROBRUTE/schematics_en.html
 - Maffez Pedrobrute: https://maffez.com/?page_id=2285
-- ModWiggler thread: https://modwiggler.com/forum/viewtopic.php?t=152071
-- MKNielsen2000 Add-ons: https://github.com/MKNielsen2000/MicroBrute-Add-ons
-- SysEx RE: https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html
-
-### DSO138/138
+- MicroBrute SysEx RE (Matraszek): https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html
+- Elektroid (open-source MB device manager): https://github.com/dagargo/elektroid
 - DLO-138 firmware: https://github.com/ardyesp/DLO-138
-
-### PT2399/Delay
-- ElectroSmash analysis: https://www.electrosmash.com/pt2399-analysis
-- VC-Echo design: http://www.sdiy.org/destrukto/vc-echo.html
-
-### LPC2361
-- Datasheet: https://www.nxp.com/docs/en/data-sheet/LPC2361_62.pdf
-- User manual: https://www.keil.com/dd/docs/datashts/philips/lpc23xx_um.pdf
-- lpc21isp: https://github.com/capiman/lpc21isp
-- ChipWhisperer: https://github.com/newaetech/chipwhisperer
-
-### Eurorack DIY
-- Yusynth modules: https://yusynth.net/Modular/index_en.html
-- N8 Synthesizers: https://www.n8synth.co.uk/diy-eurorack/
-
-### Pico
+- PT2399 analysis: https://www.electrosmash.com/pt2399-analysis
 - EuroPi: https://github.com/Allen-Synthesis/EuroPi
-- micropython-rotary: https://github.com/miketeachman/micropython-rotary
+- lpc21isp: https://github.com/capiman/lpc21isp

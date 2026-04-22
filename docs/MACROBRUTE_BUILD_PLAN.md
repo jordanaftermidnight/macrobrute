@@ -2,34 +2,38 @@
 
 ## Context
 
-The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (8 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
+The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (9 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
 
-**Current status (2026-04-12):** Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (8 modules, untested on HW). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). **No physical build started yet.**
+**Current status (2026-04-22):** Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (9 modules, untested on HW, post-reconciliation pass done). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). **Phase 0 bench validation is the next step — no physical build started yet.**
 
-### Confirmed Decisions (April 2026)
+### Confirmed Decisions (April 2026, reconciled 2026-04-22)
 
 | Decision | Detail |
 |----------|--------|
 | Connector | 2× DB-9 (VGA HD-15 rejected — cable wiring shorts pins 6-8 to ground) |
-| OLED | 1.3" SH1106 SPI (firmware driver already correct, no code change) |
+| OLED (primary) | **1.3" SH1106 I²C** on GP4/GP5 (SDA/SCL). Driver: `SH1106_I2C` in `firmware/pico/display.py`. |
+| OLED (fallbacks) | 0.96" SSD1306 I²C — same pins, set `OLED_COL_OFFSET = 0`. 24×2 I²C LCD — needs separate driver. |
+| MIDI path | Pico ↔ LPC2361 UART bridge (UART0, 115200 baud, GP0/GP1). No direct 31250-baud MIDI. |
 | CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
-| RGB LED | Replaces 3 discrete LEDs (saves 2 panel holes, same GPIO GP8/9/10) |
-| CD4049UBE | 5V→3.3V level shifting (CD40106→Pico), powered from 3.3V |
-| Touch mods | 8 body-contact bends designed, test on breakout before panel install |
+| RGB LED | Common-cathode, replaces 3 discrete LEDs (saves 2 panel holes, same GPIO GP8/9/10) |
+| CD4049UBE | 5V→3.3V level shifting (CD40106→Pico, and LPC→Pico), powered from 3.3V |
+| Touch mods | 8 body-contact bends designed, test on breakout before panel install → pick 6 |
 | Isolation transformer | Salvaged (46.9/82.4Ω windings), for ground loop mitigation if needed |
-| DSO138 power | LM7809 on hand, regulates from +12V |
+| JF-33 delay | **Separate Eurorack module (Phase 7A, optional)** — not inside expander |
+| DSO138 scope | **Separate Eurorack module (Phase 7B, optional)** — LM7809 on hand for +9V regulation |
 
 ---
 
 ## Phase 0: Bench Validation — non-destructive (Week 1)
 
-**Goal:** Validate Pico firmware on breadboard, locate test points, prepare DSO138.
+**Goal:** Validate Pico firmware on breadboard, confirm OLED choice, locate test points.
 
 ### Tasks
-- [ ] Flash Pico firmware, breadboard test: OLED + encoder + RGB LED + clock
+- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics.
+- [ ] Confirm 1.3" SH1106 draws correctly. If artifacts: toggle `OLED_COL_OFFSET` (2↔0) or fall back to 0.96" SSD1306. LCD fallback requires a separate driver — defer unless both OLEDs fail.
+- [ ] Breadboard integration: OLED + encoder + RGB LED + clock I/O + tap button
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
 - [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)
-- [ ] DSO138 power: use LM7809 (on hand) to regulate from +12V
 - [ ] Verify PL2303HX USB-TTL with serial loopback
 
 ### Toolchain Setup (macOS)
@@ -214,7 +218,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 ### 2.2 Wire Power Taps
 - [ ] Solder to TP70 (+12V), TP71 (-12V), TP72 (GND)
 - [ ] Mount breakout board on chassis wall (VHB tape or M2 standoffs)
-- [ ] Mount Pico H on/adjacent to breakout board
+- [ ] Mount Pico WH on/adjacent to breakout board
 - [ ] Route wires along chassis ribs, secure with nylon ties
 - [ ] Verify keyboard and wheels still move freely
 
@@ -390,11 +394,14 @@ Build per `schematics/jf33_cv_control.md`:
 - [ ] Delay time CV (TL072 → 2N3904 current sink, 1kΩ emitter R)
 - [ ] Eurorack level matching (input atten + output gain)
 
-### 7B: DSO138 Oscilloscope Integration
-Build per `schematics/dso130_input_protection.md`:
-- [ ] Input protection (BAT54S clamps)
-- [ ] CD4051 signal multiplexer (6 inputs)
-- [ ] LM7809 power from +12V (on hand)
+### 7B: DSO138 Oscilloscope — standalone Eurorack module (optional)
+Build per `schematics/dso138_input_protection.md` as a **separate Eurorack module**, not inside the 42HP expander:
+- [ ] Input protection (BAT54S clamps + 1kΩ series R)
+- [ ] CD4051 signal multiplexer (8:1), channels: Saw, Square, VCO Mix, VCF, Gate, Envelope, LFO, External
+- [ ] LM7809 power from +12V (on hand) — regulate to DSO138's +9V input
+- [ ] 10HP panel: LCD display, input jack, channel select (rotary or 3-bit from Pico), probe clip
+- [ ] Optional DLO-138 firmware (adds serial export)
+- **Why separate:** Display needs its own panel real estate; better as a utility module than crammed into the MB panel or expander.
 
 ### 7C: Additional Touch Plates via Pico ADC
 - [ ] Extend 6 panel bolts with Pico ADC (GP26-28) for CV output

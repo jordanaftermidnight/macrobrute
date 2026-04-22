@@ -17,7 +17,7 @@ from pathlib import Path
 from datetime import date
 
 PROJECT = Path(__file__).resolve().parent.parent
-OUTPUT = PROJECT / "manual.html"
+OUTPUT = PROJECT / "Macrobrute Manual.html"
 
 # ─── SVG Mappings ───────────────────────────────────────────────────
 # Maps markdown files to their associated SVG layout diagrams
@@ -118,7 +118,6 @@ SECTIONS = [
         "docs/MACROBRUTE_BUILD_PLAN.md",
     ]),
     ("3. System Architecture", "arch", [
-        "docs/architecture/MACROBRUTE_FINAL_ARCHITECTURE.md",
         "docs/MACROBRUTE_CONNECTION_MAP.md",
         "schematics/expander_block_diagram.md",
     ]),
@@ -154,8 +153,8 @@ SECTIONS = [
         "docs/mods/deep_circuit_bending.md",
         "docs/mods/ultimate_microbrute_project.md",
     ]),
-    ("11. Proposed Designs (Not Used)", "proposed", [
-        "schematics/dso130_input_protection.md",
+    ("11. Optional Separate Modules (Phase 7)", "optional", [
+        "schematics/dso138_input_protection.md",
     ]),
     ("12. Research", "research", [
         "docs/research/additional_mods_findings.md",
@@ -167,6 +166,7 @@ SECTIONS = [
         "docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",
     ]),
     ("13. Legacy & Archive", "legacy", [
+        "docs/legacy/MACROBRUTE_FINAL_ARCHITECTURE.md",
         "docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md",
         "docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md",
         "docs/legacy/MACROBRUTE_MASTER_PLAN.md",

@@ -6,7 +6,7 @@ Tests each peripheral independently via serial output.
 No OLED dependency — diagnose wiring issues before full firmware.
 
 Breadboard Wiring Quick Reference:
-  OLED SSD1306 0.91" (I2C0):
+  OLED SH1106 1.3" (I2C0) — primary. 0.96" SSD1306 works with same pins.
     VCC  → 3V3 (pin 36)        GND → GND
     SDA  → GP4 (pin 6)         SCL → GP5 (pin 7)
 
@@ -104,7 +104,7 @@ def test_oled():
         devices = i2c.scan()
         print(f"  I2C devices found: {[hex(d) for d in devices]}")
         if 0x3C not in devices and 0x3D not in devices:
-            print("  WARN — no SSD1306 at 0x3C or 0x3D")
+            print("  WARN — no OLED at 0x3C or 0x3D")
             print("  Check wiring: VCC→3V3, GND, SDA→GP4, SCL→GP5")
             return
 
@@ -116,9 +116,11 @@ def test_oled():
         def data(buf):
             i2c.writeto(addr, b'\x40' + buf)
 
+        # SH1106-tuned init (also works on SSD1306 for this test draw)
         for c in [0xAE, 0xD5, 0x80, 0xA8, 0x3F, 0xD3, 0x00, 0x40,
-                  0x8D, 0x14, 0x20, 0x00, 0xA1, 0xC8, 0xDA, 0x12,
-                  0x81, 0xCF, 0xD9, 0xF1, 0xDB, 0x40, 0xA4, 0xA6, 0xAF]:
+                  0xAD, 0x8B, 0xA1, 0xC8, 0xDA, 0x12,
+                  0x81, 0x80, 0xD9, 0x22, 0xDB, 0x35,
+                  0xA4, 0xA6, 0xAF]:
             cmd(c)
 
         import framebuf
@@ -130,10 +132,14 @@ def test_oled():
         fb.hline(0, 40, 128, 1)
         fb.text("I2C OK", 36, 48)
 
+        # SH1106 uses 2-col offset. Set to 0 if testing SSD1306.
+        col_offset = 2
+        col_lo = col_offset & 0x0F
+        col_hi = 0x10 | ((col_offset >> 4) & 0x0F)
         for page in range(8):
             cmd(0xB0 + page)
-            cmd(0x02)
-            cmd(0x10)
+            cmd(col_lo)
+            cmd(col_hi)
             data(buf[page * 128:(page + 1) * 128])
 
         print("  Display should show: MACROBRUTE / HW TEST / I2C OK")

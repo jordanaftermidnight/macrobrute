@@ -1,12 +1,10 @@
 # DSO138 Input Protection & Signal Multiplexer
 
-> **⚠️ PROPOSED DESIGN — NOT IMPLEMENTED**
+> **ℹ Phase 7B — optional standalone Eurorack module**
 >
-> This section documents an alternative design approach that was considered but **not used** in the final MACROBRUTE build.
+> The DSO138 is not integrated into the MicroBrute panel or the 42HP expander. Built as a separate Eurorack utility module (10HP) with its own power regulator (LM7809 from +12V), it can monitor any expander jack via a 3.5mm probe input.
 >
-> **Reason for exclusion:** DB-9 connector limitations (insufficient pins for oscilloscope integration) and aesthetic concerns (preferring a clean expander panel over additional front-panel displays).
->
-> The final design uses the **OLED display** (SH1122 256x64) for signal visualization instead. See [Control & Interface](/#cat-control) section for the implemented solution.
+> The MicroBrute itself uses the **1.3" SH1106 I²C OLED** (driven by Pico) for BPM, clock status, and menus — not for signal visualization. The DSO138 provides waveform visualization when/if built.
 
 ---
 
