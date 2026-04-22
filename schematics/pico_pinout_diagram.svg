@@ -31,8 +31,8 @@
 <text x="475" y="42" class="subtitle" text-anchor="middle">MACROBRUTE Hardware Configuration</text>
 <rect x="325" y="80" width="300" height="540" fill="#1a1a1a" stroke="#555" stroke-width="3" rx="10"/>
 <text x="475.0" y="110" class="label" text-anchor="middle" fill="#FFF" font-size="14">Raspberry Pi Pico WH</text>
-<rect x="425" y="65" width="100" height="20" fill="#333" stroke="#666" stroke-width="1"/>
-<text x="475" y="78" class="value" text-anchor="middle" fill="#CCC" font-size="8">Micro USB</text>
+<rect x="425" y="65" width="100" height="20" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>
+<text x="475" y="78" class="value" text-anchor="middle" fill="#FFF" font-size="9">Micro USB · USB-MIDI</text>
 <circle cx="325" cy="140" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="143" class="value" fill="#AAA" font-size="7">GP0</text>
 <rect x="225" y="132" width="90" height="16" fill="#00BCD4" stroke="#333" stroke-width="1" rx="2"/>
@@ -42,23 +42,29 @@
 <text x="340" y="163" class="value" fill="#AAA" font-size="7">GP1</text>
 <rect x="225" y="152" width="90" height="16" fill="#00BCD4" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">UART0 RX</text>
-<text x="220" y="163" class="value" text-anchor="end" fill="#666" font-size="8">→ LPC2361</text>
+<text x="220" y="163" class="value" text-anchor="end" fill="#666" font-size="8">← LPC2361</text>
 <circle cx="325" cy="180" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="183" class="value" fill="#AAA" font-size="7">GND</text>
 <circle cx="325" cy="200" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="203" class="value" fill="#AAA" font-size="7">GP2</text>
+<rect x="225" y="192" width="90" height="16" fill="#009688" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C1 SDA</text>
+<text x="220" y="203" class="value" text-anchor="end" fill="#666" font-size="8">Daisy (rear)</text>
 <circle cx="325" cy="220" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="223" class="value" fill="#AAA" font-size="7">GP3</text>
+<rect x="225" y="212" width="90" height="16" fill="#009688" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C1 SCL</text>
+<text x="220" y="223" class="value" text-anchor="end" fill="#666" font-size="8">Daisy (rear)</text>
 <circle cx="325" cy="240" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="243" class="value" fill="#AAA" font-size="7">GP4</text>
-<rect x="225" y="232" width="90" height="16" fill="#E91E63" stroke="#333" stroke-width="1" rx="2"/>
-<text x="270.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">MIDI TX</text>
-<text x="220" y="243" class="value" text-anchor="end" fill="#666" font-size="8">UART1</text>
+<rect x="225" y="232" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C0 SDA</text>
+<text x="220" y="243" class="value" text-anchor="end" fill="#666" font-size="8">OLED</text>
 <circle cx="325" cy="260" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="263" class="value" fill="#AAA" font-size="7">GP5</text>
-<rect x="225" y="252" width="90" height="16" fill="#E91E63" stroke="#333" stroke-width="1" rx="2"/>
-<text x="270.0" y="263" class="label" text-anchor="middle" fill="#FFF" font-size="7">MIDI RX</text>
-<text x="220" y="263" class="value" text-anchor="end" fill="#666" font-size="8">UART1</text>
+<rect x="225" y="252" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="263" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C0 SCL</text>
+<text x="220" y="263" class="value" text-anchor="end" fill="#666" font-size="8">OLED</text>
 <circle cx="325" cy="280" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="283" class="value" fill="#AAA" font-size="7">GND</text>
 <circle cx="325" cy="300" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
@@ -69,14 +75,17 @@
 <text x="340" y="343" class="value" fill="#AAA" font-size="7">GP8</text>
 <rect x="225" y="332" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="343" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Clock</text>
+<text x="220" y="343" class="value" text-anchor="end" fill="#666" font-size="8">RGB R</text>
 <circle cx="325" cy="360" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="363" class="value" fill="#AAA" font-size="7">GP9</text>
 <rect x="225" y="352" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Gate</text>
+<text x="220" y="363" class="value" text-anchor="end" fill="#666" font-size="8">RGB G</text>
 <circle cx="325" cy="380" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="383" class="value" fill="#AAA" font-size="7">GP10</text>
 <rect x="225" y="372" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="383" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Mode</text>
+<text x="220" y="383" class="value" text-anchor="end" fill="#666" font-size="8">RGB B</text>
 <circle cx="325" cy="400" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="403" class="value" fill="#AAA" font-size="7">GP11</text>
 <circle cx="325" cy="420" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
@@ -97,26 +106,26 @@
 <text x="270.0" y="483" class="label" text-anchor="middle" fill="#FFF" font-size="7">Enc. DT</text>
 <circle cx="625" cy="140" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="143" class="value" text-anchor="end" fill="#AAA" font-size="7">GP16</text>
-<rect x="635" y="132" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">OLED DC</text>
+<rect x="635" y="132" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
 <circle cx="625" cy="160" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="163" class="value" text-anchor="end" fill="#AAA" font-size="7">GP17</text>
-<rect x="635" y="152" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">OLED CS</text>
+<rect x="635" y="152" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
 <circle cx="625" cy="180" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="183" class="value" text-anchor="end" fill="#AAA" font-size="7">GND</text>
 <circle cx="625" cy="200" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="203" class="value" text-anchor="end" fill="#AAA" font-size="7">GP18</text>
-<rect x="635" y="192" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">OLED SCK</text>
+<rect x="635" y="192" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
 <circle cx="625" cy="220" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="223" class="value" text-anchor="end" fill="#AAA" font-size="7">GP19</text>
-<rect x="635" y="212" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">OLED MOSI</text>
+<rect x="635" y="212" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
 <circle cx="625" cy="240" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="243" class="value" text-anchor="end" fill="#AAA" font-size="7">GP20</text>
-<rect x="635" y="232" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">OLED RST</text>
+<rect x="635" y="232" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
 <circle cx="625" cy="260" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="263" class="value" text-anchor="end" fill="#AAA" font-size="7">GP21</text>
 <rect x="635" y="252" width="90" height="16" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
@@ -162,18 +171,20 @@
 <rect x="50" y="640" width="850" height="50" fill="#F5F5F5" stroke="#999" stroke-width="1" rx="4"/>
 <text x="475" y="660" class="label" text-anchor="middle" font-size="10">Pin Function Legend</text>
 <rect x="80" y="670" width="15" height="12" fill="#2196F3" stroke="#333" stroke-width="0.5"/>
-<text x="100" y="679" class="value" font-size="7">OLED (SPI)</text>
-<rect x="185" y="670" width="15" height="12" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
-<text x="205" y="679" class="value" font-size="7">Encoder/Button</text>
-<rect x="290" y="670" width="15" height="12" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
-<text x="310" y="679" class="value" font-size="7">LED Outputs</text>
-<rect x="395" y="670" width="15" height="12" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
-<text x="415" y="679" class="value" font-size="7">Clock I/O</text>
-<rect x="500" y="670" width="15" height="12" fill="#E91E63" stroke="#333" stroke-width="0.5"/>
-<text x="520" y="679" class="value" font-size="7">MIDI UART</text>
+<text x="100" y="679" class="value" font-size="7">OLED I²C0</text>
+<rect x="185" y="670" width="15" height="12" fill="#009688" stroke="#333" stroke-width="0.5"/>
+<text x="205" y="679" class="value" font-size="7">I²C1 Daisy exp.</text>
+<rect x="290" y="670" width="15" height="12" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
+<text x="310" y="679" class="value" font-size="7">Encoder/Button</text>
+<rect x="395" y="670" width="15" height="12" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
+<text x="415" y="679" class="value" font-size="7">RGB LED</text>
+<rect x="500" y="670" width="15" height="12" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
+<text x="520" y="679" class="value" font-size="7">Clock I/O</text>
 <rect x="605" y="670" width="15" height="12" fill="#00BCD4" stroke="#333" stroke-width="0.5"/>
-<text x="625" y="679" class="value" font-size="7">Debug UART</text>
-<rect x="710" y="670" width="15" height="12" fill="#795548" stroke="#333" stroke-width="0.5"/>
-<text x="730" y="679" class="value" font-size="7">ADC (Spare)</text>
-<rect x="815" y="670" width="15" height="12" fill="#F44336" stroke="#333" stroke-width="0.5"/>
-<text x="835" y="679" class="value" font-size="7">Power</text></svg>
+<text x="625" y="679" class="value" font-size="7">LPC bridge</text>
+<rect x="710" y="670" width="15" height="12" fill="#E91E63" stroke="#333" stroke-width="0.5"/>
+<text x="730" y="679" class="value" font-size="7">USB-MIDI</text>
+<rect x="815" y="670" width="15" height="12" fill="#795548" stroke="#333" stroke-width="0.5"/>
+<text x="835" y="679" class="value" font-size="7">ADC (Spare)</text>
+<rect x="920" y="670" width="15" height="12" fill="#F44336" stroke="#333" stroke-width="0.5"/>
+<text x="940" y="679" class="value" font-size="7">Power</text></svg>

@@ -64,11 +64,15 @@
 - `jf33_cv_control.md` — PT2399 anti-latch-up + CV control (Phase 7A)
 - `dso138_input_protection.md` — DSO138 protection + CD4051 mux (Phase 7B)
 - `touch_plates.md` + `touch_test_board.svg` — 8-channel test board → 6 final bolts
-- `pico_pinout.md` + `pico_pinout_diagram.svg` — Pico WH GPIO allocation
+- `pico_pinout.md` + `pico_pinout_diagram.svg` — Pico WH GPIO allocation (+ I²C1 Daisy expansion + USB-MIDI)
 - `lpc2361_pinout_diagram.svg` — LPC2361 pinout (documented pins + RE gaps flagged)
 - `db9_connector_diagram.svg` — full 18-pin DB-9 A/B interconnect map
 - `power_regulation_diagram.svg` — Eurorack → breakout → Pico/expander rail chain
 - `testpoints_map.svg` — 18 MicroBrute test points (waveforms, CV, gate, power, touch bends)
+- `jf33_integration_schematic.svg` — Phase 7A: PT2399 delay full Eurorack integration
+- `dso138_analog_frontend.svg` — Phase 7B: 8-ch mux + ±5V clamp + LM7809 for scope
+- `expander_power_distribution.svg` — 42HP expander rails + rear I²C header to Daisy
+- `midi_interface_circuit.svg` — Stock 6N138 DIN MIDI (LPC) + Pico USB-MIDI (new)
 - `wiring_diagram.md` + `wiring_*.svg` — complete signal flow
 
 ### Firmware

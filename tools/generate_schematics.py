@@ -1190,8 +1190,8 @@ def generate_dip_pinout_reference() -> str:
     
     # LF398 - Sample & Hold (DIP-8)
     lf398_pins = ["V+", "OFFSET", "IN", "V-", "CH", "LOGIC", "OUT", "GND"]
-    draw_dip(50, 250, lf398_pins, "LF398", "S&H Amp", 70, lf398_pins)
-    r.elements.append(f'<text x="85" y="245" class="label" font-size="10" fill="#CC0000">LF398 — Sample & Hold (DIP-8)</text>')
+    draw_dip(50, 250, lf398_pins, "LF398", "S&amp;H Amp", 70, lf398_pins)
+    r.elements.append(f'<text x="85" y="245" class="label" font-size="10" fill="#CC0000">LF398 — Sample &amp; Hold (DIP-8)</text>')
     
     # 78L05 - Voltage Regulator (TO-92)
     r.elements.append(f'<text x="200" y="245" class="label" font-size="10" fill="#CC0000">78L05 — +5V Regulator (TO-92)</text>')
@@ -2349,11 +2349,12 @@ def generate_pico_pinout_diagram() -> str:
     r = SchematicRenderer(950, 700, "Raspberry Pi Pico WH Pinout", "MACROBRUTE Hardware Configuration")
 
     # Colors for different function types
-    C_OLED = "#2196F3"      # Blue
+    C_OLED = "#2196F3"      # Blue — I²C0 OLED
+    C_I2C = "#009688"       # Teal — I²C1 Daisy expansion
     C_ENCODER = "#4CAF50"   # Green
     C_LED = "#FF9800"       # Orange
     C_CLOCK = "#9C27B0"     # Purple
-    C_MIDI = "#E91E63"      # Pink
+    C_USB = "#E91E63"       # Pink — USB-MIDI
     C_UART = "#00BCD4"      # Cyan
     C_ADC = "#795548"       # Brown
     C_POWER = "#F44336"     # Red
@@ -2365,9 +2366,9 @@ def generate_pico_pinout_diagram() -> str:
     r.elements.append(f'<rect x="{board_x}" y="{board_y}" width="{board_w}" height="{board_h}" fill="#1a1a1a" stroke="#555" stroke-width="3" rx="10"/>')
     r.elements.append(f'<text x="{board_x + board_w/2}" y="{board_y + 30}" class="label" text-anchor="middle" fill="#FFF" font-size="14">Raspberry Pi Pico WH</text>')
 
-    # USB connector at top
-    r.elements.append(f'<rect x="{board_x + 100}" y="{board_y - 15}" width="100" height="20" fill="#333" stroke="#666" stroke-width="1"/>')
-    r.elements.append(f'<text x="{board_x + 150}" y="{board_y - 2}" class="value" text-anchor="middle" fill="#CCC" font-size="8">Micro USB</text>')
+    # USB connector at top — now carries USB-MIDI
+    r.elements.append(f'<rect x="{board_x + 100}" y="{board_y - 15}" width="100" height="20" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>')
+    r.elements.append(f'<text x="{board_x + 150}" y="{board_y - 2}" class="value" text-anchor="middle" fill="#FFF" font-size="9">Micro USB · USB-MIDI</text>')
 
     # Pin spacing - consistent 20px between pins
     pin_spacing = 20
@@ -2376,18 +2377,18 @@ def generate_pico_pinout_diagram() -> str:
     # Left side pins (GP0-GP15) - aligned in a column
     left_pins = [
         ("GP0", "UART0 TX", "→ LPC2361", C_UART),
-        ("GP1", "UART0 RX", "→ LPC2361", C_UART),
+        ("GP1", "UART0 RX", "← LPC2361", C_UART),
         ("GND", None, None, C_GND),
-        ("GP2", "(Spare)", "", None),
-        ("GP3", "(Spare)", "", None),
-        ("GP4", "MIDI TX", "UART1", C_MIDI),
-        ("GP5", "MIDI RX", "UART1", C_MIDI),
+        ("GP2", "I²C1 SDA", "Daisy (rear)", C_I2C),
+        ("GP3", "I²C1 SCL", "Daisy (rear)", C_I2C),
+        ("GP4", "I²C0 SDA", "OLED", C_OLED),
+        ("GP5", "I²C0 SCL", "OLED", C_OLED),
         ("GND", None, None, C_GND),
         ("GP6", "(Spare)", "", None),
         ("GP7", "(Spare)", "", None),
-        ("GP8", "LED Clock", "", C_LED),
-        ("GP9", "LED Gate", "", C_LED),
-        ("GP10", "LED Mode", "", C_LED),
+        ("GP8", "LED Clock", "RGB R", C_LED),
+        ("GP9", "LED Gate", "RGB G", C_LED),
+        ("GP10", "LED Mode", "RGB B", C_LED),
         ("GP11", "(Spare)", "", None),
         ("GP12", "Tap Button", "", C_ENCODER),
         ("GP13", "Enc. Button", "", C_ENCODER),
@@ -2417,12 +2418,12 @@ def generate_pico_pinout_diagram() -> str:
 
     # Right side pins (GP16-GP28) - aligned in a column
     right_pins = [
-        ("GP16", "OLED DC", C_OLED),
-        ("GP17", "OLED CS", C_OLED),
+        ("GP16", "(Spare)", None),
+        ("GP17", "(Spare)", None),
         ("GND", None, C_GND),
-        ("GP18", "OLED SCK", C_OLED),
-        ("GP19", "OLED MOSI", C_OLED),
-        ("GP20", "OLED RST", C_OLED),
+        ("GP18", "(Spare)", None),
+        ("GP19", "(Spare)", None),
+        ("GP20", "(Spare)", None),
         ("GP21", "Clock In", C_CLOCK),
         ("GND", None, C_GND),
         ("GP22", "Clock Out", C_CLOCK),
@@ -2481,12 +2482,13 @@ def generate_pico_pinout_diagram() -> str:
     r.elements.append(f'<text x="475" y="660" class="label" text-anchor="middle" font-size="10">Pin Function Legend</text>')
 
     legend_items = [
-        (C_OLED, "OLED (SPI)"),
+        (C_OLED, "OLED I²C0"),
+        (C_I2C,  "I²C1 Daisy exp."),
         (C_ENCODER, "Encoder/Button"),
-        (C_LED, "LED Outputs"),
+        (C_LED, "RGB LED"),
         (C_CLOCK, "Clock I/O"),
-        (C_MIDI, "MIDI UART"),
-        (C_UART, "Debug UART"),
+        (C_UART, "LPC bridge"),
+        (C_USB, "USB-MIDI"),
         (C_ADC, "ADC (Spare)"),
         (C_POWER, "Power"),
     ]
@@ -2821,6 +2823,450 @@ def generate_testpoints_map() -> str:
     return r.render()
 
 
+def generate_jf33_integration_schematic() -> str:
+    """Generate JF-33 delay full Eurorack integration (PT2399 + CV + level matching + bypass)."""
+    r = SchematicRenderer(1000, 780, "JF-33 Delay — Eurorack Integration (Phase 7A)",
+                          "PT2399 analog delay · CV-controlled delay time · level matching · bypass")
+
+    def box(x, y, w, h, title, color, fill="#FFFFFF"):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{color}" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+w/2}" y="{y+18}" class="label" text-anchor="middle" font-size="11" fill="{color}">{title}</text>')
+
+    def arrow(x1, y1, x2, y2, label="", color="#1a1a1a"):
+        r.elements.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" stroke-width="1.8" marker-end="url(#arrow)"/>')
+        if label:
+            r.elements.append(f'<text x="{(x1+x2)/2}" y="{(y1+y2)/2 - 5}" class="anno" text-anchor="middle" font-size="9">{label}</text>')
+
+    # Row 1: input path (left to right)
+    box(40,  90, 130, 80, "IN jack (3.5mm)", "#0066CC")
+    r.elements.append(f'<text x="105" y="130" class="value" text-anchor="middle" font-size="9">Eurorack 10Vpp</text>')
+    r.elements.append(f'<text x="105" y="145" class="value" text-anchor="middle" font-size="9">AC-coupled</text>')
+
+    box(190, 90, 130, 80, "Input attenuator", "#CC6600")
+    r.elements.append(f'<text x="255" y="130" class="value" text-anchor="middle" font-size="9">÷6 divider</text>')
+    r.elements.append(f'<text x="255" y="145" class="value" text-anchor="middle" font-size="8">(10Vpp → 1.7Vpp line)</text>')
+
+    box(340, 90, 130, 80, "10µF/50V coupling", "#CC6600")
+    r.elements.append(f'<text x="405" y="130" class="value" text-anchor="middle" font-size="9">DC-block</text>')
+    r.elements.append(f'<text x="405" y="145" class="value" text-anchor="middle" font-size="8">→ JF-33 board</text>')
+
+    box(490, 80, 220, 180, "JF-33 PCB (stock)", "#6600CC", "#F0E8FF")
+    r.elements.append(f'<text x="600" y="122" class="value" text-anchor="middle" font-size="9">PT2399 delay IC</text>')
+    r.elements.append(f'<text x="600" y="138" class="value" text-anchor="middle" font-size="9">4× NE5532 op-amps</text>')
+    r.elements.append(f'<text x="600" y="158" class="value" text-anchor="middle" font-size="8">Pin 6: timing cap (Rt)</text>')
+    r.elements.append(f'<text x="600" y="172" class="value" text-anchor="middle" font-size="8">→ delay time control</text>')
+    r.elements.append(f'<text x="600" y="192" class="value" text-anchor="middle" font-size="8">Feedback pot on board</text>')
+    r.elements.append(f'<text x="600" y="206" class="value" text-anchor="middle" font-size="8">Dry/wet mix on board</text>')
+    r.elements.append(f'<text x="600" y="226" class="value" text-anchor="middle" font-size="8">~30ms–600ms range</text>')
+
+    # Row 2: CV control path
+    box(40, 300, 130, 80, "CV IN jack", "#4A4")
+    r.elements.append(f'<text x="105" y="340" class="value" text-anchor="middle" font-size="9">0–5V CV</text>')
+    r.elements.append(f'<text x="105" y="355" class="value" text-anchor="middle" font-size="8">from expander</text>')
+
+    box(190, 300, 130, 80, "CV attenuator pot", "#4A4")
+    r.elements.append(f'<text x="255" y="340" class="value" text-anchor="middle" font-size="9">100kΩ linear</text>')
+    r.elements.append(f'<text x="255" y="355" class="value" text-anchor="middle" font-size="8">0→+5V trim</text>')
+
+    box(340, 300, 130, 80, "2N3904 current sink", "#D44")
+    r.elements.append(f'<text x="405" y="340" class="value" text-anchor="middle" font-size="9">NPN base ← CV</text>')
+    r.elements.append(f'<text x="405" y="355" class="value" text-anchor="middle" font-size="8">emitter → Rt adj. pot</text>')
+
+    box(490, 290, 120, 90, "Anti-latch-up", "#CC6600", "#FFF3E0")
+    r.elements.append(f'<text x="550" y="332" class="value" text-anchor="middle" font-size="9">100Ω series</text>')
+    r.elements.append(f'<text x="550" y="346" class="value" text-anchor="middle" font-size="8">+ 1N4148 clamp</text>')
+    r.elements.append(f'<text x="550" y="362" class="value" text-anchor="middle" font-size="8">PT2399 pin 6 safe</text>')
+
+    # Row 3: output path
+    box(40, 460, 130, 80, "10µF/50V coupling", "#CC6600")
+    r.elements.append(f'<text x="105" y="500" class="value" text-anchor="middle" font-size="9">DC-block</text>')
+
+    box(190, 460, 130, 80, "Output gain stage", "#CC6600")
+    r.elements.append(f'<text x="255" y="500" class="value" text-anchor="middle" font-size="9">TL072 ×6 gain</text>')
+    r.elements.append(f'<text x="255" y="515" class="value" text-anchor="middle" font-size="8">(line → 10Vpp)</text>')
+
+    box(340, 460, 130, 80, "Bypass switch (SPDT)", "#555")
+    r.elements.append(f'<text x="405" y="500" class="value" text-anchor="middle" font-size="9">Dry ↔ Wet</text>')
+    r.elements.append(f'<text x="405" y="515" class="value" text-anchor="middle" font-size="8">true-bypass (relay opt.)</text>')
+
+    box(490, 460, 130, 80, "OUT jack (3.5mm)", "#0066CC")
+    r.elements.append(f'<text x="550" y="500" class="value" text-anchor="middle" font-size="9">Eurorack level</text>')
+
+    # Power column (right)
+    box(760, 80, 200, 100, "Power: +12V rail", "#D44")
+    r.elements.append(f'<text x="860" y="120" class="value" text-anchor="middle" font-size="9">Eurorack bus +12V</text>')
+    r.elements.append(f'<text x="860" y="135" class="value" text-anchor="middle" font-size="9">1N5817 + ferrite</text>')
+    r.elements.append(f'<text x="860" y="150" class="value" text-anchor="middle" font-size="8">100µF + 100nF bulk</text>')
+
+    box(760, 200, 200, 100, "LM78L05 → +5V", "#CC6600")
+    r.elements.append(f'<text x="860" y="240" class="value" text-anchor="middle" font-size="9">TO-92 regulator</text>')
+    r.elements.append(f'<text x="860" y="255" class="value" text-anchor="middle" font-size="8">input 100nF + out 10µF</text>')
+    r.elements.append(f'<text x="860" y="270" class="value" text-anchor="middle" font-size="8">feeds PT2399 VCC</text>')
+
+    box(760, 320, 200, 100, "-12V rail", "#44D")
+    r.elements.append(f'<text x="860" y="360" class="value" text-anchor="middle" font-size="9">Op-amp V-</text>')
+    r.elements.append(f'<text x="860" y="375" class="value" text-anchor="middle" font-size="8">bulk + 100nF per IC</text>')
+
+    # Flow arrows
+    arrow(170, 130, 190, 130)
+    arrow(320, 130, 340, 130)
+    arrow(470, 130, 490, 130, "audio")
+    arrow(600, 260, 600, 290, "delay time", color="#4A4")
+    arrow(170, 340, 190, 340)
+    arrow(320, 340, 340, 340)
+    arrow(470, 340, 490, 340, "CV→bias", color="#4A4")
+    arrow(610, 380, 110, 460, "dry tap", color="#888")
+    arrow(710, 260, 190, 500, "wet tap", color="#1a1a1a")
+    arrow(320, 500, 340, 500)
+    arrow(470, 500, 490, 500)
+
+    # Notes
+    r.elements.append(f'<rect x="40" y="580" width="920" height="180" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>')
+    r.elements.append(f'<text x="500" y="600" class="label" text-anchor="middle" font-size="12">JF-33 Integration Notes</text>')
+    notes = [
+        "• JF-33 PCB is stock (as purchased). Mods happen entirely on the Eurorack adapter board — no trace cuts on JF-33.",
+        "• Level matching: JF-33 expects ~1Vpp instrument level. Eurorack audio is 10Vpp → ÷6 in, ×6 out restores level.",
+        "• CV → delay time: 2N3904 emitter follower biases the PT2399 timing cap resistor (Rt). CV=0V → long delay, CV=+5V → short delay.",
+        "• Anti-latch-up: 100Ω + diode on PT2399 pin 6 — PT2399 latches if Rt current exceeds spec. This is mandatory.",
+        "• Feedback + dry/wet live on JF-33's stock pots. Optional: panel extension wires to larger pots for Eurorack ergonomics.",
+        "• Bypass: SPDT toggle swaps OUT between dry input and wet output. For pop-free switching, use relay + anti-pop cap.",
+        "• Panel size: 8HP Eurorack. Jacks: IN, OUT, CV. Pots: feedback, mix, CV amount. Switch: bypass.",
+        "• Power budget: +12V ~40mA (PT2399 + NE5532 quiescent), -12V ~15mA (op-amp negative rail). Well within Eurorack norms.",
+    ]
+    for i, line in enumerate(notes):
+        r.elements.append(f'<text x="55" y="{622 + i*17}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
+def generate_dso138_analog_frontend() -> str:
+    """Generate DSO138 analog front-end: input protection + CD4051 mux + power for oscilloscope module."""
+    r = SchematicRenderer(1050, 780, "DSO138 Analog Front-End (Phase 7B)",
+                          "8-ch input mux · ±5V clamp protection · +9V regulation for DSO138 kit")
+
+    def box(x, y, w, h, title, color, fill="#FFFFFF"):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{color}" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+w/2}" y="{y+18}" class="label" text-anchor="middle" font-size="11" fill="{color}">{title}</text>')
+
+    # 8 input jacks (left column)
+    r.elements.append(f'<text x="60" y="80" class="label" font-size="11">8 × Input Jacks (3.5mm)</text>')
+    jack_labels = ["Saw",  "Square", "Sub", "VCF", "Mix", "LFO", "Env", "Ext"]
+    for i, lbl in enumerate(jack_labels):
+        y = 100 + i * 55
+        r.elements.append(f'<circle cx="60" cy="{y+15}" r="14" fill="none" stroke="#333" stroke-width="1.5"/>')
+        r.elements.append(f'<circle cx="60" cy="{y+15}" r="5" fill="#333"/>')
+        r.elements.append(f'<text x="45" y="{y+18}" class="value" text-anchor="end" font-size="9">{lbl}</text>')
+        # Series protection resistor
+        r.elements.append(f'<line x1="75" y1="{y+15}" x2="115" y2="{y+15}" stroke="#1a1a1a" stroke-width="1.5"/>')
+        r.elements.append(f'<rect x="118" y="{y+9}" width="26" height="12" fill="#FFFBE6" stroke="#999"/>')
+        r.elements.append(f'<text x="131" y="{y+18}" class="value" text-anchor="middle" font-size="8">100k</text>')
+        r.elements.append(f'<line x1="144" y1="{y+15}" x2="180" y2="{y+15}" stroke="#1a1a1a" stroke-width="1.5"/>')
+        # Clamp pair
+        r.elements.append(f'<text x="185" y="{y+11}" class="value" font-size="8" fill="#D44">↑ +5V</text>')
+        r.elements.append(f'<text x="185" y="{y+22}" class="value" font-size="8" fill="#44D">↓ -5V</text>')
+
+    # Clamp network legend
+    box(230, 100, 160, 100, "BAT54S ±5V clamp", "#CC6600")
+    r.elements.append(f'<text x="310" y="140" class="value" text-anchor="middle" font-size="9">Schottky pair</text>')
+    r.elements.append(f'<text x="310" y="156" class="value" text-anchor="middle" font-size="8">per channel</text>')
+    r.elements.append(f'<text x="310" y="175" class="value" text-anchor="middle" font-size="8">Limits DSO138 input</text>')
+    r.elements.append(f'<text x="310" y="190" class="value" text-anchor="middle" font-size="8">to safe ±5V range</text>')
+
+    # CD4051 MUX
+    box(420, 130, 220, 290, "CD4051 8-ch mux", "#6600CC", "#F0E8FF")
+    r.elements.append(f'<text x="530" y="170" class="value" text-anchor="middle" font-size="9">X0–X7 inputs</text>')
+    r.elements.append(f'<text x="530" y="185" class="value" text-anchor="middle" font-size="9">(pins 13,14,15,12,1,5,2,4)</text>')
+    r.elements.append(f'<text x="530" y="210" class="value" text-anchor="middle" font-size="9">A/B/C select pins</text>')
+    r.elements.append(f'<text x="530" y="225" class="value" text-anchor="middle" font-size="8">11 / 10 / 9</text>')
+    r.elements.append(f'<text x="530" y="250" class="value" text-anchor="middle" font-size="9">COM (pin 3) → out</text>')
+    r.elements.append(f'<text x="530" y="275" class="value" text-anchor="middle" font-size="9">VDD=+5V  VEE=-5V  VSS=GND</text>')
+    r.elements.append(f'<text x="530" y="295" class="value" text-anchor="middle" font-size="8">(bipolar signals need VEE)</text>')
+    r.elements.append(f'<text x="530" y="320" class="value" text-anchor="middle" font-size="9">INH (pin 6) → GND</text>')
+    r.elements.append(f'<text x="530" y="345" class="value" text-anchor="middle" font-size="9">Address source:</text>')
+    r.elements.append(f'<text x="530" y="360" class="value" text-anchor="middle" font-size="8">3× panel toggles OR</text>')
+    r.elements.append(f'<text x="530" y="375" class="value" text-anchor="middle" font-size="8">Pico GP16/17/18 via DB-9</text>')
+    r.elements.append(f'<text x="530" y="395" class="value" text-anchor="middle" font-size="8">(address 0-7 = 3 bits)</text>')
+
+    # TL072 buffer
+    box(680, 180, 150, 100, "TL072 buffer", "#4A4")
+    r.elements.append(f'<text x="755" y="220" class="value" text-anchor="middle" font-size="9">Unity gain</text>')
+    r.elements.append(f'<text x="755" y="235" class="value" text-anchor="middle" font-size="8">follower</text>')
+    r.elements.append(f'<text x="755" y="255" class="value" text-anchor="middle" font-size="8">Isolates mux from</text>')
+    r.elements.append(f'<text x="755" y="270" class="value" text-anchor="middle" font-size="8">DSO138 input Z</text>')
+
+    # DSO138 input
+    box(860, 170, 160, 130, "DSO138 BNC IN", "#0066CC", "#E3F2FD")
+    r.elements.append(f'<text x="940" y="210" class="value" text-anchor="middle" font-size="9">Stock scope kit</text>')
+    r.elements.append(f'<text x="940" y="226" class="value" text-anchor="middle" font-size="8">STM32F103 based</text>')
+    r.elements.append(f'<text x="940" y="246" class="value" text-anchor="middle" font-size="9">1 MΩ / 20 pF</text>')
+    r.elements.append(f'<text x="940" y="260" class="value" text-anchor="middle" font-size="8">front-end input Z</text>')
+    r.elements.append(f'<text x="940" y="280" class="value" text-anchor="middle" font-size="8">Max ±50V with probe</text>')
+
+    # Flow arrows
+    r.elements.append(f'<line x1="220" y1="300" x2="420" y2="300" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
+    r.elements.append(f'<text x="320" y="290" class="anno" text-anchor="middle" font-size="9">8 protected inputs</text>')
+    r.elements.append(f'<line x1="640" y1="280" x2="680" y2="230" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
+    r.elements.append(f'<line x1="830" y1="230" x2="860" y2="230" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
+
+    # Power section (bottom left)
+    box(40, 550, 460, 200, "Power Regulation", "#D44", "#FFF0F0")
+    r.elements.append(f'<text x="270" y="575" class="value" text-anchor="middle" font-size="10" fill="#B71C1C">DSO138 needs +9V (LM7809 from +12V)</text>')
+    pwr_lines = [
+        "• +12V Eurorack → 1N5817 → LM7809 (TO-220) → +9V / 500mA",
+        "• LM7809 heatsink: small TO-220 clip-on, dissipates ~1.5W",
+        "• ±5V rails for CD4051 clamps: LM78L05 (+5V) and 79L05 (-5V) from ±12V",
+        "• Decoupling: 100µF electrolytic + 100nF ceramic on every IC VCC/VEE pin",
+        "• Backlight on DSO138 LCD: separate +5V tap (stock)",
+        "• No mains isolation needed — Eurorack is already floating",
+    ]
+    for i, line in enumerate(pwr_lines):
+        r.elements.append(f'<text x="55" y="{605 + i*18}" class="value" font-size="9">{line}</text>')
+
+    # Build notes
+    box(520, 550, 500, 200, "Module Build Notes", "#4A4", "#F1F8E9")
+    r.elements.append(f'<text x="770" y="575" class="value" text-anchor="middle" font-size="10" fill="#1B5E20">10HP Eurorack · panel: LCD cutout + 8 jacks + 3 toggles</text>')
+    build_notes = [
+        "• DSO138 LCD (2.4\" TFT) dominates panel: ~70×50mm cutout, bezel lip 3mm",
+        "• 8× 3.5mm jacks vertically stacked on right side (55mm pitch = 5 HP)",
+        "• 3× SPDT toggles for A/B/C mux address (manual mode)",
+        "• Optional: 1× DB-9 for Pico-driven mux (automated probe-switching via UART cmds)",
+        "• DSO138 kit button panel: exposed through side cutout or remote buttons",
+        "• Separate module: does NOT share ground with breakout — isolated via ferrite at +12V.",
+        "• All 8 inputs protected — safe to hot-patch Eurorack-level signals without fear.",
+    ]
+    for i, line in enumerate(build_notes):
+        r.elements.append(f'<text x="535" y="{605 + i*18}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
+def generate_expander_power_distribution() -> str:
+    """Generate 42HP expander power distribution — ±12V/+5V to 7 utility circuits + rear I²C header."""
+    r = SchematicRenderer(1100, 700, "Expander Power Distribution (42HP)",
+                          "Eurorack bus → 7 utility circuits · Rear I²C header for Daisy Seed expansion")
+
+    def util(x, y, title, detail, rails, color):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="120" height="90" fill="#FFFFFF" stroke="{color}" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+60}" y="{y+18}" class="label" text-anchor="middle" font-size="10" fill="{color}">{title}</text>')
+        r.elements.append(f'<text x="{x+60}" y="{y+35}" class="value" text-anchor="middle" font-size="8">{detail}</text>')
+        for i, rail in enumerate(rails):
+            color_r = {"+12V": "#D44", "-12V": "#44D", "+5V": "#CC6600", "GND": "#1a1a1a"}.get(rail, "#888")
+            r.elements.append(f'<rect x="{x+8+i*26}" y="{y+55}" width="24" height="14" fill="{color_r}"/>')
+            r.elements.append(f'<text x="{x+20+i*26}" y="{y+65}" class="value" text-anchor="middle" font-size="7" fill="#FFF">{rail}</text>')
+        # Decoupling caps
+        r.elements.append(f'<text x="{x+60}" y="{y+82}" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>')
+
+    # Eurorack bus header (left)
+    r.elements.append(f'<rect x="40" y="80" width="180" height="200" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="4"/>')
+    r.elements.append(f'<text x="130" y="105" class="label" text-anchor="middle" fill="#FFF" font-size="12">Eurorack Bus</text>')
+    r.elements.append(f'<text x="130" y="122" class="value" text-anchor="middle" fill="#CCC" font-size="9">16-pin IDC header</text>')
+    rails = [("+12V", "#D44", 150), ("GND", "#4A4", 170), ("GND", "#4A4", 190), ("-12V", "#44D", 210), ("+5V", "#CC6600", 230), ("CV/Gate", "#888", 250)]
+    for rail, color, y in rails:
+        r.elements.append(f'<rect x="60" y="{y}" width="140" height="14" fill="{color}"/>')
+        r.elements.append(f'<text x="130" y="{y+10}" class="value" text-anchor="middle" font-size="8" fill="#FFF">{rail}</text>')
+
+    # Protection block
+    r.elements.append(f'<rect x="250" y="100" width="170" height="170" fill="#FFF0F0" stroke="#D44" stroke-width="1.5" rx="4"/>')
+    r.elements.append(f'<text x="335" y="125" class="label" text-anchor="middle" font-size="11" fill="#D44">Protection &amp; Filter</text>')
+    prot = [
+        "1N5817 Schottky ×3",
+        "(reverse-polarity)",
+        "",
+        "Ferrite 100Ω @ 100MHz",
+        "per rail (HF suppression)",
+        "",
+        "470µF bulk ±12V",
+        "100µF bulk +5V",
+        "100nF ceramics",
+    ]
+    for i, line in enumerate(prot):
+        r.elements.append(f'<text x="335" y="{148 + i*13}" class="value" text-anchor="middle" font-size="9">{line}</text>')
+
+    # 7 utility circuits (right side, grid)
+    util(460,  90,  "Noise Gen",      "2N3904 + TL072",    ["+12V","-12V","GND"], "#6600CC")
+    util(600,  90,  "LFO",            "TL072 + CD40106",   ["+12V","-12V","GND"], "#6600CC")
+    util(740,  90,  "S&amp;H",         "LF398 or CD4066",   ["+12V","-12V","GND"], "#6600CC")
+    util(880,  90,  "Clock Div",      "CD4024 (÷2/4/8)",   ["+5V","GND"],         "#CC6600")
+    util(460, 210,  "Slew",         "TL072 + diode",     ["+12V","-12V","GND"], "#6600CC")
+    util(600, 210,  "Attenuverter",   "TL072 + center-pot",["+12V","-12V","GND"], "#6600CC")
+    util(740, 210,  "Buffered Mult",  "TL074 × 4 ch",      ["+12V","-12V","GND"], "#6600CC")
+
+    # LM78L05 block (if +5V bus rail absent)
+    r.elements.append(f'<rect x="880" y="210" width="120" height="90" fill="#FFFBE6" stroke="#CC6600" stroke-width="1.5" rx="4"/>')
+    r.elements.append(f'<text x="940" y="228" class="label" text-anchor="middle" font-size="10" fill="#CC6600">LM78L05</text>')
+    r.elements.append(f'<text x="940" y="243" class="value" text-anchor="middle" font-size="8">+12V → +5V</text>')
+    r.elements.append(f'<text x="940" y="258" class="value" text-anchor="middle" font-size="8">TO-92 · 100mA</text>')
+    r.elements.append(f'<text x="940" y="275" class="value" text-anchor="middle" font-size="8">for CD4024 logic</text>')
+    r.elements.append(f'<text x="940" y="290" class="value" text-anchor="middle" font-size="8">(if no +5V on bus)</text>')
+
+    # Distribution bus arrows
+    for y_bus in [145, 165, 185, 205]:
+        r.elements.append(f'<line x1="220" y1="{y_bus}" x2="250" y2="{y_bus}" stroke="#888" stroke-width="1.2"/>')
+    r.elements.append(f'<line x1="420" y1="175" x2="460" y2="175" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>')
+    r.elements.append(f'<text x="440" y="168" class="anno" text-anchor="middle" font-size="8">rails</text>')
+
+    # Rear I²C expansion header (NEW — Daisy)
+    r.elements.append(f'<rect x="40" y="330" width="440" height="190" fill="#E0F2F1" stroke="#009688" stroke-width="2" rx="4"/>')
+    r.elements.append(f'<text x="260" y="355" class="label" text-anchor="middle" font-size="13" fill="#009688">REAR I²C EXPANSION HEADER (hidden)</text>')
+    r.elements.append(f'<text x="260" y="372" class="value" text-anchor="middle" font-size="9">4-pin JST-XH · mounted behind panel · accessed with case open</text>')
+    # Pinout
+    pins = [("1", "SDA", "GP2 → Daisy I²C", "#009688"),
+            ("2", "SCL", "GP3 → Daisy I²C", "#009688"),
+            ("3", "+3.3V", "From Pico 3V3 pin 36", "#D44"),
+            ("4", "GND", "Star ground @ TP72", "#1a1a1a")]
+    for i, (pn, sig, detail, color) in enumerate(pins):
+        yy = 395 + i * 28
+        r.elements.append(f'<circle cx="75" cy="{yy}" r="10" fill="gold" stroke="#B8860B"/>')
+        r.elements.append(f'<text x="75" y="{yy+3}" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">{pn}</text>')
+        r.elements.append(f'<text x="100" y="{yy+3}" class="label" font-size="10" fill="{color}">{sig}</text>')
+        r.elements.append(f'<text x="170" y="{yy+3}" class="value" font-size="9">{detail}</text>')
+    r.elements.append(f'<text x="260" y="505" class="value" text-anchor="middle" font-size="8" fill="#666">Pull-ups (4.7kΩ to 3.3V) on Pico side. Bus length &lt; 30cm at 100kHz.</text>')
+
+    # Daisy Seed callout
+    r.elements.append(f'<rect x="500" y="330" width="580" height="190" fill="#F3E5F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>')
+    r.elements.append(f'<text x="790" y="355" class="label" text-anchor="middle" font-size="12" fill="#6600CC">Daisy Seed Module (planned, separate build)</text>')
+    daisy = [
+        "• Cortex-M7 @ 480MHz · 64MB SDRAM · 32-bit audio DAC — basically a Eurorack DSP coprocessor.",
+        "• Role: offloads heavy DSP from Pico (granular, reverb, pitch shift, wavetable synthesis).",
+        "• Interface: I²C peripheral addressed at 0x42 by default (user-configurable in Daisy firmware).",
+        "• Pico → Daisy: parameter messages (CV values, trigger events, mode changes) at ~100Hz.",
+        "• Daisy → Pico: status, level metering, preset ACKs.",
+        "• Audio: Daisy I/O goes to its OWN Eurorack jacks — audio does not pass through Pico or I²C.",
+        "• Power: Daisy has own 3.3V/5V from its own Eurorack bus connection. I²C header shares only GND.",
+        "• Address space: OLED 0x3C, Daisy 0x42, MPR121 (if added) 0x5A — no conflicts.",
+    ]
+    for i, line in enumerate(daisy):
+        r.elements.append(f'<text x="515" y="{377 + i*17}" class="value" font-size="9">{line}</text>')
+
+    # Current budget
+    r.elements.append(f'<rect x="40" y="550" width="1040" height="130" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>')
+    r.elements.append(f'<text x="560" y="572" class="label" text-anchor="middle" font-size="12">Current Budget (typical)</text>')
+    budget = [
+        "• +12V: ~200mA total (noise 10mA · LFO 15mA · S&amp;H 20mA · slew 10mA · attenuverter 10mA · mult 20mA · plus LM78L05 ~30mA headroom = 115mA + margin)",
+        "• -12V: ~80mA (op-amp negative rails only)",
+        "• +5V: ~20mA (CD4024 logic + header pull-ups)",
+        "• Combined draw: well within typical Eurorack PSU per-HP allocation. No separate supply needed.",
+        "• I²C bus load: Pico I²C1 clocked at 100kHz · ~1 message per 10ms · negligible load",
+    ]
+    for i, line in enumerate(budget):
+        r.elements.append(f'<text x="55" y="{595 + i*17}" class="value" font-size="9">{line}</text>')
+
+    return r.render()
+
+
+def generate_midi_interface_circuit() -> str:
+    """Generate MIDI interface: 5-pin DIN → 6N138 optocoupler → LPC UART0 (stock) + Pico USB-MIDI parallel path."""
+    r = SchematicRenderer(1100, 700, "MIDI Interfaces",
+                          "5-pin DIN → 6N138 → LPC2361 (stock Arturia) · Pico micro-USB → USB-MIDI (new)")
+
+    def box(x, y, w, h, title, color, fill="#FFFFFF"):
+        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{color}" stroke-width="1.5" rx="4"/>')
+        r.elements.append(f'<text x="{x+w/2}" y="{y+20}" class="label" text-anchor="middle" font-size="11" fill="{color}">{title}</text>')
+
+    # Top lane: STOCK DIN-MIDI path (LPC-only, untouched by mod)
+    r.elements.append(f'<rect x="30" y="60" width="1040" height="260" fill="#F5F5F5" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="5,5" rx="6"/>')
+    r.elements.append(f'<text x="550" y="80" class="label" text-anchor="middle" font-size="13">LANE A — Stock Arturia DIN-MIDI (unmodified)</text>')
+    r.elements.append(f'<text x="550" y="96" class="value" text-anchor="middle" font-size="9">Do NOT tap or reroute — this is the existing MicroBrute MIDI path. Mod does not touch it.</text>')
+
+    # DIN jack
+    box(60, 120, 130, 140, "5-pin DIN IN", "#1a1a1a")
+    r.elements.append(f'<circle cx="125" cy="200" r="38" fill="none" stroke="#333" stroke-width="2"/>')
+    # 5 pins arranged in DIN pattern
+    din_pins = [(125, 170, "2"), (97, 188, "4"), (153, 188, "5"), (107, 218, "1"), (143, 218, "3")]
+    for px, py, pn in din_pins:
+        r.elements.append(f'<circle cx="{px}" cy="{py}" r="5" fill="#333"/>')
+        r.elements.append(f'<text x="{px+10}" y="{py+3}" class="value" font-size="8">{pn}</text>')
+    r.elements.append(f'<text x="125" y="250" class="value" text-anchor="middle" font-size="9">Standard MIDI-IN</text>')
+
+    # Wiring: DIN 4/5 through 220Ω each
+    r.elements.append(f'<line x1="190" y1="188" x2="220" y2="188" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append(f'<rect x="222" y="182" width="30" height="12" fill="#FFFBE6" stroke="#999"/>')
+    r.elements.append(f'<text x="237" y="192" class="value" text-anchor="middle" font-size="8">220Ω</text>')
+    r.elements.append(f'<line x1="252" y1="188" x2="290" y2="188" stroke="#1a1a1a" stroke-width="1.5"/>')
+
+    # 6N138 optocoupler
+    box(290, 130, 180, 160, "6N138 optocoupler", "#6600CC", "#F3E5F5")
+    r.elements.append(f'<text x="380" y="175" class="value" text-anchor="middle" font-size="9">Pin 2: IR LED anode</text>')
+    r.elements.append(f'<text x="380" y="190" class="value" text-anchor="middle" font-size="9">Pin 3: IR LED cathode (to DIN pin 4 via 220Ω)</text>')
+    r.elements.append(f'<text x="380" y="215" class="value" text-anchor="middle" font-size="9">Pin 5: GND  Pin 8: +5V</text>')
+    r.elements.append(f'<text x="380" y="230" class="value" text-anchor="middle" font-size="9">Pin 6: open-collector output</text>')
+    r.elements.append(f'<text x="380" y="245" class="value" text-anchor="middle" font-size="8">→ 4.7kΩ pull-up to +5V</text>')
+    r.elements.append(f'<text x="380" y="265" class="value" text-anchor="middle" font-size="8">1N4148 across IR LED (anti-reverse)</text>')
+
+    # Pull-up
+    r.elements.append(f'<line x1="470" y1="210" x2="520" y2="210" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append(f'<line x1="495" y1="210" x2="495" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append(f'<rect x="480" y="160" width="30" height="20" fill="#FFFBE6" stroke="#999"/>')
+    r.elements.append(f'<text x="495" y="173" class="value" text-anchor="middle" font-size="8">4.7k</text>')
+    r.elements.append(f'<text x="495" y="153" class="value" text-anchor="middle" font-size="8" fill="#D44">+5V</text>')
+
+    # LPC2361 block
+    box(540, 130, 200, 160, "LPC2361 UART0 RX", "#0066CC", "#E3F2FD")
+    r.elements.append(f'<text x="640" y="175" class="value" text-anchor="middle" font-size="9">P0.3 (pin 99)</text>')
+    r.elements.append(f'<text x="640" y="195" class="value" text-anchor="middle" font-size="9">31250 baud, 8N1</text>')
+    r.elements.append(f'<text x="640" y="215" class="value" text-anchor="middle" font-size="9">Stock Arturia firmware</text>')
+    r.elements.append(f'<text x="640" y="235" class="value" text-anchor="middle" font-size="8">handles SysEx, note on/off,</text>')
+    r.elements.append(f'<text x="640" y="250" class="value" text-anchor="middle" font-size="8">CC, program change, clock</text>')
+    r.elements.append(f'<text x="640" y="270" class="value" text-anchor="middle" font-size="8">Relays internal events to</text>')
+    r.elements.append(f'<text x="640" y="283" class="value" text-anchor="middle" font-size="8">Pico via UART1 bridge</text>')
+
+    # To Pico (via bridge)
+    r.elements.append(f'<line x1="740" y1="210" x2="820" y2="210" stroke="#0066CC" stroke-width="2" marker-end="url(#arrow)"/>')
+    box(820, 170, 220, 80, "Pico UART0 bridge", "#00BCD4", "#E0F7FA")
+    r.elements.append(f'<text x="930" y="212" class="value" text-anchor="middle" font-size="9">GP0/GP1 @ 115200</text>')
+    r.elements.append(f'<text x="930" y="228" class="value" text-anchor="middle" font-size="8">Receives MIDI-as-SysEx</text>')
+
+    # Bottom lane: NEW USB-MIDI path (Pico)
+    r.elements.append(f'<rect x="30" y="350" width="1040" height="260" fill="#FCE4EC" stroke="#E91E63" stroke-width="1.5" rx="6"/>')
+    r.elements.append(f'<text x="550" y="370" class="label" text-anchor="middle" font-size="13" fill="#E91E63">LANE B — Pico USB-MIDI (new, computer-facing)</text>')
+    r.elements.append(f'<text x="550" y="386" class="value" text-anchor="middle" font-size="9">Pico enumerates as a USB-MIDI class device. Host DAW/computer sees it as a MIDI port. Does NOT drive 5-pin DIN.</text>')
+
+    # Computer
+    box(60, 410, 150, 140, "Host computer / DAW", "#1a1a1a", "#EEEEEE")
+    r.elements.append(f'<text x="135" y="450" class="value" text-anchor="middle" font-size="9">Ableton, Bitwig,</text>')
+    r.elements.append(f'<text x="135" y="465" class="value" text-anchor="middle" font-size="9">Reaper, etc.</text>')
+    r.elements.append(f'<text x="135" y="490" class="value" text-anchor="middle" font-size="8">USB host · macOS/Linux</text>')
+    r.elements.append(f'<text x="135" y="505" class="value" text-anchor="middle" font-size="8">detects Pico as MIDI dev</text>')
+    r.elements.append(f'<text x="135" y="525" class="value" text-anchor="middle" font-size="9">"Macrobrute Pico"</text>')
+
+    # USB cable
+    r.elements.append(f'<line x1="210" y1="480" x2="280" y2="480" stroke="#E91E63" stroke-width="3"/>')
+    r.elements.append(f'<text x="245" y="472" class="anno" text-anchor="middle" font-size="9" fill="#E91E63">USB 2.0</text>')
+
+    # Pico with micro-USB
+    box(280, 410, 220, 140, "Pico WH · micro-USB", "#E91E63", "#FFF0F5")
+    r.elements.append(f'<rect x="300" y="440" width="40" height="20" fill="#E91E63" stroke="#AD1457"/>')
+    r.elements.append(f'<text x="320" y="454" class="value" text-anchor="middle" font-size="8" fill="#FFF">USB</text>')
+    r.elements.append(f'<text x="390" y="452" class="value" font-size="9">VBUS +5V → VSYS</text>')
+    r.elements.append(f'<text x="390" y="467" class="value" font-size="9">D+/D- → RP2040 USB PHY</text>')
+    r.elements.append(f'<text x="390" y="490" class="value" font-size="9">TinyUSB (MicroPython)</text>')
+    r.elements.append(f'<text x="390" y="505" class="value" font-size="9">exposes MIDI class device</text>')
+    r.elements.append(f'<text x="390" y="525" class="value" font-size="8" fill="#666">CDC-ACM optional for debug</text>')
+
+    # Firmware block
+    box(540, 410, 240, 140, "Pico firmware (usbmidi.py)", "#CC6600", "#FFF3E0")
+    r.elements.append(f'<text x="660" y="450" class="value" text-anchor="middle" font-size="9">midi_in → menu / clock /</text>')
+    r.elements.append(f'<text x="660" y="465" class="value" text-anchor="middle" font-size="9">tap tempo / mode switch</text>')
+    r.elements.append(f'<text x="660" y="488" class="value" text-anchor="middle" font-size="9">midi_out ← events from</text>')
+    r.elements.append(f'<text x="660" y="503" class="value" text-anchor="middle" font-size="9">encoder / clock / LPC bridge</text>')
+    r.elements.append(f'<text x="660" y="525" class="value" text-anchor="middle" font-size="8" fill="#666">(to be implemented — issue #TBD)</text>')
+
+    # Bridge to LPC (optional forwarding)
+    r.elements.append(f'<line x1="780" y1="480" x2="830" y2="480" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrow)"/>')
+    box(830, 440, 210, 80, "Optional: forward to LPC", "#0066CC")
+    r.elements.append(f'<text x="935" y="482" class="value" text-anchor="middle" font-size="9">Convert USB-MIDI event →</text>')
+    r.elements.append(f'<text x="935" y="497" class="value" text-anchor="middle" font-size="8">SysEx frame over UART1</text>')
+    r.elements.append(f'<text x="935" y="512" class="value" text-anchor="middle" font-size="8">(so DAW controls synth)</text>')
+
+    # Footer notes
+    r.elements.append(f'<rect x="30" y="625" width="1040" height="60" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append(f'<text x="550" y="645" class="label" text-anchor="middle" font-size="11" fill="#E65100">Design Summary</text>')
+    r.elements.append(f'<text x="55" y="665" class="value" font-size="9">• DIN MIDI IN stays stock (LPC handles it). Pico USB-MIDI is additive — adds a second MIDI port for computer integration.</text>')
+    r.elements.append(f'<text x="55" y="680" class="value" font-size="9">• Optional bridge path: USB-MIDI received by Pico → SysEx frame → LPC → internal MicroBrute MIDI → DAW drives oscillator/filter/VCA remotely.</text>')
+
+    return r.render()
+
+
 def main():
     """Generate all schematics."""
     os.makedirs("schematics", exist_ok=True)
@@ -2851,6 +3297,10 @@ def main():
         ("db9_connector_diagram.svg", generate_db9_connector_diagram),
         ("power_regulation_diagram.svg", generate_power_regulation_diagram),
         ("testpoints_map.svg", generate_testpoints_map),
+        ("jf33_integration_schematic.svg", generate_jf33_integration_schematic),
+        ("dso138_analog_frontend.svg", generate_dso138_analog_frontend),
+        ("expander_power_distribution.svg", generate_expander_power_distribution),
+        ("midi_interface_circuit.svg", generate_midi_interface_circuit),
     ]
     
     for filename, generator in schematics:

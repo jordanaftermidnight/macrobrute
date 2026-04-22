@@ -18,6 +18,8 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 |------|----------|----------|-----------|-------|
 | GP0 | 1 | LPC2361 UART0 TX | OUT | 115200 baud, to LPC RXD1 via level shifter |
 | GP1 | 2 | LPC2361 UART0 RX | IN | 115200 baud, from LPC TXD1 via divider |
+| GP2 | 4 | Daisy I²C1 SDA | I/O | Rear JST-XH header → Daisy Seed @ 0x42, 4.7kΩ pull-up |
+| GP3 | 5 | Daisy I²C1 SCL | OUT | Rear JST-XH header, 100 kHz |
 | GP4 | 6 | OLED I²C0 SDA | I/O | 1.3" SH1106 @ 0x3C |
 | GP5 | 7 | OLED I²C0 SCL | OUT | 400 kHz |
 | GP8 | 11 | RGB LED Red / Clock | OUT | PWM, common-cathode RGB, owned by `leds.LEDManager` |
@@ -36,7 +38,9 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 | VSYS | 39 | +5V input | PWR | From MB +5V via 1N5817 (≈4.7V at VSYS) |
 | GND | 3,8,13,18,23,28,33,38 | Ground | — | Multiple pins |
 
-**Free GPIOs:** GP2, GP3, GP6, GP7, GP11, GP16–20, GP23–25 (13 spare — GP16–20 freed by using I²C OLED instead of SPI)
+**Free GPIOs:** GP6, GP7, GP11, GP16–20, GP23–25 (11 spare — GP2/GP3 reassigned to I²C1 Daisy expansion; GP16–20 freed by using I²C OLED instead of SPI)
+
+**USB-MIDI:** Pico micro-USB enumerates as a USB-MIDI class device via TinyUSB. Separate from the 5-pin DIN path (which stays LPC-only). Firmware hook: `firmware/pico/usbmidi.py` (to be implemented).
 
 ---
 

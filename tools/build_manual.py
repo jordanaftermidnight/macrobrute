@@ -33,6 +33,7 @@ SVG_MAP = {
         "schematics/interconnect_wiring.svg",
         "schematics/db9_connector_diagram.svg",
         "schematics/testpoints_map.svg",
+        "schematics/midi_interface_circuit.svg",
     ],
     "schematics/breakout_pcb.md": [
         "schematics/wiring_output_buffer.svg",
@@ -78,6 +79,7 @@ SVG_MAP = {
         "schematics/expander_sah.svg",
         "schematics/expander_slew.svg",
         "schematics/expander_attenuverter.svg",
+        "schematics/expander_power_distribution.svg",
     ],
     "schematics/CIRCUIT_REVIEW.md": [
         "schematics/led_driver_array_schematic.svg",
@@ -96,6 +98,10 @@ SVG_MAP = {
     ],
     "schematics/jf33_cv_control.md": [
         "schematics/pt2399_cv_control_schematic.svg",
+        "schematics/jf33_integration_schematic.svg",
+    ],
+    "schematics/dso138_input_protection.md": [
+        "schematics/dso138_analog_frontend.svg",
     ],
 }
 

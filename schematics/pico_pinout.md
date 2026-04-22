@@ -35,22 +35,49 @@ RP2040 datasheet for peripheral conflicts.
 | PWM4 | LEDs (clock, gate) | GP8, GP9 |
 | PWM5 | LED (mode) | GP10 |
 
-## Free GPIO (Previously SPI OLED)
+## Free GPIO
 
 | GPIO | Pin# | Available For |
 |------|------|---------------|
-| GP2 | 4 | I2C1 (SDA) — second I2C bus |
-| GP3 | 5 | I2C1 (SCL) — second I2C bus |
+| GP2 | 4 | **I2C1 SDA — Daisy Seed expansion (rear JST-XH header)** |
+| GP3 | 5 | **I2C1 SCL — Daisy Seed expansion (rear JST-XH header)** |
 | GP6 | 9 | General purpose — expansion |
 | GP7 | 10 | General purpose — expansion |
 | GP11 | 15 | General purpose — expansion |
-| GP16 | 21 | Was OLED DC — now free |
-| GP17 | 22 | Was OLED CS — now free |
-| GP18 | 24 | Was OLED SCK — now free |
-| GP19 | 25 | Was OLED MOSI — now free |
-| GP20 | 26 | Was OLED RST — now free |
+| GP16 | 21 | Free |
+| GP17 | 22 | Free |
+| GP18 | 24 | Free |
+| GP19 | 25 | Free |
+| GP20 | 26 | Free |
 
-Potential uses for GP16-GP20: SD card (SPI), extra encoders, expansion header, SPI DAC.
+Potential uses for GP16–GP20: SD card (SPI), extra encoders, expansion header, SPI DAC.
+
+## I²C1 Daisy Seed Expansion (rear header)
+
+The Pico exposes I²C1 on GP2/GP3 to a rear-mounted 4-pin JST-XH header on the
+expander (not panel-visible — accessed with the case open). This lets a Daisy
+Seed module attach as an I²C peripheral for DSP offload (granular, reverb,
+wavetable) while the Pico handles UI/clock.
+
+| JST pin | Signal | Pico side | Notes |
+|---------|--------|-----------|-------|
+| 1 | SDA   | GP2 (pin 4) | 4.7kΩ pull-up to 3.3V on Pico side |
+| 2 | SCL   | GP3 (pin 5) | 4.7kΩ pull-up to 3.3V on Pico side |
+| 3 | +3.3V | Pico 3V3 pin 36 | Only used for header pull-ups; Daisy has its own rail |
+| 4 | GND   | Star ground @ TP72 | Shared reference |
+
+Addresses: OLED @ 0x3C (I²C0) · Daisy @ 0x42 by convention (I²C1) · MPR121 (if
+fitted) @ 0x5A. Bus length < 30cm at 100kHz.
+
+## USB-MIDI (micro-USB)
+
+Pico WH enumerates as a USB-MIDI class device over its micro-USB port via
+TinyUSB. Orthogonal to the LPC2361 bridge — gives the DAW/computer a MIDI
+port named "Macrobrute Pico". Firmware hook: `firmware/pico/usbmidi.py` (to
+be implemented).
+
+Important: Pico does **not** drive 5-pin DIN MIDI at 31250 baud. The stock
+DIN jack goes to the LPC2361 via 6N138 optocoupler (unchanged).
 
 ## Hardware Debounce
 

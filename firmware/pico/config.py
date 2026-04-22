@@ -36,9 +36,18 @@ CLOCK_IN = 21     # GP21 — Clock input (IRQ)
 ADC_0 = 26       # GP26 — ADC0
 ADC_1 = 27       # GP27 — ADC1
 
-# --- Free GPIO (GP16-GP20, previously SPI OLED) ---
-# GP16, GP17, GP18, GP19, GP20 available for future expansion
-# (SD card, extra encoders, expansion header, etc.)
+# --- I2C1 Daisy Seed Expansion (rear JST-XH header) ---
+# Exposes a secondary I2C bus to a Daisy Seed module for DSP offload.
+# Header is mounted behind the expander panel (not panel-visible).
+# Daisy target address: 0x42 by convention (configurable in Daisy firmware).
+DAISY_I2C_ID = 1
+DAISY_SDA = 2       # GP2  — I2C1 SDA
+DAISY_SCL = 3       # GP3  — I2C1 SCL
+DAISY_ADDR = 0x42   # Default Daisy Seed address (user-configurable)
+DAISY_FREQ = 100_000
+
+# --- Free GPIO (GP6, GP7, GP11, GP16–GP20) ---
+# Available for future expansion (SD card, extra encoders, SPI DAC, etc.)
 
 # --- Clock defaults ---
 DEFAULT_BPM = 120
