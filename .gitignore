@@ -48,3 +48,6 @@ firmware/ghidra_decompiled.h
 # Backup files
 *.bak
 *.orig
+
+# Claude Code local state (council logs, etc.)
+.claude/
