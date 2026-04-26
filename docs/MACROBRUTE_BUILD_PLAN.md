@@ -24,7 +24,8 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 | Touch mods | 8 body-contact bends designed; bench-test in Phase 0 → pick 6 |
 | JF-33 delay | **Separate Eurorack module (Phase 7A, optional)** — not inside expander |
 | DSO138 scope | **Separate Eurorack module (Phase 7B, optional)** — LM7809 on hand for +9V regulation |
-| EFFIGY DSP | **Separate Eurorack module (Phase 7C, optional)** — Daisy Seed peer, paired via I²C |
+| EFFIGY DSP | **Separate Eurorack module (Phase 7C, optional)** — Daisy Seed peer, paired via 5-pin rear I²C header (target 0x42, 100 kHz on EFFIGY's I2C4). C header `EFFIGY/firmware/src/macrobrute_bridge.h` is the authoritative protocol source. |
+| Norns Shield | **Anticipated Phase 7D module** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually host an ii-compatible target on a separate front-of-rack I²C bus (suggested address 0x60) and translate ii commands to local state or proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`. |
 | PSU | **Behringer CP1A** Eurorack PSU (±12V + 5V on bus). Pico fed from +5V via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. |
 | Migrated to MB panel | Resonance CV (new jack); reuse MB's existing back-panel Sync In / Gate In / Audio In |
 

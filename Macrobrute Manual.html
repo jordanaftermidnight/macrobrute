@@ -1456,7 +1456,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <summary class="dh"><span class="arr">&#9654;</span>
 <span class="dt">Master Index</span>
 <span class="dp">docs/MACROBRUTE_INDEX.md</span></summary>
-<div class="db"><p><strong>Project:</strong> Arturia MicroBrute Deep Modification <strong>Status:</strong> Design + firmware RE complete. Hardware build: 0% (bench validation next). <strong>Last reconciliation:</strong> 2026-04-22</p>
+<div class="db"><p><strong>Project:</strong> Arturia MicroBrute Deep Modification <strong>Status:</strong> Design + firmware RE complete. Hardware build: 0% (bench validation next). <strong>Last reconciliation:</strong> 2026-04-26 (Phase D — see <code>MACROBRUTE_BUILD_PLAN.md</code>)</p>
 <hr>
 <h2 id="docs-macrobrute-index--start-here">Start Here</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -1531,7 +1531,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 </tr>
 <tr>
 <td>Expander size</td>
-<td><strong>42HP</strong></td>
+<td><strong>17HP</strong> (87 × 128.5 mm — fits user&#x27;s pre-cut panel blank)</td>
 </tr>
 <tr>
 <td>JF-33 delay</td>
@@ -1561,7 +1561,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <h3 id="docs-macrobrute-index--kicad-kicad">KiCad (<code>kicad/</code>)</h3>
 <ul><li><code>breakout/</code> — internal breakout PCB schematic</li><li><code>expander/</code> — 42HP Eurorack expander module</li><li><code>jf33/</code> — JF-33 delay CV control (Phase 7A)</li><li><code>dso_input/</code> — DSO138 input protection (Phase 7B)</li></ul>
 <h3 id="docs-macrobrute-index--panel-panel">Panel (<code>panel/</code>)</h3>
-<ul><li><code>microbrute_panel_template.svg</code> — MB drilling template</li><li><code>expander_42hp.svg</code> — expander panel layout</li></ul>
+<ul><li><code>microbrute_panel_template.svg</code> — MB drilling template</li><li><code>expander_17hp.svg</code> — current 17HP expander panel template (87 × 128.5 mm)</li></ul>
 <h3 id="docs-macrobrute-index--mods-docs-mods">Mods (<code>docs/mods/</code>)</h3>
 <ul><li><code>touch_bend_specs.md</code> — 8 circuit bends with specs (select 6)</li><li><code>microbrute_mods_guide.md</code> — standard mods reference</li><li><code>microbrute_circuit_bending_guide.md</code> — body contacts, shorts</li><li><code>deep_circuit_bending.md</code> — advanced techniques</li><li><code>ultimate_microbrute_project.md</code> — comprehensive overview</li></ul>
 <h3 id="docs-macrobrute-index--tools-tools">Tools (<code>tools/</code>)</h3>
@@ -3102,7 +3102,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <hr>
 <h2 id="hardware-macrobrute-bom--part-6-purchasing-strategy">PART 6: PURCHASING STRATEGY</h2>
 <h3 id="hardware-macrobrute-bom--order-1-tme-eu-fast-shipping">Order 1: TME (EU, fast shipping)</h3>
-<ul><li>All resistors, capacitors, diodes</li><li>TL072, TL074, LM13700, CD4066, CD4017, CD4024</li><li>BC547, BC557, 2N3906</li><li>IC sockets</li><li>Ferrite beads, MLCCs</li></ul>
+<ul><li>All resistors, capacitors, diodes (including the 3-part Pico filter: 1N5817 + 100µF/10V + 100nF)</li><li>TL072 (slew limiter), TL074 (MB-side buffers), CD40106 (gate Schmitt), CD4049UBE (level shifter)</li><li>BC547, BC557, 2N3906, 2N3904 (vactrol driver, gate buffer)</li><li>IC sockets, ferrite beads, MLCCs</li><li>~~LM13700, CD4066, CD4017, CD4024~~ — <strong>dropped</strong> (utilities moved to firmware or covered by rack modules)</li></ul>
 <h3 id="hardware-macrobrute-bom--order-2-thonk-uk">Order 2: Thonk (UK)</h3>
 <ul><li>Thonkiconn jacks (all)</li><li>9mm pots</li><li>Knobs</li></ul>
 <h3 id="hardware-macrobrute-bom--order-3-aliexpress-china-budget">Order 3: AliExpress (China, budget)</h3>
@@ -4057,8 +4057,9 @@ MJ-401-5,1</code></pre>
 </tr>
 </tbody></table></div>
 <hr>
-<h2 id="docs-macrobrute-mod-selection--build-expander-42hp-eurorack">BUILD — Expander (42HP Eurorack)</h2>
-<h3 id="docs-macrobrute-mod-selection--utility-circuits">Utility Circuits</h3>
+<h2 id="docs-macrobrute-mod-selection--build-expander-17hp-eurorack-87-128-5-mm">BUILD — Expander (17HP Eurorack — 87 × 128.5 mm)</h2>
+<p>The expander is now minimal. Most utilities have been moved off it because the user already has equivalent modules in the rack. See <code>MACROBRUTE_CONNECTION_MAP.md §10</code> for the canonical layout.</p>
+<h3 id="docs-macrobrute-mod-selection--hardware-utility-on-the-expander">Hardware utility on the expander</h3>
 <div class="table-wrap"><table><thead><tr>
 <th>Circuit</th>
 <th>IC</th>
@@ -4066,52 +4067,66 @@ MJ-401-5,1</code></pre>
 <th>Panel Controls</th>
 </tr></thead><tbody>
 <tr>
+<td>Slew limiter</td>
+<td>TL072 (1 section)</td>
+<td>2× 1N4148 (rise/fall steering), 1µF timing cap</td>
+<td>1× 1MΩ rate pot, 2 jacks (in, out)</td>
+</tr>
+</tbody></table></div>
+<h3 id="docs-macrobrute-mod-selection--firmware-only-utilities-no-analog-hardware">Firmware-only utilities (no analog hardware)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Function</th>
+<th>Pico GPIO</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr id="gp-16">
+<td>Clock divider</td>
+<td><a class="ref gp" href="#gp-16">GP16</a>, <a class="ref gp" href="#gp-17">GP17</a>, <a class="ref gp" href="#gp-18">GP18</a></td>
+<td>Configurable ratios — defaults ÷2 ÷4 ÷8. Replaces CD4024 chip.</td>
+</tr>
+<tr id="gp-19">
+<td>Programmable aux outputs ×4</td>
+<td><a class="ref gp" href="#gp-19">GP19</a>, <a class="ref gp" href="#gp-20">GP20</a>, <a class="ref gp" href="#gp-6">GP6</a>, <a class="ref gp" href="#gp-7">GP7</a></td>
+<td>Modes: TAP_DIV / EUCLID / RANDOM / PASSTHRU / PWM_CV. PWM-capable.</td>
+</tr>
+<tr id="gp-12">
+<td>Tap button (with manual gate hold)</td>
+<td><a class="ref gp" href="#gp-12">GP12</a></td>
+<td>Short = tempo, long = gate. Replaces standalone manual-gate circuit.</td>
+</tr>
+</tbody></table></div>
+<h3 id="docs-macrobrute-mod-selection--dropped-from-this-build-covered-by-user-s-existing-rack-modules">Dropped from this build (covered by user&#x27;s existing rack modules)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Originally planned</th>
+<th>What replaces it</th>
+</tr></thead><tbody>
+<tr>
 <td>White noise</td>
-<td>2N3904 + TL072</td>
-<td>2x470K bias, 4.7M/100K gain</td>
-<td>1 jack out</td>
+<td>NOISE module already in rack</td>
 </tr>
 <tr>
 <td>LFO (tri+sqr)</td>
-<td>TL072</td>
-<td>1uF timing, 1M rate pot</td>
-<td>1 rate pot, 2 jacks out</td>
-</tr>
-<tr>
-<td>Clock divider</td>
-<td>CD4024 + 78L05</td>
-<td>/2/4/8 outputs, reset button</td>
-<td>3+ jacks out, 1 button</td>
+<td>Tryfelo (3 general-purpose LFOs)</td>
 </tr>
 <tr>
 <td>Sample &amp; Hold</td>
-<td>LF398 or CD4051</td>
-<td>1nF polystyrene hold cap</td>
-<td>2 jacks in, 1 jack out</td>
-</tr>
-<tr>
-<td>Slew limiter</td>
-<td>TL072</td>
-<td>1M rise/fall pots, 1uF timing</td>
-<td>2 pots, 1 jack in/out</td>
+<td>RND CV module</td>
 </tr>
 <tr>
 <td>Attenuverter 2ch</td>
-<td>TL072</td>
-<td>100K matched 1%, center-detent</td>
-<td>2 pots, 2 jacks in/out</td>
+<td>MMI Matrix mixer covers attenuvert routing</td>
 </tr>
 <tr>
 <td>Buffered mult</td>
-<td>TL074 or Bastl passive</td>
-<td>1K series output R</td>
-<td>1 jack in, 3 jacks out</td>
+<td>&#x27;07 MULT module</td>
 </tr>
 <tr>
-<td>Gate button</td>
-<td>CD40106</td>
-<td>Momentary + LED</td>
-<td>1 button, 1 LED, 1 jack out</td>
+<td>Manual gate button</td>
+<td>Folded into the tap button (long-hold mode)</td>
+</tr>
+<tr id="gp-16">
+<td>Clock divider chip</td>
+<td>Moved to firmware (<a class="ref gp" href="#gp-16">GP16</a>/17/18)</td>
 </tr>
 </tbody></table></div>
 <h3 id="docs-macrobrute-mod-selection--patchbay-from-db-9">Patchbay (from DB-9)</h3>
@@ -4518,7 +4533,11 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 </tr>
 <tr>
 <td>EFFIGY DSP</td>
-<td><strong>Separate Eurorack module (Phase 7C, optional)</strong> — Daisy Seed peer, paired via I²C</td>
+<td><strong>Separate Eurorack module (Phase 7C, optional)</strong> — Daisy Seed peer, paired via 5-pin rear I²C header (target 0x42, 100 kHz on EFFIGY&#x27;s I2C4). C header <code>EFFIGY/firmware/src/macrobrute_bridge.h</code> is the authoritative protocol source.</td>
+</tr>
+<tr>
+<td>Norns Shield</td>
+<td><strong>Anticipated Phase 7D module</strong> — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually host an ii-compatible target on a separate front-of-rack I²C bus (suggested address 0x60) and translate ii commands to local state or proxied EFFIGY register writes. See <code>docs/MACROBRUTE_NORNS_BRIDGE.md</code>.</td>
 </tr>
 <tr>
 <td>PSU</td>
@@ -5190,7 +5209,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <span class="dt">Complete Connection Map</span>
 <span class="dp">docs/MACROBRUTE_CONNECTION_MAP.md</span></summary>
 <div class="db"><p>Every signal, mod, bend, and wire in the system. This is the master wiring reference for building, debugging, and expanding.</p>
-<p><strong>Connector:</strong> 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND) <strong>OLED:</strong> <strong>0.96&quot; SSD1306 I²C 128×64</strong> main display on expander (driver <code>OLED_I2C</code> in <code>firmware/pico/display.py</code>, <code>OLED_CHIP=&quot;SSD1306&quot;</code>). Plus a <strong>0.91&quot; SSD1306 128×32</strong> strip on the MB panel sharing the same I²C0 bus at 0x3D. Fallback chips: 1.3&quot; SH1106 (set <code>OLED_CHIP=&quot;SH1106&quot;</code>), 16×2 1602 I²C LCD. <strong>MIDI path:</strong> Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico. <strong>Firmware:</strong> Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)</p>
+<p><strong>Connector:</strong> 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND) <strong>OLED:</strong> <strong>0.96&quot; SSD1306 I²C 128×64</strong> main display on expander (driver <code>OLED_I2C</code> in <code>firmware/pico/display.py</code>, <code>OLED_CHIP=&quot;SSD1306&quot;</code>). Plus a <strong>0.91&quot; SSD1306 128×32</strong> strip on the MB panel sharing the same I²C0 bus at 0x3D. Fallback chips: 1.3&quot; SH1106 (set <code>OLED_CHIP=&quot;SH1106&quot;</code>), 16×2 1602 I²C LCD. <strong>MIDI path:</strong> Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico. <strong>Firmware:</strong> Pico WH MicroPython (14 modules + <code>_effigy_constants.py</code> generated from EFFIGY&#x27;s C header), LPC2361 ARM7 (stock + planned bridge extension)</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--1-pico-wh-gpio-allocation">1. Pico WH GPIO Allocation</h2>
 <p>Canonical source: <code>firmware/pico/config.py</code>. Update this table AND that file together.</p>
@@ -5947,8 +5966,9 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 </tr>
 </tbody></table></div>
 <hr>
-<h2 id="docs-macrobrute-connection-map--8-touch-bolts-6-selected-from-8-tested">8. Touch Bolts (6 selected from 8 tested)</h2>
-<p>All bolts: M3 brass, 6mm panel hole, 18-20mm spacing between bolts. Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GND.</p>
+<h2 id="docs-macrobrute-connection-map--8-touch-bolts-8-designed-6-to-be-selected-after-phase-0-testing">8. Touch Bolts (8 designed → 6 to be selected after Phase 0 testing)</h2>
+<p>All bolts: M3 brass, 6mm panel hole, 18–20mm spacing between bolts. Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GND.</p>
+<p>The table below lists all 8 designed bend points. Final selection of 6 happens after Phase 0 bench testing — pick the most musically useful and least destructive on real hardware.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>ID</th>
 <th>Name</th>
@@ -6088,86 +6108,124 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 </tr>
 </tbody></table></div>
 <hr>
-<h2 id="docs-macrobrute-connection-map--10-expander-42hp-eurorack">10. Expander (42HP, Eurorack)</h2>
-<h3 id="docs-macrobrute-connection-map--module-list">Module List</h3>
+<h2 id="docs-macrobrute-connection-map--10-expander-17hp-eurorack-87-128-5-mm-panel">10. Expander (17HP Eurorack — 87 × 128.5 mm panel)</h2>
+<p>The expander is <strong>minimal by design.</strong> It hosts the Pico WH, the user interface (main OLED + encoder + tap button + RGB LED), the I/O between MicroBrute and the rack, and exactly one analog utility (slew limiter). All other utilities the user already has as separate Eurorack modules in their rack — see <code>MACROBRUTE_BUILD_PLAN.md</code> for the rationale.</p>
+<h3 id="docs-macrobrute-connection-map--hardware-utilities-on-the-expander">Hardware utilities on the expander</h3>
 <div class="table-wrap"><table><thead><tr>
 <th>#</th>
 <th>Module</th>
-<th>Board Size</th>
+<th>Footprint</th>
 <th>ICs</th>
 <th>Jacks</th>
 <th>Pots</th>
 </tr></thead><tbody>
 <tr>
 <td>1</td>
-<td>Buffered mult (1→3)</td>
-<td>25×15mm</td>
-<td>TL074 (3 sections)</td>
-<td>4</td>
+<td>Slew limiter</td>
+<td>30×15 mm</td>
+<td>TL072 (1 section) + 2× 1N4148 (rise/fall steering)</td>
+<td>2 (in, out)</td>
+<td>1× 1MΩ rate</td>
+</tr>
+</tbody></table></div>
+<h3 id="docs-macrobrute-connection-map--firmware-only-utilities-no-hardware-on-the-expander">Firmware-only utilities (no hardware on the expander)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>#</th>
+<th>Module</th>
+<th>Pico GPIO</th>
+<th>Pin layout</th>
+</tr></thead><tbody>
+<tr id="gp-16">
+<td>1</td>
+<td>Clock divider (3 outputs, configurable ratios — default ÷2 ÷4 ÷8)</td>
+<td><a class="ref gp" href="#gp-16">GP16</a>, <a class="ref gp" href="#gp-17">GP17</a>, <a class="ref gp" href="#gp-18">GP18</a></td>
+<td>3 panel jacks</td>
+</tr>
+<tr id="gp-19">
+<td>2</td>
+<td>Programmable aux outputs (4 channels — TAP_DIV / EUCLID / RANDOM / PASSTHRU / PWM_CV)</td>
+<td><a class="ref gp" href="#gp-19">GP19</a>, <a class="ref gp" href="#gp-20">GP20</a>, <a class="ref gp" href="#gp-6">GP6</a>, <a class="ref gp" href="#gp-7">GP7</a></td>
+<td>4 panel jacks</td>
+</tr>
+</tbody></table></div>
+<h3 id="docs-macrobrute-connection-map--dropped-from-the-expander-covered-elsewhere-in-the-rack">Dropped from the expander (covered elsewhere in the rack)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Originally planned</th>
+<th>What replaces it</th>
+</tr></thead><tbody>
+<tr>
+<td>Buffered mult (TL074)</td>
+<td>User&#x27;s existing <strong>&#x27;07 MULT</strong> module</td>
+</tr>
+<tr>
+<td>White noise gen (2N3904 + TL072)</td>
+<td>User&#x27;s existing <strong>NOISE</strong> module</td>
+</tr>
+<tr>
+<td>LFO (TL072 + CD40106)</td>
+<td>User&#x27;s existing <strong>Tryfelo</strong> (<code>st-modular.de/modules/tryfelo</code>) — has 3 general-purpose LFOs</td>
+</tr>
+<tr>
+<td>Sample &amp; Hold (LF398)</td>
+<td>User&#x27;s existing <strong>RND CV</strong> module</td>
+</tr>
+<tr>
+<td>Attenuverter (TL072 + center-detent pots)</td>
+<td>User&#x27;s existing <strong>MMI Matrix</strong> mixer covers the routing role</td>
+</tr>
+<tr>
+<td>Manual gate button (CD40106)</td>
+<td>Tap button on the expander now does double duty — short press = tempo, long-hold = manual gate</td>
+</tr>
+<tr>
+<td>Clock divider chip (CD4024)</td>
+<td><strong>Replaced by firmware</strong> — 3 GPIO outputs at configurable ratios</td>
+</tr>
+</tbody></table></div>
+<h3 id="docs-macrobrute-connection-map--expander-panel-layout-top-to-bottom">Expander panel layout (top to bottom)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Row</th>
+<th>Element</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Title strip</td>
+<td>&quot;MACROBRUTE&quot; silkscreen</td>
 <td>—</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Main OLED — 0.96&quot; SSD1306</td>
+<td>I²C0 @ 0x3C (shared bus with strip OLED on MB panel @ 0x3D)</td>
 </tr>
 <tr>
 <td>2</td>
-<td>White noise</td>
-<td>30×20mm</td>
-<td>TL072 (1 section) + 2N3904</td>
-<td>1 out</td>
-<td>—</td>
+<td>HW-040 encoder + tap button + RGB LED</td>
+<td>Encoder = menu nav · Tap = tempo/gate · RGB = status</td>
 </tr>
 <tr>
 <td>3</td>
-<td>LFO (tri+sqr)</td>
-<td>40×20mm</td>
-<td>TL072 (both sections)</td>
-<td>2 out</td>
-<td>1MΩ rate</td>
+<td>Clock IN, Clock OUT jacks</td>
+<td>3.5 mm Thonkiconn</td>
 </tr>
-<tr>
+<tr id="gp-16">
 <td>4</td>
-<td>Clock divider (/2/4/8)</td>
-<td>30×15mm</td>
-<td>CD4024 + CD40106</td>
-<td>4 (in + 3 out)</td>
-<td>—</td>
+<td>Clock divider outputs ÷2, ÷4, ÷8</td>
+<td>Firmware-driven (<a class="ref gp" href="#gp-16">GP16</a>/17/18)</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Sample &amp; Hold</td>
-<td>25×15mm</td>
-<td>LF398</td>
-<td>3 (sig, clk, out)</td>
-<td>—</td>
+<td>Slew IN, Slew OUT, RATE pot</td>
+<td>The only analog utility on the panel</td>
 </tr>
 <tr>
 <td>6</td>
-<td>Slew limiter</td>
-<td>30×15mm</td>
-<td>TL072 (1 section)</td>
-<td>2 (in, out)</td>
-<td>2× 1MΩ rise/fall</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Attenuverter (2ch)</td>
-<td>30×20mm</td>
-<td>TL072 (both sections)</td>
-<td>4 (2in, 2out)</td>
-<td>2× 100kΩ center-detent</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Manual gate button</td>
-<td>15×10mm</td>
-<td>— (or shared CD40106)</td>
-<td>1 out</td>
-<td>—</td>
+<td>Aux 1, Aux 2, Aux 3, Aux 4</td>
+<td>Programmable, PWM-capable</td>
 </tr>
 </tbody></table></div>
-<h3 id="docs-macrobrute-connection-map--expander-panel-jacks-patchbay">Expander Panel Jacks (Patchbay)</h3>
-<p><strong>Output jacks (from DB-9 A, buffered):</strong> Saw, Square, VCO Mix, VCF Out, Gate, Pitch CV, Envelope, LFO</p>
-<p><strong>Input jacks (to DB-9 B, attenuated):</strong> Filter CV, VCA CV, Resonance CV, Sync, Gate In, Ext Audio</p>
-<p><strong>Utility jacks:</strong> Noise Out, LFO Tri, LFO Sqr, Clock /2, Clock /4, Clock /8, S&amp;H Out, Slew Out, Atten Out ×2, Mult Out ×3, Manual Gate</p>
-<p><strong>Total: ~31 Thonkiconn jacks</strong></p>
+<p><strong>Total panel jacks: 14</strong> (clock I/O × 2, divider outs × 3, slew × 2, aux × 4 — plus 3 holes for OLED/encoder/tap and 1 RGB LED hole).</p>
+<p><strong>Behind the panel:</strong> Pico WH on a small sub-board, 3-part Pico power filter (1N5817 + 100µF + 100nF), shared I²C0 pull-ups for both OLEDs, 2× DB-9 connectors for the link to MicroBrute, and the 5-pin JST-XH rear header for the EFFIGY pair bus.</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--11-ground-strategy">11. Ground Strategy</h2>
 <ul><li><strong>Star ground</strong> at DB-9 connectors (pin 9 on both A and B)</li><li>Single ground path between MicroBrute and Eurorack via DB-9</li><li>Power GND returns through DB-9 B:9</li><li>Shield/chassis ground via DB-9 shell only</li><li><strong>If hum:</strong> 100nF ceramic in series with DB-9 GND pin</li><li><strong>If persistent:</strong> Isolation transformer available (46.9/82.4Ω windings)</li><li><strong>NEVER</strong> connect MB chassis to expander chassis via separate path</li></ul>

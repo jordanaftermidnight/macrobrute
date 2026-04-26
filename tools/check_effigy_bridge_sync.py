@@ -17,7 +17,10 @@ import re
 import sys
 from pathlib import Path
 
-PYTHON_PATH = Path(__file__).resolve().parent.parent / "firmware/pico/effigy_bridge.py"
+PYTHON_PATHS = [
+    Path(__file__).resolve().parent.parent / "firmware/pico/effigy_bridge.py",
+    Path(__file__).resolve().parent.parent / "firmware/pico/_effigy_constants.py",
+]
 C_HEADER_PATH = Path(__file__).resolve().parent.parent.parent / "EFFIGY/firmware/src/macrobrute_bridge.h"
 
 
@@ -83,8 +86,8 @@ NAME_MAP = {
 }
 
 
-def parse_python_registers(path: Path) -> dict[str, int]:
-    return parse_python_prefix(path, "REG")
+def parse_python_registers(paths: list[Path]) -> dict[str, int]:
+    return parse_python_prefix(paths, "REG")
 
 
 def parse_c_namespace(path: Path, namespace: str) -> dict[str, int]:
@@ -109,11 +112,20 @@ def parse_c_namespace(path: Path, namespace: str) -> dict[str, int]:
     return {name: int(val, 16) for name, val in pat.findall(body)}
 
 
-def parse_python_prefix(path: Path, prefix: str) -> dict[str, int]:
-    """Parse `NAME = const(0xXX)` (or `= 0xXX`) for a given name prefix."""
-    text = path.read_text()
+def parse_python_prefix(paths: list[Path], prefix: str) -> dict[str, int]:
+    """Parse `NAME = const(0xXX)` for a given prefix across one or more files.
+
+    Constants in MACROBRUTE-side firmware live in `_effigy_constants.py`
+    (generated) and are re-exported by `effigy_bridge.py` via wildcard import,
+    so we look in both files.
+    """
     pat = re.compile(rf"^({prefix}_[A-Z0-9_]+)\s*=\s*(?:const\()?\s*(0x[0-9a-fA-F]+)", re.M)
-    return {name: int(val, 16) for name, val in pat.findall(text)}
+    out: dict[str, int] = {}
+    for path in paths:
+        if path.exists():
+            for name, val in pat.findall(path.read_text()):
+                out[name] = int(val, 16)
+    return out
 
 
 EVENT_NAME_MAP = {
@@ -162,17 +174,17 @@ def cross_check(py_values: dict[str, int],
 
 
 def main() -> int:
-    if not PYTHON_PATH.exists():
-        print(f"FAIL: missing {PYTHON_PATH}")
+    if not any(p.exists() for p in PYTHON_PATHS):
+        print(f"FAIL: missing {PYTHON_PATHS[0]}")
         return 1
     if not C_HEADER_PATH.exists():
         print(f"INFO: sibling EFFIGY project not present at {C_HEADER_PATH}")
         print("      Skipping cross-check.")
         return 0
 
-    py_regs   = parse_python_registers(PYTHON_PATH)
-    py_events = parse_python_prefix(PYTHON_PATH, "EVENT")
-    py_errs   = parse_python_prefix(PYTHON_PATH, "ERR")
+    py_regs   = parse_python_registers(PYTHON_PATHS)
+    py_events = parse_python_prefix(PYTHON_PATHS, "EVENT")
+    py_errs   = parse_python_prefix(PYTHON_PATHS, "ERR")
 
     c_regs   = parse_c_namespace(C_HEADER_PATH, "reg")
     c_events = parse_c_namespace(C_HEADER_PATH, "event")

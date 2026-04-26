@@ -1,9 +1,20 @@
 # MACROBRUTE ↔ EFFIGY Bridge Protocol
 
-**Status:** v1 draft (2026-04-26). Authoritative shared contract.
+**Status:** frozen (2026-04-26).
 **Scope:** Defines the I²C peer-pairing protocol between the MACROBRUTE expander
 (Raspberry Pi Pico WH, MicroPython) and the EFFIGY DSP module (Daisy Seed,
 libDaisy C++). Both projects implement to this document.
+
+**Authoritative source:** [`EFFIGY/firmware/src/macrobrute_bridge.h`](../../EFFIGY/firmware/src/macrobrute_bridge.h)
+is the single source of truth for register addresses, event types, and error
+codes. The MACROBRUTE Pico-side firmware imports the same numeric values from
+[`firmware/pico/_effigy_constants.py`](../firmware/pico/_effigy_constants.py),
+which is generated from the C header by [`tools/sync_effigy_constants.py`](../tools/sync_effigy_constants.py).
+**Do not hand-edit either Python constants file.** Re-run the generator when
+the C header changes; commit the result.
+
+EFFIGY-side adoption notes live at
+[`EFFIGY/firmware/docs/MACROBRUTE_BRIDGE_ADOPTION.md`](../../EFFIGY/firmware/docs/MACROBRUTE_BRIDGE_ADOPTION.md).
 
 ---
 
@@ -28,14 +39,22 @@ slow CV (~100 Hz update rate), events, telemetry, and coordination only.
 
 | Pin | Signal | MACROBRUTE side | EFFIGY side |
 |-----|--------|-----------------|-------------|
-| 1 | SDA | Pico GP2 (I²C1) | Daisy free I²C peripheral SDA (I2C1 is OLED on EFFIGY — use I2C2/3) |
-| 2 | SCL | Pico GP3 (I²C1) | Daisy free I²C peripheral SCL |
-| 3 | INT | Pico GP11 (input, pull-up) | Daisy GPIO (open-drain output, active-low) |
+| 1 | SDA | Pico GP2 (I²C1) | Daisy D14 (PB7, I2C4 SDA, AF6) |
+| 2 | SCL | Pico GP3 (I²C1) | Daisy D13 (PB6, I2C4 SCL, AF6) |
+| 3 | INT | Pico GP11 (input, pull-up) | Daisy D15 (PC0, open-drain output, active-low) |
 | 4 | +3.3V | Pico 3V3 (header pull-ups only) | not connected on EFFIGY side |
 | 5 | GND | star ground | shared reference |
 
 Cable: shielded twisted pair recommended, < 30 cm length.
 Pull-ups: 4.7 kΩ on SDA and SCL to +3.3V, located on the MACROBRUTE side only.
+
+**EFFIGY peripheral note (informational):** Daisy Seed's I2C4 is the only
+header-routable I²C peripheral on the user header (I2C1 is consumed by the
+panel SH1106 OLED; I2C2/I2C3 SCL/SDA pins aren't bonded out). libDaisy
+currently has no DMA path for I2C4 — fine at 100 kHz with ≤4-byte
+transactions but worth knowing if anyone benchmarks. See
+[EFFIGY's adoption doc §"I²C peripheral choice"](../../EFFIGY/firmware/docs/MACROBRUTE_BRIDGE_ADOPTION.md)
+for full reasoning.
 
 ### 2.2 Electrical
 
@@ -205,15 +224,24 @@ to 0x81 / 0x82 / 0x83.
 
 ### 6.1 MACROBRUTE side (Pico WH, MicroPython)
 
-- Module: `firmware/pico/effigy_bridge.py`
+- Driver: `firmware/pico/effigy_bridge.py`
+- Constants: `firmware/pico/_effigy_constants.py` — **generated** by
+  `tools/sync_effigy_constants.py` from EFFIGY's C header. The driver
+  re-exports those constants via `from _effigy_constants import *` so
+  callers can keep using `effigy_bridge.REG_MASS` etc.
 - I²C bus: `I2C(1, sda=Pin(2), scl=Pin(3), freq=100_000)`
 - INT pin: `Pin(11, Pin.IN, Pin.PULL_UP)` with falling-edge IRQ
 - Pull-ups: physical 4.7 kΩ on SDA and SCL to 3V3 — required even though Pico
-  has internal pull-ups, because the Daisy side may not.
-- All register addresses defined as module-level constants with the same
-  numeric values as the EFFIGY C header.
+  has internal pull-ups, because the Daisy side intentionally does not pull up.
 - Parameter writes are non-blocking (queued). Reads are blocking but bounded
   by the 100 kHz bus speed — a 12-byte `ENGINE_NAME` read is ~1.2 ms.
+
+**Sync workflow:** When the C header changes (new register, renamed field,
+etc.), run `python3 tools/sync_effigy_constants.py` to regenerate the Python
+constants file, then commit both. CI / pre-commit can run
+`python3 tools/sync_effigy_constants.py --check` to fail if the generated
+file is stale, and `python3 tools/check_effigy_bridge_sync.py` to verify
+end-to-end agreement.
 
 ### 6.2 EFFIGY side (Daisy Seed, libDaisy C++)
 
@@ -258,9 +286,41 @@ displays "EFFIGY incompatible" and stays in solo mode.
 
 ---
 
-## 8. Reference: opposing-side companions
+## 8. Three-module topology — Norns Shield (anticipated)
+
+EFFIGY's `FIRMWARE_SPEC.md §13.8` describes a planned third module: a custom
+Eurorack build of the **monome Norns Shield** (Pi 3B+ + audio HAT + monome
+software stack). The chain is **Norns → MACROBRUTE → EFFIGY**, not a mesh —
+EFFIGY's pair-bus contract does not change to accommodate Norns.
+
+What MACROBRUTE will gain when Norns lands (planned, Phase 7D):
+
+- A second I²C peripheral in **target** mode on a front-of-rack header,
+  presenting an **ii-compatible (monome) target** to Norns. Address
+  conventionally **0x60** (clear of Crow 0x70, Just Friends 0x68, Teletype
+  0x69, W/ 0x65–0x67, Faderbank 0x34).
+- A **translator layer**: incoming ii commands map either to local
+  MACROBRUTE state (`ii.macrobrute.set('mass', 0.5)`) or to outbound writes
+  on EFFIGY's pair-bus registers (`ii.macrobrute.effigy_set('mass', 0.5)`).
+- A **Link clock republisher**: Norns publishes Link tempo + tick on its ii
+  bus; MACROBRUTE consumes those messages and writes `CLOCK_BPM` (0x91) +
+  pulses `CLOCK_TICK` (0x90) on EFFIGY's pair bus at musical resolution.
+
+End-to-end Link → EFFIGY-grain-trigger latency: Norns Link offset (~1 ms)
+plus two I²C hops (~1 ms total). Well inside any musical jitter budget.
+
+**Implementation conflict to resolve before Phase 7D:** the current Pico
+allocation has I²C0 (GP4/GP5) consumed by the OLED bus and I²C1 (GP2/GP3)
+by the EFFIGY pair bus — both RP2040 hardware I²C peripherals are already
+in use. The ii target will need a third I²C bitbanged via PIO on spare
+GPIOs (GP6/GP7 candidate; both currently assigned to aux outputs). This is
+a Phase 7D decision, not a Phase 0 concern. See the forthcoming
+`docs/MACROBRUTE_NORNS_BRIDGE.md` for the full plan.
+
+## 9. Reference: opposing-side companions
 
 This document is mirrored on the EFFIGY side as
-`EFFIGY/docs/MACROBRUTE_BRIDGE_ADOPTION.md` (when produced). Both sides
-maintain the same register map; the C and Python constant headers must agree
-numerically. Drift is an integration bug.
+[`EFFIGY/firmware/docs/MACROBRUTE_BRIDGE_ADOPTION.md`](../../EFFIGY/firmware/docs/MACROBRUTE_BRIDGE_ADOPTION.md).
+Both sides agree on the C header as authoritative; the Python constants
+file is generated. Drift is an integration bug — run
+`tools/check_effigy_bridge_sync.py` to catch it.

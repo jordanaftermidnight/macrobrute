@@ -2,11 +2,13 @@
 
 Implements the register-file protocol defined in docs/MACROBRUTE_EFFIGY_BRIDGE.md.
 EFFIGY is the I²C target at address 0x42; this module reads/writes its register
-map and drains its event queue when INT fires.
+map and drains its event queue when INT (active-low, open-drain) fires.
 
-This is a SKELETON. Network framing, error handling, and pair lifecycle are in
-place; DSP-side parameter application happens in caller code (menu.py adapters
-write to the appropriate registers).
+The register addresses, event types, and error codes are NOT hand-maintained
+here — they are imported from `_effigy_constants.py`, which is generated from
+EFFIGY's authoritative C header (`EFFIGY/firmware/src/macrobrute_bridge.h`)
+by `tools/sync_effigy_constants.py`. Re-run that script when the C header
+changes; never edit `_effigy_constants.py` by hand.
 """
 
 from machine import I2C, Pin
@@ -15,91 +17,13 @@ import time
 
 import config
 
-# ---------------------------------------------------------------------------
-# Register addresses — must match docs/MACROBRUTE_EFFIGY_BRIDGE.md §4 exactly.
-# Same numeric values as src/macrobrute_bridge.h on the EFFIGY side.
-# ---------------------------------------------------------------------------
-
-# Device / pair management
-REG_DEVICE_ID        = const(0x00)  # 8 bytes "EFFIGY1\0"
-REG_FW_VERSION_MAJOR = const(0x01)
-REG_FW_VERSION_MINOR = const(0x02)
-REG_CAPABILITIES     = const(0x03)  # 4 bytes bitfield
-REG_HEARTBEAT        = const(0x0F)  # ticks every 100 ms
-
-# Parameter control (controller writes)
-REG_MASS              = const(0x10)
-REG_ENTROPY           = const(0x11)
-REG_POSITION          = const(0x12)
-REG_TEXTURE           = const(0x13)
-REG_MIX               = const(0x14)
-REG_FOLD              = const(0x15)
-REG_FILTER            = const(0x16)
-REG_REVERB            = const(0x17)
-REG_CRUSH             = const(0x18)
-REG_DESTRUCTION_MACRO = const(0x19)
-REG_ENGINE_INDEX      = const(0x1A)
-REG_HARMONIZER_INT    = const(0x1B)
-REG_MICRO_LFO_RATE    = const(0x1C)
-REG_ENV_SHAPE         = const(0x1D)
-REG_TRIG_VOICE_1      = const(0x30)
-REG_FREEZE            = const(0x31)
-REG_PANEL_OVERRIDE    = const(0x32)
-
-# State telemetry (controller reads)
-REG_LEVEL_L           = const(0x40)
-REG_LEVEL_R           = const(0x41)
-REG_CLIP_FLAGS        = const(0x42)
-REG_ENGINE_NAME       = const(0x43)  # 12 bytes
-REG_PRESET_SLOT       = const(0x44)
-REG_CPU_LOAD          = const(0x45)
-REG_GRAIN_BUFFER_FILL = const(0x46)
-REG_FREEZE_STATE      = const(0x47)
-REG_ENV_STAGE         = const(0x48)
-REG_CV_OUT_1_VALUE    = const(0x49)  # 2 bytes signed
-REG_CV_OUT_2_VALUE    = const(0x4A)
-
-# Event queue — INT-driven async
-REG_EVENT_COUNT = const(0x60)
-REG_EVENT_POP   = const(0x61)  # 4 bytes per pop
-REG_EVENT_CLEAR = const(0x62)
-
-# Routing / coordination
-REG_PAIR_ACTIVE     = const(0x80)
-REG_CLOCK_MASTER    = const(0x81)
-REG_MENU_OWNER      = const(0x82)
-REG_FOCUS_OWNER     = const(0x83)
-REG_CLOCK_TICK      = const(0x90)
-REG_CLOCK_BPM       = const(0x91)  # 2 bytes, BPM × 10
-REG_TRANSPORT_STATE = const(0x92)
-REG_PRESET_RECALL   = const(0x93)
-
-# Cross-modulation
-REG_SRC_COUNT = const(0xA0)
-REG_SRC_NAME  = const(0xA1)  # 8 bytes per source name, indices 0–14
-
-# Diagnostics
-REG_ERROR_STATUS = const(0xF0)
-REG_RESET_BRIDGE = const(0xFF)
-
-# Event types (first byte returned by EVENT_POP)
-EVENT_ENCODER = const(0x01)
-EVENT_BUTTON  = const(0x02)
-EVENT_PRESET  = const(0x03)
-EVENT_ENGINE  = const(0x04)
-EVENT_CLIP    = const(0x05)
-EVENT_PANEL   = const(0x06)
-
-# Error codes — values match EFFIGY's src/macrobrute_bridge.h err:: namespace.
-ERR_OK                  = const(0x00)
-ERR_BAD_REGISTER        = const(0x01)
-ERR_WRITE_TO_READONLY   = const(0x02)
-ERR_READ_FROM_WRITEONLY = const(0x03)
-ERR_EVENT_QUEUE_OVERFLOW = const(0x04)
-ERR_HEARTBEAT_TIMEOUT   = const(0x05)
+# Re-export constants from the generated module so existing callers can keep
+# importing names like `effigy_bridge.REG_MASS` unchanged.
+from _effigy_constants import *  # noqa: F401,F403
 
 # Pair-loss timeout: number of consecutive identical heartbeat reads before
-# we declare the link dead and revert to solo mode.
+# we declare the link dead and revert to solo mode. (Implementation-specific,
+# not part of the wire protocol.)
 HEARTBEAT_DEAD_THRESHOLD = const(2)
 HEARTBEAT_POLL_MS        = const(500)
 

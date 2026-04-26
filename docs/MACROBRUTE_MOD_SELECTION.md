@@ -55,20 +55,37 @@ swap in from reserves: #5 Envelope Decay (33K) or #7 LFO Speed (47K).
 
 ---
 
-## BUILD — Expander (42HP Eurorack)
+## BUILD — Expander (17HP Eurorack — 87 × 128.5 mm)
 
-### Utility Circuits
+The expander is now minimal. Most utilities have been moved off it because
+the user already has equivalent modules in the rack. See
+`MACROBRUTE_CONNECTION_MAP.md §10` for the canonical layout.
+
+### Hardware utility on the expander
 
 | Circuit | IC | Key Components | Panel Controls |
 |---------|----|---------------|----------------|
-| White noise | 2N3904 + TL072 | 2x470K bias, 4.7M/100K gain | 1 jack out |
-| LFO (tri+sqr) | TL072 | 1uF timing, 1M rate pot | 1 rate pot, 2 jacks out |
-| Clock divider | CD4024 + 78L05 | /2/4/8 outputs, reset button | 3+ jacks out, 1 button |
-| Sample & Hold | LF398 or CD4051 | 1nF polystyrene hold cap | 2 jacks in, 1 jack out |
-| Slew limiter | TL072 | 1M rise/fall pots, 1uF timing | 2 pots, 1 jack in/out |
-| Attenuverter 2ch | TL072 | 100K matched 1%, center-detent | 2 pots, 2 jacks in/out |
-| Buffered mult | TL074 or Bastl passive | 1K series output R | 1 jack in, 3 jacks out |
-| Gate button | CD40106 | Momentary + LED | 1 button, 1 LED, 1 jack out |
+| Slew limiter | TL072 (1 section) | 2× 1N4148 (rise/fall steering), 1µF timing cap | 1× 1MΩ rate pot, 2 jacks (in, out) |
+
+### Firmware-only utilities (no analog hardware)
+
+| Function | Pico GPIO | Notes |
+|----------|-----------|-------|
+| Clock divider | GP16, GP17, GP18 | Configurable ratios — defaults ÷2 ÷4 ÷8. Replaces CD4024 chip. |
+| Programmable aux outputs ×4 | GP19, GP20, GP6, GP7 | Modes: TAP_DIV / EUCLID / RANDOM / PASSTHRU / PWM_CV. PWM-capable. |
+| Tap button (with manual gate hold) | GP12 | Short = tempo, long = gate. Replaces standalone manual-gate circuit. |
+
+### Dropped from this build (covered by user's existing rack modules)
+
+| Originally planned | What replaces it |
+|--------------------|------------------|
+| White noise | NOISE module already in rack |
+| LFO (tri+sqr) | Tryfelo (3 general-purpose LFOs) |
+| Sample & Hold | RND CV module |
+| Attenuverter 2ch | MMI Matrix mixer covers attenuvert routing |
+| Buffered mult | '07 MULT module |
+| Manual gate button | Folded into the tap button (long-hold mode) |
+| Clock divider chip | Moved to firmware (GP16/17/18) |
 
 ### Patchbay (from DB-9)
 

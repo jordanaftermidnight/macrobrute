@@ -6,7 +6,7 @@ wiring reference for building, debugging, and expanding.
 **Connector:** 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND)
 **OLED:** **0.96" SSD1306 I²C 128×64** main display on expander (driver `OLED_I2C` in `firmware/pico/display.py`, `OLED_CHIP="SSD1306"`). Plus a **0.91" SSD1306 128×32** strip on the MB panel sharing the same I²C0 bus at 0x3D. Fallback chips: 1.3" SH1106 (set `OLED_CHIP="SH1106"`), 16×2 1602 I²C LCD.
 **MIDI path:** Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
-**Firmware:** Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)
+**Firmware:** Pico WH MicroPython (14 modules + `_effigy_constants.py` generated from EFFIGY's C header), LPC2361 ARM7 (stock + planned bridge extension)
 
 ---
 
@@ -262,10 +262,14 @@ speed for the long DB-9 B run).
 
 ---
 
-## 8. Touch Bolts (6 selected from 8 tested)
+## 8. Touch Bolts (8 designed → 6 to be selected after Phase 0 testing)
 
-All bolts: M3 brass, 6mm panel hole, 18-20mm spacing between bolts.
+All bolts: M3 brass, 6mm panel hole, 18–20mm spacing between bolts.
 Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GND.
+
+The table below lists all 8 designed bend points. Final selection of 6
+happens after Phase 0 bench testing — pick the most musically useful and
+least destructive on real hardware.
 
 | ID | Name | PCB Point | Safety R | Effect | Intensity | Risk |
 |----|------|-----------|----------|--------|-----------|------|
@@ -306,34 +310,57 @@ Wiring: PCB point → safety R → brass bolt. Body capacitance/resistance to GN
 
 ---
 
-## 10. Expander (42HP, Eurorack)
+## 10. Expander (17HP Eurorack — 87 × 128.5 mm panel)
 
-### Module List
+The expander is **minimal by design.** It hosts the Pico WH, the user
+interface (main OLED + encoder + tap button + RGB LED), the I/O between
+MicroBrute and the rack, and exactly one analog utility (slew limiter).
+All other utilities the user already has as separate Eurorack modules in
+their rack — see `MACROBRUTE_BUILD_PLAN.md` for the rationale.
 
-| # | Module | Board Size | ICs | Jacks | Pots |
-|---|--------|------------|-----|-------|------|
-| 1 | Buffered mult (1→3) | 25×15mm | TL074 (3 sections) | 4 | — |
-| 2 | White noise | 30×20mm | TL072 (1 section) + 2N3904 | 1 out | — |
-| 3 | LFO (tri+sqr) | 40×20mm | TL072 (both sections) | 2 out | 1MΩ rate |
-| 4 | Clock divider (/2/4/8) | 30×15mm | CD4024 + CD40106 | 4 (in + 3 out) | — |
-| 5 | Sample & Hold | 25×15mm | LF398 | 3 (sig, clk, out) | — |
-| 6 | Slew limiter | 30×15mm | TL072 (1 section) | 2 (in, out) | 2× 1MΩ rise/fall |
-| 7 | Attenuverter (2ch) | 30×20mm | TL072 (both sections) | 4 (2in, 2out) | 2× 100kΩ center-detent |
-| 8 | Manual gate button | 15×10mm | — (or shared CD40106) | 1 out | — |
+### Hardware utilities on the expander
 
-### Expander Panel Jacks (Patchbay)
+| # | Module | Footprint | ICs | Jacks | Pots |
+|---|--------|-----------|-----|-------|------|
+| 1 | Slew limiter | 30×15 mm | TL072 (1 section) + 2× 1N4148 (rise/fall steering) | 2 (in, out) | 1× 1MΩ rate |
 
-**Output jacks (from DB-9 A, buffered):**
-Saw, Square, VCO Mix, VCF Out, Gate, Pitch CV, Envelope, LFO
+### Firmware-only utilities (no hardware on the expander)
 
-**Input jacks (to DB-9 B, attenuated):**
-Filter CV, VCA CV, Resonance CV, Sync, Gate In, Ext Audio
+| # | Module | Pico GPIO | Pin layout |
+|---|--------|-----------|------------|
+| 1 | Clock divider (3 outputs, configurable ratios — default ÷2 ÷4 ÷8) | GP16, GP17, GP18 | 3 panel jacks |
+| 2 | Programmable aux outputs (4 channels — TAP_DIV / EUCLID / RANDOM / PASSTHRU / PWM_CV) | GP19, GP20, GP6, GP7 | 4 panel jacks |
 
-**Utility jacks:**
-Noise Out, LFO Tri, LFO Sqr, Clock /2, Clock /4, Clock /8,
-S&H Out, Slew Out, Atten Out ×2, Mult Out ×3, Manual Gate
+### Dropped from the expander (covered elsewhere in the rack)
 
-**Total: ~31 Thonkiconn jacks**
+| Originally planned | What replaces it |
+|--------------------|------------------|
+| Buffered mult (TL074) | User's existing **'07 MULT** module |
+| White noise gen (2N3904 + TL072) | User's existing **NOISE** module |
+| LFO (TL072 + CD40106) | User's existing **Tryfelo** (`st-modular.de/modules/tryfelo`) — has 3 general-purpose LFOs |
+| Sample & Hold (LF398) | User's existing **RND CV** module |
+| Attenuverter (TL072 + center-detent pots) | User's existing **MMI Matrix** mixer covers the routing role |
+| Manual gate button (CD40106) | Tap button on the expander now does double duty — short press = tempo, long-hold = manual gate |
+| Clock divider chip (CD4024) | **Replaced by firmware** — 3 GPIO outputs at configurable ratios |
+
+### Expander panel layout (top to bottom)
+
+| Row | Element | Notes |
+|-----|---------|-------|
+| Title strip | "MACROBRUTE" silkscreen | — |
+| 1 | Main OLED — 0.96" SSD1306 | I²C0 @ 0x3C (shared bus with strip OLED on MB panel @ 0x3D) |
+| 2 | HW-040 encoder + tap button + RGB LED | Encoder = menu nav · Tap = tempo/gate · RGB = status |
+| 3 | Clock IN, Clock OUT jacks | 3.5 mm Thonkiconn |
+| 4 | Clock divider outputs ÷2, ÷4, ÷8 | Firmware-driven (GP16/17/18) |
+| 5 | Slew IN, Slew OUT, RATE pot | The only analog utility on the panel |
+| 6 | Aux 1, Aux 2, Aux 3, Aux 4 | Programmable, PWM-capable |
+
+**Total panel jacks: 14** (clock I/O × 2, divider outs × 3, slew × 2, aux × 4 — plus 3 holes for OLED/encoder/tap and 1 RGB LED hole).
+
+**Behind the panel:** Pico WH on a small sub-board, 3-part Pico power
+filter (1N5817 + 100µF + 100nF), shared I²C0 pull-ups for both OLEDs,
+2× DB-9 connectors for the link to MicroBrute, and the 5-pin JST-XH rear
+header for the EFFIGY pair bus.
 
 ---
 

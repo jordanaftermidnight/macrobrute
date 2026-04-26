@@ -2,7 +2,7 @@
 
 **Project:** Arturia MicroBrute Deep Modification
 **Status:** Design + firmware RE complete. Hardware build: 0% (bench validation next).
-**Last reconciliation:** 2026-04-22
+**Last reconciliation:** 2026-04-26 (Phase D — see `MACROBRUTE_BUILD_PLAN.md`)
 
 ---
 
@@ -30,7 +30,7 @@
 | Touch mods | 6 body-contact bends (PITCH, CRUNCH, WAH, DISTORT, HARM, GATE), selected from 8 tested |
 | Panel jacks | 3 (VCF insert, Metalizer insert, VCA CV in) |
 | Panel toggles | 3 (Envelope bypass, Metalizer boost, VCA drone) |
-| Expander size | **42HP** |
+| Expander size | **17HP** (87 × 128.5 mm — fits user's pre-cut panel blank) |
 | JF-33 delay | **Separate Eurorack module** (Phase 7A, optional) |
 | DSO138 oscilloscope | **Separate Eurorack module** (Phase 7B, optional) |
 | Power | Separate supplies, signal ground only via DB-9 |
@@ -92,7 +92,7 @@
 
 ### Panel (`panel/`)
 - `microbrute_panel_template.svg` — MB drilling template
-- `expander_42hp.svg` — expander panel layout
+- `expander_17hp.svg` — current 17HP expander panel template (87 × 128.5 mm)
 
 ### Mods (`docs/mods/`)
 - `touch_bend_specs.md` — 8 circuit bends with specs (select 6)

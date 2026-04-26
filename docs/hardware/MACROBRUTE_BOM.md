@@ -406,11 +406,11 @@ Pico GPIO (PWM)
 ## PART 6: PURCHASING STRATEGY
 
 ### Order 1: TME (EU, fast shipping)
-- All resistors, capacitors, diodes
-- TL072, TL074, LM13700, CD4066, CD4017, CD4024
-- BC547, BC557, 2N3906
-- IC sockets
-- Ferrite beads, MLCCs
+- All resistors, capacitors, diodes (including the 3-part Pico filter: 1N5817 + 100µF/10V + 100nF)
+- TL072 (slew limiter), TL074 (MB-side buffers), CD40106 (gate Schmitt), CD4049UBE (level shifter)
+- BC547, BC557, 2N3906, 2N3904 (vactrol driver, gate buffer)
+- IC sockets, ferrite beads, MLCCs
+- ~~LM13700, CD4066, CD4017, CD4024~~ — **dropped** (utilities moved to firmware or covered by rack modules)
 
 ### Order 2: Thonk (UK)
 - Thonkiconn jacks (all)
