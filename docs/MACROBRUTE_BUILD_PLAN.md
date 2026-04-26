@@ -22,10 +22,10 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 | Firmware utilities | Clock divider (3 outputs, GP16/17/18), 4 programmable aux outputs (GP19/20/6/7) — replaces planned CD4024 |
 | RGB LED | Common-cathode on GP8/9/10 — R=clock tick, G=gate, B=mode/pair |
 | Touch mods | 8 body-contact bends designed; bench-test in Phase 0 → pick 6 |
-| JF-33 delay | **Separate Eurorack module (Phase 7A, optional)** — not inside expander |
-| DSO138 scope | **Separate Eurorack module (Phase 7B, optional)** — LM7809 on hand for +9V regulation |
-| EFFIGY DSP | **Separate Eurorack module (Phase 7C, optional)** — Daisy Seed peer, paired via 5-pin rear I²C header (target 0x42, 100 kHz on EFFIGY's I2C4). C header `EFFIGY/firmware/src/macrobrute_bridge.h` is the authoritative protocol source. |
-| Norns Shield | **Anticipated Phase 7D module** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually host an ii-compatible target on a separate front-of-rack I²C bus (suggested address 0x60) and translate ii commands to local state or proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`. |
+| JF-33 delay | **Moved to `spinoffs/jf33-eurorack/`** — DIY PT2399 delay; not part of the canonical MACROBRUTE build |
+| DSO138 scope | **Moved to `spinoffs/dso138-desktop/`** — desktop scope; not a Eurorack module |
+| EFFIGY DSP | **Separate Eurorack module (Phase 7A, optional)** — Daisy Seed peer, paired via 5-pin rear I²C header (target 0x42, 100 kHz on EFFIGY's I2C4). C header `EFFIGY/firmware/src/macrobrute_bridge.h` is the authoritative protocol source. |
+| Norns Shield | **Anticipated Phase 7B module** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually host an ii-compatible target on a separate front-of-rack I²C bus (suggested address 0x60) and translate ii commands to local state or proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`. |
 | PSU | **Behringer CP1A** Eurorack PSU (±12V + 5V on bus). Pico fed from +5V via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. |
 | Migrated to MB panel | Resonance CV (new jack); reuse MB's existing back-panel Sync In / Gate In / Audio In |
 
@@ -67,20 +67,20 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 | Component | Qty | Package | Used In |
 |-----------|-----|---------|---------|
 | TL074CN | 4 | DIP-14 | Breakout (1), Expander (3) |
-| TL072CP | 5 | DIP-8 | Breakout (1), Expander (2), JF-33 (1), DSO (1) |
+| TL072CP | 3 | DIP-8 | Breakout (1), Expander slew (1), spare (1) — JF-33/DSO moved to spinoffs |
 | CD4024BE | 1 | DIP-14 | Expander (clock divider) |
 | CD4051BE | 1 | DIP-16 | DSO mux (shared with touch plates) |
 | CD40106BE | 2 | DIP-14 | Breakout (1), Expander (1) |
 | LF398N | 1 | DIP-8 | Expander (S&H) |
 | 78L05 | 1 | TO-92 | Expander (+5V for CD4024) |
-| 7809 | 2 | TO-220 | JF-33 (1), DSO (1) |
+| ~~7809~~ | ~~2~~ | TO-220 | **Dropped** — moved to spinoffs (`jf33-eurorack`, `dso138-desktop`) |
 
 *Semiconductors:*
 | Component | Qty | Package | Used In |
 |-----------|-----|---------|---------|
-| 2N3904 | 8 | TO-92 | Breakout LEDs (3), Expander noise (2), JF-33 (1), spare (2) |
-| BC337 | 1 | TO-92 | JF-33 (anti-latch-up) |
-| 1N4148 | 10 | DO-35 | Expander (6), JF-33 (2), spare (2) |
+| 2N3904 | 5 | TO-92 | Breakout LEDs (3), vactrol driver (1), spare (1) |
+| ~~BC337~~ | — | TO-92 | **Dropped** (was for JF-33 anti-latch-up — now in spinoffs) |
+| 1N4148 | 8 | DO-35 | Pico filter (1), slew steering (2), gate buffer (1), spare (4) |
 | 1N5817 | 6 | DO-41 | Breakout power (3), Expander power (2), spare (1) |
 | BAT54S | 9 | SOT-23 | Breakout (3), Expander (4), DSO (1), spare (1) |
 
@@ -105,7 +105,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 | 1µF | 5 | Film (polyester) | LFO/slew timing, AC coupling, anti-latch |
 | 10µF | 3 | Electrolytic 16V+ | Expander bulk decoupling |
 | 47µF | 2 | Electrolytic 25V | Expander power filtering |
-| 100µF | 4 | Electrolytic 25V | Breakout (2), JF-33 (1), DSO (1) |
+| 100µF | 3 | Electrolytic 25V | Breakout (2), Pico power filter (1) |
 
 *Misc passives:*
 | Component | Qty | Notes |
@@ -123,7 +123,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 |-----------|-----|-------|
 | Thonkiconn PJ398SM | 16 | Standard Eurorack mono jacks |
 | Thonkiconn PJ301M | 15 | Compact Eurorack mono jacks |
-| 100kΩ linear pot (9mm) | 5 | Expander attenuators (4), JF-33 CV (1) |
+| 100kΩ linear pot (9mm) | 4 | Expander attenuators (4) |
 | 1MΩ log pot (9mm) | 3 | LFO rate, S&H rate, slew rate |
 | Knobs (19mm, aluminum) | 12 | For all pots |
 | 42HP blank panel | 1 | Anodized aluminum |
@@ -203,6 +203,16 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 - [ ] Higher-risk mods (4, 6, 8) stable with dry fingers
 - **Gate:** 6+ bends produce musically useful results, top 6 selected for panel
 
+### 1C: Triangle Output Gain (M01 — Phase 1 add)
+While the breakout PCB is open, change the TL074 D follower's feedback
+network to give the triangle waveform 2× gain — restores level parity with
+saw and square. Trivial mod (one resistor swap), full details in
+`docs/mods/macrobrute_mod_catalog.md` § M01.
+
+- [ ] Replace 16kΩ feedback R with 33kΩ (gain becomes ~2.06×)
+- [ ] Verify triangle pp matches saw/square on a scope
+- **Gate:** Triangle level within ±1 dB of saw/square at the DB-9 A jack
+
 ---
 
 ## Phase 2: Internal Wiring (Week 3-5)
@@ -271,6 +281,24 @@ LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C drive
 - [ ] Touch bolts modify sound when touched (verify against Phase 1B results)
 - [ ] DB-9 connectors secure, no pin shorts
 - **Gate:** OLED displays through panel, encoder works, touch bolts modify sound, DB-9 signals measure correct
+
+### 3.X: Phase 2 mod additions
+
+While the MicroBrute case is open, add the 13 Phase 2 mods documented in
+`docs/mods/macrobrute_mod_catalog.md` (M02–M14). Recommended sequence
+(safest → most invasive):
+
+| Build group | Mods | Notes |
+|-------------|------|-------|
+| **Safe injects (no PCB cuts)** | M06 PWM CV, M09 PWM self-mod normalled, M03 sine extract, M11 9th touch bolt, M14 safe bias starve | All tap high-Z nodes; only solder leads |
+| **Toggles** | M05 selfosc kill, M07 pitch starve, M10 brute extreme, M13 sync→env, M08 sub-harmonic enable | SPDT/SPST in series with existing nets |
+| **Breadboard then install** | M02 active soft sync, M12 ARG audio-rate gate | Both use LM393 — bench-test stability before committing |
+| **Most invasive** | M04 metalizer VCA (LM13700), M08 sub-harmonic divider (74HC74) | Both need a small stripboard sub-PCB; cuts/inserts in audio path |
+
+Per-mod parts list and wiring detail: `docs/mods/macrobrute_mod_catalog.md`.
+
+**Gate:** all Phase 2 mods bench-tested, then panel-installed; sound check
+on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
@@ -395,25 +423,24 @@ LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C drive
 
 ## Phase 7: Advanced / Optional
 
-### 7A: JF-33 Delay CV Integration
-Build per `schematics/jf33_cv_control.md`:
-- [ ] Anti-latch-up circuit (BC337 + RC, **build first**)
-- [ ] Delay time CV (TL072 → 2N3904 current sink, 1kΩ emitter R)
-- [ ] Eurorack level matching (input atten + output gain)
+### 7A: EFFIGY DSP module pair-up
+Daisy Seed peer module on the rear 5-pin I²C header (target 0x42, 100 kHz on
+EFFIGY's I2C4). Pair-bus contract is frozen — see `docs/MACROBRUTE_EFFIGY_BRIDGE.md`.
+EFFIGY's C header is the authoritative source for register addresses; Pico-side
+constants are auto-generated by `tools/sync_effigy_constants.py`. Bench-test the
+link with `effigy.probe()` before adding any DSP-side logic.
 
-### 7B: DSO138 Oscilloscope — standalone Eurorack module (optional)
-Build per `schematics/dso138_input_protection.md` as a **separate Eurorack module**, not inside the 42HP expander:
-- [ ] Input protection (BAT54S clamps + 1kΩ series R)
-- [ ] CD4051 signal multiplexer (8:1), channels: Saw, Square, VCO Mix, VCF, Gate, Envelope, LFO, External
-- [ ] LM7809 power from +12V (on hand) — regulate to DSO138's +9V input
-- [ ] 10HP panel: LCD display, input jack, channel select (rotary or 3-bit from Pico), probe clip
-- [ ] Optional DLO-138 firmware (adds serial export)
-- **Why separate:** Display needs its own panel real estate; better as a utility module than crammed into the MB panel or expander.
+### 7B: Norns Shield ii bridge (anticipated)
+Three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will host an
+ii-compatible target on a separate front-of-rack I²C bus (suggested address
+0x60). See `docs/MACROBRUTE_NORNS_BRIDGE.md` — covers translator command split,
+ii address allocation, pull-up topology, hardware conflict (RP2040 has only
+2 HW I²C peripherals — ii target needs PIO-based I²C on spare GPIOs).
 
-### 7C: Additional Touch Plates via Pico ADC
-- [ ] Extend 6 panel bolts with Pico ADC (GP26-28) for CV output
-- [ ] CD4051 multiplexed scanning (reuse DSO mux)
-- [ ] PWM → RC filter → CV output
+### 7C: Additional touch plates via Pico ADC
+- [ ] Extend the 6 selected panel bolts with Pico ADC (GP26–28) for CV output
+- [ ] CD4051 multiplexed scanning if more than 3 channels needed
+- [ ] PWM → RC filter → CV output (reuses the aux-output PWM machinery)
 
 ### 7D: Circuit Bending Switches
 Per `docs/mods/deep_circuit_bending.md`:
@@ -482,7 +509,7 @@ For LPC2361 (future): `make && ./tools/flash.sh build/macrobrute.hex`
 | Firmware (Pico) | `firmware/pico/` — 8 MicroPython modules |
 | Firmware (LPC) | `firmware/lpc2361/` — 48 C files, ARM7 skeleton |
 | Schematics | `schematics/` — 8 ASCII docs + 6 SVG stripboard layouts |
-| KiCad | `kicad/` — 4 sub-projects (breakout, expander, jf33, dso_input) |
+| KiCad | `kicad/` — 2 sub-projects (breakout, expander). JF-33 and DSO138 KiCad work moved to `spinoffs/`. |
 | Panel | `panel/` — 2 SVGs (MicroBrute panel + 42HP expander) |
 | Touch mods | `docs/mods/touch_bend_specs.md` — 8 circuit bends with specs |
 | Circuit review | `schematics/CIRCUIT_REVIEW.md` — all circuits reviewed and verified |

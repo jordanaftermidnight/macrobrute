@@ -787,107 +787,6 @@ def generate_attenuverter_schematic() -> str:
     return r.render()
 
 
-def generate_pt2399_cv_schematic() -> str:
-    """Generate PT2399 CV Control schematic (JF-33 delay mod)."""
-    r = SchematicRenderer(700, 600, "PT2399 CV Control", "Anti-latch-up + CV current sink for JF-33 delay")
-
-    # +5V rail (from 78L05)
-    for x in [150, 550]:
-        r.vcc(Point(x, 50), label="+5V")
-
-    # === ANTI-LATCH-UP CIRCUIT (left side) ===
-    r.elements.append(f'<text x="80" y="80" class="label">Anti-Latch-Up</text>')
-
-    # BC337 transistor
-    r.npn_transistor(Point(150, 150), label="BC337")
-
-    # 100k from +5V to base
-    r.wire(Point(150, 50), Point(150, 100))
-    r.resistor(Point(130, 75), label="R1", value="100k", vertical=False)
-
-    # 100k from base to +5V (pulldown for startup)
-    r.wire(Point(150, 100), Point(150, 120))
-
-    # 1uF cap from base to GND (timing)
-    r.wire(Point(150, 180), Point(150, 220))
-    r.wire(Point(150, 220), Point(120, 220))
-    r.capacitor(Point(120, 250), label="C1", value="1µF", polarized=True, vertical=True)
-    r.ground(Point(120, 280))
-
-    # Emitter to GND
-    r.wire(Point(165, 170), Point(165, 300))
-    r.ground(Point(165, 300))
-
-    # PT2399 pin 6 connection label
-    r.elements.append(f'<text x="180" y="135" class="value">To PT2399 pin 6</text>')
-
-    # === CV CONTROL CIRCUIT (right side) ===
-    r.elements.append(f'<text x="450" y="80" class="label">CV Control</text>')
-
-    # CV Input jack
-    r.jack(Point(450, 120), label="CV 0-5V")
-    r.wire(Point(470, 120), Point(500, 120))
-    r.resistor(Point(515, 120), label="R2", value="100k", vertical=False)
-    r.wire(Point(530, 120), Point(550, 120))
-
-    # Attenuator pot
-    r.potentiometer(Point(550, 180), label="ATTEN", value="100k")
-    r.wire(Point(550, 150), Point(550, 130))
-    r.wire(Point(550, 210), Point(550, 250))
-    r.ground(Point(550, 250))
-
-    # TL072 buffer
-    r.opamp(Point(620, 200), label="TL072", pins=("-", "+", "out"))
-    r.wire(Point(550, 180), Point(580, 182))  # Pot wiper to +in
-
-    # -in to output (voltage follower)
-    r.wire(Point(620, 200), Point(660, 200))
-    r.wire(Point(660, 200), Point(660, 160))
-    r.wire(Point(660, 160), Point(590, 160))
-    r.wire(Point(590, 160), Point(590, 182))
-
-    # +in to GND (for bias)
-    r.wire(Point(580, 218), Point(580, 280))
-    r.ground(Point(580, 280))
-
-    # Output to 2N3904 base (via 1k)
-    r.wire(Point(660, 200), Point(700, 200))
-    r.wire(Point(700, 200), Point(700, 350))
-    r.resistor(Point(700, 380), label="R3", value="1k", vertical=True)
-
-    # 2N3904 current sink
-    r.npn_transistor(Point(620, 420), label="2N3904")
-    r.wire(Point(700, 400), Point(635, 420))  # Base connection
-
-    # Collector to PT2399 pin 6 (through anti-latch-up)
-    r.wire(Point(605, 405), Point(605, 350))
-    r.wire(Point(605, 350), Point(400, 350))
-    r.wire(Point(400, 350), Point(400, 150))
-    r.wire(Point(400, 150), Point(180, 150))  # Connect to anti-latch-up output
-
-    # Emitter resistor to GND
-    r.wire(Point(635, 445), Point(635, 480))
-    r.resistor(Point(635, 500), label="R4", value="1k", vertical=True)
-    r.ground(Point(635, 530))
-
-    # Protection diode (1N4148)
-    r.elements.append(f'<text x="480" y="400" class="value">D1 (1N4148)</text>')
-    r.elements.append(f'<line x1="480" y1="410" x2="480" y2="450" stroke="#333" stroke-width="1"/>')
-    # Diode symbol (pointing from pin 6 to GND)
-    r.elements.extend([
-        f'<polygon points="470,430 490,430 480,450" fill="none" stroke="#333" stroke-width="1.5"/>',
-        f'<line x1="470" y1="450" x2="490" y2="450" stroke="#333" stroke-width="1.5"/>',
-    ])
-    r.wire(Point(480, 450), Point(480, 480))
-    r.ground(Point(480, 480))
-
-    # === ANNOTATIONS ===
-    r.annotate(Point(50, 150), "Startup:\nBC337 OFF\nfor ~500ms")
-    r.annotate(Point(50, 420), "CV→Current:\nSink 0-5mA\nfrom pin 6")
-
-    return r.render()
-
-
 def generate_led_driver_schematic() -> str:
     """Generate LED Driver Array schematic — 3-channel NPN driver for RGB + status LEDs."""
     r = SchematicRenderer(650, 550, "LED Driver Array", "3× 2N3904 NPN Drivers for RGB LED + Status LEDs")
@@ -1362,108 +1261,6 @@ def generate_touch_plate_schematic() -> str:
     for label, desc, y in explanation:
         r.elements.append(f'<text x="70" y="{y}" class="label" font-size="8" fill="#BF360C">{label}</text>')
         r.elements.append(f'<text x="170" y="{y}" class="value" font-size="8">{desc}</text>')
-    
-    return r.render()
-
-
-def generate_input_protection_schematic() -> str:
-    """Generate DSO138 Input Protection schematic — for safe oscilloscope probing."""
-    r = SchematicRenderer(700, 600, "DSO138 Input Protection", "Safe Signal Injection for Oscilloscope Module")
-    
-    C_POS = "#D44"
-    C_NEG = "#44D"
-    C_SIG = "#1a1a1a"
-    
-    # === INPUT STAGE ===
-    r.elements.append(f'<text x="50" y="50" class="label" font-size="12">Signal Input (From Synth)</text>')
-    
-    # Input jack
-    r.jack(Point(80, 100), label="IN")
-    r.wire(Point(100, 100), Point(140, 100))
-    
-    # Series resistor (current limiting)
-    r.resistor(Point(160, 100), label="R1", value="1kΩ", vertical=False)
-    r.wire(Point(180, 100), Point(220, 100))
-    
-    # === CLAMPING DIODES ===
-    r.elements.append(f'<text x="250" y="50" class="label" font-size="12">Voltage Clamping</text>')
-    
-    # To positive clamp diode
-    r.wire(Point(220, 100), Point(220, 70))
-    r.wire(Point(220, 70), Point(280, 70))
-    # Diode to +3.3V rail (pointing up)
-    r.elements.extend([
-        f'<polygon points="280,55 280,85 300,70" fill="none" stroke="#D44" stroke-width="1.5"/>',
-        f'<line x1="300" y1="55" x2="300" y2="85" stroke="#D44" stroke-width="1.5"/>',
-    ])
-    r.wire(Point(300, 70), Point(350, 70))
-    r.vcc(Point(350, 70), label="+3.3V")
-    
-    # To negative clamp diode
-    r.wire(Point(220, 100), Point(220, 130))
-    r.wire(Point(220, 130), Point(280, 130))
-    # Diode to GND (pointing down)
-    r.elements.extend([
-        f'<polygon points="300,115 300,145 280,130" fill="none" stroke="#44D" stroke-width="1.5"/>',
-        f'<line x1="280" y1="115" x2="280" y2="145" stroke="#44D" stroke-width="1.5"/>',
-    ])
-    r.ground(Point(280, 150))
-    
-    # === VOLTAGE DIVIDER (Attenuation) ===
-    r.elements.append(f'<text x="50" y="200" class="label" font-size="12">10:1 Voltage Divider</text>')
-    
-    # Top resistor
-    r.wire(Point(220, 100), Point(260, 100))
-    r.resistor(Point(290, 100), label="R2", value="900kΩ", vertical=False)
-    r.wire(Point(320, 100), Point(350, 100))
-    
-    # Tap point
-    r.junction(Point(350, 100))
-    
-    # Bottom resistor
-    r.wire(Point(350, 100), Point(350, 160))
-    r.resistor(Point(350, 130), label="R3", value="100kΩ", vertical=True)
-    r.ground(Point(350, 180))
-    
-    # === OUTPUT TO DSO138 ===
-    r.elements.append(f'<text x="450" y="50" class="label" font-size="12">To DSO138 Module</text>')
-    
-    # Output connection
-    r.wire(Point(350, 100), Point(450, 100))
-    r.block(Point(500, 100), 80, 40, label="DSO138", sublabel="ADC Input")
-    
-    # DSO138 internal reference
-    r.elements.append(f'<text x="520" y="170" class="value" font-size="8">Internal reference:</text>')
-    r.elements.append(f'<text x="520" y="185" class="value" font-size="8">0V - 3.3V range</text>')
-    
-    # === PROTECTION SPECS ===
-    r.elements.append(f'<rect x="50" y="250" width="600" height="320" fill="#E3F2FD" stroke="#2196F3" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="350" y="275" class="label" text-anchor="middle" fill="#0D47A1">Protection Circuit Specifications</text>')
-    
-    specs = [
-        ("Input Range:", "±12V (synth signals)", 300),
-        ("Output Range:", "0V - 3.3V (DSO138 safe)", 320),
-        ("Attenuation:", "10:1 (divide by 10)", 340),
-        ("Clamping:", "Schottky diodes to 0V / 3.3V rails", 360),
-        ("Current Limit:", "1kΩ series resistor limits fault current", 380),
-        ("Response:", "Suitable for audio and CV signals", 400),
-        ("Bandwidth:", "~100kHz (limited by 10MΩ impedance)", 420),
-    ]
-    
-    for label, value, y in specs:
-        r.elements.append(f'<text x="70" y="{y}" class="label" font-size="9" fill="#1565C0">{label}</text>')
-        r.elements.append(f'<text x="200" y="{y}" class="value" font-size="9">{value}</text>')
-    
-    # How it works
-    r.elements.append(f'<text x="70" y="460" class="label" font-size="10">How Protection Works:</text>')
-    protection_notes = [
-        "• 1kΩ resistor limits current if diodes conduct (protects diodes and DSO138)",
-        "• Schottky diodes clamp voltage to 0V - 3.3V range (fast response)",
-        "• 10:1 divider brings ±12V synth signals down to ±1.2V (within ADC range)",
-        "• Works for AC (audio) and DC (CV) signals",
-    ]
-    for i, note in enumerate(protection_notes):
-        r.elements.append(f'<text x="70" y="{480 + i*20}" class="value" font-size="8">{note}</text>')
     
     return r.render()
 
@@ -2848,223 +2645,6 @@ def generate_testpoints_map() -> str:
     return r.render()
 
 
-def generate_jf33_integration_schematic() -> str:
-    """Generate JF-33 delay full Eurorack integration (PT2399 + CV + level matching + bypass)."""
-    r = SchematicRenderer(1000, 780, "JF-33 Delay — Eurorack Integration (Phase 7A)",
-                          "PT2399 analog delay · CV-controlled delay time · level matching · bypass")
-
-    def box(x, y, w, h, title, color, fill="#FFFFFF"):
-        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{color}" stroke-width="1.5" rx="4"/>')
-        r.elements.append(f'<text x="{x+w/2}" y="{y+18}" class="label" text-anchor="middle" font-size="11" fill="{color}">{title}</text>')
-
-    def arrow(x1, y1, x2, y2, label="", color="#1a1a1a"):
-        r.elements.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" stroke-width="1.8" marker-end="url(#arrow)"/>')
-        if label:
-            r.elements.append(f'<text x="{(x1+x2)/2}" y="{(y1+y2)/2 - 5}" class="anno" text-anchor="middle" font-size="9">{label}</text>')
-
-    # Row 1: input path (left to right)
-    box(40,  90, 130, 80, "IN jack (3.5mm)", "#0066CC")
-    r.elements.append(f'<text x="105" y="130" class="value" text-anchor="middle" font-size="9">Eurorack 10Vpp</text>')
-    r.elements.append(f'<text x="105" y="145" class="value" text-anchor="middle" font-size="9">AC-coupled</text>')
-
-    box(190, 90, 130, 80, "Input attenuator", "#CC6600")
-    r.elements.append(f'<text x="255" y="130" class="value" text-anchor="middle" font-size="9">÷6 divider</text>')
-    r.elements.append(f'<text x="255" y="145" class="value" text-anchor="middle" font-size="8">(10Vpp → 1.7Vpp line)</text>')
-
-    box(340, 90, 130, 80, "10µF/50V coupling", "#CC6600")
-    r.elements.append(f'<text x="405" y="130" class="value" text-anchor="middle" font-size="9">DC-block</text>')
-    r.elements.append(f'<text x="405" y="145" class="value" text-anchor="middle" font-size="8">→ JF-33 board</text>')
-
-    box(490, 80, 220, 180, "JF-33 PCB (stock)", "#6600CC", "#F0E8FF")
-    r.elements.append(f'<text x="600" y="122" class="value" text-anchor="middle" font-size="9">PT2399 delay IC</text>')
-    r.elements.append(f'<text x="600" y="138" class="value" text-anchor="middle" font-size="9">4× NE5532 op-amps</text>')
-    r.elements.append(f'<text x="600" y="158" class="value" text-anchor="middle" font-size="8">Pin 6: timing cap (Rt)</text>')
-    r.elements.append(f'<text x="600" y="172" class="value" text-anchor="middle" font-size="8">→ delay time control</text>')
-    r.elements.append(f'<text x="600" y="192" class="value" text-anchor="middle" font-size="8">Feedback pot on board</text>')
-    r.elements.append(f'<text x="600" y="206" class="value" text-anchor="middle" font-size="8">Dry/wet mix on board</text>')
-    r.elements.append(f'<text x="600" y="226" class="value" text-anchor="middle" font-size="8">~30ms–600ms range</text>')
-
-    # Row 2: CV control path
-    box(40, 300, 130, 80, "CV IN jack", "#4A4")
-    r.elements.append(f'<text x="105" y="340" class="value" text-anchor="middle" font-size="9">0–5V CV</text>')
-    r.elements.append(f'<text x="105" y="355" class="value" text-anchor="middle" font-size="8">from expander</text>')
-
-    box(190, 300, 130, 80, "CV attenuator pot", "#4A4")
-    r.elements.append(f'<text x="255" y="340" class="value" text-anchor="middle" font-size="9">100kΩ linear</text>')
-    r.elements.append(f'<text x="255" y="355" class="value" text-anchor="middle" font-size="8">0→+5V trim</text>')
-
-    box(340, 300, 130, 80, "2N3904 current sink", "#D44")
-    r.elements.append(f'<text x="405" y="340" class="value" text-anchor="middle" font-size="9">NPN base ← CV</text>')
-    r.elements.append(f'<text x="405" y="355" class="value" text-anchor="middle" font-size="8">emitter → Rt adj. pot</text>')
-
-    box(490, 290, 120, 90, "Anti-latch-up", "#CC6600", "#FFF3E0")
-    r.elements.append(f'<text x="550" y="332" class="value" text-anchor="middle" font-size="9">100Ω series</text>')
-    r.elements.append(f'<text x="550" y="346" class="value" text-anchor="middle" font-size="8">+ 1N4148 clamp</text>')
-    r.elements.append(f'<text x="550" y="362" class="value" text-anchor="middle" font-size="8">PT2399 pin 6 safe</text>')
-
-    # Row 3: output path
-    box(40, 460, 130, 80, "10µF/50V coupling", "#CC6600")
-    r.elements.append(f'<text x="105" y="500" class="value" text-anchor="middle" font-size="9">DC-block</text>')
-
-    box(190, 460, 130, 80, "Output gain stage", "#CC6600")
-    r.elements.append(f'<text x="255" y="500" class="value" text-anchor="middle" font-size="9">TL072 ×6 gain</text>')
-    r.elements.append(f'<text x="255" y="515" class="value" text-anchor="middle" font-size="8">(line → 10Vpp)</text>')
-
-    box(340, 460, 130, 80, "Bypass switch (SPDT)", "#555")
-    r.elements.append(f'<text x="405" y="500" class="value" text-anchor="middle" font-size="9">Dry ↔ Wet</text>')
-    r.elements.append(f'<text x="405" y="515" class="value" text-anchor="middle" font-size="8">true-bypass (relay opt.)</text>')
-
-    box(490, 460, 130, 80, "OUT jack (3.5mm)", "#0066CC")
-    r.elements.append(f'<text x="550" y="500" class="value" text-anchor="middle" font-size="9">Eurorack level</text>')
-
-    # Power column (right)
-    box(760, 80, 200, 100, "Power: +12V rail", "#D44")
-    r.elements.append(f'<text x="860" y="120" class="value" text-anchor="middle" font-size="9">Eurorack bus +12V</text>')
-    r.elements.append(f'<text x="860" y="135" class="value" text-anchor="middle" font-size="9">1N5817 + ferrite</text>')
-    r.elements.append(f'<text x="860" y="150" class="value" text-anchor="middle" font-size="8">100µF + 100nF bulk</text>')
-
-    box(760, 200, 200, 100, "LM78L05 → +5V", "#CC6600")
-    r.elements.append(f'<text x="860" y="240" class="value" text-anchor="middle" font-size="9">TO-92 regulator</text>')
-    r.elements.append(f'<text x="860" y="255" class="value" text-anchor="middle" font-size="8">input 100nF + out 10µF</text>')
-    r.elements.append(f'<text x="860" y="270" class="value" text-anchor="middle" font-size="8">feeds PT2399 VCC</text>')
-
-    box(760, 320, 200, 100, "-12V rail", "#44D")
-    r.elements.append(f'<text x="860" y="360" class="value" text-anchor="middle" font-size="9">Op-amp V-</text>')
-    r.elements.append(f'<text x="860" y="375" class="value" text-anchor="middle" font-size="8">bulk + 100nF per IC</text>')
-
-    # Flow arrows
-    arrow(170, 130, 190, 130)
-    arrow(320, 130, 340, 130)
-    arrow(470, 130, 490, 130, "audio")
-    arrow(600, 260, 600, 290, "delay time", color="#4A4")
-    arrow(170, 340, 190, 340)
-    arrow(320, 340, 340, 340)
-    arrow(470, 340, 490, 340, "CV→bias", color="#4A4")
-    arrow(610, 380, 110, 460, "dry tap", color="#888")
-    arrow(710, 260, 190, 500, "wet tap", color="#1a1a1a")
-    arrow(320, 500, 340, 500)
-    arrow(470, 500, 490, 500)
-
-    # Notes
-    r.elements.append(f'<rect x="40" y="580" width="920" height="180" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>')
-    r.elements.append(f'<text x="500" y="600" class="label" text-anchor="middle" font-size="12">JF-33 Integration Notes</text>')
-    notes = [
-        "• JF-33 PCB is stock (as purchased). Mods happen entirely on the Eurorack adapter board — no trace cuts on JF-33.",
-        "• Level matching: JF-33 expects ~1Vpp instrument level. Eurorack audio is 10Vpp → ÷6 in, ×6 out restores level.",
-        "• CV → delay time: 2N3904 emitter follower biases the PT2399 timing cap resistor (Rt). CV=0V → long delay, CV=+5V → short delay.",
-        "• Anti-latch-up: 100Ω + diode on PT2399 pin 6 — PT2399 latches if Rt current exceeds spec. This is mandatory.",
-        "• Feedback + dry/wet live on JF-33's stock pots. Optional: panel extension wires to larger pots for Eurorack ergonomics.",
-        "• Bypass: SPDT toggle swaps OUT between dry input and wet output. For pop-free switching, use relay + anti-pop cap.",
-        "• Panel size: 8HP Eurorack. Jacks: IN, OUT, CV. Pots: feedback, mix, CV amount. Switch: bypass.",
-        "• Power budget: +12V ~40mA (PT2399 + NE5532 quiescent), -12V ~15mA (op-amp negative rail). Well within Eurorack norms.",
-    ]
-    for i, line in enumerate(notes):
-        r.elements.append(f'<text x="55" y="{622 + i*17}" class="value" font-size="9">{line}</text>')
-
-    return r.render()
-
-
-def generate_dso138_analog_frontend() -> str:
-    """Generate DSO138 analog front-end: input protection + CD4051 mux + power for oscilloscope module."""
-    r = SchematicRenderer(1050, 780, "DSO138 Analog Front-End (Phase 7B)",
-                          "8-ch input mux · ±5V clamp protection · +9V regulation for DSO138 kit")
-
-    def box(x, y, w, h, title, color, fill="#FFFFFF"):
-        r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{color}" stroke-width="1.5" rx="4"/>')
-        r.elements.append(f'<text x="{x+w/2}" y="{y+18}" class="label" text-anchor="middle" font-size="11" fill="{color}">{title}</text>')
-
-    # 8 input jacks (left column)
-    r.elements.append(f'<text x="60" y="80" class="label" font-size="11">8 × Input Jacks (3.5mm)</text>')
-    jack_labels = ["Saw",  "Square", "Sub", "VCF", "Mix", "LFO", "Env", "Ext"]
-    for i, lbl in enumerate(jack_labels):
-        y = 100 + i * 55
-        r.elements.append(f'<circle cx="60" cy="{y+15}" r="14" fill="none" stroke="#333" stroke-width="1.5"/>')
-        r.elements.append(f'<circle cx="60" cy="{y+15}" r="5" fill="#333"/>')
-        r.elements.append(f'<text x="45" y="{y+18}" class="value" text-anchor="end" font-size="9">{lbl}</text>')
-        # Series protection resistor
-        r.elements.append(f'<line x1="75" y1="{y+15}" x2="115" y2="{y+15}" stroke="#1a1a1a" stroke-width="1.5"/>')
-        r.elements.append(f'<rect x="118" y="{y+9}" width="26" height="12" fill="#FFFBE6" stroke="#999"/>')
-        r.elements.append(f'<text x="131" y="{y+18}" class="value" text-anchor="middle" font-size="8">100k</text>')
-        r.elements.append(f'<line x1="144" y1="{y+15}" x2="180" y2="{y+15}" stroke="#1a1a1a" stroke-width="1.5"/>')
-        # Clamp pair
-        r.elements.append(f'<text x="185" y="{y+11}" class="value" font-size="8" fill="#D44">↑ +5V</text>')
-        r.elements.append(f'<text x="185" y="{y+22}" class="value" font-size="8" fill="#44D">↓ -5V</text>')
-
-    # Clamp network legend
-    box(230, 100, 160, 100, "BAT54S ±5V clamp", "#CC6600")
-    r.elements.append(f'<text x="310" y="140" class="value" text-anchor="middle" font-size="9">Schottky pair</text>')
-    r.elements.append(f'<text x="310" y="156" class="value" text-anchor="middle" font-size="8">per channel</text>')
-    r.elements.append(f'<text x="310" y="175" class="value" text-anchor="middle" font-size="8">Limits DSO138 input</text>')
-    r.elements.append(f'<text x="310" y="190" class="value" text-anchor="middle" font-size="8">to safe ±5V range</text>')
-
-    # CD4051 MUX
-    box(420, 130, 220, 290, "CD4051 8-ch mux", "#6600CC", "#F0E8FF")
-    r.elements.append(f'<text x="530" y="170" class="value" text-anchor="middle" font-size="9">X0–X7 inputs</text>')
-    r.elements.append(f'<text x="530" y="185" class="value" text-anchor="middle" font-size="9">(pins 13,14,15,12,1,5,2,4)</text>')
-    r.elements.append(f'<text x="530" y="210" class="value" text-anchor="middle" font-size="9">A/B/C select pins</text>')
-    r.elements.append(f'<text x="530" y="225" class="value" text-anchor="middle" font-size="8">11 / 10 / 9</text>')
-    r.elements.append(f'<text x="530" y="250" class="value" text-anchor="middle" font-size="9">COM (pin 3) → out</text>')
-    r.elements.append(f'<text x="530" y="275" class="value" text-anchor="middle" font-size="9">VDD=+5V  VEE=-5V  VSS=GND</text>')
-    r.elements.append(f'<text x="530" y="295" class="value" text-anchor="middle" font-size="8">(bipolar signals need VEE)</text>')
-    r.elements.append(f'<text x="530" y="320" class="value" text-anchor="middle" font-size="9">INH (pin 6) → GND</text>')
-    r.elements.append(f'<text x="530" y="345" class="value" text-anchor="middle" font-size="9">Address source:</text>')
-    r.elements.append(f'<text x="530" y="360" class="value" text-anchor="middle" font-size="8">3× panel toggles OR</text>')
-    r.elements.append(f'<text x="530" y="375" class="value" text-anchor="middle" font-size="8">Pico GP16/17/18 via DB-9</text>')
-    r.elements.append(f'<text x="530" y="395" class="value" text-anchor="middle" font-size="8">(address 0-7 = 3 bits)</text>')
-
-    # TL072 buffer
-    box(680, 180, 150, 100, "TL072 buffer", "#4A4")
-    r.elements.append(f'<text x="755" y="220" class="value" text-anchor="middle" font-size="9">Unity gain</text>')
-    r.elements.append(f'<text x="755" y="235" class="value" text-anchor="middle" font-size="8">follower</text>')
-    r.elements.append(f'<text x="755" y="255" class="value" text-anchor="middle" font-size="8">Isolates mux from</text>')
-    r.elements.append(f'<text x="755" y="270" class="value" text-anchor="middle" font-size="8">DSO138 input Z</text>')
-
-    # DSO138 input
-    box(860, 170, 160, 130, "DSO138 BNC IN", "#0066CC", "#E3F2FD")
-    r.elements.append(f'<text x="940" y="210" class="value" text-anchor="middle" font-size="9">Stock scope kit</text>')
-    r.elements.append(f'<text x="940" y="226" class="value" text-anchor="middle" font-size="8">STM32F103 based</text>')
-    r.elements.append(f'<text x="940" y="246" class="value" text-anchor="middle" font-size="9">1 MΩ / 20 pF</text>')
-    r.elements.append(f'<text x="940" y="260" class="value" text-anchor="middle" font-size="8">front-end input Z</text>')
-    r.elements.append(f'<text x="940" y="280" class="value" text-anchor="middle" font-size="8">Max ±50V with probe</text>')
-
-    # Flow arrows
-    r.elements.append(f'<line x1="220" y1="300" x2="420" y2="300" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
-    r.elements.append(f'<text x="320" y="290" class="anno" text-anchor="middle" font-size="9">8 protected inputs</text>')
-    r.elements.append(f'<line x1="640" y1="280" x2="680" y2="230" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
-    r.elements.append(f'<line x1="830" y1="230" x2="860" y2="230" stroke="#1a1a1a" stroke-width="1.8" marker-end="url(#arrow)"/>')
-
-    # Power section (bottom left)
-    box(40, 550, 460, 200, "Power Regulation", "#D44", "#FFF0F0")
-    r.elements.append(f'<text x="270" y="575" class="value" text-anchor="middle" font-size="10" fill="#B71C1C">DSO138 needs +9V (LM7809 from +12V)</text>')
-    pwr_lines = [
-        "• +12V Eurorack → 1N5817 → LM7809 (TO-220) → +9V / 500mA",
-        "• LM7809 heatsink: small TO-220 clip-on, dissipates ~1.5W",
-        "• ±5V rails for CD4051 clamps: LM78L05 (+5V) and 79L05 (-5V) from ±12V",
-        "• Decoupling: 100µF electrolytic + 100nF ceramic on every IC VCC/VEE pin",
-        "• Backlight on DSO138 LCD: separate +5V tap (stock)",
-        "• No mains isolation needed — Eurorack is already floating",
-    ]
-    for i, line in enumerate(pwr_lines):
-        r.elements.append(f'<text x="55" y="{605 + i*18}" class="value" font-size="9">{line}</text>')
-
-    # Build notes
-    box(520, 550, 500, 200, "Module Build Notes", "#4A4", "#F1F8E9")
-    r.elements.append(f'<text x="770" y="575" class="value" text-anchor="middle" font-size="10" fill="#1B5E20">10HP Eurorack · panel: LCD cutout + 8 jacks + 3 toggles</text>')
-    build_notes = [
-        "• DSO138 LCD (2.4\" TFT) dominates panel: ~70×50mm cutout, bezel lip 3mm",
-        "• 8× 3.5mm jacks vertically stacked on right side (55mm pitch = 5 HP)",
-        "• 3× SPDT toggles for A/B/C mux address (manual mode)",
-        "• Optional: 1× DB-9 for Pico-driven mux (automated probe-switching via UART cmds)",
-        "• DSO138 kit button panel: exposed through side cutout or remote buttons",
-        "• Separate module: does NOT share ground with breakout — isolated via ferrite at +12V.",
-        "• All 8 inputs protected — safe to hot-patch Eurorack-level signals without fear.",
-    ]
-    for i, line in enumerate(build_notes):
-        r.elements.append(f'<text x="535" y="{605 + i*18}" class="value" font-size="9">{line}</text>')
-
-    return r.render()
-
-
 def generate_expander_power_distribution() -> str:
     """17HP expander power + 5-pin EFFIGY rear header. Most utilities are firmware or external."""
     r = SchematicRenderer(1100, 720, "Expander Power Distribution (17HP)",
@@ -3377,6 +2957,538 @@ def generate_pico_power_protection() -> str:
     return r.render()
 
 
+# ─── Mod catalog schematics (M01–M14) ─────────────────────────────────────
+#
+# Each mod_mNN_* generator produces a single-page schematic figure
+# documenting one Phase 1 / Phase 2 mod from docs/mods/macrobrute_mod_catalog.md.
+# The simple mods (M01, M05–M07, M09–M11, M13–M14) get compact wiring sketches.
+# The complex mods (M02, M04, M08, M12) get full schematics with IC pinout
+# detail and (separately) stripboard layouts in tools/generate_layouts.py.
+
+def _mod_header(r, body_lines, parts_label="Parts"):
+    """Common footer block — parts list + mod-id badge."""
+    y = 510
+    r.elements.append(f'<rect x="40" y="{y}" width="800" height="80" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>')
+    r.elements.append(f'<text x="55" y="{y+18}" class="label" font-size="11" fill="#333">{parts_label}</text>')
+    for i, line in enumerate(body_lines):
+        r.elements.append(f'<text x="55" y="{y+38 + i*15}" class="value" font-size="9">{line}</text>')
+
+
+def _draw_jack(r, x, y, label, color="#1a1a1a"):
+    r.elements.append(f'<circle cx="{x}" cy="{y}" r="14" fill="none" stroke="{color}" stroke-width="2"/>')
+    r.elements.append(f'<circle cx="{x}" cy="{y}" r="5" fill="{color}"/>')
+    r.elements.append(f'<text x="{x}" y="{y-22}" class="label" text-anchor="middle" font-size="10">{label}</text>')
+
+
+def _draw_resistor(r, x, y, value, horizontal=True):
+    if horizontal:
+        r.elements.append(f'<rect x="{x-15}" y="{y-6}" width="30" height="12" fill="#FFFBE6" stroke="#999" rx="1"/>')
+        r.elements.append(f'<text x="{x}" y="{y+3}" class="value" text-anchor="middle" font-size="8">{value}</text>')
+    else:
+        r.elements.append(f'<rect x="{x-6}" y="{y-15}" width="12" height="30" fill="#FFFBE6" stroke="#999" rx="1"/>')
+        r.elements.append(f'<text x="{x+12}" y="{y+3}" class="value" font-size="8">{value}</text>')
+
+
+def _draw_switch(r, x, y, kind="SPDT", label=""):
+    """SPDT or SPST toggle symbol."""
+    r.elements.append(f'<circle cx="{x-15}" cy="{y}" r="3" fill="#1a1a1a"/>')
+    r.elements.append(f'<circle cx="{x+15}" cy="{y-8}" r="3" fill="#1a1a1a"/>')
+    r.elements.append(f'<line x1="{x-15}" y1="{y}" x2="{x+12}" y2="{y-8}" stroke="#1a1a1a" stroke-width="1.5"/>')
+    if kind == "SPDT":
+        r.elements.append(f'<circle cx="{x+15}" cy="{y+8}" r="3" fill="#1a1a1a"/>')
+    if label:
+        r.elements.append(f'<text x="{x}" y="{y+22}" class="value" text-anchor="middle" font-size="8">{label}</text>')
+
+
+def _draw_ic(r, x, y, w, h, name, pins_left, pins_right, color="#2a2a2a"):
+    """Draw a DIP IC body with pin labels."""
+    r.elements.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{color}" stroke="#1a1a1a" stroke-width="2" rx="3"/>')
+    r.elements.append(f'<circle cx="{x+8}" cy="{y+8}" r="3" fill="gold"/>')
+    r.elements.append(f'<text x="{x+w/2}" y="{y+h/2}" class="label" text-anchor="middle" fill="#FFF" font-size="11">{name}</text>')
+    pin_count = max(len(pins_left), len(pins_right))
+    pitch = (h - 20) / max(1, pin_count - 1) if pin_count > 1 else 0
+    for i, pl in enumerate(pins_left):
+        py = y + 14 + i * pitch
+        r.elements.append(f'<circle cx="{x-4}" cy="{py}" r="2.5" fill="gold"/>')
+        r.elements.append(f'<text x="{x-8}" y="{py+3}" class="value" text-anchor="end" font-size="8">{pl}</text>')
+    for i, pr in enumerate(pins_right):
+        py = y + 14 + i * pitch
+        r.elements.append(f'<circle cx="{x+w+4}" cy="{py}" r="2.5" fill="gold"/>')
+        r.elements.append(f'<text x="{x+w+8}" y="{py+3}" class="value" font-size="8">{pr}</text>')
+
+
+# ── M01 — Triangle gain ×2 ──────────────────────────────────────────────────
+def generate_mod_m01_triangle_gain() -> str:
+    r = SchematicRenderer(900, 620, "M01 — Triangle Output Gain ×2",
+                          "Restore level parity with saw/square (TL074 D follower in breakout PCB)")
+    r.elements.append('<text x="80" y="120" class="label" font-size="11">TP124 (triangle, ~5 Vpp)</text>')
+    r.elements.append('<line x1="80" y1="140" x2="240" y2="140" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.opamp(Point(280, 140), label="TL074 D", pins=("+", "-", "out"), show_power=False)
+    # Feedback network
+    r.elements.append('<line x1="310" y1="140" x2="380" y2="140" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="380" y1="140" x2="380" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="380" y1="200" x2="200" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 290, 200, "33k Rf (was 16k)", horizontal=True)
+    r.elements.append('<line x1="200" y1="200" x2="200" y2="160" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Ground leg
+    r.elements.append('<line x1="200" y1="200" x2="200" y2="260" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 200, 260, "16k Rg", horizontal=False)
+    r.elements.append('<line x1="200" y1="290" x2="200" y2="320" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.ground(Point(200, 320))
+    # Output
+    r.elements.append('<line x1="380" y1="140" x2="540" y2="140" stroke="#1a1a1a" stroke-width="2"/>')
+    _draw_jack(r, 580, 140, "DB-9 A:7 (triangle out)")
+    r.elements.append('<text x="450" y="130" class="anno" text-anchor="middle" font-size="9">A = 1 + Rf/Rg ≈ 2.06×</text>')
+    _mod_header(r, [
+        "• 1× 33 kΩ resistor (replaces existing 16 kΩ feedback R)",
+        "• Effect: triangle level matches saw/square at the DB-9 A jack (within ±1 dB)",
+        "• Single-component swap — no PCB cuts, no panel work",
+    ])
+    return r.render()
+
+
+# ── M02 — Active soft sync ──────────────────────────────────────────────────
+def generate_mod_m02_soft_sync() -> str:
+    r = SchematicRenderer(900, 620, "M02 — Active Soft Sync (LM393)",
+                          "Working soft sync — replaces the broken stock circuit. Toggle between hard / soft.")
+    # Sync input jack
+    _draw_jack(r, 80, 200, "SYNC IN")
+    r.elements.append('<line x1="100" y1="200" x2="180" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # SPDT toggle (mode select)
+    _draw_switch(r, 200, 200, "SPDT", "Hard / Soft")
+    r.elements.append('<text x="200" y="170" class="label" text-anchor="middle" font-size="9">M02 toggle</text>')
+    # Hard path (top): direct
+    r.elements.append('<line x1="215" y1="192" x2="640" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="430" y="110" class="anno" font-size="9">A: hard sync (stock direct)</text>')
+    # Soft path (bottom): through LM393
+    r.elements.append('<line x1="215" y1="208" x2="280" y2="280" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # LM393 body
+    _draw_ic(r, 280, 240, 150, 90, "LM393", ["IN+", "IN-", "GND"], ["OUT", "+5V", ""])
+    # Threshold divider
+    _draw_resistor(r, 240, 320, "100k", True)
+    _draw_resistor(r, 240, 360, "100k", True)
+    r.elements.append('<line x1="220" y1="340" x2="280" y2="270" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="200" y="395" class="value" text-anchor="middle" font-size="8">mid-rail bias</text>')
+    # Hysteresis feedback (output → +input)
+    r.elements.append('<line x1="430" y1="252" x2="500" y2="252" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="500" y1="252" x2="500" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="500" y1="220" x2="260" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="260" y1="220" x2="260" y2="252" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="260" y1="252" x2="280" y2="252" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 380, 220, "10k hyst", True)
+    # Diode
+    r.elements.append('<polygon points="450,210 450,230 470,220" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="460" y="200" class="value" font-size="8">1N4148</text>')
+    # Pull-up
+    _draw_resistor(r, 460, 270, "10k", False)
+    r.elements.append('<text x="490" y="252" class="value" font-size="8">+5V</text>')
+    # Output to VCO sync
+    r.elements.append('<line x1="430" y1="252" x2="640" y2="252" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="640" y1="100" x2="640" y2="252" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="650" y="180" class="label" font-size="10">→ VCO sync node</text>')
+    _mod_header(r, [
+        "• LM393 dual comparator, 2× 100 kΩ (threshold divider), 1× 10 kΩ (hysteresis), 1× 1N4148, 1× SPDT",
+        "• Hard mode (A): sync jack → VCO sync directly (stock behaviour).",
+        "• Soft mode (B): comparator + hysteresis produces phase-resync edges that re-time the VCO without forcing it.",
+        "• Bench-test on breadboard before final install. Stripboard layout: schematics/mod_m02_soft_sync_stripboard.svg",
+    ])
+    return r.render()
+
+
+# ── M03 — Sine extraction + buffer ─────────────────────────────────────────
+def generate_mod_m03_sine_extract() -> str:
+    r = SchematicRenderer(900, 580, "M03 — Sine Extraction + Buffer",
+                          "Tap the triangle wave-shaper, buffer with TL074 spare section, output to new panel jack")
+    r.elements.append('<text x="60" y="120" class="label" font-size="11">Triangle shaper output</text>')
+    r.elements.append('<text x="60" y="135" class="value" font-size="9">(post diode-clipper, quasi-sine ~3 Vpp)</text>')
+    r.elements.append('<line x1="60" y1="180" x2="220" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # DC block cap
+    r.elements.append('<line x1="220" y1="170" x2="220" y2="190" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<line x1="232" y1="170" x2="232" y2="190" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<text x="226" y="160" class="value" text-anchor="middle" font-size="8">1µF</text>')
+    r.elements.append('<line x1="232" y1="180" x2="280" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Series R
+    _draw_resistor(r, 310, 180, "10k", True)
+    r.elements.append('<line x1="325" y1="180" x2="380" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # TL074 spare follower
+    r.opamp(Point(420, 180), label="TL074 (spare)", pins=("+", "-", "out"), show_power=False)
+    # Feedback (unity gain)
+    r.elements.append('<line x1="450" y1="180" x2="500" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="500" y1="180" x2="500" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="500" y1="220" x2="380" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="380" y1="220" x2="380" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Output
+    r.elements.append('<line x1="500" y1="180" x2="600" y2="180" stroke="#1a1a1a" stroke-width="2"/>')
+    _draw_jack(r, 640, 180, "SINE OUT (panel)")
+    r.elements.append('<text x="510" y="170" class="anno" font-size="9">~10 Vpp Eurorack</text>')
+    _mod_header(r, [
+        "• 1× TL074 spare section (already on the breakout — re-uses I6 spare op-amp slot)",
+        "• 2× 10 kΩ (input + feedback), 1× 1 µF (DC-block), 1× 6 mm panel jack",
+        "• Tap point is high-impedance — no PCB cuts, doesn't load the stock signal path",
+        "• Adds a clean sine output to the MicroBrute's waveform palette",
+    ])
+    return r.render()
+
+
+# ── M04 — Metalizer CV depth (LM13700 OTA) ─────────────────────────────────
+def generate_mod_m04_metalizer_vca() -> str:
+    r = SchematicRenderer(960, 620, "M04 — Metalizer CV Depth (LM13700 OTA)",
+                          "VCA in the Metalizer feedback loop — turns the wavefolder into a dynamic effect")
+    # Metalizer feedback TAP (entry)
+    r.elements.append('<text x="60" y="120" class="label" font-size="11">Metalizer feedback (cut here)</text>')
+    r.elements.append('<line x1="60" y1="180" x2="220" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="140" y="172" class="anno" text-anchor="middle" font-size="9">existing trace cut</text>')
+    # OTA body
+    _draw_ic(r, 240, 160, 160, 120, "LM13700",
+             ["IN+", "IN-", "Iabc", "V-"],
+             ["OUT", "Diode B", "Buf", "V+"])
+    # CV input network
+    r.elements.append('<line x1="100" y1="350" x2="220" y2="350" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_jack(r, 80, 350, "CV IN")
+    _draw_resistor(r, 180, 350, "100k", True)
+    r.elements.append('<line x1="195" y1="350" x2="280" y2="350" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="280" y1="350" x2="280" y2="225" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Amount pot
+    r.potentiometer(Point(360, 380), label="Amount", value="100k")
+    r.elements.append('<line x1="370" y1="380" x2="370" y2="225" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Power decoupling
+    r.elements.append('<text x="420" y="295" class="value" font-size="8">+12V (V+)</text>')
+    r.elements.append('<text x="420" y="245" class="value" font-size="8">-12V (V-)</text>')
+    # Output back to feedback path
+    r.elements.append('<line x1="404" y1="180" x2="640" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="650" y="184" class="label" font-size="10">→ Metalizer fb (rejoin)</text>')
+    _mod_header(r, [
+        "• LM13700 (1 OTA section), 1× 100 kΩ CV input R, 1× 10 kΩ control R, 1× 100 kΩ pot, 1× 6 mm CV jack, 4× 0.1 µF decouple",
+        "• Cut Metalizer feedback trace at the wavefolder output node; re-route through the OTA's signal input",
+        "• CV (0–5 V) modulates Iabc — high CV = full feedback (intense fold), low CV = muted",
+        "• Amount pot sets manual offset / minimum-fold floor when CV is at 0V",
+        "• Most invasive of the Phase 2 mods — install LAST in build sequence",
+    ])
+    return r.render()
+
+
+# ── M05 — Filter self-oscillation kill switch ────────────────────────────
+def generate_mod_m05_filter_selfosc_kill() -> str:
+    r = SchematicRenderer(900, 540, "M05 — Filter Self-Oscillation Kill Switch",
+                          "SPST breaks the Steiner-Parker filter feedback at high resonance")
+    r.elements.append('<text x="60" y="130" class="label" font-size="11">Steiner-Parker filter</text>')
+    r.elements.append('<rect x="60" y="150" width="160" height="80" fill="#F0F0F5" stroke="#666" stroke-width="1.5" rx="4"/>')
+    r.elements.append('<text x="140" y="195" class="value" text-anchor="middle" font-size="10">Stock filter core</text>')
+    # Feedback path tap
+    r.elements.append('<line x1="220" y1="190" x2="320" y2="190" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="245" y="180" class="anno" font-size="9">resonance fb</text>')
+    # 10k limit + SPST
+    _draw_resistor(r, 350, 190, "10k", True)
+    r.elements.append('<line x1="365" y1="190" x2="420" y2="190" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_switch(r, 440, 190, "SPST", "Kill")
+    r.elements.append('<line x1="460" y1="182" x2="540" y2="182" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="540" y1="182" x2="540" y2="270" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="540" y1="270" x2="140" y2="270" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="140" y1="270" x2="140" y2="230" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="340" y="290" class="anno" text-anchor="middle" font-size="9">closed = stock self-osc · open = clean percussive</text>')
+    _mod_header(r, [
+        "• 1× SPST mini-toggle, 1× 10 kΩ resistor (current limit during switching)",
+        "• Wired in series with the existing resonance feedback path — no PCB cuts",
+        "• Closed: filter can self-oscillate at high Q (stock behaviour)",
+        "• Open: resonance peak only, no oscillation — clean percussive plucks",
+    ])
+    return r.render()
+
+
+# ── M06 — PWM CV input ─────────────────────────────────────────────────────
+def generate_mod_m06_pwm_cv() -> str:
+    r = SchematicRenderer(900, 540, "M06 — PWM CV Input",
+                          "Direct CV injection to PWM summing node (R289)")
+    _draw_jack(r, 100, 200, "PWM CV IN")
+    r.elements.append('<line x1="120" y1="200" x2="240" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 270, 200, "39k", True)
+    r.elements.append('<line x1="285" y1="200" x2="380" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="390" y="195" class="label" font-size="10">→ R289 junction</text>')
+    r.elements.append('<text x="390" y="210" class="value" font-size="9">PWM summing node, front board</text>')
+    r.elements.append('<rect x="240" y="250" width="450" height="70" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append('<text x="465" y="270" class="label" text-anchor="middle" font-size="11" fill="#E65100">Safety</text>')
+    r.elements.append('<text x="260" y="290" class="value" font-size="9">39 kΩ + LPC2361 DAC node internal Z → max ±0.13 mA at ±5 V CV</text>')
+    r.elements.append('<text x="260" y="304" class="value" font-size="9">Well below DAC node spec — no clamping diodes required.</text>')
+    _mod_header(r, [
+        "• 1× 39 kΩ series resistor, 1× 6 mm Thonkiconn jack",
+        "• Tap point: R289 junction on the front board (PWM summing node)",
+        "• 0V CV = stock PWM (knob position), CV swings shift pulse width",
+        "• Pairs with M09 (PWM self-mod normalled jack) — sharing the same panel jack",
+    ])
+    return r.render()
+
+
+# ── M07 — Pitch CV starve toggle ───────────────────────────────────────────
+def generate_mod_m07_pitch_starve() -> str:
+    r = SchematicRenderer(900, 540, "M07 — Pitch CV Starve Toggle",
+                          "SPDT introduces a current draw on the VCO pitch CV — drifty/glitchy pitch")
+    r.elements.append('<text x="60" y="130" class="label" font-size="11">VCO pitch CV summing node</text>')
+    r.elements.append('<rect x="60" y="150" width="160" height="60" fill="#F0F0F5" stroke="#666" stroke-width="1.5" rx="4"/>')
+    r.elements.append('<text x="140" y="185" class="value" text-anchor="middle" font-size="10">Pitch summing</text>')
+    r.elements.append('<line x1="220" y1="180" x2="320" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_switch(r, 340, 180, "SPDT", "Stable / Starve")
+    r.elements.append('<line x1="355" y1="172" x2="420" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="430" y="176" class="value" font-size="9">A: stock (open)</text>')
+    r.elements.append('<line x1="355" y1="188" x2="420" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 460, 240, "470Ω", True)
+    r.elements.append('<line x1="475" y1="240" x2="540" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.ground(Point(540, 240))
+    r.elements.append('<text x="540" y="270" class="value" font-size="9">B: starved (current sink)</text>')
+    _mod_header(r, [
+        "• 1× SPDT mini-toggle, 1× 470 Ω resistor",
+        "• Position A: open — stock pitch CV behaviour",
+        "• Position B: 470 Ω + LPC2361 DAC source impedance limits current to a few mA",
+        "• Result: pitch slowly drifts low / becomes unstable while toggle is in B",
+    ])
+    return r.render()
+
+
+# ── M08 — Sub-harmonic divider (74HC74) ────────────────────────────────────
+def generate_mod_m08_subharmonic() -> str:
+    r = SchematicRenderer(960, 620, "M08 — Sub-harmonic Divider (74HC74)",
+                          "Square out → Schmitt buffer → /2 flip-flop → mix back into audio path")
+    # Square in
+    r.elements.append('<text x="60" y="120" class="label" font-size="11">Square out tap (TP93)</text>')
+    r.elements.append('<line x1="60" y1="180" x2="180" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Schmitt buffer (CD40106 spare)
+    r.elements.append('<polygon points="180,170 180,190 210,180" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<circle cx="214" cy="180" r="3" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="195" y="160" class="value" text-anchor="middle" font-size="8">CD40106 (spare)</text>')
+    r.elements.append('<line x1="217" y1="180" x2="280" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # 74HC74 D-flip-flop
+    _draw_ic(r, 280, 130, 150, 100, "74HC74",
+             ["D", "CLK", "RST", "GND"],
+             ["Q", "Q̄", "+5V", "PRE"])
+    # D = Q̄ feedback
+    r.elements.append('<line x1="434" y1="160" x2="480" y2="160" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="480" y1="160" x2="480" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="480" y1="100" x2="240" y2="100" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="240" y1="100" x2="240" y2="144" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="240" y1="144" x2="280" y2="144" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="360" y="92" class="anno" text-anchor="middle" font-size="9">D ← Q̄ (toggles on every clock — /2 division)</text>')
+    # Q output → mix
+    r.elements.append('<line x1="434" y1="144" x2="500" y2="144" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # AC coupling
+    r.elements.append('<line x1="500" y1="134" x2="500" y2="154" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<line x1="512" y1="134" x2="512" y2="154" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<text x="506" y="125" class="value" text-anchor="middle" font-size="8">1µF</text>')
+    r.elements.append('<line x1="512" y1="144" x2="560" y2="144" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Mix pot
+    r.potentiometer(Point(610, 144), label="Mix", value="10k")
+    r.elements.append('<line x1="640" y1="144" x2="720" y2="144" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="730" y="148" class="label" font-size="10">→ pre-VCF mixer</text>')
+    # Enable toggle
+    _draw_switch(r, 590, 320, "SPDT", "Sub Enable")
+    r.elements.append('<line x1="575" y1="320" x2="500" y2="320" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="490" y="324" class="value" text-anchor="end" font-size="9">SPDT in series with mix tap</text>')
+    _mod_header(r, [
+        "• 1× 74HC74 dual D-flip-flop, 1× 10 kΩ mix pot, 1× SPDT enable, 4× 0.1 µF decouple, 1× 1 µF AC-couple",
+        "• Schmitt buffer reuses a spare CD40106 gate (already on the breakout)",
+        "• Generates a square wave one octave below the source — gritty bass enhancement",
+        "• Pair with T6 (gate feedback touch bolt) for big metallic textures",
+        "• Stripboard: schematics/mod_m08_subharmonic_stripboard.svg",
+    ])
+    return r.render()
+
+
+# ── M09 — PWM self-mod normalled jack ──────────────────────────────────────
+def generate_mod_m09_pwm_selfmod() -> str:
+    r = SchematicRenderer(900, 540, "M09 — PWM Self-Modulation (normalled jack)",
+                          "Saw out → 100kΩ → PWM CV (default). Plug a cable to break the loop.")
+    r.elements.append('<text x="60" y="130" class="label" font-size="11">Saw output (TP94 area)</text>')
+    r.elements.append('<line x1="60" y1="180" x2="200" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 230, 180, "100k", True)
+    r.elements.append('<line x1="245" y1="180" x2="320" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Switching jack
+    r.elements.append('<rect x="320" y="160" width="120" height="40" fill="none" stroke="#1a1a1a" stroke-width="2" rx="3"/>')
+    r.elements.append('<text x="380" y="155" class="label" text-anchor="middle" font-size="10">Switching jack</text>')
+    r.elements.append('<text x="380" y="195" class="value" text-anchor="middle" font-size="9">tip · normal · sleeve</text>')
+    r.elements.append('<text x="380" y="218" class="value" text-anchor="middle" font-size="8">(M06 panel jack body — re-used)</text>')
+    # When unplugged: tip ↔ normal connected internally
+    r.elements.append('<line x1="440" y1="180" x2="560" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="570" y="184" class="label" font-size="10">→ M06 PWM CV node</text>')
+    r.elements.append('<rect x="40" y="240" width="820" height="60" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
+    r.elements.append('<text x="450" y="262" class="label" text-anchor="middle" font-size="11" fill="#E65100">How it behaves</text>')
+    r.elements.append('<text x="60" y="282" class="value" font-size="9">No cable plugged: the saw self-modulates the PWM via 100 kΩ → metallic FM-ish PWM textures by default.</text>')
+    r.elements.append('<text x="60" y="296" class="value" font-size="9">Cable plugged into M06 jack: the switch breaks the saw → normal contact, lets external CV take over.</text>')
+    _mod_header(r, [
+        "• 1× 6 mm switching (normalled) Thonkiconn jack — replaces the plain jack from M06",
+        "• 1× 100 kΩ series resistor (saw → normal contact)",
+        "• Cooperates with M06: same panel hole, two behaviours depending on plug state",
+    ])
+    return r.render()
+
+
+# ── M10 — Brute Factor extreme toggle ──────────────────────────────────────
+def generate_mod_m10_brute_extreme() -> str:
+    r = SchematicRenderer(900, 540, "M10 — Brute Factor Extreme Toggle",
+                          "SPDT bypasses the internal limit R on the Brute Factor feedback path")
+    r.elements.append('<text x="60" y="130" class="label" font-size="11">Brute Factor feedback loop</text>')
+    r.elements.append('<rect x="60" y="150" width="160" height="60" fill="#F0F0F5" stroke="#666" stroke-width="1.5" rx="4"/>')
+    r.elements.append('<text x="140" y="185" class="value" text-anchor="middle" font-size="10">BF feedback amp</text>')
+    r.elements.append('<line x1="220" y1="180" x2="280" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Stock limit R
+    _draw_resistor(r, 320, 180, "Rlim", True)
+    r.elements.append('<line x1="335" y1="180" x2="420" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # SPDT
+    _draw_switch(r, 450, 180, "SPDT", "Tame / Extreme")
+    r.elements.append('<line x1="465" y1="172" x2="540" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="550" y="176" class="value" font-size="9">B: stock (Rlim in circuit)</text>')
+    # Bypass path
+    r.elements.append('<line x1="465" y1="188" x2="510" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 540, 220, "1k safety", True)
+    r.elements.append('<line x1="555" y1="220" x2="610" y2="220" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="610" y1="220" x2="610" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="660" y="220" class="value" font-size="9">A: extreme (Rlim shorted)</text>')
+    r.elements.append('<line x1="610" y1="172" x2="700" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="710" y="176" class="label" font-size="10">→ feedback path</text>')
+    _mod_header(r, [
+        "• 1× SPDT mini-toggle, 1× 1 kΩ inline (safety limiter for switching transients)",
+        "• Position B: stock — Rlim in circuit, normal Brute Factor feedback",
+        "• Position A: extreme — Rlim bypassed, feedback can self-oscillate / explode",
+        "• Output level can spike. Panel-mark the 'extreme' position prominently.",
+    ])
+    return r.render()
+
+
+# ── M11 — 9th touch bolt: envelope retrigger ───────────────────────────────
+def generate_mod_m11_touch_envretrig() -> str:
+    r = SchematicRenderer(900, 540, "M11 — 9th Touch Bolt: Envelope Retrigger",
+                          "Body contact injects a brief gate pulse — rhythmic glitch via touch")
+    # Brass bolt symbol
+    r.elements.append('<rect x="60" y="170" width="40" height="20" fill="#B87333" stroke="#8B4513" stroke-width="1.5" rx="2"/>')
+    r.elements.append('<text x="80" y="160" class="label" text-anchor="middle" font-size="10">M3 brass bolt</text>')
+    r.elements.append('<text x="80" y="205" class="value" text-anchor="middle" font-size="8">body contact</text>')
+    r.elements.append('<line x1="100" y1="180" x2="160" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Series R
+    _draw_resistor(r, 190, 180, "100k", True)
+    r.elements.append('<line x1="205" y1="180" x2="260" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Diode
+    r.elements.append('<polygon points="260,170 260,190 280,180" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="280" y1="170" x2="280" y2="190" stroke="#1a1a1a" stroke-width="2"/>')
+    r.elements.append('<text x="270" y="155" class="value" font-size="8">1N4148</text>')
+    r.elements.append('<line x1="280" y1="180" x2="340" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Pulse-shaping cap
+    r.elements.append('<line x1="340" y1="170" x2="340" y2="190" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<line x1="352" y1="170" x2="352" y2="190" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<text x="346" y="160" class="value" text-anchor="middle" font-size="8">100nF</text>')
+    r.elements.append('<line x1="352" y1="180" x2="440" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="450" y="184" class="label" font-size="10">→ Gate node (env trig)</text>')
+    _mod_header(r, [
+        "• 1× M3 brass bolt + nut (matches the existing 8 touch bolts)",
+        "• 1× 100 kΩ + 1× 1N4148 + 1× 100 nF — the diode prevents back-feed, the cap shapes the touch into a short pulse",
+        "• Touching the bolt produces a brief gate edge → envelope retriggers",
+        "• Body capacitance can't latch the gate high — falls back to inactive after the cap charges",
+    ])
+    return r.render()
+
+
+# ── M12 — ARG (audio-rate gate) ────────────────────────────────────────────
+def generate_mod_m12_arg() -> str:
+    r = SchematicRenderer(960, 620, "M12 — ARG (Audio-Rate Gate)",
+                          "Audio in → LM393 comparator → gate at zero-crossings")
+    _draw_jack(r, 80, 200, "AUDIO IN")
+    # DC block
+    r.elements.append('<line x1="100" y1="200" x2="180" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="180" y1="190" x2="180" y2="210" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<line x1="192" y1="190" x2="192" y2="210" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<text x="186" y="180" class="value" text-anchor="middle" font-size="8">100nF</text>')
+    r.elements.append('<line x1="192" y1="200" x2="260" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # LM393
+    _draw_ic(r, 280, 160, 150, 90, "LM393", ["IN+", "IN-", "GND"], ["OUT", "+5V", ""])
+    r.elements.append('<line x1="260" y1="200" x2="280" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Threshold pot biases IN-
+    r.potentiometer(Point(220, 320), label="Threshold", value="100k")
+    r.elements.append('<line x1="220" y1="290" x2="220" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="220" y1="200" x2="280" y2="208" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Pull-up
+    _draw_resistor(r, 460, 250, "10k", False)
+    r.elements.append('<text x="490" y="208" class="value" font-size="8">+5V pull-up</text>')
+    # Output → gate
+    r.elements.append('<line x1="430" y1="180" x2="640" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="650" y="184" class="label" font-size="10">→ Gate input (env / aux out)</text>')
+    _mod_header(r, [
+        "• 1× LM393 dual comparator, 1× 100 kΩ threshold pot, 1× 10 kΩ pull-up to +5 V, 1× 100 nF DC-block, 1× 6 mm jack",
+        "• Audio crosses the threshold → comparator output snaps low → gate edge",
+        "• LM393's natural ~few-mV hysteresis gives clean edges; tune threshold pot to reject quiet content",
+        "• Use case: trigger envelope from kick drum, vocal, anything",
+        "• Stripboard: schematics/mod_m12_arg_stripboard.svg",
+    ])
+    return r.render()
+
+
+# ── M13 — VCO sync to envelope toggle ──────────────────────────────────────
+def generate_mod_m13_vco_sync_env() -> str:
+    r = SchematicRenderer(900, 540, "M13 — VCO Sync to Envelope (toggle)",
+                          "SPDT routes envelope decay edge to the VCO sync input")
+    r.elements.append('<text x="60" y="130" class="label" font-size="11">External sync jack</text>')
+    r.elements.append('<line x1="60" y1="180" x2="200" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_switch(r, 230, 180, "SPDT", "Ext / Env")
+    # Position A: external (top) — straight through to VCO sync
+    r.elements.append('<line x1="245" y1="172" x2="640" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="430" y="164" class="anno" text-anchor="middle" font-size="9">A: external sync (stock)</text>')
+    # Position B: envelope decay → high-pass edge shaper → VCO sync
+    r.elements.append('<line x1="245" y1="188" x2="320" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="320" y1="240" x2="380" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Edge shaper: 100n + 10k high-pass
+    r.elements.append('<line x1="380" y1="230" x2="380" y2="250" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<line x1="392" y1="230" x2="392" y2="250" stroke="#1a1a1a" stroke-width="3"/>')
+    r.elements.append('<text x="386" y="220" class="value" text-anchor="middle" font-size="8">100nF</text>')
+    r.elements.append('<line x1="392" y1="240" x2="440" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 470, 240, "10k", True)
+    r.elements.append('<line x1="485" y1="240" x2="540" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="540" y1="240" x2="540" y2="172" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<text x="290" y="270" class="anno" font-size="9">B: env decay → HPF edge → VCO sync</text>')
+    r.elements.append('<text x="650" y="176" class="label" font-size="10">→ VCO sync</text>')
+    _mod_header(r, [
+        "• 1× SPDT mini-toggle, 1× 100 nF + 1× 10 kΩ (edge-shaper)",
+        "• Position A: external sync jack feeds VCO sync (stock)",
+        "• Position B: envelope decay → high-pass → produces a sync edge on each note end",
+        "• Replicates a classic patch (env → VCO sync) without using a cable",
+    ])
+    return r.render()
+
+
+# ── M14 — Safe VCO bias starve ─────────────────────────────────────────────
+def generate_mod_m14_vco_bias_starve() -> str:
+    r = SchematicRenderer(900, 580, "M14 — Safe VCO Bias Starve (NOT supply rail)",
+                          "Body contact loads the VCO pitch-bias node — detune via touch, no risk to LPC2361")
+    # Brass bolt
+    r.elements.append('<rect x="60" y="170" width="40" height="20" fill="#B87333" stroke="#8B4513" stroke-width="1.5" rx="2"/>')
+    r.elements.append('<text x="80" y="160" class="label" text-anchor="middle" font-size="10">M3 brass bolt</text>')
+    r.elements.append('<line x1="100" y1="180" x2="160" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    _draw_resistor(r, 190, 180, "22k", True)
+    r.elements.append('<line x1="205" y1="180" x2="260" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Diode (anti-backflow)
+    r.elements.append('<polygon points="260,170 260,190 280,180" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>')
+    r.elements.append('<line x1="280" y1="170" x2="280" y2="190" stroke="#1a1a1a" stroke-width="2"/>')
+    r.elements.append('<text x="270" y="155" class="value" font-size="8">1N4148</text>')
+    r.elements.append('<line x1="280" y1="180" x2="380" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Bias node label
+    r.elements.append('<rect x="380" y="160" width="220" height="50" fill="#F0F0F5" stroke="#666" stroke-width="1.5" rx="4"/>')
+    r.elements.append('<text x="490" y="183" class="value" text-anchor="middle" font-size="10">VCO pitch-bias node</text>')
+    r.elements.append('<text x="490" y="200" class="value" text-anchor="middle" font-size="9">(high-Z point in temperature-comp network)</text>')
+    # Big safety callout
+    r.elements.append('<rect x="40" y="260" width="800" height="180" fill="#FFF0F0" stroke="#D44" stroke-width="1.5" rx="4"/>')
+    r.elements.append('<text x="450" y="285" class="label" text-anchor="middle" font-size="12" fill="#D44">⚠ SAFETY — read before building</text>')
+    safety = [
+        "• This mod taps the VCO pitch-BIAS node, NOT the +12V supply rail.",
+        "• 22 kΩ + body resistance + 1N4148 caps current at ~0.5 mA on a +12V node — safe for the analog network.",
+        "• The LPC2361 DAC and shared +12V/-12V supply rails are NOT touched.",
+        "• Worst case if you press-and-hold: pitch drifts low, oscillator slows or briefly stops.",
+        "• DO NOT tap the +12V rail directly — that variant was explicitly rejected (risks cooking the LPC2361 DAC).",
+    ]
+    for i, line in enumerate(safety):
+        r.elements.append(f'<text x="60" y="{310 + i*22}" class="value" font-size="10" fill="#D44">{line}</text>')
+    _mod_header(r, [
+        "• 1× M3 brass bolt + nut, 1× 22 kΩ series R, 1× 1N4148 diode",
+        "• Tap point: VCO pitch-bias node (high-Z, in temperature-compensation network)",
+        "• Touching the bolt pulls the bias slightly low — oscillator detunes downward / breaks up",
+        "• Could double as a 10th touch bolt position alongside M11",
+    ])
+    return r.render()
+
+
 def main():
     """Generate all schematics."""
     os.makedirs("schematics", exist_ok=True)
@@ -3388,13 +3500,11 @@ def main():
         ("clock_divider_schematic.svg", generate_clock_divider_schematic),
         ("slew_limiter_schematic.svg", generate_slew_limiter_schematic),
         ("attenuverter_schematic.svg", generate_attenuverter_schematic),
-        ("pt2399_cv_control_schematic.svg", generate_pt2399_cv_schematic),
         ("led_driver_array_schematic.svg", generate_led_driver_schematic),
         ("vactrol_full_schematic.svg", generate_vactrol_full_schematic),
         ("wiring_overview.svg", generate_wiring_diagram),
         ("dip_pinout_reference.svg", generate_dip_pinout_reference),
         ("touch_plate_schematic.svg", generate_touch_plate_schematic),
-        ("input_protection_schematic.svg", generate_input_protection_schematic),
         ("esd_protection_schematic.svg", generate_esd_protection_schematic),
         ("system_architecture_block.svg", generate_system_architecture_block),
         ("audio_signal_flow.svg", generate_audio_signal_flow),
@@ -3407,11 +3517,24 @@ def main():
         ("db9_connector_diagram.svg", generate_db9_connector_diagram),
         ("power_regulation_diagram.svg", generate_power_regulation_diagram),
         ("testpoints_map.svg", generate_testpoints_map),
-        ("jf33_integration_schematic.svg", generate_jf33_integration_schematic),
-        ("dso138_analog_frontend.svg", generate_dso138_analog_frontend),
         ("expander_power_distribution.svg", generate_expander_power_distribution),
         ("midi_interface_circuit.svg", generate_midi_interface_circuit),
         ("pico_power_protection.svg", generate_pico_power_protection),
+        # Mod catalog (M01–M14)
+        ("mod_m01_triangle_gain.svg",        generate_mod_m01_triangle_gain),
+        ("mod_m02_soft_sync.svg",            generate_mod_m02_soft_sync),
+        ("mod_m03_sine_extract.svg",         generate_mod_m03_sine_extract),
+        ("mod_m04_metalizer_vca.svg",        generate_mod_m04_metalizer_vca),
+        ("mod_m05_filter_selfosc_kill.svg",  generate_mod_m05_filter_selfosc_kill),
+        ("mod_m06_pwm_cv.svg",               generate_mod_m06_pwm_cv),
+        ("mod_m07_pitch_starve.svg",         generate_mod_m07_pitch_starve),
+        ("mod_m08_subharmonic.svg",          generate_mod_m08_subharmonic),
+        ("mod_m09_pwm_selfmod.svg",          generate_mod_m09_pwm_selfmod),
+        ("mod_m10_brute_extreme.svg",        generate_mod_m10_brute_extreme),
+        ("mod_m11_touch_envretrig.svg",      generate_mod_m11_touch_envretrig),
+        ("mod_m12_arg.svg",                  generate_mod_m12_arg),
+        ("mod_m13_vco_sync_env.svg",         generate_mod_m13_vco_sync_env),
+        ("mod_m14_vco_bias_starve.svg",      generate_mod_m14_vco_bias_starve),
     ]
     
     for filename, generator in schematics:

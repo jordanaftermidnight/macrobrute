@@ -2,7 +2,7 @@
 
 **Arturia MicroBrute Deep Modification Project**
 
-Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico WH digital brain, a 17HP Eurorack expander, firmware reverse engineering, and three optional companion modules (JF-33 delay, DSO138 scope, EFFIGY Daisy DSP via I²C peer-pair bus).
+Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico WH digital brain, a 17HP Eurorack expander, firmware reverse engineering, and an optional EFFIGY Daisy DSP companion module on an I²C peer-pair bus. Two earlier-design companion modules (JF-33 delay, DSO138 scope) live as spinoffs under `spinoffs/` — out of the canonical build.
 
 ## Documentation — start here
 
@@ -24,8 +24,6 @@ Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM 
 - **Pico WH firmware** — main + strip OLED, encoder, clock gen/detect/divide, programmable aux outputs, tap tempo + manual gate, RGB LED, LPC2361 UART bridge, USB-MIDI, EFFIGY peer-pair bus
 - **EFFIGY peer pair** — separate 24HP Daisy DSP module on a hidden 5-pin rear I²C header. When paired, MACROBRUTE owns clock, EFFIGY owns main menu, encoders share focus. Audio/CV stay on Eurorack patches; I²C carries control + telemetry only. EFFIGY's C header (`EFFIGY/firmware/src/macrobrute_bridge.h`) is the authoritative source for the register map; Pico-side Python constants are generated.
 - **Norns Shield (anticipated, Phase 7D)** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually present an ii-compatible target on a separate front-of-rack I²C bus and translate ii commands into local state OR proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`.
-- **JF-33 analog delay** — Separate Eurorack module with CV-controlled delay time (optional, Phase 7A)
-- **DSO138 oscilloscope** — Separate Eurorack module with input protection + CD4051 mux (optional, Phase 7B)
 - **LPC2361 firmware RE** — ~98% complete via .mbf decryption. 43 SysEx commands mapped. Pico↔LPC UART bridge framed as `0xAA · type · counter · len · payload · xor_checksum`.
 - **Power** — Behringer CP1A Eurorack PSU. Pico fed from +5V bus via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. ±12V passes through DB-9 B for MB-side op-amp buffers.
 - **Circuit bending** — 6 touch bolts + 3 toggle mods + 3 panel jacks (curated from 130+ mods)
@@ -39,7 +37,7 @@ macrobrute/
 │   ├── hardware/            # BOM, shopping list, pinouts
 │   ├── firmware/            # LPC2361 investigation guide, firmware project docs
 │   ├── mods/                # Modification guides, circuit bending (4 docs)
-│   ├── research/            # Firmware RE findings, .mbf analysis, PT2399/DSO138
+│   ├── research/            # Firmware RE findings, .mbf analysis
 │   └── legacy/              # Earlier spec revisions
 ├── firmware/
 │   ├── pico/                # Pico WH MicroPython firmware (14 modules + 1 generated)
@@ -53,10 +51,11 @@ macrobrute/
 ├── schematics/              # 8 ASCII circuit docs + ~60 SVGs (stripboards, pinouts, wiring)
 ├── kicad/                   # KiCad 8 schematic projects
 │   ├── breakout/            #   Internal breakout PCB
-│   ├── expander/            #   42HP Eurorack expander module
-│   ├── jf33/                #   JF-33 CV control & level matching (Phase 7A)
-│   └── dso_input/           #   DSO138 input protection & mux (Phase 7B)
-├── panel/                   # Panel templates (SVG): MicroBrute + 42HP expander
+│   └── expander/            #   17HP Eurorack expander module
+├── panel/                   # Panel templates (SVG): MicroBrute + 17HP expander
+├── spinoffs/                # Companion projects out of canonical scope
+│   ├── jf33-eurorack/       #   DIY PT2399 delay (speculative)
+│   └── dso138-desktop/      #   DSO138 desktop scope (speculative)
 └── tools/                   # Flash, RE, doc-build, diagram generators
     └── ghidra/              # Ghidra label tooling for LPC2361 analysis
 ```
@@ -64,7 +63,7 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 0.96" SSD1306 I²C OLED (primary main), 0.91" 128×32 SSD1306 (strip on MB panel), 1.3" SH1106 (fallback / reserved for EFFIGY), 16×2 1602 I²C LCD (alt fallback), HW040 encoder, 2× shielded DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case, Behringer CP1A PSU
+MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 0.96" SSD1306 I²C OLED (primary main), 0.91" 128×32 SSD1306 (strip on MB panel), 1.3" SH1106 (fallback / reserved for EFFIGY), 16×2 1602 I²C LCD (alt fallback), HW040 encoder, 2× shielded DB-9, LED/LDR kit, IC kit, 6U 84HP Eurorack case, Behringer CP1A PSU. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
 
 ### Key Decisions
 | Decision | Choice |
@@ -102,7 +101,6 @@ MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 0.96" SSD1306 I²C
 - [Maffez Pedrobrute](https://maffez.com/?page_id=2285)
 - [MicroBrute SysEx RE](https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html)
 - [MKNielsen2000 Add-ons](https://github.com/MKNielsen2000/MicroBrute-Add-ons)
-- [PT2399 Analysis](https://www.electrosmash.com/pt2399-analysis)
 - [DLO-138 Firmware](https://github.com/ardyesp/DLO-138)
 - [Elektroid](https://github.com/dagargo/elektroid) — Open source MicroBrute device manager
 - [EuroPi](https://github.com/Allen-Synthesis/EuroPi)

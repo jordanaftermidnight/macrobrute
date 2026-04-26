@@ -31,8 +31,8 @@
 | Panel jacks | 3 (VCF insert, Metalizer insert, VCA CV in) |
 | Panel toggles | 3 (Envelope bypass, Metalizer boost, VCA drone) |
 | Expander size | **17HP** (87 × 128.5 mm — fits user's pre-cut panel blank) |
-| JF-33 delay | **Separate Eurorack module** (Phase 7A, optional) |
-| DSO138 oscilloscope | **Separate Eurorack module** (Phase 7B, optional) |
+| JF-33 delay | Moved to `spinoffs/jf33-eurorack/` — not part of canonical MACROBRUTE |
+| DSO138 oscilloscope | Moved to `spinoffs/dso138-desktop/` — desktop scope, not a module |
 | Power | Separate supplies, signal ground only via DB-9 |
 
 ---
@@ -50,7 +50,7 @@
 - `docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md` — component/circuit research
 - `docs/research/mbf_analysis.md` — .mbf firmware decryption + Ghidra findings (43 SysEx cmds, 427 fns)
 - `docs/research/firmware_re_findings.md` — CRP bypass methods, tools
-- `docs/research/pt2399_dso138_findings.md` — delay + scope deep dive
+- `spinoffs/jf33-eurorack/docs/pt2399_dso138_findings.md` — moved with the JF-33 spinoff
 - `docs/research/additional_mods_findings.md` — soft sync, triangle gain, VCA offset, PWM
 
 ### Hardware
@@ -62,16 +62,12 @@
 - `CIRCUIT_REVIEW.md` — systematic review of all 13 circuit sections + corrections
 - `breakout_pcb.md` + `breakout_stripboard.md` + `breakout_layout.svg` — internal PCB
 - `expander_circuits.md` + `expander_stripboard.md` + per-module SVGs (LFO, noise, clock, S&H, slew, attenuverter)
-- `jf33_cv_control.md` — PT2399 anti-latch-up + CV control (Phase 7A)
-- `dso138_input_protection.md` — DSO138 protection + CD4051 mux (Phase 7B)
 - `touch_plates.md` + `touch_test_board.svg` — 8-channel test board → 6 final bolts
 - `pico_pinout.md` + `pico_pinout_diagram.svg` — Pico WH GPIO allocation (+ I²C1 Daisy expansion + USB-MIDI)
 - `lpc2361_pinout_diagram.svg` — LPC2361 pinout (documented pins + RE gaps flagged)
 - `db9_connector_diagram.svg` — full 18-pin DB-9 A/B interconnect map
 - `power_regulation_diagram.svg` — Eurorack → breakout → Pico/expander rail chain
 - `testpoints_map.svg` — 18 MicroBrute test points (waveforms, CV, gate, power, touch bends)
-- `jf33_integration_schematic.svg` — Phase 7A: PT2399 delay full Eurorack integration
-- `dso138_analog_frontend.svg` — Phase 7B: 8-ch mux + ±5V clamp + LM7809 for scope
 - `expander_power_distribution.svg` — 42HP expander rails + rear I²C header to Daisy
 - `midi_interface_circuit.svg` — Stock 6N138 DIN MIDI (LPC) + Pico USB-MIDI (new)
 - `wiring_diagram.md` + `wiring_*.svg` — complete signal flow
@@ -87,8 +83,6 @@
 ### KiCad (`kicad/`)
 - `breakout/` — internal breakout PCB schematic
 - `expander/` — 42HP Eurorack expander module
-- `jf33/` — JF-33 delay CV control (Phase 7A)
-- `dso_input/` — DSO138 input protection (Phase 7B)
 
 ### Panel (`panel/`)
 - `microbrute_panel_template.svg` — MB drilling template
@@ -133,8 +127,8 @@ See `MACROBRUTE_BUILD_PLAN.md` for task-level detail.
 | 4 | 42HP expander build (all utilities) | Not started |
 | 5 | System integration + ground-loop audit | Not started |
 | 6 | LPC2361 UART bridge + custom firmware | Firmware RE ~98% done; hardware bridge pending |
-| 7A | JF-33 delay module (optional, separate) | Not started |
-| 7B | DSO138 scope module (optional, separate) | Not started |
+| 7A | EFFIGY DSP module pair-up (Daisy Seed peer over I²C) | Spec frozen; firmware skeleton in place |
+| 7B | Norns Shield ii bridge (anticipated) | Design stub `docs/MACROBRUTE_NORNS_BRIDGE.md` |
 
 ---
 
@@ -145,6 +139,5 @@ See `MACROBRUTE_BUILD_PLAN.md` for task-level detail.
 - MicroBrute SysEx RE (Matraszek): https://matraszek.dev/posts/reverse-engineering-arturia-microbrute-midi-sysex-protocol.html
 - Elektroid (open-source MB device manager): https://github.com/dagargo/elektroid
 - DLO-138 firmware: https://github.com/ardyesp/DLO-138
-- PT2399 analysis: https://www.electrosmash.com/pt2399-analysis
 - EuroPi: https://github.com/Allen-Synthesis/EuroPi
 - lpc21isp: https://github.com/capiman/lpc21isp

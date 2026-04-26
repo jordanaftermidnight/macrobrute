@@ -76,6 +76,74 @@
   <text x="220" y="70" text-anchor="middle" font-size="2.2" fill="orange">VCA CV</text>
 
   <!-- ============================================================ -->
+  <!-- SECTION D2: PHASE 2 MOD ADDITIONS (M01–M14)                   -->
+  <!-- 4 new jacks · 3 pots · 6 toggles · 2 brass bolts              -->
+  <!-- See docs/mods/macrobrute_mod_catalog.md                       -->
+  <!-- ============================================================ -->
+
+  <!-- M03 sine out · M06 PWM CV (M09 normalled) · M04 metalizer CV · M12 ARG audio in -->
+  <circle cx="240" cy="26" r="3" fill="none" stroke="orange" stroke-width="0.4"/>
+  <text x="240" y="36" text-anchor="middle" font-size="2.2" fill="orange">SINE</text>
+  <text x="240" y="22" text-anchor="middle" font-size="1.6" fill="#888">M03</text>
+
+  <circle cx="260" cy="26" r="3" fill="none" stroke="orange" stroke-width="0.4"/>
+  <text x="260" y="36" text-anchor="middle" font-size="2.2" fill="orange">PWM CV</text>
+  <text x="260" y="22" text-anchor="middle" font-size="1.6" fill="#888">M06/M09</text>
+
+  <circle cx="280" cy="26" r="3" fill="none" stroke="orange" stroke-width="0.4"/>
+  <text x="280" y="36" text-anchor="middle" font-size="2.2" fill="orange">META CV</text>
+  <text x="280" y="22" text-anchor="middle" font-size="1.6" fill="#888">M04</text>
+
+  <circle cx="300" cy="26" r="3" fill="none" stroke="orange" stroke-width="0.4"/>
+  <text x="300" y="36" text-anchor="middle" font-size="2.2" fill="orange">ARG IN</text>
+  <text x="300" y="22" text-anchor="middle" font-size="1.6" fill="#888">M12</text>
+
+  <!-- M04 META amount · M08 SUB mix · M12 ARG threshold (7mm pot holes) -->
+  <circle cx="240" cy="80" r="3.5" fill="none" stroke="#0066CC" stroke-width="0.4"/>
+  <text x="240" y="89" text-anchor="middle" font-size="2.0" fill="#0066CC">META AMT</text>
+  <text x="240" y="92" text-anchor="middle" font-size="1.6" fill="#0066CC">M04 · 7mm pot</text>
+
+  <circle cx="270" cy="80" r="3.5" fill="none" stroke="#0066CC" stroke-width="0.4"/>
+  <text x="270" y="89" text-anchor="middle" font-size="2.0" fill="#0066CC">SUB MIX</text>
+  <text x="270" y="92" text-anchor="middle" font-size="1.6" fill="#0066CC">M08 · 7mm pot</text>
+
+  <circle cx="300" cy="80" r="3.5" fill="none" stroke="#0066CC" stroke-width="0.4"/>
+  <text x="300" y="89" text-anchor="middle" font-size="2.0" fill="#0066CC">ARG THR</text>
+  <text x="300" y="92" text-anchor="middle" font-size="1.6" fill="#0066CC">M12 · 7mm pot</text>
+
+  <!-- 6 toggles for M02 / M05 / M07 / M08 / M10 / M13 (6.2mm SPDT/SPST) -->
+  <circle cx="60" cy="90" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="60" y="100" text-anchor="middle" font-size="2.0" fill="purple">SOFT-SYNC</text>
+  <text x="60" y="103" text-anchor="middle" font-size="1.6" fill="purple">M02</text>
+
+  <circle cx="85" cy="90" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="85" y="100" text-anchor="middle" font-size="2.0" fill="purple">FIL-SO</text>
+  <text x="85" y="103" text-anchor="middle" font-size="1.6" fill="purple">M05</text>
+
+  <circle cx="110" cy="90" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="110" y="100" text-anchor="middle" font-size="2.0" fill="purple">PITCH-S</text>
+  <text x="110" y="103" text-anchor="middle" font-size="1.6" fill="purple">M07</text>
+
+  <circle cx="135" cy="90" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="135" y="100" text-anchor="middle" font-size="2.0" fill="purple">SUB EN</text>
+  <text x="135" y="103" text-anchor="middle" font-size="1.6" fill="purple">M08</text>
+
+  <circle cx="380" cy="90" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="380" y="100" text-anchor="middle" font-size="2.0" fill="purple">BF EXTREME</text>
+  <text x="380" y="103" text-anchor="middle" font-size="1.6" fill="purple">M10</text>
+
+  <circle cx="395" cy="60" r="3.1" fill="none" stroke="purple" stroke-width="0.3"/>
+  <text x="395" y="70" text-anchor="middle" font-size="2.0" fill="purple">SYNC→ENV</text>
+  <text x="395" y="73" text-anchor="middle" font-size="1.6" fill="purple">M13</text>
+
+  <!-- 2 new brass bolts: M11 env-retrig + M14 bias-starve (6mm holes near touch cluster) -->
+  <circle cx="155" cy="22" r="3" fill="none" stroke="#B87333" stroke-width="0.5"/>
+  <text x="155" y="18" text-anchor="middle" font-size="1.8" fill="#B87333">M11 RETRIG</text>
+
+  <circle cx="135" cy="22" r="3" fill="none" stroke="#B87333" stroke-width="0.5"/>
+  <text x="135" y="18" text-anchor="middle" font-size="1.8" fill="#B87333">M14 BIAS</text>
+
+  <!-- ============================================================ -->
   <!-- SECTION E: TOUCH BOLTS (separate side-panel template)         -->
   <!-- 6 brass M3 bolts, 18-20mm spacing — see touch_test_board.svg  -->
   <!-- ============================================================ -->
@@ -101,9 +169,10 @@
   <text x="20" y="113" text-anchor="middle" font-size="2" fill="black">10mm</text>
 
   <!-- Legend box -->
-  <rect x="290" y="93" width="120" height="22" fill="white" stroke="#ccc" stroke-width="0.2"/>
-  <text x="295" y="99" font-size="2.2" fill="red">■ Red = Rectangular cutout (strip OLED)</text>
-  <text x="295" y="103" font-size="2.2" fill="orange">● Orange = 3.5mm jack (6mm hole)</text>
-  <text x="295" y="107" font-size="2.2" fill="purple">● Purple = Toggle switch (6.2mm)</text>
-  <text x="295" y="111" font-size="2.2" fill="#888">Touch bolts: separate side-panel template</text>
+  <rect x="290" y="93" width="120" height="26" fill="white" stroke="#ccc" stroke-width="0.2"/>
+  <text x="295" y="99" font-size="2.0" fill="red">■ Red = Rectangular cutout (strip OLED)</text>
+  <text x="295" y="103" font-size="2.0" fill="orange">● Orange = 3.5mm jack (6mm hole)</text>
+  <text x="295" y="107" font-size="2.0" fill="#0066CC">● Blue = 9mm pot (7mm bushing)</text>
+  <text x="295" y="111" font-size="2.0" fill="purple">● Purple = Toggle switch (6.2mm)</text>
+  <text x="295" y="115" font-size="2.0" fill="#B87333">● Bronze = M3 brass touch bolt (6mm hole)</text>
 </svg>

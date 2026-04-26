@@ -416,42 +416,7 @@ a buffer + jack, no round-trip to expander.
 | Metalizer Feedback Pot | 100kΩ pot across wavefolder feedback path | Better than touch bolt T6? May replace it |
 | Brute Factor CV | External CV → 100kΩ → feedback path | Overlaps T4, but CV-controllable |
 
-### 12D. JF-33 Delay — Separate Eurorack Module
-
-The Joyo JF-33 (PT2399 delay) PCB is extracted and available.
-Build as a standalone Eurorack module rather than integrating into MB.
-
-| Feature | Implementation |
-|---------|----------------|
-| Anti-latch-up | BC337 + 100kΩ/1µF RC (300ms startup delay) |
-| Delay Time CV | TL072 → 2N3904 current sink, 1kΩ emitter R (0-5mA range) |
-| Eurorack level match | Input: 10kΩ attenuator. Output: TL072 gain stage |
-| Feedback CV | Optional: SSI2164 VCA or simple pot |
-| Power | +12V from Eurorack bus, onboard 78L05 for PT2399 |
-| Panel | 6HP: In, Out, Time CV, Feedback, Mix, Time knob |
-| Schematic | `schematics/jf33_cv_control.md` |
-
-**Why separate:** PT2399 is noisy and benefits from isolated power.
-Keeping it off the MB PSU avoids clock noise bleeding into VCO.
-
-### 12E. DSO138 Oscilloscope — Separate Eurorack Module
-
-Built DSO138 kit available. Convert to Eurorack signal monitor.
-
-| Feature | Implementation |
-|---------|----------------|
-| Input protection | BAT54S clamps to ±12V + 1kΩ series R per channel |
-| Signal mux | CD4051 (8:1) — select which signal to display |
-| Mux channels | Saw, Square, Mix, VCF, Gate, Envelope, LFO, External |
-| Mux control | 3-bit from Pico (GP spare) or manual rotary switch |
-| Power | +12V → LM7809 → DSO138 (test on raw 12V first) |
-| Panel | 10HP: LCD display, input jack, channel select, probe clip |
-| Firmware | Optional: DLO-138 (open source, adds serial export) |
-
-**Why separate:** Display is large, needs its own panel real estate.
-Better as a utility module than crammed into MB panel.
-
-### 12F. LPC2361 Firmware Bridge (Phase 6)
+### 12D. LPC2361 Firmware Bridge (Phase 6)
 
 | Feature | Implementation |
 |---------|----------------|
@@ -540,8 +505,8 @@ Bought locally in Kaunas, April 2026:
 | HW040 encoder | 1 | ✓ Have |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare) |
 | DB-9 connectors | 2 | ✓ Have |
-| DSO138 oscilloscope | 1 | ✓ Built |
-| JF-33 PCB | 1 | ✓ Extracted |
+| DSO138 oscilloscope | — | Moved to `spinoffs/dso138-desktop/` |
+| JF-33 PCB | — | Moved to `spinoffs/jf33-eurorack/` |
 | CD4049UBE | 3 | ✓ Have (level shifter) |
 | Isolation transformer | 1 | ✓ Salvaged (46.9/82.4Ω) |
 
@@ -550,7 +515,7 @@ Bought locally in Kaunas, April 2026:
 | Part | Qty | Source | For |
 |------|-----|--------|-----|
 | 1nF polystyrene cap | 1 | TME | S&H hold cap (CRITICAL) |
-| LM7809 | 1-2 | Local/TME | DSO138 power |
+| ~~LM7809~~ | — | — | **Dropped** — DSO138 moved to `spinoffs/dso138-desktop/` |
 | LM7805 | 2 | Local/TME | Spares |
 | Thonkiconn PJ398SM | ~20 | Thonk | Expander jacks |
 | Eurorack 16-pin header | 1 | Thonk | Expander power |

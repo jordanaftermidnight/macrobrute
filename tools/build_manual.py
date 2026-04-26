@@ -57,7 +57,6 @@ SVG_MAP = {
         "schematics/ic_pinout_cd4024.svg",
         "schematics/ic_pinout_cd4066.svg",
         "schematics/ic_pinout_lm358.svg",
-        "schematics/ic_pinout_pt2399.svg",
     ],
     "schematics/breakout_stripboard.md": [
         "schematics/breakout_layout.svg",
@@ -84,7 +83,6 @@ SVG_MAP = {
     "schematics/CIRCUIT_REVIEW.md": [
         "schematics/led_driver_array_schematic.svg",
         "schematics/vactrol_full_schematic.svg",
-        "schematics/input_protection_schematic.svg",
         "schematics/esd_protection_schematic.svg",
         "schematics/cv_input_protection_diagram.svg",
         "schematics/cd4051_multiplexer.svg",
@@ -96,12 +94,21 @@ SVG_MAP = {
         "schematics/touch_test_board.svg",
         "schematics/touch_plate_redesign.svg",
     ],
-    "schematics/jf33_cv_control.md": [
-        "schematics/pt2399_cv_control_schematic.svg",
-        "schematics/jf33_integration_schematic.svg",
-    ],
-    "schematics/dso138_input_protection.md": [
-        "schematics/dso138_analog_frontend.svg",
+    "docs/mods/macrobrute_mod_catalog.md": [
+        "schematics/mod_m01_triangle_gain.svg",
+        "schematics/mod_m02_soft_sync.svg",
+        "schematics/mod_m03_sine_extract.svg",
+        "schematics/mod_m04_metalizer_vca.svg",
+        "schematics/mod_m05_filter_selfosc_kill.svg",
+        "schematics/mod_m06_pwm_cv.svg",
+        "schematics/mod_m07_pitch_starve.svg",
+        "schematics/mod_m08_subharmonic.svg",
+        "schematics/mod_m09_pwm_selfmod.svg",
+        "schematics/mod_m10_brute_extreme.svg",
+        "schematics/mod_m11_touch_envretrig.svg",
+        "schematics/mod_m12_arg.svg",
+        "schematics/mod_m13_vco_sync_env.svg",
+        "schematics/mod_m14_vco_bias_starve.svg",
     ],
 }
 
@@ -144,7 +151,6 @@ SECTIONS = [
     ]),
     ("8. Control & Interface", "control", [
         "schematics/touch_plates.md",
-        "schematics/jf33_cv_control.md",
         "docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md",
         "docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md",
     ]),
@@ -154,19 +160,16 @@ SECTIONS = [
     ]),
     ("10. Mods & Extensions", "mods", [
         "docs/mods/touch_bend_specs.md",
+        "docs/mods/macrobrute_mod_catalog.md",
         "docs/mods/microbrute_mods_guide.md",
         "docs/mods/microbrute_circuit_bending_guide.md",
         "docs/mods/deep_circuit_bending.md",
         "docs/mods/ultimate_microbrute_project.md",
     ]),
-    ("11. Optional Separate Modules (Phase 7)", "optional", [
-        "schematics/dso138_input_protection.md",
-    ]),
-    ("12. Research", "research", [
+    ("11. Research", "research", [
         "docs/research/additional_mods_findings.md",
         "docs/research/mbf_analysis.md",
         "docs/research/firmware_re_findings.md",
-        "docs/research/pt2399_dso138_findings.md",
         "docs/firmware/lpc2361_investigation_guide.md",
         "docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
         "docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",

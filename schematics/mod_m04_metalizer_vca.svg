@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620">
+<defs>
+  <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .subtitle { font: 11px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .label { font: bold 10px "SF Mono", Consolas, monospace; fill: #1a1a1a; filter: url(#textshadow); }
+    .value { font: 9px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .pin { font: 10px "SF Mono", Consolas, monospace; fill: #555; filter: url(#textshadow); }
+    .anno { font: 9px "SF Mono", Consolas, monospace; fill: #0066CC; filter: url(#textshadow); }
+    .wire { stroke: #1a1a1a; stroke-width: 1.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire:hover { stroke: #ff6600; stroke-width: 2.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .wire-thick { stroke: #1a1a1a; stroke-width: 2.5; fill: none; transition: all 0.2s; cursor: pointer; }
+    .wire-thick:hover { stroke: #ff6600; stroke-width: 3.5; filter: drop-shadow(0 0 3px #ff6600); }
+    .component { stroke: #1a1a1a; stroke-width: 1.5; fill: none; }
+    .filled { fill: #1a1a1a; }
+    .junction { fill: #0066CC; }
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
+  </marker>
+</defs>
+<rect width="960" height="620" fill="#FEFEFE"/>
+<text x="480" y="25" class="title" text-anchor="middle">M04 — Metalizer CV Depth (LM13700 OTA)</text>
+<text x="480" y="42" class="subtitle" text-anchor="middle">VCA in the Metalizer feedback loop — turns the wavefolder into a dynamic effect</text>
+<text x="60" y="120" class="label" font-size="11">Metalizer feedback (cut here)</text>
+<line x1="60" y1="180" x2="220" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="140" y="172" class="anno" text-anchor="middle" font-size="9">existing trace cut</text>
+<rect x="240" y="160" width="160" height="120" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+<circle cx="248" cy="168" r="3" fill="gold"/>
+<text x="320.0" y="220.0" class="label" text-anchor="middle" fill="#FFF" font-size="11">LM13700</text>
+<circle cx="236" cy="174.0" r="2.5" fill="gold"/>
+<text x="232" y="177.0" class="value" text-anchor="end" font-size="8">IN+</text>
+<circle cx="236" cy="207.33333333333334" r="2.5" fill="gold"/>
+<text x="232" y="210.33333333333334" class="value" text-anchor="end" font-size="8">IN-</text>
+<circle cx="236" cy="240.66666666666669" r="2.5" fill="gold"/>
+<text x="232" y="243.66666666666669" class="value" text-anchor="end" font-size="8">Iabc</text>
+<circle cx="236" cy="274.0" r="2.5" fill="gold"/>
+<text x="232" y="277.0" class="value" text-anchor="end" font-size="8">V-</text>
+<circle cx="404" cy="174.0" r="2.5" fill="gold"/>
+<text x="408" y="177.0" class="value" font-size="8">OUT</text>
+<circle cx="404" cy="207.33333333333334" r="2.5" fill="gold"/>
+<text x="408" y="210.33333333333334" class="value" font-size="8">Diode B</text>
+<circle cx="404" cy="240.66666666666669" r="2.5" fill="gold"/>
+<text x="408" y="243.66666666666669" class="value" font-size="8">Buf</text>
+<circle cx="404" cy="274.0" r="2.5" fill="gold"/>
+<text x="408" y="277.0" class="value" font-size="8">V+</text>
+<line x1="100" y1="350" x2="220" y2="350" stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="80" cy="350" r="14" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+<circle cx="80" cy="350" r="5" fill="#1a1a1a"/>
+<text x="80" y="328" class="label" text-anchor="middle" font-size="10">CV IN</text>
+<rect x="165" y="344" width="30" height="12" fill="#FFFBE6" stroke="#999" rx="1"/>
+<text x="180" y="353" class="value" text-anchor="middle" font-size="8">100k</text>
+<line x1="195" y1="350" x2="280" y2="350" stroke="#1a1a1a" stroke-width="1.5"/>
+<line x1="280" y1="350" x2="280" y2="225" stroke="#1a1a1a" stroke-width="1.5"/>
+<path d="M340,380 l5,-8 l5,8 l5,-8 l5,8 l5,-8 l5,8" class="component"/>
+<line x1="360" y1="350" x2="360" y2="370" class="wire"/>
+<polygon points="360,370 356,362 364,362" class="filled"/>
+<text x="360" y="345" class="label" text-anchor="middle">Amount</text>
+<text x="360" y="400" class="value" text-anchor="middle">100k</text>
+<line x1="370" y1="380" x2="370" y2="225" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="420" y="295" class="value" font-size="8">+12V (V+)</text>
+<text x="420" y="245" class="value" font-size="8">-12V (V-)</text>
+<line x1="404" y1="180" x2="640" y2="180" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="650" y="184" class="label" font-size="10">→ Metalizer fb (rejoin)</text>
+<rect x="40" y="510" width="800" height="80" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
+<text x="55" y="528" class="label" font-size="11" fill="#333">Parts</text>
+<text x="55" y="548" class="value" font-size="9">• LM13700 (1 OTA section), 1× 100 kΩ CV input R, 1× 10 kΩ control R, 1× 100 kΩ pot, 1× 6 mm CV jack, 4× 0.1 µF decouple</text>
+<text x="55" y="563" class="value" font-size="9">• Cut Metalizer feedback trace at the wavefolder output node; re-route through the OTA's signal input</text>
+<text x="55" y="578" class="value" font-size="9">• CV (0–5 V) modulates Iabc — high CV = full feedback (intense fold), low CV = muted</text>
+<text x="55" y="593" class="value" font-size="9">• Amount pot sets manual offset / minimum-fold floor when CV is at 0V</text>
+<text x="55" y="608" class="value" font-size="9">• Most invasive of the Phase 2 mods — install LAST in build sequence</text></svg>

@@ -158,11 +158,6 @@ def main():
             "IN2+", "IN2-", "OUT2", "VCC"
         ], "DIP-8", "#795548"),
         
-        ("PT2399", "Delay IC", [
-            "VCC", "REF", "AGND", "DGND", "CLK_O", "VCO", "CC1", "CC0"
-        ], [
-            "OP1-", "OP1+", "OP2-", "OP2+", "VCOF", "VCC", "GND", "NC"
-        ], "DIP-16", "#607D8B"),
     ]
     
     for name, desc, left_pins, right_pins, package, color in ics:

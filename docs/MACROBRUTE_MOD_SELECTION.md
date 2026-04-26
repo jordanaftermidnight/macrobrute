@@ -55,6 +55,45 @@ swap in from reserves: #5 Envelope Decay (33K) or #7 LFO Speed (47K).
 
 ---
 
+## BUILD — Phase 2 mod additions (M01–M14)
+
+The original 12 panel mods + 8 touch bolts cover the canonical "make the
+MicroBrute semi-modular" use case. Phase E (2026-04-27) added **14 more
+mods** that enhance the synth's voice and add circuit-bent character.
+Full per-mod detail (parts, wiring, panel position, schematic refs) is in
+`docs/mods/macrobrute_mod_catalog.md`.
+
+**Phase 1 — restore tonal balance:**
+
+| ID | Mod | Cost | Effect |
+|----|-----|------|--------|
+| M01 | Triangle output gain ×2 | 1 R swap | Triangle level matches saw/square |
+
+**Phase 2 — synth-nature enhancements:**
+
+| ID | Mod | Cost | Effect |
+|----|-----|------|--------|
+| M02 | Active soft sync | LM393 + 6 passives + SPDT | Working soft sync (stock has design bug) |
+| M03 | Sine extraction + buffer | TL074 spare + 1 jack | Adds clean sine output |
+| M04 | Metalizer CV depth (VCA) | LM13700 + jack + pot | CV-controllable wavefolder intensity |
+| M05 | Filter self-osc kill switch | SPST + 1 R | Clean percussive filter mode |
+| M06 | PWM CV input | 1 jack + 1 R | External CV → PWM depth |
+
+**Phase 2 — circuit-bent additions:**
+
+| ID | Mod | Cost | Effect |
+|----|-----|------|--------|
+| M07 | Pitch CV starve toggle | SPDT + 1 R | Drifty/glitchy pitch on demand |
+| M08 | Sub-harmonic divider | 74HC74 + pot + SPDT | Sub-octave mixed into audio path |
+| M09 | PWM self-mod normalled jack | 1 switching jack + 1 R | Saw → PWM by default; cable plug breaks loop |
+| M10 | Brute Factor extreme toggle | SPDT | Bypass internal feedback limit |
+| M11 | 9th touch bolt — env retrigger | M3 brass + R + diode + cap | Body-controlled gate retrigger |
+| M12 | ARG — audio-rate gate input | LM393 + jack + threshold pot | Audio → comparator → gate |
+| M13 | VCO sync → envelope toggle | SPDT + edge-shaper | Quick-toggle synced sweep tones |
+| M14 | Safe VCO bias starve | M3 brass + 22 kΩ + diode | Detune via body contact (no supply rail tap) |
+
+Combined parts cost: ~€15–20. Combined panel area: 4 new jacks + 3 pots + 6 toggles + 2 brass bolts.
+
 ## BUILD — Expander (17HP Eurorack — 87 × 128.5 mm)
 
 The expander is now minimal. Most utilities have been moved off it because
@@ -126,16 +165,13 @@ SAW, SQR, TRI, SUB, MIX, VCF, ENV, LFO → 8 jacks
 | LPC2361 clock manipulation | Brick risk | Varactor on crystal — any mistake kills MCU | deep_circuit_bending.md |
 | MIDI out (pin 82) | SMD damage | LPC2361 pin is microscopic | mods_guide.md |
 
-### Separate Projects (Phase 7)
+### Spinoff projects (out of canonical scope)
 
-| Mod | Why Defer | Source |
-|-----|-----------|--------|
-| PT2399 clock injection | JF-33 is a separate build | deep_circuit_bending.md |
-| PT2399 VDD starving | JF-33 is a separate build | deep_circuit_bending.md |
-| PT2399 reference manipulation | JF-33 is a separate build | deep_circuit_bending.md |
-| DSO138 DAC output | Needs custom STM32 firmware | pt2399_dso138_findings.md |
-| DSO138 trigger output | Separate integration project | pt2399_dso138_findings.md |
-| Multi-PT2399 cascade/parallel | Advanced, needs dedicated board | deep_circuit_bending.md |
+JF-33 delay and DSO138 scope are no longer part of MACROBRUTE — they live
+under `spinoffs/jf33-eurorack/` and `spinoffs/dso138-desktop/` respectively.
+Their PT2399 clock injection / VDD starving / DAC output / trigger output
+mods are documented in `spinoffs/jf33-eurorack/docs/pt2399_deep_bending.md`
+and `spinoffs/dso138-desktop/docs/dso138_deep_mods.md`.
 
 ### Low Priority / Covered by Other Mods
 
