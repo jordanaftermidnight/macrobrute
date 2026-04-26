@@ -28,68 +28,60 @@
 </defs>
 <rect width="1050" height="600" fill="#FEFEFE"/>
 <text x="525" y="25" class="title" text-anchor="middle">Power Regulation Chain</text>
-<text x="525" y="42" class="subtitle" text-anchor="middle">Eurorack bus → breakout PCB → Pico VSYS + expander +5V</text>
-<rect x="40" y="90" width="180" height="120" fill="#555" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="130.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Eurorack Bus</text>
-<text x="130.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V / -12V / +5V</text>
-<text x="130.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">16-pin IDC or Doepfer</text>
-<text x="130.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">2A typical peak</text>
-<rect x="280" y="90" width="180" height="120" fill="#0066CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="370.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">DB-9 B Protection</text>
-<text x="370.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 diodes</text>
-<text x="370.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">Ferrite bead 100Ω</text>
-<text x="370.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">100µF/25V + 100nF</text>
-<rect x="520" y="40" width="180" height="90" fill="#D44" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="62" class="label" text-anchor="middle" fill="#FFF" font-size="11">+12V_BRK Rail</text>
-<text x="610.0" y="80" class="value" text-anchor="middle" fill="#FFF" font-size="9">To op-amps, CD40106</text>
-<text x="610.0" y="93" class="value" text-anchor="middle" fill="#FFF" font-size="9">~200mA budget</text>
-<rect x="520" y="150" width="180" height="90" fill="#44D" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="172" class="label" text-anchor="middle" fill="#FFF" font-size="11">-12V_BRK Rail</text>
-<text x="610.0" y="190" class="value" text-anchor="middle" fill="#FFF" font-size="9">To op-amps</text>
-<text x="610.0" y="203" class="value" text-anchor="middle" fill="#FFF" font-size="9">~200mA budget</text>
-<rect x="520" y="260" width="180" height="90" fill="#CC6600" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="282" class="label" text-anchor="middle" fill="#FFF" font-size="11">LM78L05 → +5V</text>
-<text x="610.0" y="300" class="value" text-anchor="middle" fill="#FFF" font-size="9">Input: +12V_BRK</text>
-<text x="610.0" y="313" class="value" text-anchor="middle" fill="#FFF" font-size="9">~100mA (CD4024, gates)</text>
-<rect x="760" y="40" width="230" height="90" fill="#6600CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="62" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico VSYS (pin 39)</text>
-<text x="875.0" y="80" class="value" text-anchor="middle" fill="#FFF" font-size="9">Fed from MB +5V rail</text>
-<text x="875.0" y="93" class="value" text-anchor="middle" fill="#FFF" font-size="9">via 1N5817 + 100nF</text>
-<text x="875.0" y="106" class="value" text-anchor="middle" fill="#FFF" font-size="9">3.7-5.5V input</text>
-<rect x="760" y="150" width="230" height="90" fill="#4A4" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="172" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico 3V3 (pin 36)</text>
-<text x="875.0" y="190" class="value" text-anchor="middle" fill="#FFF" font-size="9">Internal LDO</text>
-<text x="875.0" y="203" class="value" text-anchor="middle" fill="#FFF" font-size="9">~50mA (OLED, encoder)</text>
-<text x="875.0" y="216" class="value" text-anchor="middle" fill="#FFF" font-size="9">Powers I2C pull-ups</text>
-<rect x="760" y="260" width="230" height="90" fill="#009933" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="282" class="label" text-anchor="middle" fill="#FFF" font-size="11">Expander Utilities</text>
-<text x="875.0" y="300" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V/-12V: op-amps, LFO</text>
-<text x="875.0" y="313" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V: clock divider</text>
-<text x="875.0" y="326" class="value" text-anchor="middle" fill="#FFF" font-size="9">GND: star node</text>
-<line x1="220" y1="150" x2="280" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="250.0" y="144.0" class="anno" text-anchor="middle" font-size="9">DB-9 B:7/8</text>
-<line x1="460" y1="110" x2="520" y2="85" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="91.5" class="anno" text-anchor="middle" font-size="9">+12V</text>
-<line x1="460" y1="170" x2="520" y2="195" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="176.5" class="anno" text-anchor="middle" font-size="9">-12V</text>
-<line x1="460" y1="200" x2="520" y2="305" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="246.5" class="anno" text-anchor="middle" font-size="9">+12V→78L05</text>
-<line x1="700" y1="85" x2="760" y2="85" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="730.0" y="79.0" class="anno" text-anchor="middle" font-size="9">+5V</text>
-<line x1="875" y1="130" x2="875" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<line x1="700" y1="305" x2="760" y2="305" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="730.0" y="299.0" class="anno" text-anchor="middle" font-size="9">rails</text>
-<rect x="40" y="400" width="470" height="150" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
-<text x="275" y="420" class="label" text-anchor="middle" fill="#E65100" font-size="11">LPC2361 Power (stock Arturia)</text>
-<text x="55" y="445" class="value" font-size="9">• VDD (3.3V) — internal to MicroBrute main PCB, supplied by stock regulator (not tapped by mod)</text>
-<text x="55" y="462" class="value" font-size="9">• VDDA (analog 3.3V) — separate pin, derived on-board</text>
-<text x="55" y="479" class="value" font-size="9">• Core 1.8V — generated internally by LPC2361 DC/DC</text>
-<text x="55" y="496" class="value" font-size="9">• MOD does NOT modify stock MicroBrute power — breakout only adds rails FOR mods, shares GND at TP72.</text>
-<text x="55" y="513" class="value" font-size="9">• Mod current budget: Pico ≤150mA + expander ≤500mA = ~650mA added on Eurorack ±12V.</text>
-<rect x="540" y="400" width="470" height="150" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
-<text x="775" y="420" class="label" text-anchor="middle" fill="#1B5E20" font-size="11">Protection &amp; Budget</text>
-<text x="555" y="445" class="value" font-size="9">• 1N5817 Schottky on ±12V and +5V inputs: reverse-polarity protection (0.3V drop).</text>
-<text x="555" y="462" class="value" font-size="9">• Ferrite bead (100Ω @ 100MHz) in series with each rail: suppresses HF noise from Eurorack bus.</text>
-<text x="555" y="479" class="value" font-size="9">• 100µF electrolytic + 100nF ceramic per rail: bulk + HF decoupling.</text>
-<text x="555" y="496" class="value" font-size="9">• Star ground at TP72 — single return path for audio, CV, gate, and power.</text>
-<text x="555" y="513" class="value" font-size="9">• UNDOCUMENTED: actual current draw by LPC2361 DAC/keyboard matrix (not measured).</text></svg>
+<text x="525" y="42" class="subtitle" text-anchor="middle">Behringer CP1A bus → expander → Pico VSYS · DB-9 B carries ±12V to MB breakout · MicroBrute stock power untouched</text>
+<rect x="40" y="90" width="200" height="120" fill="#555" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="140.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Behringer CP1A PSU</text>
+<text x="140.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V · -12V · +5V on bus</text>
+<text x="140.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">13V / 3A wall input</text>
+<text x="140.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V rail ~1A available</text>
+<rect x="280" y="90" width="200" height="120" fill="#D44" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="380.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico Power Filter</text>
+<text x="380.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 reverse-polarity</text>
+<text x="380.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">100µF/10V bulk</text>
+<text x="380.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">100nF ceramic HF bypass</text>
+<rect x="520" y="90" width="200" height="120" fill="#6600CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="620.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico VSYS (pin 39)</text>
+<text x="620.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">Direct from filtered +5V</text>
+<text x="620.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">Pico draws ~100 mA</text>
+<text x="620.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">Internal LDO → 3V3 (pin 36)</text>
+<rect x="520" y="240" width="200" height="120" fill="#44D" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="620.0" y="262" class="label" text-anchor="middle" fill="#FFF" font-size="11">DB-9 B → MB breakout</text>
+<text x="620.0" y="280" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V (pin 7), -12V (pin 8)</text>
+<text x="620.0" y="293" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 + ferrite + 100µF</text>
+<text x="620.0" y="306" class="value" text-anchor="middle" fill="#FFF" font-size="9">Powers MB-side op-amp buffers</text>
+<rect x="760" y="90" width="240" height="120" fill="#4A4" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="880.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Expander analog rails</text>
+<text x="880.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V / -12V → slew op-amp</text>
+<text x="880.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V → Pico VSYS path</text>
+<text x="880.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">GND → star at expander</text>
+<rect x="760" y="240" width="240" height="120" fill="#0066CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="880.0" y="262" class="label" text-anchor="middle" fill="#FFF" font-size="11">MB-side breakout PCB</text>
+<text x="880.0" y="280" class="value" text-anchor="middle" fill="#FFF" font-size="9">±12V via DB-9 B → buffers</text>
+<text x="880.0" y="293" class="value" text-anchor="middle" fill="#FFF" font-size="9">Receives ±12V only</text>
+<text x="880.0" y="306" class="value" text-anchor="middle" fill="#FFF" font-size="9">Star ground at TP72</text>
+<line x1="240" y1="130" x2="280" y2="130" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="260.0" y="124.0" class="anno" text-anchor="middle" font-size="9">+5V</text>
+<line x1="240" y1="170" x2="280" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="260.0" y="164.0" class="anno" text-anchor="middle" font-size="9">GND</text>
+<line x1="480" y1="150" x2="520" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="500.0" y="144.0" class="anno" text-anchor="middle" font-size="9">VSYS</text>
+<line x1="720" y1="150" x2="760" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="720" y1="300" x2="760" y2="300" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="740.0" y="294.0" class="anno" text-anchor="middle" font-size="9">DB-9 B</text>
+<line x1="140" y1="210" x2="600" y2="240" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="40" y="400" width="470" height="170" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
+<text x="275" y="420" class="label" text-anchor="middle" fill="#1B5E20" font-size="12">Non-invasive principle</text>
+<text x="55" y="445" class="value" font-size="9">• MicroBrute stock power is NOT tapped or modified.</text>
+<text x="55" y="464" class="value" font-size="9">• Pico is fed from Eurorack +5V (CP1A bus), not from any MB rail.</text>
+<text x="55" y="483" class="value" font-size="9">• MB breakout PCB receives only ±12V via DB-9 B for op-amp buffers.</text>
+<text x="55" y="502" class="value" font-size="9">• Removing the DB-9 B cable leaves both MB and Pico in clean states.</text>
+<text x="55" y="521" class="value" font-size="9">• MB stock 5V regulator is never loaded by the mod.</text>
+<text x="55" y="540" class="value" font-size="9">• Star ground at TP72 — single return for audio/CV/gate.</text>
+<rect x="540" y="400" width="470" height="170" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
+<text x="775" y="420" class="label" text-anchor="middle" fill="#E65100" font-size="12">Current budget</text>
+<text x="555" y="445" class="value" font-size="9">• +5V from CP1A bus: ~150 mA (Pico + main OLED + strip OLED + LEDs)</text>
+<text x="555" y="464" class="value" font-size="9">• +12V from CP1A bus: ~80 mA (slew op-amp, MB-side buffers via DB-9 B)</text>
+<text x="555" y="483" class="value" font-size="9">• -12V from CP1A bus: ~50 mA (op-amp negative rails)</text>
+<text x="555" y="502" class="value" font-size="9">• CP1A rated: ±12V @ 500 mA, +5V @ 1 A → comfortable headroom.</text>
+<text x="555" y="521" class="value" font-size="9">• Pico filter: 1N5817 (0.2 V drop) + 100 µF + 100 nF — shop-stocked parts.</text>
+<text x="555" y="540" class="value" font-size="9">• Optional armor (defer): PPTC 500 mA fuse, SMAJ5.0A TVS, ferrite bead.</text></svg>

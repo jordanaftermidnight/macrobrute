@@ -1,8 +1,20 @@
 # MACROBRUTE PROJECT — Complete Bill of Materials
 
-**Project:** MicroBrute Deep Modification + Pi Pico Expansion Controller  
-**Author:** jordanaftermidnight  
-**Version:** 1.0 — March 2026
+**Project:** MicroBrute Deep Modification + Pi Pico Expansion Controller
+**Author:** jordanaftermidnight
+**Version:** 1.1 — April 2026 (Phase D refresh)
+
+> **Phase D revisions:** Expander shrunk to 17HP. Behringer **CP1A** is the
+> reference Eurorack PSU (±12V + 5V on bus). Pico powered from CP1A +5V via
+> 3-part filter (1N5817 + 100µF + 100nF) — no LM7805 needed. **CD4024 dropped**
+> — clock division is firmware (3 GPIO outputs). Noise gen, S&H, buffered
+> mult, LFO, attenuverter all dropped from the expander BOM (covered by
+> existing rack modules — NOISE / RND CV / '07 MULT / Tryfelo / MMI Matrix).
+> Slew limiter is the only hardware utility on the expander.
+>
+> **New connector spec:** 5-pin JST-XH rear header for the EFFIGY pair bus
+> (was 4-pin — INT line added). 0.91" SSD1306 strip OLED on MB panel. 2× DB-9
+> shielded cables (no aux cable — DB-9 B carries digital + power + 2 CVs).
 
 ---
 
@@ -156,8 +168,8 @@
 | 29 | TL074 quad op-amp (DIP-14) | 2 | €0.60 | €1.20 | Multi-channel processing |
 | 30 | LM13700 dual OTA (DIP-16) | 2 | €1.50 | €3.00 | VCA, VC-LFO rate |
 | 31 | CD4066 quad bilateral switch (DIP-14) | 2 | €0.40 | €0.80 | Sample & hold |
-| 32 | CD4017 decade counter (DIP-16) | 1 | €0.35 | €0.35 | Clock divider |
-| 33 | CD4024 7-stage counter (DIP-14) | 1 | €0.35 | €0.35 | Clock divider |
+| 32 | CD4017 decade counter (DIP-16) | — | — | — | **Dropped** — clock division now in Pico firmware (3 GPIO outputs, configurable ratios) |
+| 33 | CD4024 7-stage counter (DIP-14) | — | — | — | **Dropped** — clock division now in Pico firmware |
 | 34 | BC547 NPN transistor (TO-92) | 5 | €0.08 | €0.40 | Noise source, comparators |
 | 35 | BC557 PNP transistor (TO-92) | 5 | €0.08 | €0.40 | Various |
 | 36 | 2N3906 PNP transistor | 2 | €0.10 | €0.20 | Sequencer decoupling |

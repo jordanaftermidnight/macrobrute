@@ -2,25 +2,31 @@
 
 ## Context
 
-The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (9 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
+The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (14 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
 
-**Current status (2026-04-22):** Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (9 modules, untested on HW, post-reconciliation pass done). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). **Phase 0 bench validation is the next step — no physical build started yet.**
+**Current status (2026-04-26):** Design phase complete after Phase D refresh. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware: 14 modules, including new effigy_bridge / clock_divider / aux_outputs / strip_display / usbmidi modules. BOM acquired (CD4024 dropped — clock division is firmware now). Stripboard layouts generated. Touch test board designed (8 circuit bends, pending bench-test selection). **Phase 0 bench validation is the next step — no physical build started yet.**
 
-### Confirmed Decisions (April 2026, reconciled 2026-04-22)
+### Confirmed Decisions (April 2026, last reconciled 2026-04-26)
 
 | Decision | Detail |
 |----------|--------|
-| Connector | 2× DB-9 (VGA HD-15 rejected — cable wiring shorts pins 6-8 to ground) |
-| OLED (primary) | **1.3" SH1106 I²C** on GP4/GP5 (SDA/SCL). Driver: `SH1106_I2C` in `firmware/pico/display.py`. |
-| OLED (fallbacks) | 0.96" SSD1306 I²C — same pins, set `OLED_COL_OFFSET = 0`. 16×2 1602 I²C LCD — needs separate driver. |
-| MIDI path | Pico ↔ LPC2361 UART bridge (UART0, 115200 baud, GP0/GP1). No direct 31250-baud MIDI. |
-| CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
-| RGB LED | Common-cathode, replaces 3 discrete LEDs (saves 2 panel holes, same GPIO GP8/9/10) |
-| CD4049UBE | 5V→3.3V level shifting (CD40106→Pico, and LPC→Pico), powered from 3.3V |
-| Touch mods | 8 body-contact bends designed, test on breakout before panel install → pick 6 |
-| Isolation transformer | Salvaged (46.9/82.4Ω windings), for ground loop mitigation if needed |
+| Expander HP | **17HP** (87mm × 128.5mm panel — fits user's pre-cut blank) |
+| Connector | **2× shielded DB-9** (no aux cable; DB-9 B carries digital + power + 2 essential CVs) |
+| Pico location | Inside the 17HP expander (not the MicroBrute case) |
+| OLED (primary) | **1.3" SH1106 I²C** on GP4/GP5 @ 0x3C — on the expander panel |
+| OLED (strip) | **0.91" SSD1306 128×32** @ 0x3D on the MicroBrute panel — shared I²C0 bus via DB-9 B |
+| OLED (fallbacks) | 0.96" SSD1306 (same pins, `OLED_COL_OFFSET = 0`); 16×2 1602 I²C LCD (separate driver) |
+| MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B @ 115200 baud, XOR-checksummed frame; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class) |
+| EFFIGY pair bus | 5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, target addr 0x42 — see `docs/MACROBRUTE_EFFIGY_BRIDGE.md` |
+| Hardware utilities | **Slew limiter only** (TL072 + 2 diodes + pot). All others dropped. |
+| Firmware utilities | Clock divider (3 outputs, GP16/17/18), 4 programmable aux outputs (GP19/20/6/7) — replaces planned CD4024 |
+| RGB LED | Common-cathode on GP8/9/10 — R=clock tick, G=gate, B=mode/pair |
+| Touch mods | 8 body-contact bends designed; bench-test in Phase 0 → pick 6 |
 | JF-33 delay | **Separate Eurorack module (Phase 7A, optional)** — not inside expander |
 | DSO138 scope | **Separate Eurorack module (Phase 7B, optional)** — LM7809 on hand for +9V regulation |
+| EFFIGY DSP | **Separate Eurorack module (Phase 7C, optional)** — Daisy Seed peer, paired via I²C |
+| PSU | **Behringer CP1A** Eurorack PSU (±12V + 5V on bus). Pico fed from +5V via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. |
+| Migrated to MB panel | Resonance CV (new jack); reuse MB's existing back-panel Sync In / Gate In / Audio In |
 
 ---
 

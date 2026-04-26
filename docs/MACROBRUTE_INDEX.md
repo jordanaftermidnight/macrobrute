@@ -13,6 +13,7 @@
 | `README.md` | Project overview, status matrix, hardware summary |
 | `MACROBRUTE_BUILD_PLAN.md` | **Canonical roadmap** — 7 phases, bench → integration |
 | `MACROBRUTE_CONNECTION_MAP.md` | **Canonical wiring** — every signal, pin, and mod |
+| `MACROBRUTE_EFFIGY_BRIDGE.md` | **Pair protocol** — register map shared with the EFFIGY DSP module |
 | `MACROBRUTE_MOD_SELECTION.md` | Curated 12 mods + 6 touch bolts from 130+ audited |
 | `Macrobrute Manual.html` | Single-file rendered build manual (built from `tools/build_manual.py`) |
 

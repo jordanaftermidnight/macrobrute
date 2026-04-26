@@ -1,9 +1,15 @@
 """MACROBRUTE Pico WH — LPC2361 bridge for MicroBrute parameter control.
 
-Pico sends commands to LPC2361 over UART0 (GP0/GP1 at 115200 baud).
-LPC firmware translates these into MIDI SysEx messages sent to the
-MicroBrute internally. This replaces the previous direct MIDI UART approach,
-freeing GP4/GP5 for I2C OLED.
+Pico sends commands to LPC2361 over UART0 (GP0/GP1 at 115200 baud) carried
+across DB-9 B pins 1/2 to the MicroBrute. LPC firmware translates these into
+MIDI SysEx messages sent to the MicroBrute internally.
+
+Frame format (matches firmware/lpc2361/include/pico_comm.h):
+    0xAA · msg_type · counter · payload_len · payload[0..N] · xor_checksum
+
+The xor_checksum is the bitwise XOR of all bytes from msg_type through the
+last payload byte (i.e. everything after 0xAA, up to but not including the
+checksum itself). Recipients verify and silently drop bad frames.
 """
 
 from machine import UART, Pin
@@ -71,13 +77,16 @@ class LPCBridge:
         return self._counter
 
     def _send(self, msg_type, payload=b''):
-        hdr = bytearray([
-            0xAA,
-            msg_type,
-            self._next_counter(),
-            len(payload) & 0xFF,
-        ])
-        self._uart.write(hdr + payload)
+        counter = self._next_counter()
+        plen = len(payload) & 0xFF
+        # XOR checksum over msg_type..last_payload_byte
+        chk = msg_type ^ counter ^ plen
+        for b in payload:
+            chk ^= b
+        frame = bytearray([0xAA, msg_type, counter, plen])
+        frame.extend(payload)
+        frame.append(chk & 0xFF)
+        self._uart.write(frame)
 
     def set_param(self, param_code, value):
         self._send(MSG_PARAM_SET, bytearray([param_code, value & 0x7F]))
@@ -114,10 +123,27 @@ class LPCBridge:
                     self._rx_pos += 1
                 if self._rx_pos >= 4:
                     payload_len = self._rx_buf[3]
-                    total = 4 + payload_len
-                    if self._rx_pos >= total:
+                    total_with_chk = 4 + payload_len + 1  # +1 for checksum byte
+                    if self._rx_pos >= total_with_chk:
                         self._in_msg = False
-                        self._handle_response(self._rx_buf[:self._rx_pos])
+                        self._validate_and_dispatch(self._rx_buf[:total_with_chk])
 
-    def _handle_response(self, data):
+    def _validate_and_dispatch(self, frame):
+        """Verify XOR checksum, then dispatch valid frames."""
+        if len(frame) < 5 or frame[0] != 0xAA:
+            return
+        msg_type = frame[1]
+        counter  = frame[2]
+        plen     = frame[3]
+        payload  = frame[4:4 + plen]
+        rx_chk   = frame[4 + plen]
+        chk = msg_type ^ counter ^ plen
+        for b in payload:
+            chk ^= b
+        if (chk & 0xFF) != rx_chk:
+            return  # silent drop; future: increment error counter
+        self._handle_response(msg_type, counter, payload)
+
+    def _handle_response(self, msg_type, counter, payload):
+        """Override or set externally to receive validated LPC responses."""
         pass

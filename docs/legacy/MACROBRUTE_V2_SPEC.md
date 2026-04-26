@@ -1,3 +1,8 @@
+> ⚠️ **DEPRECATED — superseded by current docs.** This file reflects an
+> earlier iteration (different connector, expander HP, or pin map). Kept
+> for historical reference only. See `README.md`, `docs/MACROBRUTE_BUILD_PLAN.md`,
+> and `docs/MACROBRUTE_CONNECTION_MAP.md` for the current authoritative spec.
+
 # MACROBRUTE V2 — Complete System Specification
 ## Custom Firmware + Pico Expansion + Analog Mods
 

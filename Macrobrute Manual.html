@@ -246,7 +246,7 @@ body:not(.light-mode) .svg-container svg polygon[fill="#333"],body:not(.light-mo
 <div id="toc"><div class="ts"><a class="tl" href="#quick-ref" style="color:var(--yel)">Quick Reference</a></div><div class="ts"><div class="ts-t">1. Getting Started</div><a class="tl" href="#docs-macrobrute-index">Master Index</a></div><div class="ts"><div class="ts-t">2. Planning & Preparation</div><a class="tl" href="#hardware-macrobrute-bom">PROJECT — Complete Bill of Materials</a><a class="tl" href="#hardware-macrobrute-shopping-list">CONSOLIDATED SHOPPING LIST</a><a class="tl" href="#docs-macrobrute-mod-selection">Curated Mod Selection</a><a class="tl" href="#docs-macrobrute-build-plan">Comprehensive Build Plan</a></div><div class="ts"><div class="ts-t">3. System Architecture</div><a class="tl" href="#docs-macrobrute-connection-map">Complete Connection Map</a><a class="tl" href="#schematics-expander-block-diagram">Expander Block Diagram</a></div><div class="ts"><div class="ts-t">4. Interconnect & Wiring</div><a class="tl" href="#schematics-wiring-diagram">Complete Internal Wiring Diagram</a></div><div class="ts"><div class="ts-t">5. Breakout Board</div><a class="tl" href="#schematics-breakout-pcb">Internal Breakout PCB — Schematic</a><a class="tl" href="#schematics-breakout-stripboard">Breakout Board — Stripboard Layout</a><a class="tl" href="#schematics-pico-pinout">Pico WH GPIO Pinout (Final)</a></div><div class="ts"><div class="ts-t">6. Expander Modules</div><a class="tl" href="#schematics-expander-circuits">Expander — Utility Circuit Schematics</a><a class="tl" href="#schematics-expander-stripboard">Expander — Stripboard Layouts</a></div><div class="ts"><div class="ts-t">7. Protection & Safety</div><a class="tl" href="#schematics-circuit-review">Circuit Design Review</a></div><div class="ts"><div class="ts-t">8. Control & Interface</div><a class="tl" href="#schematics-touch-plates">Touch Plate Interface — Schematic &amp; Design</a><a class="tl" href="#schematics-jf33-cv-control">JF-33 Analog Delay — CV Control &amp; Eurorack Integration</a><a class="tl" href="#firmware-macrobrute-firmware-project">Firmware Project Structure</a><a class="tl" href="#docs-macrobrute-firmware-mod-plan">Custom Firmware Modification Plan</a></div><div class="ts"><div class="ts-t">9. Hardware Reference</div><a class="tl" href="#hardware-macrobrute-test-points-verified">Verified Test Point Reference</a><a class="tl" href="#schematics-ic-pinout-reference">IC Pinout Reference</a></div><div class="ts"><div class="ts-t">10. Mods & Extensions</div><a class="tl" href="#mods-touch-bend-specs">Touch Bend Specifications</a><a class="tl" href="#mods-microbrute-mods-guide">Arturia MicroBrute Modifications Guide</a><a class="tl" href="#mods-microbrute-circuit-bending-guide">MicroBrute Circuit Bending Guide</a><a class="tl" href="#mods-deep-circuit-bending">Deep Circuit Bending — PT2399, DSO138, MicroBrute</a><a class="tl" href="#mods-ultimate-microbrute-project">THE ULTIMATE MICROBRUTE PROJECT</a></div><div class="ts"><div class="ts-t">11. Optional Separate Modules (Phase 7)</div><a class="tl" href="#schematics-dso138-input-protection">DSO138 Input Protection &amp; Signal Multiplexer</a></div><div class="ts"><div class="ts-t">12. Research</div><a class="tl" href="#research-additional-mods-findings">Additional MicroBrute Modifications — Research Findings</a><a class="tl" href="#research-mbf-analysis">MicroBrute .mbf Firmware File — Decryption &amp; Analysis</a><a class="tl" href="#research-firmware-re-findings">LPC2361 Firmware Reverse Engineering — Research Findings</a><a class="tl" href="#research-pt2399-dso138-findings">PT2399 / JF-33 &amp; DSO138 — Research Findings</a><a class="tl" href="#firmware-lpc2361-investigation-guide">LPC2361 Firmware Investigation — Step-by-Step Guide</a><a class="tl" href="#architecture-macrobrute-complete-expansion-map">Complete Expansion System</a><a class="tl" href="#architecture-macrobrute-comprehensive-research">MACROBRUTE: Comprehensive Modification Research</a></div><div class="ts"><div class="ts-t">13. Legacy & Archive</div><a class="tl" href="#legacy-macrobrute-final-architecture">Final Architecture</a><a class="tl" href="#legacy-macrobrute-project-handoff">Project Handoff Document (Legacy)</a><a class="tl" href="#legacy-macrobrute-expander-db37-pinout">Expander — DB-37 Pinout Specification</a><a class="tl" href="#legacy-macrobrute-master-plan">MASTER PLAN</a><a class="tl" href="#legacy-macrobrute-revised-spec">Revised Specification</a><a class="tl" href="#legacy-macrobrute-v2-spec">V2 — Complete System Specification</a><a class="tl" href="#legacy-macrobrute-v2-complete-spec">V2 — Complete System Specification</a></div></div>
 </nav>
 <main id="main">
-<div class="hdr"><h1>MACROBRUTE Manual</h1><p>MicroBrute &rarr; Semi-Modular Synthesizer Expansion</p><p>Generated 2026-04-23 &middot; 40 documents</p><p class="author">Authored by: jordanaftermidnight</p></div>
+<div class="hdr"><h1>MACROBRUTE Manual</h1><p>MicroBrute &rarr; Semi-Modular Synthesizer Expansion</p><p>Generated 2026-04-26 &middot; 40 documents</p><p class="author">Authored by: jordanaftermidnight</p></div>
 <div class="qr" id="quick-ref">
 <div class="cat">Quick Reference</div>
 <div class="tabs"><button class="tab on" data-t="tp">Test Points</button><button class="tab" data-t="gpio">Pico GPIO</button><button class="tab" data-t="bends">Touch Bends</button></div>
@@ -1476,6 +1476,10 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <td><strong>Canonical wiring</strong> — every signal, pin, and mod</td>
 </tr>
 <tr>
+<td><code>MACROBRUTE_EFFIGY_BRIDGE.md</code></td>
+<td><strong>Pair protocol</strong> — register map shared with the EFFIGY DSP module</td>
+</tr>
+<tr>
 <td><code>MACROBRUTE_MOD_SELECTION.md</code></td>
 <td>Curated 12 mods + 6 touch bolts from 130+ audited</td>
 </tr>
@@ -1633,7 +1637,8 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <summary class="dh"><span class="arr">&#9654;</span>
 <span class="dt">PROJECT — Complete Bill of Materials</span>
 <span class="dp">docs/hardware/MACROBRUTE_BOM.md</span></summary>
-<div class="db"><p><strong>Project:</strong> MicroBrute Deep Modification + Pi Pico Expansion Controller <strong>Author:</strong> jordanaftermidnight <strong>Version:</strong> 1.0 — March 2026</p>
+<div class="db"><p><strong>Project:</strong> MicroBrute Deep Modification + Pi Pico Expansion Controller <strong>Author:</strong> jordanaftermidnight <strong>Version:</strong> 1.1 — April 2026 (Phase D refresh)</p>
+<blockquote><p><strong>Phase D revisions:</strong> Expander shrunk to 17HP. Behringer <strong>CP1A</strong> is the reference Eurorack PSU (±12V + 5V on bus). Pico powered from CP1A +5V via 3-part filter (1N5817 + 100µF + 100nF) — no LM7805 needed. <strong>CD4024 dropped</strong> — clock division is firmware (3 GPIO outputs). Noise gen, S&amp;H, buffered mult, LFO, attenuverter all dropped from the expander BOM (covered by existing rack modules — NOISE / RND CV / &#x27;07 MULT / Tryfelo / MMI Matrix). Slew limiter is the only hardware utility on the expander.  <strong>New connector spec:</strong> 5-pin JST-XH rear header for the EFFIGY pair bus (was 4-pin — INT line added). 0.91&quot; SSD1306 strip OLED on MB panel. 2× DB-9 shielded cables (no aux cable — DB-9 B carries digital + power + 2 CVs).</p></blockquote>
 <hr>
 <h2 id="hardware-macrobrute-bom--quick-cost-summary">QUICK COST SUMMARY</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -2326,18 +2331,18 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <tr>
 <td>32</td>
 <td>CD4017 decade counter (DIP-16)</td>
-<td>1</td>
-<td>€0.35</td>
-<td>€0.35</td>
-<td>Clock divider</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Dropped</strong> — clock division now in Pico firmware (3 GPIO outputs, configurable ratios)</td>
 </tr>
 <tr>
 <td>33</td>
 <td>CD4024 7-stage counter (DIP-14)</td>
-<td>1</td>
-<td>€0.35</td>
-<td>€0.35</td>
-<td>Clock divider</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Dropped</strong> — clock division now in Pico firmware</td>
 </tr>
 <tr>
 <td>34</td>
@@ -4448,48 +4453,60 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <span class="dt">Comprehensive Build Plan</span>
 <span class="dp">docs/MACROBRUTE_BUILD_PLAN.md</span></summary>
 <div class="db"><h2 id="docs-macrobrute-build-plan--context">Context</h2>
-<p>The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (9 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.</p>
-<p><strong>Current status (2026-04-22):</strong> Design phase complete. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware complete (9 modules, untested on HW, post-reconciliation pass done). BOM acquired. Stripboard layouts generated (6 SVGs). Touch test board designed (8 circuit bends). <strong>Phase 0 bench validation is the next step — no physical build started yet.</strong></p>
-<h3 id="docs-macrobrute-build-plan--confirmed-decisions-april-2026-reconciled-2026-04-22">Confirmed Decisions (April 2026, reconciled 2026-04-22)</h3>
+<p>The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (14 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.</p>
+<p><strong>Current status (2026-04-26):</strong> Design phase complete after Phase D refresh. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware: 14 modules, including new effigy_bridge / clock_divider / aux_outputs / strip_display / usbmidi modules. BOM acquired (CD4024 dropped — clock division is firmware now). Stripboard layouts generated. Touch test board designed (8 circuit bends, pending bench-test selection). <strong>Phase 0 bench validation is the next step — no physical build started yet.</strong></p>
+<h3 id="docs-macrobrute-build-plan--confirmed-decisions-april-2026-last-reconciled-2026-04-26">Confirmed Decisions (April 2026, last reconciled 2026-04-26)</h3>
 <div class="table-wrap"><table><thead><tr>
 <th>Decision</th>
 <th>Detail</th>
 </tr></thead><tbody>
 <tr>
+<td>Expander HP</td>
+<td><strong>17HP</strong> (87mm × 128.5mm panel — fits user&#x27;s pre-cut blank)</td>
+</tr>
+<tr>
 <td>Connector</td>
-<td>2× DB-9 (VGA HD-15 rejected — cable wiring shorts pins 6-8 to ground)</td>
+<td><strong>2× shielded DB-9</strong> (no aux cable; DB-9 B carries digital + power + 2 essential CVs)</td>
+</tr>
+<tr>
+<td>Pico location</td>
+<td>Inside the 17HP expander (not the MicroBrute case)</td>
 </tr>
 <tr id="gp-4">
 <td>OLED (primary)</td>
-<td><strong>1.3&quot; SH1106 I²C</strong> on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> (SDA/SCL). Driver: <code>SH1106_I2C</code> in <code>firmware/pico/display.py</code>.</td>
+<td><strong>1.3&quot; SH1106 I²C</strong> on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> @ 0x3C — on the expander panel</td>
+</tr>
+<tr>
+<td>OLED (strip)</td>
+<td><strong>0.91&quot; SSD1306 128×32</strong> @ 0x3D on the MicroBrute panel — shared I²C0 bus via DB-9 B</td>
 </tr>
 <tr>
 <td>OLED (fallbacks)</td>
-<td>0.96&quot; SSD1306 I²C — same pins, set <code>OLED_COL_OFFSET = 0</code>. 16×2 1602 I²C LCD — needs separate driver.</td>
-</tr>
-<tr id="gp-0">
-<td>MIDI path</td>
-<td>Pico ↔ LPC2361 UART bridge (UART0, 115200 baud, <a class="ref gp" href="#gp-0">GP0</a>/<a class="ref gp" href="#gp-1">GP1</a>). No direct 31250-baud MIDI.</td>
+<td>0.96&quot; SSD1306 (same pins, <code>OLED_COL_OFFSET = 0</code>); 16×2 1602 I²C LCD (separate driver)</td>
 </tr>
 <tr>
-<td>CD4051 replaces CD4066</td>
-<td>Unavailable locally (Kaunas)</td>
+<td>MIDI paths</td>
+<td>(a) Pico ↔ LPC2361 UART bridge over DB-9 B @ 115200 baud, XOR-checksummed frame; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class)</td>
+</tr>
+<tr>
+<td>EFFIGY pair bus</td>
+<td>5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, target addr 0x42 — see <code>docs/MACROBRUTE_EFFIGY_BRIDGE.md</code></td>
+</tr>
+<tr>
+<td>Hardware utilities</td>
+<td><strong>Slew limiter only</strong> (TL072 + 2 diodes + pot). All others dropped.</td>
+</tr>
+<tr id="gp-16">
+<td>Firmware utilities</td>
+<td>Clock divider (3 outputs, <a class="ref gp" href="#gp-16">GP16</a>/17/18), 4 programmable aux outputs (<a class="ref gp" href="#gp-19">GP19</a>/20/6/7) — replaces planned CD4024</td>
 </tr>
 <tr id="gp-8">
 <td>RGB LED</td>
-<td>Common-cathode, replaces 3 discrete LEDs (saves 2 panel holes, same GPIO <a class="ref gp" href="#gp-8">GP8</a>/9/10)</td>
-</tr>
-<tr>
-<td>CD4049UBE</td>
-<td>5V→3.3V level shifting (CD40106→Pico, and LPC→Pico), powered from 3.3V</td>
+<td>Common-cathode on <a class="ref gp" href="#gp-8">GP8</a>/9/10 — R=clock tick, G=gate, B=mode/pair</td>
 </tr>
 <tr>
 <td>Touch mods</td>
-<td>8 body-contact bends designed, test on breakout before panel install → pick 6</td>
-</tr>
-<tr>
-<td>Isolation transformer</td>
-<td>Salvaged (46.9/82.4Ω windings), for ground loop mitigation if needed</td>
+<td>8 body-contact bends designed; bench-test in Phase 0 → pick 6</td>
 </tr>
 <tr>
 <td>JF-33 delay</td>
@@ -4498,6 +4515,18 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <tr>
 <td>DSO138 scope</td>
 <td><strong>Separate Eurorack module (Phase 7B, optional)</strong> — LM7809 on hand for +9V regulation</td>
+</tr>
+<tr>
+<td>EFFIGY DSP</td>
+<td><strong>Separate Eurorack module (Phase 7C, optional)</strong> — Daisy Seed peer, paired via I²C</td>
+</tr>
+<tr>
+<td>PSU</td>
+<td><strong>Behringer CP1A</strong> Eurorack PSU (±12V + 5V on bus). Pico fed from +5V via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched.</td>
+</tr>
+<tr>
+<td>Migrated to MB panel</td>
+<td>Resonance CV (new jack); reuse MB&#x27;s existing back-panel Sync In / Gate In / Audio In</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -5175,79 +5204,100 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <tr id="gp-0">
 <td><a class="ref gp" href="#gp-0">GP0</a></td>
 <td>1</td>
-<td>LPC2361 UART0 TX</td>
+<td>UART0 TX → LPC2361</td>
 <td>OUT</td>
-<td>115200 baud, to LPC RXD1 via level shifter</td>
+<td>115200 baud, via DB-9 B:1, ferrite at Pico end</td>
 </tr>
 <tr id="gp-1">
 <td><a class="ref gp" href="#gp-1">GP1</a></td>
 <td>2</td>
-<td>LPC2361 UART0 RX</td>
+<td>UART0 RX ← LPC2361</td>
 <td>IN</td>
-<td>115200 baud, from LPC TXD1 via divider</td>
+<td>115200 baud, via DB-9 B:2</td>
 </tr>
 <tr id="gp-2">
 <td><a class="ref gp" href="#gp-2">GP2</a></td>
 <td>4</td>
-<td>Daisy I²C1 SDA</td>
+<td>I²C1 SDA → EFFIGY</td>
 <td>I/O</td>
-<td>Rear JST-XH header → Daisy Seed @ 0x42, 4.7kΩ pull-up</td>
+<td>Rear JST-XH pin 1, 4.7kΩ pull-up to 3V3</td>
 </tr>
 <tr id="gp-3">
 <td><a class="ref gp" href="#gp-3">GP3</a></td>
 <td>5</td>
-<td>Daisy I²C1 SCL</td>
+<td>I²C1 SCL → EFFIGY</td>
 <td>OUT</td>
-<td>Rear JST-XH header, 100 kHz</td>
+<td>Rear JST-XH pin 2, 100 kHz</td>
 </tr>
 <tr id="gp-4">
 <td><a class="ref gp" href="#gp-4">GP4</a></td>
 <td>6</td>
-<td>OLED I²C0 SDA</td>
+<td>I²C0 SDA (shared)</td>
 <td>I/O</td>
-<td>1.3&quot; SH1106 @ 0x3C</td>
+<td>Main OLED 0x3C (expander) + strip OLED 0x3D (MB panel via DB-9 B:3)</td>
 </tr>
 <tr id="gp-5">
 <td><a class="ref gp" href="#gp-5">GP5</a></td>
 <td>7</td>
-<td>OLED I²C0 SCL</td>
+<td>I²C0 SCL (shared)</td>
 <td>OUT</td>
-<td>400 kHz</td>
+<td>100 kHz on shared bus (longer cable to MB strip OLED)</td>
+</tr>
+<tr id="gp-6">
+<td><a class="ref gp" href="#gp-6">GP6</a></td>
+<td>9</td>
+<td>Aux output 3</td>
+<td>OUT</td>
+<td>Programmable: tap-div / euclidean / random / passthrough / PWM-CV</td>
+</tr>
+<tr id="gp-7">
+<td><a class="ref gp" href="#gp-7">GP7</a></td>
+<td>10</td>
+<td>Aux output 4</td>
+<td>OUT</td>
+<td>Programmable, same modes as <a class="ref gp" href="#gp-6">GP6</a></td>
 </tr>
 <tr id="gp-8">
 <td><a class="ref gp" href="#gp-8">GP8</a></td>
 <td>11</td>
-<td>RGB LED Red / Clock</td>
+<td>RGB LED R · Clock tick</td>
 <td>OUT</td>
-<td>PWM, common-cathode RGB, owned by <code>leds.LEDManager</code></td>
+<td>PWM, owned exclusively by <code>leds.LEDManager</code></td>
 </tr>
 <tr id="gp-9">
 <td><a class="ref gp" href="#gp-9">GP9</a></td>
 <td>12</td>
-<td>RGB LED Green / Gate</td>
+<td>RGB LED G · Gate active</td>
 <td>OUT</td>
-<td>PWM, common-cathode RGB</td>
+<td>PWM</td>
 </tr>
 <tr id="gp-10">
 <td><a class="ref gp" href="#gp-10">GP10</a></td>
 <td>14</td>
-<td>RGB LED Blue / Mode</td>
+<td>RGB LED B · Mode/Pair</td>
 <td>OUT</td>
-<td>PWM, common-cathode RGB</td>
+<td>PWM</td>
+</tr>
+<tr id="gp-11">
+<td><a class="ref gp" href="#gp-11">GP11</a></td>
+<td>15</td>
+<td>EFFIGY INT</td>
+<td>IN</td>
+<td>Pull-up to 3V3, falling-edge IRQ from EFFIGY (rear JST-XH pin 3)</td>
 </tr>
 <tr id="gp-12">
 <td><a class="ref gp" href="#gp-12">GP12</a></td>
 <td>16</td>
-<td>Tap Tempo Button</td>
+<td>Tap button</td>
 <td>IN</td>
-<td>Pull-up, active low</td>
+<td>Pull-up; short = tap tempo, long-hold = manual gate</td>
 </tr>
 <tr id="gp-13">
 <td><a class="ref gp" href="#gp-13">GP13</a></td>
 <td>17</td>
-<td>Encoder Switch</td>
+<td>Encoder switch</td>
 <td>IN</td>
-<td>Pull-up, active low, long-press = back</td>
+<td>Pull-up, short = select, long = back</td>
 </tr>
 <tr id="gp-14">
 <td><a class="ref gp" href="#gp-14">GP14</a></td>
@@ -5263,65 +5313,124 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <td>IN</td>
 <td>Pull-up</td>
 </tr>
+<tr id="gp-16">
+<td><a class="ref gp" href="#gp-16">GP16</a></td>
+<td>21</td>
+<td>Clock divider out 1</td>
+<td>OUT</td>
+<td>Firmware-driven, default ÷2 (configurable)</td>
+</tr>
+<tr id="gp-17">
+<td><a class="ref gp" href="#gp-17">GP17</a></td>
+<td>22</td>
+<td>Clock divider out 2</td>
+<td>OUT</td>
+<td>Default ÷4</td>
+</tr>
+<tr id="gp-18">
+<td><a class="ref gp" href="#gp-18">GP18</a></td>
+<td>24</td>
+<td>Clock divider out 3</td>
+<td>OUT</td>
+<td>Default ÷8</td>
+</tr>
+<tr id="gp-19">
+<td><a class="ref gp" href="#gp-19">GP19</a></td>
+<td>25</td>
+<td>Aux output 1</td>
+<td>OUT</td>
+<td>Programmable (PWM-capable)</td>
+</tr>
+<tr id="gp-20">
+<td><a class="ref gp" href="#gp-20">GP20</a></td>
+<td>26</td>
+<td>Aux output 2</td>
+<td>OUT</td>
+<td>Programmable</td>
+</tr>
 <tr id="gp-21">
 <td><a class="ref gp" href="#gp-21">GP21</a></td>
 <td>27</td>
-<td>Clock Input</td>
+<td>Clock input</td>
 <td>IN</td>
-<td>Pull-down, ext sync detect IRQ</td>
+<td>Pull-down, external sync IRQ</td>
 </tr>
 <tr id="gp-22">
 <td><a class="ref gp" href="#gp-22">GP22</a></td>
 <td>29</td>
-<td>Clock Output</td>
+<td>Clock output</td>
 <td>OUT</td>
-<td>Master clock to expander (3.3V)</td>
+<td>Master clock to expander panel jack (3.3V)</td>
 </tr>
 <tr id="gp-26">
 <td><a class="ref gp" href="#gp-26">GP26</a></td>
 <td>31</td>
-<td>ADC0</td>
+<td>ADC0 (spare)</td>
 <td>IN</td>
-<td>Spare (touch plates future)</td>
+<td>Reserved for future touch plate sensing</td>
 </tr>
 <tr id="gp-27">
 <td><a class="ref gp" href="#gp-27">GP27</a></td>
 <td>32</td>
-<td>ADC1</td>
+<td>ADC1 (spare)</td>
 <td>IN</td>
-<td>Spare (touch plates future)</td>
+<td>Reserved</td>
 </tr>
 <tr id="gp-28">
 <td><a class="ref gp" href="#gp-28">GP28</a></td>
 <td>34</td>
-<td>ADC2</td>
+<td>ADC2 (spare)</td>
 <td>IN</td>
-<td>Spare (touch plates future)</td>
+<td>Reserved</td>
 </tr>
 <tr>
 <td>3V3</td>
 <td>36</td>
-<td>+3.3V</td>
+<td>3V3 out</td>
 <td>PWR</td>
-<td>To OLED, encoder, level shifter VDD</td>
+<td>OLED + encoder + I²C pull-ups</td>
 </tr>
 <tr>
 <td>VSYS</td>
 <td>39</td>
 <td>+5V input</td>
 <td>PWR</td>
-<td>From MB +5V via 1N5817 (≈4.7V at VSYS)</td>
+<td>From Eurorack CP1A +5V via 1N5817 + 100µF + 100nF</td>
 </tr>
-<tr>
+<tr id="tp-72">
 <td>GND</td>
 <td>3,8,13,18,23,28,33,38</td>
 <td>Ground</td>
 <td>—</td>
-<td>Multiple pins</td>
+<td>Multiple pins, star return at <a class="ref tp" href="#tp-72">TP72</a></td>
 </tr>
 </tbody></table></div>
-<p><strong>Free GPIOs:</strong> <a class="ref gp" href="#gp-6">GP6</a>, <a class="ref gp" href="#gp-7">GP7</a>, <a class="ref gp" href="#gp-11">GP11</a>, <a class="ref gp" href="#gp-16">GP16</a>–20, <a class="ref gp" href="#gp-23">GP23</a>–25 (11 spare — <a class="ref gp" href="#gp-2">GP2</a>/<a class="ref gp" href="#gp-3">GP3</a> reassigned to I²C1 Daisy expansion; <a class="ref gp" href="#gp-16">GP16</a>–20 freed by using I²C OLED instead of SPI)</p>
-<p><strong>USB-MIDI:</strong> Pico micro-USB enumerates as a USB-MIDI class device via TinyUSB. Separate from the 5-pin DIN path (which stays LPC-only). Firmware hook: <code>firmware/pico/usbmidi.py</code> (to be implemented).</p>
+<p><strong>No truly spare GPIO.</strong> All exposed Pico GP pins are now allocated. <a class="ref gp" href="#gp-23">GP23</a>/24/25 are RP2040-internal (SMPS / VBUS / on-board LED) and not exposed.</p>
+<p><strong>Tap button modes:</strong> short press (&lt; 400 ms release) → tap tempo. Held press (≥ 400 ms) → manual gate (RGB-G LED full-bright while held; gate signal also goes to LPC bridge as a synthetic note-on/off pair).</p>
+<p><strong>RGB LED color semantics:</strong></p>
+<div class="table-wrap"><table><thead><tr>
+<th>Channel</th>
+<th>Pin</th>
+<th>Meaning</th>
+</tr></thead><tbody>
+<tr id="gp-8">
+<td>Red</td>
+<td><a class="ref gp" href="#gp-8">GP8</a></td>
+<td>Brief flash on each clock tick</td>
+</tr>
+<tr id="gp-9">
+<td>Green</td>
+<td><a class="ref gp" href="#gp-9">GP9</a></td>
+<td>Solid while gate is high (manual or external)</td>
+</tr>
+<tr id="gp-10">
+<td>Blue</td>
+<td><a class="ref gp" href="#gp-10">GP10</a></td>
+<td>Mode indicator: dim = solo, bright = paired with EFFIGY</td>
+</tr>
+</tbody></table></div>
+<p>Mixed colors arise naturally — yellow = clock + gate, cyan = gate + paired, magenta = clock + paired, white = all three.</p>
+<p><strong>USB-MIDI:</strong> Pico micro-USB enumerates as a USB-MIDI class device via TinyUSB (<code>firmware/pico/usbmidi.py</code>). Orthogonal to the LPC bridge — gives the host DAW a &quot;Macrobrute Pico&quot; MIDI port. Pico does NOT drive 5-pin DIN MIDI; that stays on the stock 6N138 → LPC2361 UART0 path inside the MicroBrute.</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--2-db-9-a-outputs-microbrute-expander">2. DB-9 A — Outputs (MicroBrute → Expander)</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -5407,88 +5516,103 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 </tbody></table></div>
 <p><strong>Level shifter note:</strong> CD40106 gate output (5V) going to Pico GP needs CD4049UBE level shifter (powered from 3.3V, accepts &gt;VDD inputs).</p>
 <hr>
-<h2 id="docs-macrobrute-connection-map--3-db-9-b-inputs-power-expander-microbrute">3. DB-9 B — Inputs + Power (Expander → MicroBrute)</h2>
+<h2 id="docs-macrobrute-connection-map--3-db-9-b-digital-power-essential-cv-expander-microbrute">3. DB-9 B — Digital + Power + Essential CV (Expander ↔ MicroBrute)</h2>
+<p><strong>Revised pin map (replaces earlier all-CV layout).</strong> DB-9 B now carries the UART bridge, the I²C0 bus to the strip OLED on the MB panel, two essential CV inputs that benefit from expander-routed modulation, and ±12V to power the MB-side breakout op-amps. No third aux cable required.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Pin</th>
 <th>Signal</th>
-<th>MB Destination</th>
-<th>Protection</th>
-<th>Series R</th>
+<th>Direction</th>
+<th>Protection / Notes</th>
 <th>Wire Color</th>
 </tr></thead><tbody>
-<tr>
+<tr id="gp-0">
 <td>1</td>
-<td>Filter CV In</td>
-<td>Summing node (U8A)</td>
-<td>BAT54S clamp</td>
-<td>220kΩ</td>
+<td>UART TX (Pico <a class="ref gp" href="#gp-0">GP0</a>)</td>
+<td>Expander → MB (LPC P0.16 RXD1)</td>
+<td>Ferrite bead at Pico end · 115200 baud · 1kΩ+2kΩ divider OR CD4049UBE level shift</td>
 <td>White</td>
 </tr>
-<tr id="tp-10">
+<tr id="gp-1">
 <td>2</td>
-<td>VCA CV In</td>
-<td><a class="ref tp" href="#tp-10">TP10</a>/<a class="ref tp" href="#tp-11">TP11</a></td>
-<td>BAT54S clamp</td>
-<td>100kΩ</td>
+<td>UART RX (Pico <a class="ref gp" href="#gp-1">GP1</a>)</td>
+<td>Expander ← MB (LPC P0.15 TXD1)</td>
+<td>Ferrite bead at Pico end · 115200 baud · direct (LPC is 3.3V)</td>
 <td>Yellow</td>
 </tr>
-<tr>
+<tr id="gp-4">
 <td>3</td>
-<td>Resonance CV In</td>
-<td>Vactrol LED</td>
-<td>1kΩ current limit</td>
-<td>1kΩ via 2N3904</td>
+<td>I²C0 SDA (Pico <a class="ref gp" href="#gp-4">GP4</a>)</td>
+<td>Bidirectional</td>
+<td>Pull-up 4.7kΩ to 3V3 (Pico side) · drives strip OLED on MB panel @ 0x3D</td>
 <td>Orange</td>
 </tr>
-<tr>
+<tr id="gp-5">
 <td>4</td>
-<td>Sync In</td>
-<td>VCO sync point</td>
-<td>—</td>
-<td>Direct</td>
+<td>I²C0 SCL (Pico <a class="ref gp" href="#gp-5">GP5</a>)</td>
+<td>Expander → MB</td>
+<td>Pull-up 4.7kΩ · 100 kHz max for cable length</td>
 <td>Green</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Gate In</td>
-<td>Gate circuit</td>
-<td>1N4148</td>
-<td>—</td>
+<td>Filter CV In</td>
+<td>Expander → MB</td>
+<td>BAT54S clamp · 220kΩ series · summing node U8A</td>
 <td>Blue</td>
 </tr>
-<tr>
+<tr id="tp-10">
 <td>6</td>
-<td>Ext Audio In</td>
-<td>Mixer ext input</td>
-<td>—</td>
-<td>Attenuated</td>
+<td>VCA CV In</td>
+<td>Expander → MB</td>
+<td>BAT54S clamp · 100kΩ series · <a class="ref tp" href="#tp-10">TP10</a>/<a class="ref tp" href="#tp-11">TP11</a></td>
 <td>Purple</td>
 </tr>
 <tr>
 <td>7</td>
 <td>+12V</td>
-<td>Breakout PCB</td>
-<td>1N5817 + ferrite</td>
-<td>—</td>
+<td>Expander → MB breakout</td>
+<td>1N5817 + ferrite · powers MB-side op-amps only</td>
 <td>Red</td>
 </tr>
 <tr>
 <td>8</td>
 <td>-12V</td>
-<td>Breakout PCB</td>
-<td>1N5817 + ferrite</td>
-<td>—</td>
-<td>Brown/stripe</td>
+<td>Expander → MB breakout</td>
+<td>1N5817 + ferrite · op-amp negative rail</td>
+<td>Brown/Stripe</td>
 </tr>
-<tr>
+<tr id="tp-72">
 <td>9</td>
 <td>GND</td>
-<td>Star ground point</td>
-<td>—</td>
-<td>—</td>
+<td>shared</td>
+<td>Star ground (<a class="ref tp" href="#tp-72">TP72</a>) · single return path</td>
 <td>Black</td>
 </tr>
 </tbody></table></div>
+<p><strong>Migrated to MB panel (no longer in DB-9 B):</strong></p>
+<div class="table-wrap"><table><thead><tr>
+<th>Original DB-9 signal</th>
+<th>Where it goes now</th>
+</tr></thead><tbody>
+<tr>
+<td>Resonance CV In</td>
+<td>New 3.5 mm jack on MB panel — wires internally to 2N3904 → vactrol LED on breakout</td>
+</tr>
+<tr>
+<td>Sync In</td>
+<td>Use existing MB back-panel Sync In jack — no new drilling</td>
+</tr>
+<tr>
+<td>Gate In</td>
+<td>Use existing MB back-panel Gate In jack — no new drilling</td>
+</tr>
+<tr>
+<td>Ext Audio In</td>
+<td>Use existing MB back-panel Audio In jack — no new drilling</td>
+</tr>
+</tbody></table></div>
+<p><strong>Cable spec:</strong> shielded DB-9 (e.g., quality D-Sub serial cable), shell tied to shield drain on MB side only. Pin layout deliberately puts digital lines (1–4) physically apart from the analog CV inputs (5–6), with power and GND acting as buffers in between.</p>
+<p><strong>Crosstalk mitigation cumulative:</strong> (1) shielded cable, (2) physical pin separation, (3) ferrite beads on UART/I²C lines at the Pico end, (4) I²C spec&#x27;d at 100 kHz (not 400 kHz). Apply all four — they&#x27;re cheap and additive.</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--4-clock-wiring-separate-from-db-9">4. Clock Wiring (Separate from DB-9)</h2>
 <p>Routed through rear panel grommet alongside DB-9 cables.</p>
@@ -5673,7 +5797,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 </tr>
 </tbody></table></div>
 <h3 id="docs-macrobrute-connection-map--5-4-lpc-bridge-wiring-replaces-direct-midi">5.4 LPC Bridge Wiring (replaces direct MIDI)</h3>
-<p>Pico speaks a custom framed protocol to the LPC2361 over UART0 at 115200 baud. The LPC firmware (modified via .mbf re-encryption) translates protocol messages into internal MIDI SysEx, avoiding the 31250-baud MIDI path entirely and freeing <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> for the I²C OLED.</p>
+<p>Pico speaks a custom framed protocol to the LPC2361 over UART0 at 115200 baud, carried across DB-9 B pins 1/2 (with the Pico now living on the expander, not inside the MicroBrute case). The LPC firmware (modified via .mbf re-encryption) translates protocol messages into internal MIDI SysEx, avoiding the 31250-baud MIDI path entirely and freeing <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> for the shared I²C0 bus (main OLED on the expander + strip OLED on the MB panel).</p>
 <div class="table-wrap"><table><thead><tr>
 <th>From</th>
 <th>To</th>
@@ -5681,21 +5805,85 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 </tr></thead><tbody>
 <tr id="gp-0">
 <td>Pico <a class="ref gp" href="#gp-0">GP0</a> (UART0 TX)</td>
-<td>LPC2361 P0.16 (RXD1)</td>
-<td>Via 1kΩ+2kΩ divider or CD4049UBE</td>
+<td>DB-9 B:1 → LPC2361 P0.16 (RXD1)</td>
+<td>Ferrite at Pico · 1kΩ+2kΩ divider OR CD4049UBE</td>
 </tr>
 <tr id="gp-1">
 <td>LPC2361 P0.15 (TXD1)</td>
-<td>Pico <a class="ref gp" href="#gp-1">GP1</a> (UART0 RX)</td>
-<td>Direct (LPC runs 3.3V I/O)</td>
+<td>DB-9 B:2 → Pico <a class="ref gp" href="#gp-1">GP1</a> (UART0 RX)</td>
+<td>Ferrite at Pico · direct (LPC is 3.3V)</td>
 </tr>
-<tr>
-<td>Pico GND</td>
-<td>LPC2361 GND</td>
-<td>Shared ground reference</td>
+<tr id="tp-72">
+<td>Shared GND</td>
+<td>DB-9 B:9</td>
+<td>Single star return at <a class="ref tp" href="#tp-72">TP72</a></td>
 </tr>
 </tbody></table></div>
-<p>Protocol framing: <code>0xAA [msg_type] [counter] [len] [payload…]</code> — see <code>firmware/pico/midi.py</code> for the bridge implementation and message codes.</p>
+<p><strong>Protocol frame:</strong> <code>0xAA · msg_type · counter · payload_len · payload[…] · xor_checksum</code></p>
+<p>The XOR checksum is the bitwise XOR of all bytes from <code>msg_type</code> through the last payload byte (excluding the leading <code>0xAA</code> and the checksum itself). Receivers compute and verify; bad frames are silently dropped. Both sides (<code>firmware/pico/midi.py</code> and <code>firmware/lpc2361/include/pico_comm.h</code>) implement identical framing.</p>
+<h3 id="docs-macrobrute-connection-map--5-5-strip-oled-wiring-mb-panel">5.5 Strip OLED Wiring (MB panel)</h3>
+<p>The 0.91&quot; SSD1306 128×32 strip display lives on the MB panel where the &quot;microbrute&quot; silkscreen sits. It shares the Pico&#x27;s I²C0 bus with the main 1.3&quot; SH1106 on the expander (different addresses: 0x3C main, 0x3D strip).</p>
+<div class="table-wrap"><table><thead><tr>
+<th>From</th>
+<th>To</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr id="gp-4">
+<td>Pico <a class="ref gp" href="#gp-4">GP4</a> (I²C0 SDA)</td>
+<td>DB-9 B:3 → strip OLED SDA</td>
+<td>Ferrite at Pico end · pull-up 4.7kΩ to 3V3</td>
+</tr>
+<tr id="gp-5">
+<td>Pico <a class="ref gp" href="#gp-5">GP5</a> (I²C0 SCL)</td>
+<td>DB-9 B:4 → strip OLED SCL</td>
+<td>Ferrite at Pico end · pull-up 4.7kΩ to 3V3</td>
+</tr>
+<tr>
+<td>MB +5V (local)</td>
+<td>Strip OLED VCC</td>
+<td>Powered from MB internal 5V — onboard LDO + level shifter on the module</td>
+</tr>
+<tr id="tp-72">
+<td><a class="ref tp" href="#tp-72">TP72</a> GND</td>
+<td>Strip OLED GND</td>
+<td>Shared with star ground</td>
+</tr>
+</tbody></table></div>
+<p>The strip OLED&#x27;s I²C address jumper must be set to <strong>0x3D</strong> (alt) — verify on your specific module before mounting; some boards require a small SMD resistor swap rather than a solder pad jumper.</p>
+<h3 id="docs-macrobrute-connection-map--5-6-effigy-pair-header-rear-hidden">5.6 EFFIGY Pair Header (rear, hidden)</h3>
+<p>5-pin JST-XH on the rear of the expander, accessed with the case open. Wires the Pico&#x27;s I²C1 bus + an INT line to a separately-built EFFIGY Daisy Seed module. See <code>docs/MACROBRUTE_EFFIGY_BRIDGE.md</code> for the protocol.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Pin</th>
+<th>Signal</th>
+<th>Pico side</th>
+</tr></thead><tbody>
+<tr id="gp-2">
+<td>1</td>
+<td>SDA</td>
+<td><a class="ref gp" href="#gp-2">GP2</a> (I²C1 SDA) · 4.7kΩ pull-up to 3V3</td>
+</tr>
+<tr id="gp-3">
+<td>2</td>
+<td>SCL</td>
+<td><a class="ref gp" href="#gp-3">GP3</a> (I²C1 SCL) · 4.7kΩ pull-up to 3V3</td>
+</tr>
+<tr id="gp-11">
+<td>3</td>
+<td>INT</td>
+<td><a class="ref gp" href="#gp-11">GP11</a> input · pull-up to 3V3 · falling-edge IRQ</td>
+</tr>
+<tr>
+<td>4</td>
+<td>+3.3V</td>
+<td>Pico 3V3 — for header pull-ups only (EFFIGY has its own power)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GND</td>
+<td>Shared reference</td>
+</tr>
+</tbody></table></div>
+<p>Cable: shielded twisted-pair, &lt; 30 cm. Bus speed: 100 kHz (matches I²C0 speed for the long DB-9 B run).</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--6-panel-mods-jacks-3">6. Panel Mods — Jacks (3)</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -7861,7 +8049,7 @@ LFO</text>
 <div class="svg-wrap">
 <div class="svg-caption">2× DB-9 Interconnect Detail</div>
 <div class="svg-container"><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" width="1000" height="780">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 820" width="1000" height="820">
 <defs>
   
   <style>
@@ -7885,7 +8073,7 @@ LFO</text>
 </defs>
 
 <text x="500" y="25" class="title" text-anchor="middle">2× DB-9 Interconnect Detail</text>
-<text x="500" y="42" class="subtitle" text-anchor="middle">MicroBrute ↔ 42HP Eurorack expander — 18 signals + shield</text>
+<text x="500" y="42" class="subtitle" text-anchor="middle">MicroBrute ↔ 17HP expander — DB-9 B carries UART + I²C + 2 CVs + ±12V (no aux cable)</text>
 <path d="M110,90 L250,90 L240,310 L120,310 Z" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="2"/>
 <text x="180" y="70" class="label" text-anchor="middle" font-size="12" fill="#0066CC">DB-9 A — OUTPUTS (MB → Expander)</text>
 <circle cx="130" cy="120" r="4" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
@@ -8004,47 +8192,47 @@ LFO</text>
 <rect x="330" y="488" width="640" height="18" fill="#F8F8F8"/>
 <circle cx="348" cy="496" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="499" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">1</text>
-<text x="390" y="500" class="label" font-size="9" fill="#6600CC">Filter CV In</text>
-<text x="500" y="500" class="value" font-size="8">Summing node U8A (R67)</text>
-<text x="700" y="500" class="value" font-size="8">BAT54S clamp · 220kΩ</text>
+<text x="390" y="500" class="label" font-size="9" fill="#00BCD4">UART TX</text>
+<text x="500" y="500" class="value" font-size="8">Pico GP0 → LPC P0.16 (RXD1)</text>
+<text x="700" y="500" class="value" font-size="8">ferrite bead · 115200</text>
 <text x="900" y="500" class="value" font-size="8">White</text>
 <circle cx="348" cy="514" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="517" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">2</text>
-<text x="390" y="518" class="label" font-size="9" fill="#CC6600">VCA CV In</text>
-<text x="500" y="518" class="value" font-size="8">TP10/TP11</text>
-<text x="700" y="518" class="value" font-size="8">BAT54S clamp · 100kΩ</text>
+<text x="390" y="518" class="label" font-size="9" fill="#00BCD4">UART RX</text>
+<text x="500" y="518" class="value" font-size="8">Pico GP1 ← LPC P0.15 (TXD1)</text>
+<text x="700" y="518" class="value" font-size="8">ferrite bead · 115200</text>
 <text x="900" y="518" class="value" font-size="8">Yellow</text>
 <rect x="330" y="524" width="640" height="18" fill="#F8F8F8"/>
 <circle cx="348" cy="532" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="535" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">3</text>
-<text x="390" y="536" class="label" font-size="9" fill="#CC6600">Resonance CV In</text>
-<text x="500" y="536" class="value" font-size="8">Vactrol LED via 2N3904</text>
-<text x="700" y="536" class="value" font-size="8">1kΩ current limit</text>
+<text x="390" y="536" class="label" font-size="9" fill="#2196F3">I²C0 SDA</text>
+<text x="500" y="536" class="value" font-size="8">Pico GP4 ↔ MB-panel strip OLED 0x3D</text>
+<text x="700" y="536" class="value" font-size="8">4.7kΩ pull-up to 3V3</text>
 <text x="900" y="536" class="value" font-size="8">Orange</text>
 <circle cx="348" cy="550" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="553" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">4</text>
-<text x="390" y="554" class="label" font-size="9" fill="#4A4">Sync In</text>
-<text x="500" y="554" class="value" font-size="8">VCO sync node (direct)</text>
-<text x="700" y="554" class="value" font-size="8">—</text>
+<text x="390" y="554" class="label" font-size="9" fill="#2196F3">I²C0 SCL</text>
+<text x="500" y="554" class="value" font-size="8">Pico GP5 ↔ MB-panel strip OLED</text>
+<text x="700" y="554" class="value" font-size="8">4.7kΩ pull-up · 100kHz</text>
 <text x="900" y="554" class="value" font-size="8">Green</text>
 <rect x="330" y="560" width="640" height="18" fill="#F8F8F8"/>
 <circle cx="348" cy="568" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="571" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">5</text>
-<text x="390" y="572" class="label" font-size="9" fill="#0066CC">Gate In</text>
-<text x="500" y="572" class="value" font-size="8">Gate circuit via 1N4148</text>
-<text x="700" y="572" class="value" font-size="8">—</text>
+<text x="390" y="572" class="label" font-size="9" fill="#6600CC">Filter CV In</text>
+<text x="500" y="572" class="value" font-size="8">Summing node U8A (R67)</text>
+<text x="700" y="572" class="value" font-size="8">BAT54S clamp · 220kΩ</text>
 <text x="900" y="572" class="value" font-size="8">Blue</text>
 <circle cx="348" cy="586" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="589" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">6</text>
-<text x="390" y="590" class="label" font-size="9" fill="#6600CC">Ext Audio In</text>
-<text x="500" y="590" class="value" font-size="8">Mixer ext in (attenuated)</text>
-<text x="700" y="590" class="value" font-size="8">—</text>
+<text x="390" y="590" class="label" font-size="9" fill="#CC6600">VCA CV In</text>
+<text x="500" y="590" class="value" font-size="8">TP10/TP11</text>
+<text x="700" y="590" class="value" font-size="8">BAT54S clamp · 100kΩ</text>
 <text x="900" y="590" class="value" font-size="8">Purple</text>
 <rect x="330" y="596" width="640" height="18" fill="#F8F8F8"/>
 <circle cx="348" cy="604" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="607" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">7</text>
 <text x="390" y="608" class="label" font-size="9" fill="#D44">+12V</text>
-<text x="500" y="608" class="value" font-size="8">Breakout +12V rail</text>
+<text x="500" y="608" class="value" font-size="8">Breakout +12V rail (MB buffers)</text>
 <text x="700" y="608" class="value" font-size="8">1N5817 + ferrite bead</text>
 <text x="900" y="608" class="value" font-size="8">Red</text>
 <circle cx="348" cy="622" r="5" fill="gold" stroke="#B8860B"/>
@@ -8056,15 +8244,18 @@ LFO</text>
 <rect x="330" y="632" width="640" height="18" fill="#F8F8F8"/>
 <circle cx="348" cy="640" r="5" fill="gold" stroke="#B8860B"/>
 <text x="348" y="643" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a" font-weight="bold">9</text>
-<text x="390" y="644" class="label" font-size="9" fill="#1a1a1a">GND (power)</text>
+<text x="390" y="644" class="label" font-size="9" fill="#1a1a1a">GND (power+sig)</text>
 <text x="500" y="644" class="value" font-size="8">Star ground at TP72</text>
 <text x="700" y="644" class="value" font-size="8">—</text>
 <text x="900" y="644" class="value" font-size="8">Black</text>
-<rect x="50" y="680" width="920" height="80" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
-<text x="65" y="700" class="value" font-size="9">• Ground strategy: single return at TP72 via DB-9 B pin 9. Do not duplicate ground via DB-9 A pin 9 (avoid loop).</text>
-<text x="65" y="716" class="value" font-size="9">• DB-9 shells: tied to shield drain on MicroBrute side only. Expander shells left floating to prevent ground loop.</text>
-<text x="65" y="732" class="value" font-size="9">• VGA HD-15 rejected — commodity VGA cables short pins 6/7/8 to GND, which would collide with our output signal assignments.</text>
-<text x="65" y="748" class="value" font-size="9">• All audio outputs buffered (TL072/TL074, unity gain). All CV inputs clamped to ±5V via BAT54S before op-amp stage.</text></svg></div>
+<rect x="50" y="680" width="920" height="120" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
+<text x="65" y="700" class="value" font-size="9">• Ground strategy: single return at TP72 via DB-9 B pin 9. Do not duplicate via DB-9 A pin 9 (avoid loop).</text>
+<text x="65" y="715" class="value" font-size="9">• Cable: shielded DB-9 (shell tied to shield drain on MB side only). Pin layout puts digital lines (1–4) physically apart from analog CV (5–6).</text>
+<text x="65" y="730" class="value" font-size="9">• Digital crosstalk mitigation: ferrite beads on UART/I²C lines at the Pico end suppress HF emissions into adjacent CV pins.</text>
+<text x="65" y="745" class="value" font-size="9">• I²C @ 100 kHz tolerates the ~30 cm cable length. 400 kHz is NOT recommended for this run.</text>
+<text x="65" y="760" class="value" font-size="9">• Migrated to MB panel jacks (no longer in DB-9): Resonance CV (new jack), Sync In / Gate In / Ext Audio In (use stock MB back-panel jacks).</text>
+<text x="65" y="775" class="value" font-size="9">• VGA HD-15 rejected — commodity VGA cables short pins 6/7/8 to GND, which would collide with our signal assignments.</text>
+<text x="65" y="790" class="value" font-size="9">• All audio outputs buffered (TL072/TL074, unity gain). All CV inputs clamped to ±5V via BAT54S before op-amp stage.</text></svg></div>
 </div>
 <div class="svg-wrap">
 <div class="svg-caption">MicroBrute Test-Points Map</div>
@@ -10591,71 +10782,63 @@ LFO</text>
 </defs>
 
 <text x="525" y="25" class="title" text-anchor="middle">Power Regulation Chain</text>
-<text x="525" y="42" class="subtitle" text-anchor="middle">Eurorack bus → breakout PCB → Pico VSYS + expander +5V</text>
-<rect x="40" y="90" width="180" height="120" fill="#555" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="130.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Eurorack Bus</text>
-<text x="130.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V / -12V / +5V</text>
-<text x="130.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">16-pin IDC or Doepfer</text>
-<text x="130.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">2A typical peak</text>
-<rect x="280" y="90" width="180" height="120" fill="#0066CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="370.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">DB-9 B Protection</text>
-<text x="370.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 diodes</text>
-<text x="370.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">Ferrite bead 100Ω</text>
-<text x="370.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">100µF/25V + 100nF</text>
-<rect x="520" y="40" width="180" height="90" fill="#D44" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="62" class="label" text-anchor="middle" fill="#FFF" font-size="11">+12V_BRK Rail</text>
-<text x="610.0" y="80" class="value" text-anchor="middle" fill="#FFF" font-size="9">To op-amps, CD40106</text>
-<text x="610.0" y="93" class="value" text-anchor="middle" fill="#FFF" font-size="9">~200mA budget</text>
-<rect x="520" y="150" width="180" height="90" fill="#44D" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="172" class="label" text-anchor="middle" fill="#FFF" font-size="11">-12V_BRK Rail</text>
-<text x="610.0" y="190" class="value" text-anchor="middle" fill="#FFF" font-size="9">To op-amps</text>
-<text x="610.0" y="203" class="value" text-anchor="middle" fill="#FFF" font-size="9">~200mA budget</text>
-<rect x="520" y="260" width="180" height="90" fill="#CC6600" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="610.0" y="282" class="label" text-anchor="middle" fill="#FFF" font-size="11">LM78L05 → +5V</text>
-<text x="610.0" y="300" class="value" text-anchor="middle" fill="#FFF" font-size="9">Input: +12V_BRK</text>
-<text x="610.0" y="313" class="value" text-anchor="middle" fill="#FFF" font-size="9">~100mA (CD4024, gates)</text>
-<rect x="760" y="40" width="230" height="90" fill="#6600CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="62" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico VSYS (pin 39)</text>
-<text x="875.0" y="80" class="value" text-anchor="middle" fill="#FFF" font-size="9">Fed from MB +5V rail</text>
-<text x="875.0" y="93" class="value" text-anchor="middle" fill="#FFF" font-size="9">via 1N5817 + 100nF</text>
-<text x="875.0" y="106" class="value" text-anchor="middle" fill="#FFF" font-size="9">3.7-5.5V input</text>
-<rect x="760" y="150" width="230" height="90" fill="#4A4" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="172" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico 3V3 (pin 36)</text>
-<text x="875.0" y="190" class="value" text-anchor="middle" fill="#FFF" font-size="9">Internal LDO</text>
-<text x="875.0" y="203" class="value" text-anchor="middle" fill="#FFF" font-size="9">~50mA (OLED, encoder)</text>
-<text x="875.0" y="216" class="value" text-anchor="middle" fill="#FFF" font-size="9">Powers I2C pull-ups</text>
-<rect x="760" y="260" width="230" height="90" fill="#009933" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
-<text x="875.0" y="282" class="label" text-anchor="middle" fill="#FFF" font-size="11">Expander Utilities</text>
-<text x="875.0" y="300" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V/-12V: op-amps, LFO</text>
-<text x="875.0" y="313" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V: clock divider</text>
-<text x="875.0" y="326" class="value" text-anchor="middle" fill="#FFF" font-size="9">GND: star node</text>
-<line x1="220" y1="150" x2="280" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="250.0" y="144.0" class="anno" text-anchor="middle" font-size="9">DB-9 B:7/8</text>
-<line x1="460" y1="110" x2="520" y2="85" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="91.5" class="anno" text-anchor="middle" font-size="9">+12V</text>
-<line x1="460" y1="170" x2="520" y2="195" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="176.5" class="anno" text-anchor="middle" font-size="9">-12V</text>
-<line x1="460" y1="200" x2="520" y2="305" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="490.0" y="246.5" class="anno" text-anchor="middle" font-size="9">+12V→78L05</text>
-<line x1="700" y1="85" x2="760" y2="85" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="730.0" y="79.0" class="anno" text-anchor="middle" font-size="9">+5V</text>
-<line x1="875" y1="130" x2="875" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<line x1="700" y1="305" x2="760" y2="305" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="730.0" y="299.0" class="anno" text-anchor="middle" font-size="9">rails</text>
-<rect x="40" y="400" width="470" height="150" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
-<text x="275" y="420" class="label" text-anchor="middle" fill="#E65100" font-size="11">LPC2361 Power (stock Arturia)</text>
-<text x="55" y="445" class="value" font-size="9">• VDD (3.3V) — internal to MicroBrute main PCB, supplied by stock regulator (not tapped by mod)</text>
-<text x="55" y="462" class="value" font-size="9">• VDDA (analog 3.3V) — separate pin, derived on-board</text>
-<text x="55" y="479" class="value" font-size="9">• Core 1.8V — generated internally by LPC2361 DC/DC</text>
-<text x="55" y="496" class="value" font-size="9">• MOD does NOT modify stock MicroBrute power — breakout only adds rails FOR mods, shares GND at TP72.</text>
-<text x="55" y="513" class="value" font-size="9">• Mod current budget: Pico ≤150mA + expander ≤500mA = ~650mA added on Eurorack ±12V.</text>
-<rect x="540" y="400" width="470" height="150" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
-<text x="775" y="420" class="label" text-anchor="middle" fill="#1B5E20" font-size="11">Protection &amp; Budget</text>
-<text x="555" y="445" class="value" font-size="9">• 1N5817 Schottky on ±12V and +5V inputs: reverse-polarity protection (0.3V drop).</text>
-<text x="555" y="462" class="value" font-size="9">• Ferrite bead (100Ω @ 100MHz) in series with each rail: suppresses HF noise from Eurorack bus.</text>
-<text x="555" y="479" class="value" font-size="9">• 100µF electrolytic + 100nF ceramic per rail: bulk + HF decoupling.</text>
-<text x="555" y="496" class="value" font-size="9">• Star ground at TP72 — single return path for audio, CV, gate, and power.</text>
-<text x="555" y="513" class="value" font-size="9">• UNDOCUMENTED: actual current draw by LPC2361 DAC/keyboard matrix (not measured).</text></svg></div>
+<text x="525" y="42" class="subtitle" text-anchor="middle">Behringer CP1A bus → expander → Pico VSYS · DB-9 B carries ±12V to MB breakout · MicroBrute stock power untouched</text>
+<rect x="40" y="90" width="200" height="120" fill="#555" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="140.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Behringer CP1A PSU</text>
+<text x="140.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V · -12V · +5V on bus</text>
+<text x="140.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">13V / 3A wall input</text>
+<text x="140.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V rail ~1A available</text>
+<rect x="280" y="90" width="200" height="120" fill="#D44" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="380.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico Power Filter</text>
+<text x="380.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 reverse-polarity</text>
+<text x="380.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">100µF/10V bulk</text>
+<text x="380.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">100nF ceramic HF bypass</text>
+<rect x="520" y="90" width="200" height="120" fill="#6600CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="620.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Pico VSYS (pin 39)</text>
+<text x="620.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">Direct from filtered +5V</text>
+<text x="620.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">Pico draws ~100 mA</text>
+<text x="620.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">Internal LDO → 3V3 (pin 36)</text>
+<rect x="520" y="240" width="200" height="120" fill="#44D" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="620.0" y="262" class="label" text-anchor="middle" fill="#FFF" font-size="11">DB-9 B → MB breakout</text>
+<text x="620.0" y="280" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V (pin 7), -12V (pin 8)</text>
+<text x="620.0" y="293" class="value" text-anchor="middle" fill="#FFF" font-size="9">1N5817 + ferrite + 100µF</text>
+<text x="620.0" y="306" class="value" text-anchor="middle" fill="#FFF" font-size="9">Powers MB-side op-amp buffers</text>
+<rect x="760" y="90" width="240" height="120" fill="#4A4" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="880.0" y="112" class="label" text-anchor="middle" fill="#FFF" font-size="11">Expander analog rails</text>
+<text x="880.0" y="130" class="value" text-anchor="middle" fill="#FFF" font-size="9">+12V / -12V → slew op-amp</text>
+<text x="880.0" y="143" class="value" text-anchor="middle" fill="#FFF" font-size="9">+5V → Pico VSYS path</text>
+<text x="880.0" y="156" class="value" text-anchor="middle" fill="#FFF" font-size="9">GND → star at expander</text>
+<rect x="760" y="240" width="240" height="120" fill="#0066CC" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+<text x="880.0" y="262" class="label" text-anchor="middle" fill="#FFF" font-size="11">MB-side breakout PCB</text>
+<text x="880.0" y="280" class="value" text-anchor="middle" fill="#FFF" font-size="9">±12V via DB-9 B → buffers</text>
+<text x="880.0" y="293" class="value" text-anchor="middle" fill="#FFF" font-size="9">Receives ±12V only</text>
+<text x="880.0" y="306" class="value" text-anchor="middle" fill="#FFF" font-size="9">Star ground at TP72</text>
+<line x1="240" y1="130" x2="280" y2="130" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="260.0" y="124.0" class="anno" text-anchor="middle" font-size="9">+5V</text>
+<line x1="240" y1="170" x2="280" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="260.0" y="164.0" class="anno" text-anchor="middle" font-size="9">GND</text>
+<line x1="480" y1="150" x2="520" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="500.0" y="144.0" class="anno" text-anchor="middle" font-size="9">VSYS</text>
+<line x1="720" y1="150" x2="760" y2="150" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="720" y1="300" x2="760" y2="300" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="740.0" y="294.0" class="anno" text-anchor="middle" font-size="9">DB-9 B</text>
+<line x1="140" y1="210" x2="600" y2="240" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="40" y="400" width="470" height="170" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
+<text x="275" y="420" class="label" text-anchor="middle" fill="#1B5E20" font-size="12">Non-invasive principle</text>
+<text x="55" y="445" class="value" font-size="9">• MicroBrute stock power is NOT tapped or modified.</text>
+<text x="55" y="464" class="value" font-size="9">• Pico is fed from Eurorack +5V (CP1A bus), not from any MB rail.</text>
+<text x="55" y="483" class="value" font-size="9">• MB breakout PCB receives only ±12V via DB-9 B for op-amp buffers.</text>
+<text x="55" y="502" class="value" font-size="9">• Removing the DB-9 B cable leaves both MB and Pico in clean states.</text>
+<text x="55" y="521" class="value" font-size="9">• MB stock 5V regulator is never loaded by the mod.</text>
+<text x="55" y="540" class="value" font-size="9">• Star ground at TP72 — single return for audio/CV/gate.</text>
+<rect x="540" y="400" width="470" height="170" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
+<text x="775" y="420" class="label" text-anchor="middle" fill="#E65100" font-size="12">Current budget</text>
+<text x="555" y="445" class="value" font-size="9">• +5V from CP1A bus: ~150 mA (Pico + main OLED + strip OLED + LEDs)</text>
+<text x="555" y="464" class="value" font-size="9">• +12V from CP1A bus: ~80 mA (slew op-amp, MB-side buffers via DB-9 B)</text>
+<text x="555" y="483" class="value" font-size="9">• -12V from CP1A bus: ~50 mA (op-amp negative rails)</text>
+<text x="555" y="502" class="value" font-size="9">• CP1A rated: ±12V @ 500 mA, +5V @ 1 A → comfortable headroom.</text>
+<text x="555" y="521" class="value" font-size="9">• Pico filter: 1N5817 (0.2 V drop) + 100 µF + 100 nF — shop-stocked parts.</text>
+<text x="555" y="540" class="value" font-size="9">• Optional armor (defer): PPTC 500 mA fuse, SMAJ5.0A TVS, ferrite bead.</text></svg></div>
 </div>
 </div><p>Mounts inside MicroBrute. Houses Pico H, output buffers, gate buffer, LED drivers, vactrol driver, and DB-9 header connections.</p>
 <h2 id="schematics-breakout-pcb--power-supply-from-microbrute-rails">Power Supply (from MicroBrute rails)</h2>
@@ -13664,61 +13847,71 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="340" y="143" class="value" fill="#AAA" font-size="7">GP0</text>
 <rect x="225" y="132" width="90" height="16" fill="#00BCD4" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">UART0 TX</text>
-<text x="220" y="143" class="value" text-anchor="end" fill="#666" font-size="8">→ LPC2361</text>
+<text x="220" y="143" class="value" text-anchor="end" fill="#666" font-size="8">→ LPC (DB-9 B:1)</text>
 <circle cx="325" cy="160" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="163" class="value" fill="#AAA" font-size="7">GP1</text>
 <rect x="225" y="152" width="90" height="16" fill="#00BCD4" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">UART0 RX</text>
-<text x="220" y="163" class="value" text-anchor="end" fill="#666" font-size="8">← LPC2361</text>
+<text x="220" y="163" class="value" text-anchor="end" fill="#666" font-size="8">← LPC (DB-9 B:2)</text>
 <circle cx="325" cy="180" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="183" class="value" fill="#AAA" font-size="7">GND</text>
 <circle cx="325" cy="200" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="203" class="value" fill="#AAA" font-size="7">GP2</text>
 <rect x="225" y="192" width="90" height="16" fill="#009688" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C1 SDA</text>
-<text x="220" y="203" class="value" text-anchor="end" fill="#666" font-size="8">Daisy (rear)</text>
+<text x="220" y="203" class="value" text-anchor="end" fill="#666" font-size="8">→ EFFIGY (rear)</text>
 <circle cx="325" cy="220" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="223" class="value" fill="#AAA" font-size="7">GP3</text>
 <rect x="225" y="212" width="90" height="16" fill="#009688" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C1 SCL</text>
-<text x="220" y="223" class="value" text-anchor="end" fill="#666" font-size="8">Daisy (rear)</text>
+<text x="220" y="223" class="value" text-anchor="end" fill="#666" font-size="8">→ EFFIGY (rear)</text>
 <circle cx="325" cy="240" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="243" class="value" fill="#AAA" font-size="7">GP4</text>
 <rect x="225" y="232" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C0 SDA</text>
-<text x="220" y="243" class="value" text-anchor="end" fill="#666" font-size="8">OLED</text>
+<text x="220" y="243" class="value" text-anchor="end" fill="#666" font-size="8">OLEDs (main+strip)</text>
 <circle cx="325" cy="260" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="263" class="value" fill="#AAA" font-size="7">GP5</text>
 <rect x="225" y="252" width="90" height="16" fill="#2196F3" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="263" class="label" text-anchor="middle" fill="#FFF" font-size="7">I²C0 SCL</text>
-<text x="220" y="263" class="value" text-anchor="end" fill="#666" font-size="8">OLED</text>
+<text x="220" y="263" class="value" text-anchor="end" fill="#666" font-size="8">OLEDs (main+strip)</text>
 <circle cx="325" cy="280" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="283" class="value" fill="#AAA" font-size="7">GND</text>
 <circle cx="325" cy="300" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="303" class="value" fill="#AAA" font-size="7">GP6</text>
+<rect x="225" y="292" width="90" height="16" fill="#FF5722" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="303" class="label" text-anchor="middle" fill="#FFF" font-size="7">Aux 3</text>
+<text x="220" y="303" class="value" text-anchor="end" fill="#666" font-size="8">programmable</text>
 <circle cx="325" cy="320" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="323" class="value" fill="#AAA" font-size="7">GP7</text>
+<rect x="225" y="312" width="90" height="16" fill="#FF5722" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="323" class="label" text-anchor="middle" fill="#FFF" font-size="7">Aux 4</text>
+<text x="220" y="323" class="value" text-anchor="end" fill="#666" font-size="8">programmable</text>
 <circle cx="325" cy="340" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="343" class="value" fill="#AAA" font-size="7">GP8</text>
 <rect x="225" y="332" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
-<text x="270.0" y="343" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Clock</text>
-<text x="220" y="343" class="value" text-anchor="end" fill="#666" font-size="8">RGB R</text>
+<text x="270.0" y="343" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED R</text>
+<text x="220" y="343" class="value" text-anchor="end" fill="#666" font-size="8">clock tick</text>
 <circle cx="325" cy="360" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="363" class="value" fill="#AAA" font-size="7">GP9</text>
 <rect x="225" y="352" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
-<text x="270.0" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Gate</text>
-<text x="220" y="363" class="value" text-anchor="end" fill="#666" font-size="8">RGB G</text>
+<text x="270.0" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED G</text>
+<text x="220" y="363" class="value" text-anchor="end" fill="#666" font-size="8">gate active</text>
 <circle cx="325" cy="380" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="383" class="value" fill="#AAA" font-size="7">GP10</text>
 <rect x="225" y="372" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
-<text x="270.0" y="383" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED Mode</text>
-<text x="220" y="383" class="value" text-anchor="end" fill="#666" font-size="8">RGB B</text>
+<text x="270.0" y="383" class="label" text-anchor="middle" fill="#FFF" font-size="7">LED B</text>
+<text x="220" y="383" class="value" text-anchor="end" fill="#666" font-size="8">mode/pair</text>
 <circle cx="325" cy="400" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="403" class="value" fill="#AAA" font-size="7">GP11</text>
+<rect x="225" y="392" width="90" height="16" fill="#FF9800" stroke="#333" stroke-width="1" rx="2"/>
+<text x="270.0" y="403" class="label" text-anchor="middle" fill="#FFF" font-size="7">EFFIGY INT</text>
+<text x="220" y="403" class="value" text-anchor="end" fill="#666" font-size="8">open-drain in</text>
 <circle cx="325" cy="420" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="423" class="value" fill="#AAA" font-size="7">GP12</text>
 <rect x="225" y="412" width="90" height="16" fill="#4CAF50" stroke="#333" stroke-width="1" rx="2"/>
 <text x="270.0" y="423" class="label" text-anchor="middle" fill="#FFF" font-size="7">Tap Button</text>
+<text x="220" y="423" class="value" text-anchor="end" fill="#666" font-size="8">tempo/manual gate</text>
 <circle cx="325" cy="440" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="340" y="443" class="value" fill="#AAA" font-size="7">GP13</text>
 <rect x="225" y="432" width="90" height="16" fill="#4CAF50" stroke="#333" stroke-width="1" rx="2"/>
@@ -13733,26 +13926,26 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="270.0" y="483" class="label" text-anchor="middle" fill="#FFF" font-size="7">Enc. DT</text>
 <circle cx="625" cy="140" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="143" class="value" text-anchor="end" fill="#AAA" font-size="7">GP16</text>
-<rect x="635" y="132" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
+<rect x="635" y="132" width="90" height="16" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">Div /N out 1</text>
 <circle cx="625" cy="160" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="163" class="value" text-anchor="end" fill="#AAA" font-size="7">GP17</text>
-<rect x="635" y="152" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
+<rect x="635" y="152" width="90" height="16" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="7">Div /N out 2</text>
 <circle cx="625" cy="180" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="183" class="value" text-anchor="end" fill="#AAA" font-size="7">GND</text>
 <circle cx="625" cy="200" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="203" class="value" text-anchor="end" fill="#AAA" font-size="7">GP18</text>
-<rect x="635" y="192" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
+<rect x="635" y="192" width="90" height="16" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="203" class="label" text-anchor="middle" fill="#FFF" font-size="7">Div /N out 3</text>
 <circle cx="625" cy="220" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="223" class="value" text-anchor="end" fill="#AAA" font-size="7">GP19</text>
-<rect x="635" y="212" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
+<rect x="635" y="212" width="90" height="16" fill="#FF5722" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">Aux 1</text>
 <circle cx="625" cy="240" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="243" class="value" text-anchor="end" fill="#AAA" font-size="7">GP20</text>
-<rect x="635" y="232" width="90" height="16" fill="None" stroke="#333" stroke-width="1" rx="2"/>
-<text x="680.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">(Spare)</text>
+<rect x="635" y="232" width="90" height="16" fill="#FF5722" stroke="#333" stroke-width="1" rx="2"/>
+<text x="680.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="7">Aux 2</text>
 <circle cx="625" cy="260" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="610" y="263" class="value" text-anchor="end" fill="#AAA" font-size="7">GP21</text>
 <rect x="635" y="252" width="90" height="16" fill="#9C27B0" stroke="#333" stroke-width="1" rx="2"/>
@@ -13780,11 +13973,11 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <circle cx="350.0" cy="620" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="350.0" y="640" class="value" text-anchor="middle" fill="#666" font-size="7">VSYS</text>
 <rect x="310.0" y="585" width="80" height="14" fill="#F44336" stroke="#333" stroke-width="1" rx="2"/>
-<text x="350.0" y="595" class="label" text-anchor="middle" fill="#FFF" font-size="8">+5V from MB</text>
+<text x="350.0" y="595" class="label" text-anchor="middle" fill="#FFF" font-size="8">+5V Eurorack</text>
 <circle cx="400.0" cy="620" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="400.0" y="640" class="value" text-anchor="middle" fill="#666" font-size="7">VBUS</text>
 <rect x="360.0" y="585" width="80" height="14" fill="#F44336" stroke="#333" stroke-width="1" rx="2"/>
-<text x="400.0" y="595" class="label" text-anchor="middle" fill="#FFF" font-size="8">USB 5V</text>
+<text x="400.0" y="595" class="label" text-anchor="middle" fill="#FFF" font-size="8">USB 5V (alt)</text>
 <circle cx="450.0" cy="620" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="450.0" y="640" class="value" text-anchor="middle" fill="#666" font-size="7">GND</text>
 <circle cx="500.0" cy="620" r="5" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
@@ -13798,23 +13991,29 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <rect x="50" y="640" width="850" height="50" fill="#F5F5F5" stroke="#999" stroke-width="1" rx="4"/>
 <text x="475" y="660" class="label" text-anchor="middle" font-size="10">Pin Function Legend</text>
 <rect x="80" y="670" width="15" height="12" fill="#2196F3" stroke="#333" stroke-width="0.5"/>
-<text x="100" y="679" class="value" font-size="7">OLED I²C0</text>
+<text x="100" y="679" class="value" font-size="7">OLED I²C0 (shared)</text>
 <rect x="185" y="670" width="15" height="12" fill="#009688" stroke="#333" stroke-width="0.5"/>
-<text x="205" y="679" class="value" font-size="7">I²C1 Daisy exp.</text>
-<rect x="290" y="670" width="15" height="12" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
-<text x="310" y="679" class="value" font-size="7">Encoder/Button</text>
-<rect x="395" y="670" width="15" height="12" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
-<text x="415" y="679" class="value" font-size="7">RGB LED</text>
-<rect x="500" y="670" width="15" height="12" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
-<text x="520" y="679" class="value" font-size="7">Clock I/O</text>
-<rect x="605" y="670" width="15" height="12" fill="#00BCD4" stroke="#333" stroke-width="0.5"/>
-<text x="625" y="679" class="value" font-size="7">LPC bridge</text>
-<rect x="710" y="670" width="15" height="12" fill="#E91E63" stroke="#333" stroke-width="0.5"/>
-<text x="730" y="679" class="value" font-size="7">USB-MIDI</text>
-<rect x="815" y="670" width="15" height="12" fill="#795548" stroke="#333" stroke-width="0.5"/>
-<text x="835" y="679" class="value" font-size="7">ADC (Spare)</text>
-<rect x="920" y="670" width="15" height="12" fill="#F44336" stroke="#333" stroke-width="0.5"/>
-<text x="940" y="679" class="value" font-size="7">Power</text></svg></div>
+<text x="205" y="679" class="value" font-size="7">I²C1 EFFIGY</text>
+<rect x="290" y="670" width="15" height="12" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
+<text x="310" y="679" class="value" font-size="7">EFFIGY INT</text>
+<rect x="395" y="670" width="15" height="12" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
+<text x="415" y="679" class="value" font-size="7">Encoder/Button</text>
+<rect x="500" y="670" width="15" height="12" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
+<text x="520" y="679" class="value" font-size="7">RGB LED</text>
+<rect x="605" y="670" width="15" height="12" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
+<text x="625" y="679" class="value" font-size="7">Clock div outs</text>
+<rect x="710" y="670" width="15" height="12" fill="#FF5722" stroke="#333" stroke-width="0.5"/>
+<text x="730" y="679" class="value" font-size="7">Aux programmable</text>
+<rect x="815" y="670" width="15" height="12" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
+<text x="835" y="679" class="value" font-size="7">Clock I/O</text>
+<rect x="920" y="670" width="15" height="12" fill="#00BCD4" stroke="#333" stroke-width="0.5"/>
+<text x="940" y="679" class="value" font-size="7">LPC bridge</text>
+<rect x="1025" y="670" width="15" height="12" fill="#E91E63" stroke="#333" stroke-width="0.5"/>
+<text x="1045" y="679" class="value" font-size="7">USB-MIDI</text>
+<rect x="1130" y="670" width="15" height="12" fill="#795548" stroke="#333" stroke-width="0.5"/>
+<text x="1150" y="679" class="value" font-size="7">ADC (Spare)</text>
+<rect x="1235" y="670" width="15" height="12" fill="#F44336" stroke="#333" stroke-width="0.5"/>
+<text x="1255" y="679" class="value" font-size="7">Power</text></svg></div>
 </div>
 <div class="svg-wrap">
 <div class="svg-caption">NXP LPC2361 Pinout (MACROBRUTE usage)</div>
@@ -14925,7 +15124,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <rect x="50" y="250" width="70" height="84" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="3"/>
 <circle cx="58" cy="258" r="3" fill="gold"/>
 <text x="85.0" y="287.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">LF398</text>
-<text x="85.0" y="302.0" class="value" text-anchor="middle" fill="#CCC" font-size="8">S&H Amp</text>
+<text x="85.0" y="302.0" class="value" text-anchor="middle" fill="#CCC" font-size="8">S&amp;H Amp</text>
 <circle cx="45" cy="270" r="2.5" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
 <text x="38" y="272" class="pin" text-anchor="end" fill="gold" font-size="7">1</text>
 <text x="55" y="272" class="value" fill="#FFF" font-size="7">V+</text>
@@ -14950,7 +15149,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <circle cx="125" cy="270" r="2.5" fill="gold" stroke="#B8860B" stroke-width="0.5"/>
 <text x="132" y="272" class="pin" text-anchor="start" fill="gold" font-size="7">8</text>
 <text x="115" y="272" class="value" text-anchor="end" fill="#FFF" font-size="7">GND</text>
-<text x="85" y="245" class="label" font-size="10" fill="#CC0000">LF398 — Sample & Hold (DIP-8)</text>
+<text x="85" y="245" class="label" font-size="10" fill="#CC0000">LF398 — Sample &amp; Hold (DIP-8)</text>
 <text x="200" y="245" class="label" font-size="10" fill="#CC0000">78L05 — +5V Regulator (TO-92)</text>
 <circle cx="235" cy="280" r="20" fill="#333" stroke="#1a1a1a" stroke-width="2"/>
 <text x="235" y="285" class="label" text-anchor="middle" fill="#FFF" font-size="9">78L05</text>
@@ -17510,9 +17709,9 @@ Protection:
 </svg></div>
 </div>
 <div class="svg-wrap">
-<div class="svg-caption">Expander Power Distribution (42HP)</div>
+<div class="svg-caption">Expander Power Distribution (17HP)</div>
 <div class="svg-container"><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" width="1100" height="700">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" width="1100" height="720">
 <defs>
   
   <style>
@@ -17535,11 +17734,11 @@ Protection:
   </marker>
 </defs>
 
-<text x="550" y="25" class="title" text-anchor="middle">Expander Power Distribution (42HP)</text>
-<text x="550" y="42" class="subtitle" text-anchor="middle">Eurorack bus → 7 utility circuits · Rear I²C header for Daisy Seed expansion</text>
+<text x="550" y="25" class="title" text-anchor="middle">Expander Power Distribution (17HP)</text>
+<text x="550" y="42" class="subtitle" text-anchor="middle">Behringer CP1A bus → Pico (filtered) + slew op-amp · 5-pin rear I²C header (EFFIGY) · clock divider in firmware</text>
 <rect x="40" y="80" width="180" height="200" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="130" y="105" class="label" text-anchor="middle" fill="#FFF" font-size="12">Eurorack Bus</text>
-<text x="130" y="122" class="value" text-anchor="middle" fill="#CCC" font-size="9">16-pin IDC header</text>
+<text x="130" y="105" class="label" text-anchor="middle" fill="#FFF" font-size="12">CP1A Bus</text>
+<text x="130" y="122" class="value" text-anchor="middle" fill="#CCC" font-size="9">16-pin Eurorack IDC</text>
 <rect x="60" y="150" width="140" height="14" fill="#D44"/>
 <text x="130" y="160" class="value" text-anchor="middle" font-size="8" fill="#FFF">+12V</text>
 <rect x="60" y="170" width="140" height="14" fill="#4A4"/>
@@ -17552,134 +17751,94 @@ Protection:
 <text x="130" y="240" class="value" text-anchor="middle" font-size="8" fill="#FFF">+5V</text>
 <rect x="60" y="250" width="140" height="14" fill="#888"/>
 <text x="130" y="260" class="value" text-anchor="middle" font-size="8" fill="#FFF">CV/Gate</text>
-<rect x="250" y="100" width="170" height="170" fill="#FFF0F0" stroke="#D44" stroke-width="1.5" rx="4"/>
-<text x="335" y="125" class="label" text-anchor="middle" font-size="11" fill="#D44">Protection &amp; Filter</text>
-<text x="335" y="148" class="value" text-anchor="middle" font-size="9">1N5817 Schottky ×3</text>
-<text x="335" y="161" class="value" text-anchor="middle" font-size="9">(reverse-polarity)</text>
-<text x="335" y="174" class="value" text-anchor="middle" font-size="9"></text>
-<text x="335" y="187" class="value" text-anchor="middle" font-size="9">Ferrite 100Ω @ 100MHz</text>
-<text x="335" y="200" class="value" text-anchor="middle" font-size="9">per rail (HF suppression)</text>
-<text x="335" y="213" class="value" text-anchor="middle" font-size="9"></text>
-<text x="335" y="226" class="value" text-anchor="middle" font-size="9">470µF bulk ±12V</text>
-<text x="335" y="239" class="value" text-anchor="middle" font-size="9">100µF bulk +5V</text>
-<text x="335" y="252" class="value" text-anchor="middle" font-size="9">100nF ceramics</text>
-<rect x="460" y="90" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="520" y="108" class="label" text-anchor="middle" font-size="10" fill="#6600CC">Noise Gen</text>
-<text x="520" y="125" class="value" text-anchor="middle" font-size="8">2N3904 + TL072</text>
-<rect x="468" y="145" width="24" height="14" fill="#D44"/>
-<text x="480" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="494" y="145" width="24" height="14" fill="#44D"/>
-<text x="506" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="520" y="145" width="24" height="14" fill="#1a1a1a"/>
-<text x="532" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="520" y="172" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="600" y="90" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="660" y="108" class="label" text-anchor="middle" font-size="10" fill="#6600CC">LFO</text>
-<text x="660" y="125" class="value" text-anchor="middle" font-size="8">TL072 + CD40106</text>
-<rect x="608" y="145" width="24" height="14" fill="#D44"/>
-<text x="620" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="634" y="145" width="24" height="14" fill="#44D"/>
-<text x="646" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="660" y="145" width="24" height="14" fill="#1a1a1a"/>
-<text x="672" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="660" y="172" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="740" y="90" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="800" y="108" class="label" text-anchor="middle" font-size="10" fill="#6600CC">S&amp;H</text>
-<text x="800" y="125" class="value" text-anchor="middle" font-size="8">LF398 or CD4066</text>
-<rect x="748" y="145" width="24" height="14" fill="#D44"/>
-<text x="760" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="774" y="145" width="24" height="14" fill="#44D"/>
-<text x="786" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="800" y="145" width="24" height="14" fill="#1a1a1a"/>
-<text x="812" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="800" y="172" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="880" y="90" width="120" height="90" fill="#FFFFFF" stroke="#CC6600" stroke-width="1.5" rx="4"/>
-<text x="940" y="108" class="label" text-anchor="middle" font-size="10" fill="#CC6600">Clock Div</text>
-<text x="940" y="125" class="value" text-anchor="middle" font-size="8">CD4024 (÷2/4/8)</text>
-<rect x="888" y="145" width="24" height="14" fill="#CC6600"/>
-<text x="900" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">+5V</text>
-<rect x="914" y="145" width="24" height="14" fill="#1a1a1a"/>
-<text x="926" y="155" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="940" y="172" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="460" y="210" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="520" y="228" class="label" text-anchor="middle" font-size="10" fill="#6600CC">Slew</text>
-<text x="520" y="245" class="value" text-anchor="middle" font-size="8">TL072 + diode</text>
-<rect x="468" y="265" width="24" height="14" fill="#D44"/>
-<text x="480" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="494" y="265" width="24" height="14" fill="#44D"/>
-<text x="506" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="520" y="265" width="24" height="14" fill="#1a1a1a"/>
-<text x="532" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="520" y="292" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="600" y="210" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="660" y="228" class="label" text-anchor="middle" font-size="10" fill="#6600CC">Attenuverter</text>
-<text x="660" y="245" class="value" text-anchor="middle" font-size="8">TL072 + center-pot</text>
-<rect x="608" y="265" width="24" height="14" fill="#D44"/>
-<text x="620" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="634" y="265" width="24" height="14" fill="#44D"/>
-<text x="646" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="660" y="265" width="24" height="14" fill="#1a1a1a"/>
-<text x="672" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="660" y="292" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="740" y="210" width="120" height="90" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="800" y="228" class="label" text-anchor="middle" font-size="10" fill="#6600CC">Buffered Mult</text>
-<text x="800" y="245" class="value" text-anchor="middle" font-size="8">TL074 × 4 ch</text>
-<rect x="748" y="265" width="24" height="14" fill="#D44"/>
-<text x="760" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">+12V</text>
-<rect x="774" y="265" width="24" height="14" fill="#44D"/>
-<text x="786" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">-12V</text>
-<rect x="800" y="265" width="24" height="14" fill="#1a1a1a"/>
-<text x="812" y="275" class="value" text-anchor="middle" font-size="7" fill="#FFF">GND</text>
-<text x="800" y="292" class="value" text-anchor="middle" font-size="7" fill="#888">100µF + 100nF</text>
-<rect x="880" y="210" width="120" height="90" fill="#FFFBE6" stroke="#CC6600" stroke-width="1.5" rx="4"/>
-<text x="940" y="228" class="label" text-anchor="middle" font-size="10" fill="#CC6600">LM78L05</text>
-<text x="940" y="243" class="value" text-anchor="middle" font-size="8">+12V → +5V</text>
-<text x="940" y="258" class="value" text-anchor="middle" font-size="8">TO-92 · 100mA</text>
-<text x="940" y="275" class="value" text-anchor="middle" font-size="8">for CD4024 logic</text>
-<text x="940" y="290" class="value" text-anchor="middle" font-size="8">(if no +5V on bus)</text>
-<line x1="220" y1="145" x2="250" y2="145" stroke="#888" stroke-width="1.2"/>
-<line x1="220" y1="165" x2="250" y2="165" stroke="#888" stroke-width="1.2"/>
-<line x1="220" y1="185" x2="250" y2="185" stroke="#888" stroke-width="1.2"/>
-<line x1="220" y1="205" x2="250" y2="205" stroke="#888" stroke-width="1.2"/>
-<line x1="420" y1="175" x2="460" y2="175" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="440" y="168" class="anno" text-anchor="middle" font-size="8">rails</text>
-<rect x="40" y="330" width="440" height="190" fill="#E0F2F1" stroke="#009688" stroke-width="2" rx="4"/>
-<text x="260" y="355" class="label" text-anchor="middle" font-size="13" fill="#009688">REAR I²C EXPANSION HEADER (hidden)</text>
-<text x="260" y="372" class="value" text-anchor="middle" font-size="9">4-pin JST-XH · mounted behind panel · accessed with case open</text>
+<rect x="250" y="80" width="200" height="220" fill="#FFF0F0" stroke="#D44" stroke-width="1.5" rx="4"/>
+<text x="350" y="105" class="label" text-anchor="middle" font-size="11" fill="#D44">Pico power filter</text>
+<text x="350" y="122" class="value" text-anchor="middle" font-size="9">3 commodity parts</text>
+<text x="270" y="145" class="label" font-size="10">1N5817</text>
+<text x="270" y="158" class="value" font-size="8">Schottky · reverse polarity</text>
+<text x="270" y="175" class="label" font-size="10">100µF/10V</text>
+<text x="270" y="188" class="value" font-size="8">Bulk electrolytic</text>
+<text x="270" y="205" class="label" font-size="10">100nF</text>
+<text x="270" y="218" class="value" font-size="8">HF ceramic bypass</text>
+<text x="350" y="245" class="value" text-anchor="middle" font-size="8" fill="#888">Optional armor (defer):</text>
+<text x="350" y="258" class="value" text-anchor="middle" font-size="8" fill="#888">PPTC 500 mA · SMAJ5.0A · ferrite</text>
+<text x="350" y="280" class="value" text-anchor="middle" font-size="9" fill="#1B5E20">All parts shop-stocked</text>
+<rect x="480" y="80" width="180" height="220" fill="#F3E5F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>
+<text x="570" y="105" class="label" text-anchor="middle" font-size="11" fill="#6600CC">Pico VSYS</text>
+<text x="570" y="122" class="value" text-anchor="middle" font-size="9">pin 39 · ~100 mA</text>
+<text x="570" y="150" class="value" text-anchor="middle" font-size="9">Internal LDO →</text>
+<text x="570" y="163" class="value" text-anchor="middle" font-size="9">3V3 (pin 36)</text>
+<text x="570" y="190" class="value" text-anchor="middle" font-size="9">Powers main OLED,</text>
+<text x="570" y="203" class="value" text-anchor="middle" font-size="9">strip OLED, encoder,</text>
+<text x="570" y="216" class="value" text-anchor="middle" font-size="9">RGB LED, all GPIO</text>
+<text x="570" y="245" class="value" text-anchor="middle" font-size="9">USB-MIDI via</text>
+<text x="570" y="258" class="value" text-anchor="middle" font-size="9">micro-USB (alt path)</text>
+<rect x="690" y="80" width="180" height="100" fill="#FFFFFF" stroke="#6600CC" stroke-width="1.5" rx="4"/>
+<text x="780" y="105" class="label" text-anchor="middle" font-size="11" fill="#6600CC">Slew limiter (HW)</text>
+<text x="780" y="125" class="value" text-anchor="middle" font-size="9">TL072 + 2 diodes</text>
+<text x="780" y="140" class="value" text-anchor="middle" font-size="9">±12V supply</text>
+<text x="780" y="160" class="value" text-anchor="middle" font-size="9">~10 mA draw</text>
+<rect x="690" y="200" width="180" height="100" fill="#E8F5E9" stroke="#4A4" stroke-width="1.5" rx="4"/>
+<text x="780" y="225" class="label" text-anchor="middle" font-size="11" fill="#4A4">Firmware only</text>
+<text x="780" y="245" class="value" text-anchor="middle" font-size="9">Clock divider (GP16/17/18)</text>
+<text x="780" y="260" class="value" text-anchor="middle" font-size="9">4 aux outputs (GP19/20/6/7)</text>
+<text x="780" y="275" class="value" text-anchor="middle" font-size="9">No CD4024 chip needed</text>
+<rect x="900" y="80" width="180" height="220" fill="#E3F2FD" stroke="#0066CC" stroke-width="1.5" rx="4"/>
+<text x="990" y="105" class="label" text-anchor="middle" font-size="11" fill="#0066CC">MB breakout</text>
+<text x="990" y="122" class="value" text-anchor="middle" font-size="9">via DB-9 B</text>
+<text x="990" y="150" class="value" text-anchor="middle" font-size="9">±12V → buffers</text>
+<text x="990" y="165" class="value" text-anchor="middle" font-size="9">(TL074, TL072,</text>
+<text x="990" y="178" class="value" text-anchor="middle" font-size="9">CD40106, CD4049)</text>
+<text x="990" y="205" class="value" text-anchor="middle" font-size="9">Star GND at TP72</text>
+<text x="990" y="240" class="value" text-anchor="middle" font-size="8" fill="#666">MB stock 5V untouched</text>
+<text x="990" y="253" class="value" text-anchor="middle" font-size="8" fill="#666">— mod is non-invasive</text>
+<line x1="220" y1="170" x2="250" y2="170" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="235" y="162" class="anno" text-anchor="middle" font-size="8">+5V</text>
+<line x1="450" y1="170" x2="480" y2="170" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="660" y1="130" x2="690" y2="130" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="660" y1="245" x2="690" y2="245" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="220" y1="220" x2="900" y2="220" stroke="#44D" stroke-width="1.5" stroke-dasharray="6,4"/>
+<text x="560" y="215" class="anno" text-anchor="middle" font-size="8" fill="#44D">±12V via DB-9 B → MB</text>
+<rect x="40" y="330" width="500" height="220" fill="#E0F2F1" stroke="#009688" stroke-width="2" rx="4"/>
+<text x="290" y="355" class="label" text-anchor="middle" font-size="13" fill="#009688">REAR I²C HEADER → EFFIGY (hidden, 5-pin)</text>
+<text x="290" y="372" class="value" text-anchor="middle" font-size="9">5-pin JST-XH · mounted behind panel · accessed with case open</text>
 <circle cx="75" cy="395" r="10" fill="gold" stroke="#B8860B"/>
 <text x="75" y="398" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">1</text>
 <text x="100" y="398" class="label" font-size="10" fill="#009688">SDA</text>
-<text x="170" y="398" class="value" font-size="9">GP2 → Daisy I²C</text>
+<text x="170" y="398" class="value" font-size="9">Pico GP2 — I²C1 SDA</text>
 <circle cx="75" cy="423" r="10" fill="gold" stroke="#B8860B"/>
 <text x="75" y="426" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">2</text>
 <text x="100" y="426" class="label" font-size="10" fill="#009688">SCL</text>
-<text x="170" y="426" class="value" font-size="9">GP3 → Daisy I²C</text>
+<text x="170" y="426" class="value" font-size="9">Pico GP3 — I²C1 SCL</text>
 <circle cx="75" cy="451" r="10" fill="gold" stroke="#B8860B"/>
 <text x="75" y="454" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">3</text>
-<text x="100" y="454" class="label" font-size="10" fill="#D44">+3.3V</text>
-<text x="170" y="454" class="value" font-size="9">From Pico 3V3 pin 36</text>
+<text x="100" y="454" class="label" font-size="10" fill="#FF9800">INT</text>
+<text x="170" y="454" class="value" font-size="9">Pico GP11 — open-drain from EFFIGY</text>
 <circle cx="75" cy="479" r="10" fill="gold" stroke="#B8860B"/>
 <text x="75" y="482" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">4</text>
-<text x="100" y="482" class="label" font-size="10" fill="#1a1a1a">GND</text>
-<text x="170" y="482" class="value" font-size="9">Star ground @ TP72</text>
-<text x="260" y="505" class="value" text-anchor="middle" font-size="8" fill="#666">Pull-ups (4.7kΩ to 3.3V) on Pico side. Bus length &lt; 30cm at 100kHz.</text>
-<rect x="500" y="330" width="580" height="190" fill="#F3E5F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>
-<text x="790" y="355" class="label" text-anchor="middle" font-size="12" fill="#6600CC">Daisy Seed Module (planned, separate build)</text>
-<text x="515" y="377" class="value" font-size="9">• Cortex-M7 @ 480MHz · 64MB SDRAM · 32-bit audio DAC — basically a Eurorack DSP coprocessor.</text>
-<text x="515" y="394" class="value" font-size="9">• Role: offloads heavy DSP from Pico (granular, reverb, pitch shift, wavetable synthesis).</text>
-<text x="515" y="411" class="value" font-size="9">• Interface: I²C peripheral addressed at 0x42 by default (user-configurable in Daisy firmware).</text>
-<text x="515" y="428" class="value" font-size="9">• Pico → Daisy: parameter messages (CV values, trigger events, mode changes) at ~100Hz.</text>
-<text x="515" y="445" class="value" font-size="9">• Daisy → Pico: status, level metering, preset ACKs.</text>
-<text x="515" y="462" class="value" font-size="9">• Audio: Daisy I/O goes to its OWN Eurorack jacks — audio does not pass through Pico or I²C.</text>
-<text x="515" y="479" class="value" font-size="9">• Power: Daisy has own 3.3V/5V from its own Eurorack bus connection. I²C header shares only GND.</text>
-<text x="515" y="496" class="value" font-size="9">• Address space: OLED 0x3C, Daisy 0x42, MPR121 (if added) 0x5A — no conflicts.</text>
-<rect x="40" y="550" width="1040" height="130" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
-<text x="560" y="572" class="label" text-anchor="middle" font-size="12">Current Budget (typical)</text>
-<text x="55" y="595" class="value" font-size="9">• +12V: ~200mA total (noise 10mA · LFO 15mA · S&amp;H 20mA · slew 10mA · attenuverter 10mA · mult 20mA · plus LM78L05 ~30mA headroom = 115mA + margin)</text>
-<text x="55" y="612" class="value" font-size="9">• -12V: ~80mA (op-amp negative rails only)</text>
-<text x="55" y="629" class="value" font-size="9">• +5V: ~20mA (CD4024 logic + header pull-ups)</text>
-<text x="55" y="646" class="value" font-size="9">• Combined draw: well within typical Eurorack PSU per-HP allocation. No separate supply needed.</text>
-<text x="55" y="663" class="value" font-size="9">• I²C bus load: Pico I²C1 clocked at 100kHz · ~1 message per 10ms · negligible load</text></svg></div>
+<text x="100" y="482" class="label" font-size="10" fill="#D44">+3.3V</text>
+<text x="170" y="482" class="value" font-size="9">Pull-ups only (4.7kΩ on each line)</text>
+<circle cx="75" cy="507" r="10" fill="gold" stroke="#B8860B"/>
+<text x="75" y="510" class="value" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="bold">5</text>
+<text x="100" y="510" class="label" font-size="10" fill="#1a1a1a">GND</text>
+<text x="170" y="510" class="value" font-size="9">Star ground reference</text>
+<text x="290" y="540" class="value" text-anchor="middle" font-size="8" fill="#666">100 kHz · &lt; 30 cm shielded · target address 0x42 · see docs/MACROBRUTE_EFFIGY_BRIDGE.md</text>
+<rect x="560" y="330" width="520" height="220" fill="#F3E5F5" stroke="#6600CC" stroke-width="1.5" rx="4"/>
+<text x="820" y="355" class="label" text-anchor="middle" font-size="12" fill="#6600CC">EFFIGY (24HP Daisy DSP, separate module)</text>
+<text x="575" y="378" class="value" font-size="9">• Standalone Eurorack audio + CV processor — pair mode is purely additive.</text>
+<text x="575" y="395" class="value" font-size="9">• I²C target at 0x42 (see bridge spec). Audio + fast CV stay on patch cables.</text>
+<text x="575" y="412" class="value" font-size="9">• Bus carries: parameter writes (~100 Hz), telemetry, events (INT-driven), pair coordination.</text>
+<text x="575" y="429" class="value" font-size="9">• Default role on pair: MACROBRUTE owns clock, EFFIGY owns main menu, EFFIGY encoder drives.</text>
+<text x="575" y="446" class="value" font-size="9">• Heartbeat-watched link · 1-second pair-loss timeout · graceful solo fallback.</text>
+<text x="575" y="463" class="value" font-size="9">• Power independent — EFFIGY has its own Eurorack bus connection. Header shares only GND.</text>
+<text x="575" y="480" class="value" font-size="9">• I²C addresses: main OLED 0x3C, strip OLED 0x3D, EFFIGY 0x42 — no conflicts.</text>
+<rect x="40" y="580" width="1040" height="120" fill="#F5F5F5" stroke="#666" stroke-width="0.5" rx="4"/>
+<text x="560" y="602" class="label" text-anchor="middle" font-size="12">Current Budget (17HP minimal expander)</text>
+<text x="55" y="623" class="value" font-size="9">• +5V: ~150 mA (Pico ≈ 100 mA + main OLED ≈ 20 mA + strip OLED ≈ 10 mA + RGB LED + I²C pull-ups)</text>
+<text x="55" y="639" class="value" font-size="9">• +12V: ~30 mA (slew TL072 quiescent + headroom; MB-side buffers via DB-9 B add ~50 mA more on the same rail)</text>
+<text x="55" y="655" class="value" font-size="9">• -12V: ~25 mA (op-amp negative rails only — slew + MB buffers)</text>
+<text x="55" y="671" class="value" font-size="9">• CP1A rated: ±12V @ 500 mA, +5V @ 1 A. Total mod draw &lt; 250 mA per rail. Comfortable headroom.</text>
+<text x="55" y="687" class="value" font-size="9">• Dropped utilities (using user's existing rack): noise (NOISE module), S&amp;H (RND CV), buffered mult ('07 MULT), LFO (Tryfelo).</text></svg></div>
 </div>
 </div><p>Each utility circuit is built on a separate small stripboard for independent testing, easy replacement, and flexible panel arrangement. All boards share ±12V and GND from the Eurorack power bus via a common power distribution board.</p>
 <p><strong>Convention:</strong> All diagrams show component side (top view, looking down). Copper tracks run horizontally (left → right). &quot;X&quot; = track cut on copper side.</p>
