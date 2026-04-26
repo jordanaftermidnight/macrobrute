@@ -1,7 +1,9 @@
-"""MACROBRUTE Pico WH — OLED display driver (SH1106 1.3" I2C, 128x64).
+"""MACROBRUTE Pico WH — main OLED driver (128×64, I²C).
 
-Primary target is the SH1106 1.3" module. The driver also works with the
-0.96" SSD1306 fallback — set OLED_COL_OFFSET = 0 in config.py for that.
+Primary target is the **0.96" SSD1306** (matches the strip OLED's chip family
+on the same bus, simpler driver story). The 1.3" SH1106 is supported as a
+fallback by switching the chip-specific init bytes — set
+`config.OLED_CHIP = "SH1106"` and `config.OLED_COL_OFFSET = 2` to use it.
 """
 
 from machine import Pin, I2C
@@ -10,12 +12,13 @@ import time
 import config
 
 
-class SH1106_I2C:
-    """SH1106 128x64 OLED driver over I2C (page addressing mode).
+class OLED_I2C:
+    """128×64 OLED driver — works with both SSD1306 and SH1106 chips.
 
-    SH1106 uses page addressing with a 2-column offset (visible area starts
-    at column 2). SSD1306 is addressable from column 0 in horizontal mode.
-    Set config.OLED_COL_OFFSET to switch between them.
+    The two chips share most registers; the differences are the charge-pump
+    command (0x8D vs 0xAD), the column-address scheme (horizontal mode vs
+    page mode), and a 2-column offset on SH1106. `config.OLED_CHIP` selects
+    which init sequence to send; `config.OLED_COL_OFFSET` handles the offset.
     """
 
     def __init__(self):
@@ -24,6 +27,7 @@ class SH1106_I2C:
         self.pages = self.height // 8
         self.addr = config.OLED_ADDR
         self.col_offset = config.OLED_COL_OFFSET
+        self.chip = getattr(config, "OLED_CHIP", "SSD1306").upper()
 
         self.i2c = I2C(
             config.OLED_I2C_ID,
@@ -37,25 +41,35 @@ class SH1106_I2C:
         self._init_display()
 
     def _init_display(self):
+        # Chip-specific charge-pump command differs between SSD1306 and SH1106.
+        if self.chip == "SH1106":
+            charge_pump = [0xAD, 0x8B]   # SH1106 DC-DC enable
+        else:
+            charge_pump = [0x8D, 0x14]   # SSD1306 charge-pump enable
+
         init_cmds = [
             0xAE,        # Display OFF
-            0xD5, 0x80,  # Clock divide ratio / oscillator freq
+            0xD5, 0x80,  # Clock divide / oscillator frequency
             0xA8, 0x3F,  # Multiplex ratio (64 rows - 1)
             0xD3, 0x00,  # Display offset = 0
             0x40,        # Display start line = 0
-            0xAD, 0x8B,  # SH1106 DC-DC charge pump enable (SSD1306 ignores; use 0x8D,0x14 for SSD1306)
+            *charge_pump,
             0xA1,        # Segment remap (flip horizontal)
             0xC8,        # COM output scan direction (flip vertical)
-            0xDA, 0x12,  # COM pins hardware config
+            0xDA, 0x12,  # COM pins hardware config (128×64)
             0x81, 0x80,  # Contrast
             0xD9, 0x22,  # Pre-charge period
             0xDB, 0x35,  # VCOM deselect level
-            0xA4,        # Entire display ON from RAM (not forced)
+            0xA4,        # Entire display ON from RAM
             0xA6,        # Normal (non-inverted) display
             0xAF,        # Display ON
         ]
         for cmd in init_cmds:
             self._cmd(cmd)
+
+
+# Backwards-compatible alias — older code imports SH1106_I2C.
+SH1106_I2C = OLED_I2C
 
     def _cmd(self, cmd):
         self.i2c.writeto(self.addr, bytearray([0x00, cmd]))

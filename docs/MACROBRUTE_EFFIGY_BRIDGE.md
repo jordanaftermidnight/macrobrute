@@ -178,8 +178,8 @@ own panel) to MACROBRUTE so its mirror stays current.
 | 0xF0 | ERROR_STATUS  | r/o | 1 | last bridge error code (0=OK) |
 | 0xFF | RESET_BRIDGE  | w/o | 1 | resets pair state, clears events |
 
-**Error codes:** 0=OK, 1=invalid_register, 2=write_to_readonly,
-3=value_out_of_range, 4=panel_locked, 5=protocol_error.
+**Error codes:** 0=OK, 1=bad_register, 2=write_to_readonly,
+3=read_from_writeonly, 4=event_queue_overflow, 5=heartbeat_timeout.
 
 ---
 

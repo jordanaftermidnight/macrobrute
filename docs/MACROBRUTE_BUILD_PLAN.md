@@ -13,9 +13,9 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 | Expander HP | **17HP** (87mm × 128.5mm panel — fits user's pre-cut blank) |
 | Connector | **2× shielded DB-9** (no aux cable; DB-9 B carries digital + power + 2 essential CVs) |
 | Pico location | Inside the 17HP expander (not the MicroBrute case) |
-| OLED (primary) | **1.3" SH1106 I²C** on GP4/GP5 @ 0x3C — on the expander panel |
+| OLED (primary) | **0.96" SSD1306** I²C on GP4/GP5 @ 0x3C — on the expander panel. Driver: `OLED_I2C` in `firmware/pico/display.py`. Same chip family as strip OLED. |
 | OLED (strip) | **0.91" SSD1306 128×32** @ 0x3D on the MicroBrute panel — shared I²C0 bus via DB-9 B |
-| OLED (fallbacks) | 0.96" SSD1306 (same pins, `OLED_COL_OFFSET = 0`); 16×2 1602 I²C LCD (separate driver) |
+| OLED (fallbacks) | 1.3" SH1106 (set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2` — reserved for EFFIGY); 16×2 1602 I²C LCD (separate driver) |
 | MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B @ 115200 baud, XOR-checksummed frame; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class) |
 | EFFIGY pair bus | 5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, target addr 0x42 — see `docs/MACROBRUTE_EFFIGY_BRIDGE.md` |
 | Hardware utilities | **Slew limiter only** (TL072 + 2 diodes + pot). All others dropped. |

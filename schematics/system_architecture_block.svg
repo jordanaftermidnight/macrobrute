@@ -66,8 +66,8 @@
 <text x="750.0" y="162.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">LFO</text>
 <text x="750.0" y="179.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Free-running</text>
 <rect x="680" y="200" width="140" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="750.0" y="217.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">S&H</text>
-<text x="750.0" y="234.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Sample & Hold</text>
+<text x="750.0" y="217.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">S&amp;H</text>
+<text x="750.0" y="234.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Sample &amp; Hold</text>
 <rect x="680" y="255" width="140" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
 <text x="750.0" y="272.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">Clock Div</text>
 <text x="750.0" y="289.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">/2 /4 /8</text>
@@ -133,7 +133,7 @@
 <rect x="70" y="592" width="20" height="15" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
 <text x="100" y="603" class="value" font-size="10">Breakout Interface (DB-9, Power Distribution)</text>
 <rect x="70" y="617" width="20" height="15" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
-<text x="100" y="628" class="value" font-size="10">Expander Modules (Noise, LFO, S&H, Clock, etc.)</text>
+<text x="100" y="628" class="value" font-size="10">Expander Modules (Noise, LFO, S&amp;H, Clock, etc.)</text>
 <rect x="70" y="642" width="20" height="15" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
 <text x="100" y="653" class="value" font-size="10">Control System (Pico W, Touch Pads, LEDs)</text>
 <rect x="70" y="667" width="20" height="15" fill="#E91E63" stroke="#333" stroke-width="0.5"/>

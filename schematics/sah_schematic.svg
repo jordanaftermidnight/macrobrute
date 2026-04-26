@@ -27,7 +27,7 @@
   </marker>
 </defs>
 <rect width="600" height="500" fill="#FEFEFE"/>
-<text x="300" y="25" class="title" text-anchor="middle">Sample & Hold</text>
+<text x="300" y="25" class="title" text-anchor="middle">Sample &amp; Hold</text>
 <text x="300" y="42" class="subtitle" text-anchor="middle">LF398 with droop compensation</text>
 <polygon points="120,120 120,180 180,150" class="component"/>
 <text x="150" y="155" class="label" text-anchor="middle" font-size="9">Input Buffer</text>

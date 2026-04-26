@@ -1499,7 +1499,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 </tr>
 <tr id="gp-4">
 <td>OLED</td>
-<td><strong>1.3&quot; SH1106 I²C</strong> on <a class="ref gp" href="#gp-4">GP4</a> (SDA) / <a class="ref gp" href="#gp-5">GP5</a> (SCL). Fallbacks: 0.96&quot; SSD1306 I²C, 16×2 1602 I²C LCD</td>
+<td><strong>0.96&quot; SSD1306 I²C</strong> on <a class="ref gp" href="#gp-4">GP4</a> (SDA) / <a class="ref gp" href="#gp-5">GP5</a> (SCL) — main display on expander panel. <strong>0.91&quot; SSD1306 128×32</strong> strip on MB panel (shared I²C0 bus, addr 0x3D). Fallbacks: 1.3&quot; SH1106 (reserved for EFFIGY), 16×2 1602 I²C LCD.</td>
 </tr>
 <tr id="gp-0">
 <td>MIDI path</td>
@@ -1557,7 +1557,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <h3 id="docs-macrobrute-index--schematics-schematics">Schematics (<code>schematics/</code>)</h3>
 <ul><li><code>CIRCUIT_REVIEW.md</code> — systematic review of all 13 circuit sections + corrections</li><li><code>breakout_pcb.md</code> + <code>breakout_stripboard.md</code> + <code>breakout_layout.svg</code> — internal PCB</li><li><code>expander_circuits.md</code> + <code>expander_stripboard.md</code> + per-module SVGs (LFO, noise, clock, S&amp;H, slew, attenuverter)</li><li><code>jf33_cv_control.md</code> — PT2399 anti-latch-up + CV control (Phase 7A)</li><li><code>dso138_input_protection.md</code> — DSO138 protection + CD4051 mux (Phase 7B)</li><li><code>touch_plates.md</code> + <code>touch_test_board.svg</code> — 8-channel test board → 6 final bolts</li><li><code>pico_pinout.md</code> + <code>pico_pinout_diagram.svg</code> — Pico WH GPIO allocation (+ I²C1 Daisy expansion + USB-MIDI)</li><li><code>lpc2361_pinout_diagram.svg</code> — LPC2361 pinout (documented pins + RE gaps flagged)</li><li><code>db9_connector_diagram.svg</code> — full 18-pin DB-9 A/B interconnect map</li><li><code>power_regulation_diagram.svg</code> — Eurorack → breakout → Pico/expander rail chain</li><li><code>testpoints_map.svg</code> — 18 MicroBrute test points (waveforms, CV, gate, power, touch bends)</li><li><code>jf33_integration_schematic.svg</code> — Phase 7A: PT2399 delay full Eurorack integration</li><li><code>dso138_analog_frontend.svg</code> — Phase 7B: 8-ch mux + ±5V clamp + LM7809 for scope</li><li><code>expander_power_distribution.svg</code> — 42HP expander rails + rear I²C header to Daisy</li><li><code>midi_interface_circuit.svg</code> — Stock 6N138 DIN MIDI (LPC) + Pico USB-MIDI (new)</li><li><code>wiring_diagram.md</code> + <code>wiring_*.svg</code> — complete signal flow</li></ul>
 <h3 id="docs-macrobrute-index--firmware">Firmware</h3>
-<ul><li><code>firmware/pico/</code> — MicroPython modules: main, config, display (SH1106), encoder, clock, menu, midi (LPC bridge), leds, test_hw</li><li><code>firmware/lpc2361/</code> — C skeleton (48 files): drivers, synth, midi, ui, utils, ARM startup, Makefile</li><li><code>firmware/*.hex / *.bin / *.mbf</code> — Arturia firmware (decrypted + encrypted forms)</li><li><code>firmware/labels_export.csv</code> + <code>tools/ghidra/</code> — Ghidra label tooling</li><li><code>docs/firmware/lpc2361_investigation_guide.md</code> — ISP connection + CRP check procedure</li><li><code>docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md</code> — C firmware reference</li></ul>
+<ul><li><code>firmware/pico/</code> — MicroPython modules (14): main, config, display (SSD1306/SH1106), strip_display, encoder, clock, clock_divider, aux_outputs, menu, leds, midi (LPC bridge), usbmidi, effigy_bridge, test_hw</li><li><code>firmware/lpc2361/</code> — C skeleton (48 files): drivers, synth, midi, ui, utils, ARM startup, Makefile</li><li><code>firmware/*.hex / *.bin / *.mbf</code> — Arturia firmware (decrypted + encrypted forms)</li><li><code>firmware/labels_export.csv</code> + <code>tools/ghidra/</code> — Ghidra label tooling</li><li><code>docs/firmware/lpc2361_investigation_guide.md</code> — ISP connection + CRP check procedure</li><li><code>docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md</code> — C firmware reference</li></ul>
 <h3 id="docs-macrobrute-index--kicad-kicad">KiCad (<code>kicad/</code>)</h3>
 <ul><li><code>breakout/</code> — internal breakout PCB schematic</li><li><code>expander/</code> — 42HP Eurorack expander module</li><li><code>jf33/</code> — JF-33 delay CV control (Phase 7A)</li><li><code>dso_input/</code> — DSO138 input protection (Phase 7B)</li></ul>
 <h3 id="docs-macrobrute-index--panel-panel">Panel (<code>panel/</code>)</h3>
@@ -1695,8 +1695,8 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 </tr>
 <tr>
 <td>2</td>
-<td>1.3&quot; 128x64 OLED SH1106 I²C (on hand) — fallback: 0.96&quot; SSD1306 I²C or 16x2 1602 I²C LCD (all on hand)</td>
-<td>1</td>
+<td>0.96&quot; 128x64 OLED SSD1306 I²C (main, on hand) + 0.91&quot; 128×32 SSD1306 (strip on MB, on hand) — fallback: 1.3&quot; SH1106 (reserved for EFFIGY), 16×2 1602 I²C LCD (all on hand)</td>
+<td>2</td>
 <td>€0</td>
 <td>€0</td>
 <td>—</td>
@@ -3106,7 +3106,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <h3 id="hardware-macrobrute-bom--order-2-thonk-uk">Order 2: Thonk (UK)</h3>
 <ul><li>Thonkiconn jacks (all)</li><li>9mm pots</li><li>Knobs</li></ul>
 <h3 id="hardware-macrobrute-bom--order-3-aliexpress-china-budget">Order 3: AliExpress (China, budget)</h3>
-<ul><li>Raspberry Pi Pico (if Pico WH not already on hand)</li><li>JST-PH connectors</li><li>Wire assortment</li><li>M2/M3 hardware</li><li>Toggle switches</li><li>Breadboard</li><li>(OLED already on hand — 1.3&quot; SH1106, 0.96&quot; SSD1306, 16x2 1602 LCD)</li></ul>
+<ul><li>Raspberry Pi Pico (if Pico WH not already on hand)</li><li>JST-PH connectors</li><li>Wire assortment</li><li>M2/M3 hardware</li><li>Toggle switches</li><li>Breadboard</li><li>(OLED already on hand — 0.96&quot; SSD1306 main, 0.91&quot; SSD1306 strip, 1.3&quot; SH1106 fallback/EFFIGY, 16x2 1602 LCD)</li></ul>
 <h3 id="hardware-macrobrute-bom--order-4-mouser-amazon-fills">Order 4: Mouser/Amazon (fills)</h3>
 <ul><li>J-Link EDU Mini (or Segger direct)</li><li>Bourns 3296 trimmers</li><li>3M VHB tape</li><li>Specialty items</li></ul>
 <h3 id="hardware-macrobrute-bom--order-5-local-hardware-store">Order 5: Local Hardware Store</h3>
@@ -3643,10 +3643,10 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 <hr>
 <h1 id="hardware-macrobrute-shopping-list--order-4-aliexpress">ORDER 4: ALIEXPRESS</h1>
 <p>Search terms and recommended items:</p>
-<h2 id="hardware-macrobrute-shopping-list--oled-display-user-already-has-1-3-0-96">OLED Display — user already has 1.3&quot; + 0.96&quot;</h2>
-<p>The user has a 1.3&quot; SH1106 I²C (primary) and a 0.96&quot; SSD1306 I²C (fallback) on hand, plus a 16×2 1602 I²C LCD module. No purchase required.</p>
+<h2 id="hardware-macrobrute-shopping-list--oled-display-user-already-has-all-needed-oleds">OLED Display — user already has all needed OLEDs</h2>
+<p>The user has a <strong>0.96&quot; SSD1306</strong> (primary main display, on expander panel), a <strong>0.91&quot; SSD1306 128×32</strong> (strip display on MB panel), and a <strong>1.3&quot; SH1106</strong> (reserved for EFFIGY / fallback). Plus a 16×2 1602 I²C LCD module. No purchase required.</p>
 <p>If an OLED module does need to be sourced:</p>
-<p><strong>Search:</strong> &quot;1.3 inch OLED 128x64 SH1106 I2C&quot;</p>
+<p><strong>Search:</strong> &quot;0.96 inch OLED 128x64 SSD1306 I2C&quot; (primary) — backup: &quot;1.3 inch OLED 128x64 SH1106 I2C&quot;</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Item</th>
 <th>Specs</th>
@@ -3819,7 +3819,7 @@ Metalizer input  ──[1k]── Brass bolt B</code></pre>
 □ Davies knobs x10
 □ Toggle switches x5 (if available)</code></pre>
 <h2 id="hardware-macrobrute-shopping-list--aliexpress-order-50">☐ AliExpress Order (~€50)</h2>
-<pre><code>□ (OLED not needed — 1.3&quot; SH1106 + 0.96&quot; SSD1306 + 16x2 1602 LCD already on hand)
+<pre><code>□ (OLED not needed — 0.96&quot; SSD1306 main + 0.91&quot; SSD1306 strip + 1.3&quot; SH1106 fallback/EFFIGY + 16x2 1602 LCD already on hand)
 □ JST PH connector kit
 □ 28AWG silicone wire set
 □ 22AWG wire red/black
@@ -4474,7 +4474,7 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 </tr>
 <tr id="gp-4">
 <td>OLED (primary)</td>
-<td><strong>1.3&quot; SH1106 I²C</strong> on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> @ 0x3C — on the expander panel</td>
+<td><strong>0.96&quot; SSD1306</strong> I²C on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> @ 0x3C — on the expander panel. Driver: <code>OLED_I2C</code> in <code>firmware/pico/display.py</code>. Same chip family as strip OLED.</td>
 </tr>
 <tr>
 <td>OLED (strip)</td>
@@ -4482,7 +4482,7 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 </tr>
 <tr>
 <td>OLED (fallbacks)</td>
-<td>0.96&quot; SSD1306 (same pins, <code>OLED_COL_OFFSET = 0</code>); 16×2 1602 I²C LCD (separate driver)</td>
+<td>1.3&quot; SH1106 (set <code>OLED_CHIP=&quot;SH1106&quot;</code> + <code>OLED_COL_OFFSET=2</code> — reserved for EFFIGY); 16×2 1602 I²C LCD (separate driver)</td>
 </tr>
 <tr>
 <td>MIDI paths</td>
@@ -5190,7 +5190,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <span class="dt">Complete Connection Map</span>
 <span class="dp">docs/MACROBRUTE_CONNECTION_MAP.md</span></summary>
 <div class="db"><p>Every signal, mod, bend, and wire in the system. This is the master wiring reference for building, debugging, and expanding.</p>
-<p><strong>Connector:</strong> 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND) <strong>OLED:</strong> 1.3&quot; SH1106 I²C 128×64 (driver <code>SH1106_I2C</code> in <code>firmware/pico/display.py</code>). Fallback: 0.96&quot; SSD1306 I²C or 16×2 1602 I²C LCD. <strong>MIDI path:</strong> Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico. <strong>Firmware:</strong> Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)</p>
+<p><strong>Connector:</strong> 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND) <strong>OLED:</strong> <strong>0.96&quot; SSD1306 I²C 128×64</strong> main display on expander (driver <code>OLED_I2C</code> in <code>firmware/pico/display.py</code>, <code>OLED_CHIP=&quot;SSD1306&quot;</code>). Plus a <strong>0.91&quot; SSD1306 128×32</strong> strip on the MB panel sharing the same I²C0 bus at 0x3D. Fallback chips: 1.3&quot; SH1106 (set <code>OLED_CHIP=&quot;SH1106&quot;</code>), 16×2 1602 I²C LCD. <strong>MIDI path:</strong> Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico. <strong>Firmware:</strong> Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)</p>
 <hr>
 <h2 id="docs-macrobrute-connection-map--1-pico-wh-gpio-allocation">1. Pico WH GPIO Allocation</h2>
 <p>Canonical source: <code>firmware/pico/config.py</code>. Update this table AND that file together.</p>
@@ -5822,7 +5822,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <p><strong>Protocol frame:</strong> <code>0xAA · msg_type · counter · payload_len · payload[…] · xor_checksum</code></p>
 <p>The XOR checksum is the bitwise XOR of all bytes from <code>msg_type</code> through the last payload byte (excluding the leading <code>0xAA</code> and the checksum itself). Receivers compute and verify; bad frames are silently dropped. Both sides (<code>firmware/pico/midi.py</code> and <code>firmware/lpc2361/include/pico_comm.h</code>) implement identical framing.</p>
 <h3 id="docs-macrobrute-connection-map--5-5-strip-oled-wiring-mb-panel">5.5 Strip OLED Wiring (MB panel)</h3>
-<p>The 0.91&quot; SSD1306 128×32 strip display lives on the MB panel where the &quot;microbrute&quot; silkscreen sits. It shares the Pico&#x27;s I²C0 bus with the main 1.3&quot; SH1106 on the expander (different addresses: 0x3C main, 0x3D strip).</p>
+<p>The 0.91&quot; SSD1306 128×32 strip display lives on the MB panel where the &quot;microbrute&quot; silkscreen sits. It shares the Pico&#x27;s I²C0 bus with the main 0.96&quot; SSD1306 on the expander (different addresses: 0x3C main, 0x3D strip).</p>
 <div class="table-wrap"><table><thead><tr>
 <th>From</th>
 <th>To</th>
@@ -6553,7 +6553,17 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <td>✓ Have</td>
 </tr>
 <tr>
-<td>1.3&quot; SH1106 OLED</td>
+<td>0.96&quot; SSD1306 OLED (main)</td>
+<td>1</td>
+<td>✓ Have</td>
+</tr>
+<tr>
+<td>0.91&quot; SSD1306 128×32 OLED (strip on MB panel)</td>
+<td>1</td>
+<td>✓ Have</td>
+</tr>
+<tr>
+<td>1.3&quot; SH1106 OLED (reserved for EFFIGY / fallback)</td>
 <td>1</td>
 <td>✓ Have</td>
 </tr>
@@ -6745,8 +6755,8 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <text x="750.0" y="162.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">LFO</text>
 <text x="750.0" y="179.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Free-running</text>
 <rect x="680" y="200" width="140" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="750.0" y="217.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">S&H</text>
-<text x="750.0" y="234.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Sample & Hold</text>
+<text x="750.0" y="217.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">S&amp;H</text>
+<text x="750.0" y="234.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">Sample &amp; Hold</text>
 <rect x="680" y="255" width="140" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
 <text x="750.0" y="272.5" class="label" text-anchor="middle" fill="#FFF" font-size="11">Clock Div</text>
 <text x="750.0" y="289.5" class="value" text-anchor="middle" fill="#FFF" font-size="8" opacity="0.8">/2 /4 /8</text>
@@ -6812,7 +6822,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <rect x="70" y="592" width="20" height="15" fill="#FF9800" stroke="#333" stroke-width="0.5"/>
 <text x="100" y="603" class="value" font-size="10">Breakout Interface (DB-9, Power Distribution)</text>
 <rect x="70" y="617" width="20" height="15" fill="#4CAF50" stroke="#333" stroke-width="0.5"/>
-<text x="100" y="628" class="value" font-size="10">Expander Modules (Noise, LFO, S&H, Clock, etc.)</text>
+<text x="100" y="628" class="value" font-size="10">Expander Modules (Noise, LFO, S&amp;H, Clock, etc.)</text>
 <rect x="70" y="642" width="20" height="15" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
 <text x="100" y="653" class="value" font-size="10">Control System (Pico W, Touch Pads, LEDs)</text>
 <rect x="70" y="667" width="20" height="15" fill="#E91E63" stroke="#333" stroke-width="0.5"/>
@@ -6909,7 +6919,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <line x1="760" y1="335" x2="760" y2="270" stroke="#666" stroke-width="1.5"/>
 <text x="740" y="310" class="value" font-size="8" fill="#666">Direct</text>
 <rect x="50" y="380" width="800" height="250" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>
-<text x="450" y="405" class="label" text-anchor="middle" fill="#1B5E20">Signal Flow & Test Point Notes</text>
+<text x="450" y="405" class="label" text-anchor="middle" fill="#1B5E20">Signal Flow &amp; Test Point Notes</text>
 <text x="70" y="430" class="label" font-size="8" fill="#1B5E20">Signal Path:</text>
 <text x="160" y="430" class="value" font-size="8">Saw/Square/Sub/Ext/Noise → Mixer → VCF → VCA → Main Out</text>
 <text x="70" y="450" class="label" font-size="8" fill="#1B5E20">VCO Outputs:</text>
@@ -6974,8 +6984,8 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <text x="120.0" y="347.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Exp LFO</text>
 <text x="120.0" y="364.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Free Run</text>
 <rect x="70" y="390" width="100" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="407.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Exp S&H</text>
-<text x="120.0" y="424.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">S&H</text>
+<text x="120.0" y="407.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Exp S&amp;H</text>
+<text x="120.0" y="424.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">S&amp;H</text>
 <rect x="400" y="70" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
 <text x="450.0" y="87.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Pitch</text>
 <text x="450.0" y="104.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">VCO Freq</text>
@@ -7029,7 +7039,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0</code></pre>
 <path d="M720,332 L610,332 L610,392 L500,392" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
 <text x="610" y="329" class="value" text-anchor="middle" fill="#FF9800" font-size="8">Sync</text>
 <rect x="50" y="460" width="850" height="220" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
-<text x="475" y="485" class="label" text-anchor="middle" fill="#E65100">CV Routing & Modulation Notes</text>
+<text x="475" y="485" class="label" text-anchor="middle" fill="#E65100">CV Routing &amp; Modulation Notes</text>
 <text x="70" y="510" class="label" font-size="8" fill="#E65100">Mod Matrix:</text>
 <text x="160" y="510" class="value" font-size="8">MicroBrute's patch panel routes LFO/Env to different destinations using front-panel switches</text>
 <text x="70" y="535" class="label" font-size="8" fill="#E65100">Attenuation:</text>
@@ -7189,7 +7199,7 @@ LFO</text>
 <rect x="800" y="140" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
 <text x="845" y="153" class="label" text-anchor="middle" fill="#FFF" font-size="8">LFO</text>
 <rect x="800" y="180" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="193" class="label" text-anchor="middle" fill="#FFF" font-size="8">S&H</text>
+<text x="845" y="193" class="label" text-anchor="middle" fill="#FFF" font-size="8">S&amp;H</text>
 <rect x="800" y="220" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
 <text x="845" y="233" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clock Div</text>
 <rect x="800" y="260" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
@@ -7270,7 +7280,7 @@ LFO</text>
 </defs>
 
 <text x="500" y="25" class="title" text-anchor="middle">MACROBRUTE Interconnect Wiring</text>
-<text x="500" y="42" class="subtitle" text-anchor="middle">DB-9 A (Outputs) & DB-9 B (Inputs + Power)</text>
+<text x="500" y="42" class="subtitle" text-anchor="middle">DB-9 A (Outputs) &amp; DB-9 B (Inputs + Power)</text>
 <text x="750" y="35" class="label" font-size="11">Signal Type Legend:</text>
 <rect x="750" y="47" width="20" height="10" fill="#0066CC" stroke="#333" stroke-width="0.5"/>
 <text x="775" y="55" class="value" font-size="9">Audio Output (Saw, Sqr, Mix, VCF)</text>
@@ -7512,7 +7522,7 @@ LFO</text>
 <text x="270" y="257" class="value" text-anchor="middle">1kΩ</text>
 <text x="615" y="238" class="value" font-size="9">→ J1-5</text>
 <rect x="40" y="250" width="720" height="110" fill="#E8F5E9" stroke="#009933" stroke-width="1" stroke-dasharray="5,3" opacity="0.3"/>
-<text x="60" y="265" class="label" font-size="9" fill="#009933">GATE & MODULATION</text>
+<text x="60" y="265" class="label" font-size="9" fill="#009933">GATE &amp; MODULATION</text>
 <text x="55" y="283" class="value" font-size="9" text-anchor="end">TP83 Gate</text>
 <path d="M190,280 L350,280 L350,280 L600,280" stroke="#009933" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
 <path d="M245,280 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>
@@ -7617,7 +7627,7 @@ LFO</text>
 <path d="M600,300 L600,210 L620,210" stroke="#228B22" stroke-width="2.5" fill="none"/>
 <path d="M600,460 L600,210 L620,210" stroke="#0000CC" stroke-width="2" fill="none"/>
 <rect x="620" y="228" width="140" height="24" fill="#E8D5A3" stroke="#B8722D" stroke-width="1" rx="2"/>
-<text x="690" y="244" class="label" font-size="9" text-anchor="middle">S&H</text>
+<text x="690" y="244" class="label" font-size="9" text-anchor="middle">S&amp;H</text>
 <path d="M600,140 L600,240 L620,240" stroke="#CC0000" stroke-width="2" fill="none"/>
 <path d="M600,300 L600,240 L620,240" stroke="#228B22" stroke-width="2.5" fill="none"/>
 <path d="M600,460 L600,240 L620,240" stroke="#0000CC" stroke-width="2" fill="none"/>
@@ -14590,7 +14600,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
   </marker>
 </defs>
 
-<text x="300" y="25" class="title" text-anchor="middle">Sample & Hold</text>
+<text x="300" y="25" class="title" text-anchor="middle">Sample &amp; Hold</text>
 <text x="300" y="42" class="subtitle" text-anchor="middle">LF398 with droop compensation</text>
 <polygon points="120,120 120,180 180,150" class="component"/>
 <text x="150" y="155" class="label" text-anchor="middle" font-size="9">Input Buffer</text>
@@ -15212,7 +15222,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="500" y="510" class="label" font-size="8">CD4024:</text>
 <text x="550" y="510" class="value" font-size="8">Clock divider (/2, /4, /8 outputs)</text>
 <text x="500" y="530" class="label" font-size="8">LF398:</text>
-<text x="550" y="530" class="value" font-size="8">Sample & Hold module</text>
+<text x="550" y="530" class="value" font-size="8">Sample &amp; Hold module</text>
 <text x="500" y="550" class="label" font-size="8">78L05:</text>
 <text x="550" y="550" class="value" font-size="8">JF-33 delay +5V supply</text>
 <text x="500" y="570" class="label" font-size="8">2N3904:</text>

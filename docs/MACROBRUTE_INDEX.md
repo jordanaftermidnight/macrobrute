@@ -22,7 +22,7 @@
 | Decision | Choice |
 |----------|--------|
 | Connector | 2× DB-9 (18 pins total) — VGA HD-15 rejected |
-| OLED | **1.3" SH1106 I²C** on GP4 (SDA) / GP5 (SCL). Fallbacks: 0.96" SSD1306 I²C, 16×2 1602 I²C LCD |
+| OLED | **0.96" SSD1306 I²C** on GP4 (SDA) / GP5 (SCL) — main display on expander panel. **0.91" SSD1306 128×32** strip on MB panel (shared I²C0 bus, addr 0x3D). Fallbacks: 1.3" SH1106 (reserved for EFFIGY), 16×2 1602 I²C LCD. |
 | MIDI path | **Pico ↔ LPC2361 UART bridge** over UART0 (GP0/GP1) @ 115200 baud. No direct 31250-baud MIDI from Pico. |
 | CD4051 replaces CD4066 | Unavailable locally (Kaunas) |
 | RGB LED (common cathode) | GP8=R/clock, GP9=G/gate, GP10=B/mode. Replaces 3 discrete LEDs. |
@@ -77,7 +77,7 @@
 - `wiring_diagram.md` + `wiring_*.svg` — complete signal flow
 
 ### Firmware
-- `firmware/pico/` — MicroPython modules: main, config, display (SH1106), encoder, clock, menu, midi (LPC bridge), leds, test_hw
+- `firmware/pico/` — MicroPython modules (14): main, config, display (SSD1306/SH1106), strip_display, encoder, clock, clock_divider, aux_outputs, menu, leds, midi (LPC bridge), usbmidi, effigy_bridge, test_hw
 - `firmware/lpc2361/` — C skeleton (48 files): drivers, synth, midi, ui, utils, ARM startup, Makefile
 - `firmware/*.hex / *.bin / *.mbf` — Arturia firmware (decrypted + encrypted forms)
 - `firmware/labels_export.csv` + `tools/ghidra/` — Ghidra label tooling

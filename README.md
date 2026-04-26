@@ -63,7 +63,7 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C OLED (primary), 0.96" SSD1306 + 16×2 1602 I²C LCD (fallbacks), HW040 encoder, 2× DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case
+MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 0.96" SSD1306 I²C OLED (primary main), 0.91" 128×32 SSD1306 (strip on MB panel), 1.3" SH1106 (fallback / reserved for EFFIGY), 16×2 1602 I²C LCD (alt fallback), HW040 encoder, 2× shielded DB-9, LED/LDR kit, IC kit, JF-33 delay PCB, DSO138 scope kit, 6U 84HP Eurorack case, Behringer CP1A PSU
 
 ### Key Decisions
 | Decision | Choice |
@@ -71,7 +71,7 @@ MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 1.3" SH1106 I²C O
 | Expander HP | **17HP** (87×128.5mm panel — fits user's pre-cut blank) |
 | Connector | 2× DB-9 shielded (no aux cable — DB-9 B carries digital + power + 2 CVs) |
 | Pico location | Inside the expander (not the MicroBrute case) |
-| Main OLED | 1.3" SH1106 I²C @ 0x3C on expander panel; fallbacks 0.96" SSD1306, 16×2 1602 LCD |
+| Main OLED | **0.96" SSD1306** I²C @ 0x3C on expander panel — same chip family as strip OLED → simpler driver. (1.3" SH1106 left for EFFIGY; set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2` if you swap.) |
 | Strip OLED | 0.91" SSD1306 128×32 @ 0x3D on MB panel — shared I²C0 bus via DB-9 B |
 | MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (XOR checksum) + USB-MIDI on Pico micro-USB |
 | EFFIGY pair | 5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, addr 0x42 |

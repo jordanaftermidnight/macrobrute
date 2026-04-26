@@ -5,18 +5,23 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 """
 
 # ---------------------------------------------------------------------------
-# Main OLED — SH1106 1.3" I²C, 128×64
-#   Fallbacks: 0.96" SSD1306 (same pins, set OLED_COL_OFFSET=0),
+# Main OLED — 0.96" SSD1306 I²C, 128×64
+#   Same chip family as the strip OLED (both SSD1306) — keeps driver simple
+#   and matches what's commonly available. The expander panel uses a smaller
+#   cutout to suit the 0.96" module.
+#
+#   Fallbacks: 1.3" SH1106 (set OLED_CHIP="SH1106" + OLED_COL_OFFSET=2),
 #              16×2 1602 I²C LCD (different driver entirely)
-# Bus: I²C0 — shared with strip OLED below.
+# Bus: I²C0 — shared with strip OLED below at addr 0x3D.
 # ---------------------------------------------------------------------------
+OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106"
 OLED_I2C_ID      = 0
 OLED_WIDTH       = 128
 OLED_HEIGHT      = 64
 OLED_SDA         = 4       # GP4  — I²C0 SDA
 OLED_SCL         = 5       # GP5  — I²C0 SCL
-OLED_ADDR        = 0x3C    # SH1106/SSD1306 default (alt 0x3D = strip OLED)
-OLED_COL_OFFSET  = 2       # SH1106 needs 2; SSD1306 = 0
+OLED_ADDR        = 0x3C    # SSD1306/SH1106 default (alt 0x3D = strip OLED)
+OLED_COL_OFFSET  = 0       # SSD1306 = 0; set to 2 if using SH1106
 
 # ---------------------------------------------------------------------------
 # Strip OLED — 0.91" SSD1306 128×32, mounted on the MicroBrute panel

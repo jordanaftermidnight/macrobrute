@@ -142,7 +142,7 @@ def generate_internal_wiring() -> str:
     
     # === GATE & CV GROUP (Rows 260-340) ===
     r.elements.append(f'<rect x="40" y="250" width="720" height="110" fill="#E8F5E9" stroke="#009933" stroke-width="1" stroke-dasharray="5,3" opacity="0.3"/>')
-    r.elements.append(f'<text x="60" y="265" class="label" font-size="9" fill="{C_GATE}">GATE & MODULATION</text>')
+    r.elements.append(f'<text x="60" y="265" class="label" font-size="9" fill="{C_GATE}">GATE &amp; MODULATION</text>')
     
     cv_signals = [
         ("TP83 Gate", 280, "J2-1", "10kΩ", C_GATE),
@@ -270,7 +270,7 @@ def generate_power_distribution() -> str:
     modules = [
         ("Noise Gen", 180),
         ("LFO", 210),
-        ("S&H", 240),
+        ("S&amp;H", 240),
         ("Clock /2/4/8", 270),
         ("Slew Limiter", 340),
         ("Attenuverter", 370),

@@ -76,7 +76,7 @@
 <path d="M600,300 L600,210 L620,210" stroke="#228B22" stroke-width="2.5" fill="none"/>
 <path d="M600,460 L600,210 L620,210" stroke="#0000CC" stroke-width="2" fill="none"/>
 <rect x="620" y="228" width="140" height="24" fill="#E8D5A3" stroke="#B8722D" stroke-width="1" rx="2"/>
-<text x="690" y="244" class="label" font-size="9" text-anchor="middle">S&H</text>
+<text x="690" y="244" class="label" font-size="9" text-anchor="middle">S&amp;H</text>
 <path d="M600,140 L600,240 L620,240" stroke="#CC0000" stroke-width="2" fill="none"/>
 <path d="M600,300 L600,240 L620,240" stroke="#228B22" stroke-width="2.5" fill="none"/>
 <path d="M600,460 L600,240 L620,240" stroke="#0000CC" stroke-width="2" fill="none"/>

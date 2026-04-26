@@ -4,7 +4,7 @@ Every signal, mod, bend, and wire in the system. This is the master
 wiring reference for building, debugging, and expanding.
 
 **Connector:** 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND)
-**OLED:** 1.3" SH1106 I²C 128×64 (driver `SH1106_I2C` in `firmware/pico/display.py`). Fallback: 0.96" SSD1306 I²C or 16×2 1602 I²C LCD.
+**OLED:** **0.96" SSD1306 I²C 128×64** main display on expander (driver `OLED_I2C` in `firmware/pico/display.py`, `OLED_CHIP="SSD1306"`). Plus a **0.91" SSD1306 128×32** strip on the MB panel sharing the same I²C0 bus at 0x3D. Fallback chips: 1.3" SH1106 (set `OLED_CHIP="SH1106"`), 16×2 1602 I²C LCD.
 **MIDI path:** Pico ↔ LPC2361 UART bridge over UART0 @ 115200 baud. LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
 **Firmware:** Pico WH MicroPython (9 modules), LPC2361 ARM7 (stock + planned bridge extension)
 
@@ -210,7 +210,7 @@ identical framing.
 
 The 0.91" SSD1306 128×32 strip display lives on the MB panel where the
 "microbrute" silkscreen sits. It shares the Pico's I²C0 bus with the main
-1.3" SH1106 on the expander (different addresses: 0x3C main, 0x3D strip).
+0.96" SSD1306 on the expander (different addresses: 0x3C main, 0x3D strip).
 
 | From | To | Notes |
 |------|----|-------|
@@ -507,7 +507,9 @@ Bought locally in Kaunas, April 2026:
 | 100kΩ pots | 4 | ✓ Have |
 | 3.5mm jacks | 25 | ✓ Have |
 | Pico WH | 1 | ✓ Have |
-| 1.3" SH1106 OLED | 1 | ✓ Have |
+| 0.96" SSD1306 OLED (main) | 1 | ✓ Have |
+| 0.91" SSD1306 128×32 OLED (strip on MB panel) | 1 | ✓ Have |
+| 1.3" SH1106 OLED (reserved for EFFIGY / fallback) | 1 | ✓ Have |
 | HW040 encoder | 1 | ✓ Have |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare) |
 | DB-9 connectors | 2 | ✓ Have |

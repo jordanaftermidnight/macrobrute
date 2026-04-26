@@ -39,7 +39,7 @@
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
 | 1 | Raspberry Pi Pico (standard, NOT W) | 1 | €4.00 | €4.00 | Mouser/Pimoroni |
-| 2 | 1.3" 128x64 OLED SH1106 I²C (on hand) — fallback: 0.96" SSD1306 I²C or 16x2 1602 I²C LCD (all on hand) | 1 | €0 | €0 | — |
+| 2 | 0.96" 128x64 OLED SSD1306 I²C (main, on hand) + 0.91" 128×32 SSD1306 (strip on MB, on hand) — fallback: 1.3" SH1106 (reserved for EFFIGY), 16×2 1602 I²C LCD (all on hand) | 2 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -424,7 +424,7 @@ Pico GPIO (PWM)
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
-- (OLED already on hand — 1.3" SH1106, 0.96" SSD1306, 16x2 1602 LCD)
+- (OLED already on hand — 0.96" SSD1306 main, 0.91" SSD1306 strip, 1.3" SH1106 fallback/EFFIGY, 16x2 1602 LCD)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)

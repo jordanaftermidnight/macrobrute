@@ -222,13 +222,13 @@ Go to: https://www.thonk.co.uk/shop/
 
 Search terms and recommended items:
 
-## OLED Display — user already has 1.3" + 0.96"
+## OLED Display — user already has all needed OLEDs
 
-The user has a 1.3" SH1106 I²C (primary) and a 0.96" SSD1306 I²C (fallback) on hand, plus a 16×2 1602 I²C LCD module. No purchase required.
+The user has a **0.96" SSD1306** (primary main display, on expander panel), a **0.91" SSD1306 128×32** (strip display on MB panel), and a **1.3" SH1106** (reserved for EFFIGY / fallback). Plus a 16×2 1602 I²C LCD module. No purchase required.
 
 If an OLED module does need to be sourced:
 
-**Search:** "1.3 inch OLED 128x64 SH1106 I2C"
+**Search:** "0.96 inch OLED 128x64 SSD1306 I2C" (primary) — backup: "1.3 inch OLED 128x64 SH1106 I2C"
 
 | Item | Specs | Qty | Price |
 |------|-------|-----|-------|
@@ -330,7 +330,7 @@ If an OLED module does need to be sourced:
 
 ## ☐ AliExpress Order (~€50)
 ```
-□ (OLED not needed — 1.3" SH1106 + 0.96" SSD1306 + 16x2 1602 LCD already on hand)
+□ (OLED not needed — 0.96" SSD1306 main + 0.91" SSD1306 strip + 1.3" SH1106 fallback/EFFIGY + 16x2 1602 LCD already on hand)
 □ JST PH connector kit
 □ 28AWG silicone wire set
 □ 22AWG wire red/black

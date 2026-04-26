@@ -34,10 +34,12 @@
   <!-- Title strip -->
   <text class="title" x="43.5" y="9">MACROBRUTE</text>
 
-  <!-- Main 1.3" SH1106 OLED — module body ~30×30mm, glass area ~28×17mm.
-       Cutout for glass: 28 × 17 mm centered horizontally, top edge ~14 mm. -->
-  <rect class="hole" x="29.5" y="14" width="28" height="17" rx="0.5"/>
-  <text class="sublbl" x="43.5" y="34">1.3" OLED 128×64</text>
+  <!-- Main 0.96" SSD1306 OLED — module body ~27×27mm, glass area ~22×12mm.
+       Cutout for glass: 22 × 12 mm centered horizontally, top edge ~16 mm.
+       (SH1106 1.3" fallback: 28×17mm cutout. Verify your module's exact
+        glass dimensions before drilling.) -->
+  <rect class="hole" x="32.5" y="16" width="22" height="12" rx="0.5"/>
+  <text class="sublbl" x="43.5" y="34">0.96" OLED 128×64 · SSD1306</text>
 
   <!-- Encoder (HW-040) — 7 mm bushing hole, centered horizontally, y ~46. -->
   <circle class="holefill" cx="35" cy="48" r="3.5"/>

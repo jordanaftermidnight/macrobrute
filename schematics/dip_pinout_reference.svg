@@ -343,7 +343,7 @@
 <text x="500" y="510" class="label" font-size="8">CD4024:</text>
 <text x="550" y="510" class="value" font-size="8">Clock divider (/2, /4, /8 outputs)</text>
 <text x="500" y="530" class="label" font-size="8">LF398:</text>
-<text x="550" y="530" class="value" font-size="8">Sample & Hold module</text>
+<text x="550" y="530" class="value" font-size="8">Sample &amp; Hold module</text>
 <text x="500" y="550" class="label" font-size="8">78L05:</text>
 <text x="550" y="550" class="value" font-size="8">JF-33 delay +5V supply</text>
 <text x="500" y="570" class="label" font-size="8">2N3904:</text>

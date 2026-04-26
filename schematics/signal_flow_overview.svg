@@ -145,7 +145,7 @@ LFO</text>
 <rect x="800" y="140" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
 <text x="845" y="153" class="label" text-anchor="middle" fill="#FFF" font-size="8">LFO</text>
 <rect x="800" y="180" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="193" class="label" text-anchor="middle" fill="#FFF" font-size="8">S&H</text>
+<text x="845" y="193" class="label" text-anchor="middle" fill="#FFF" font-size="8">S&amp;H</text>
 <rect x="800" y="220" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
 <text x="845" y="233" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clock Div</text>
 <rect x="800" y="260" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>

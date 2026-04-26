@@ -77,7 +77,7 @@
 <text x="270" y="257" class="value" text-anchor="middle">1kΩ</text>
 <text x="615" y="238" class="value" font-size="9">→ J1-5</text>
 <rect x="40" y="250" width="720" height="110" fill="#E8F5E9" stroke="#009933" stroke-width="1" stroke-dasharray="5,3" opacity="0.3"/>
-<text x="60" y="265" class="label" font-size="9" fill="#009933">GATE & MODULATION</text>
+<text x="60" y="265" class="label" font-size="9" fill="#009933">GATE &amp; MODULATION</text>
 <text x="55" y="283" class="value" font-size="9" text-anchor="end">TP83 Gate</text>
 <path d="M190,280 L350,280 L350,280 L600,280" stroke="#009933" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
 <path d="M245,280 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,-6 l5,6 l5,0" class="component"/>

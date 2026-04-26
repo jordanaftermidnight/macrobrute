@@ -90,13 +90,13 @@ EVENT_ENGINE  = const(0x04)
 EVENT_CLIP    = const(0x05)
 EVENT_PANEL   = const(0x06)
 
-# Error codes
-ERR_OK                 = const(0x00)
-ERR_INVALID_REGISTER   = const(0x01)
-ERR_WRITE_TO_READONLY  = const(0x02)
-ERR_VALUE_OUT_OF_RANGE = const(0x03)
-ERR_PANEL_LOCKED       = const(0x04)
-ERR_PROTOCOL_ERROR     = const(0x05)
+# Error codes — values match EFFIGY's src/macrobrute_bridge.h err:: namespace.
+ERR_OK                  = const(0x00)
+ERR_BAD_REGISTER        = const(0x01)
+ERR_WRITE_TO_READONLY   = const(0x02)
+ERR_READ_FROM_WRITEONLY = const(0x03)
+ERR_EVENT_QUEUE_OVERFLOW = const(0x04)
+ERR_HEARTBEAT_TIMEOUT   = const(0x05)
 
 # Pair-loss timeout: number of consecutive identical heartbeat reads before
 # we declare the link dead and revert to solo mode.

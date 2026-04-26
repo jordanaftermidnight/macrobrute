@@ -381,7 +381,7 @@ def generate_lfo_schematic() -> str:
 
 def generate_sah_schematic() -> str:
     """Generate Sample & Hold schematic."""
-    r = SchematicRenderer(600, 500, "Sample & Hold", "LF398 with droop compensation")
+    r = SchematicRenderer(600, 500, "Sample &amp; Hold", "LF398 with droop compensation")
     
     # Input buffer
     r.opamp(Point(150, 150), label="Input Buffer", pins=("-", "+", "out"))
@@ -493,7 +493,7 @@ def generate_wiring_diagram() -> str:
     C_GND = "#1a1a1a"        # Black - GND
     C_CONTROL = "#6600CC"    # Purple - Control signals
     
-    r = SchematicRenderer(1000, 750, "MACROBRUTE Interconnect Wiring", "DB-9 A (Outputs) & DB-9 B (Inputs + Power)")
+    r = SchematicRenderer(1000, 750, "MACROBRUTE Interconnect Wiring", "DB-9 A (Outputs) &amp; DB-9 B (Inputs + Power)")
     
     # === LEGEND (Top Right) ===
     r.elements.append(f'<text x="750" y="35" class="label" font-size="11">Signal Type Legend:</text>')
@@ -1263,7 +1263,7 @@ def generate_dip_pinout_reference() -> str:
         ("CD40106:", "LFO core (Schmitt trigger oscillator)", 470),
         ("CD4051:", "Input selection (if used)", 490),
         ("CD4024:", "Clock divider (/2, /4, /8 outputs)", 510),
-        ("LF398:", "Sample & Hold module", 530),
+        ("LF398:", "Sample &amp; Hold module", 530),
         ("78L05:", "JF-33 delay +5V supply", 550),
         ("2N3904:", "LED drivers, noise source, vactrol", 570),
     ]
@@ -1635,7 +1635,7 @@ def generate_system_architecture_block() -> str:
     expander_blocks = [
         ("Noise", "White/Pink", 90),
         ("LFO", "Free-running", 145),
-        ("S&H", "Sample & Hold", 200),
+        ("S&amp;H", "Sample &amp; Hold", 200),
         ("Clock Div", "/2 /4 /8", 255),
         ("Slew", "Glide", 310),
         ("Attenuvert", "CV Scale", 365),
@@ -1693,7 +1693,7 @@ def generate_system_architecture_block() -> str:
     legend_items = [
         (C_SYNTH, "MicroBrute Core (VCO, VCF, VCA, LFO, Envelope)"),
         (C_INTERFACE, "Breakout Interface (DB-9, Power Distribution)"),
-        (C_EXPANDER, "Expander Modules (Noise, LFO, S&H, Clock, etc.)"),
+        (C_EXPANDER, "Expander Modules (Noise, LFO, S&amp;H, Clock, etc.)"),
         (C_CONTROL, "Control System (Pico W, Touch Pads, LEDs)"),
         (C_AUDIO, "Audio Outputs (Buffered, Protected)"),
     ]
@@ -1803,7 +1803,7 @@ def generate_audio_signal_flow() -> str:
     
     # === NOTES BOX (Bottom, clear placement) ===
     r.elements.append(f'<rect x="50" y="380" width="800" height="250" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="450" y="405" class="label" text-anchor="middle" fill="#1B5E20">Signal Flow & Test Point Notes</text>')
+    r.elements.append(f'<text x="450" y="405" class="label" text-anchor="middle" fill="#1B5E20">Signal Flow &amp; Test Point Notes</text>')
     
     notes = [
         ("Signal Path:", "Saw/Square/Sub/Ext/Noise → Mixer → VCF → VCA → Main Out", 430),
@@ -1858,7 +1858,7 @@ def generate_cv_control_flow() -> str:
         ("Pitch CV", "1V/oct", 190, C_MOD),
         ("Mod Wheel", "0-5V", 250, C_MOD),
         ("Exp LFO", "Free Run", 330, C_EXPANDER),
-        ("Exp S&H", "S&H", 390, C_EXPANDER),
+        ("Exp S&amp;H", "S&amp;H", 390, C_EXPANDER),
     ]
 
     for label, sublabel, y, color in sources:
@@ -1920,7 +1920,7 @@ def generate_cv_control_flow() -> str:
 
     # === NOTES BOX ===
     r.elements.append(f'<rect x="50" y="460" width="850" height="220" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="475" y="485" class="label" text-anchor="middle" fill="#E65100">CV Routing & Modulation Notes</text>')
+    r.elements.append(f'<text x="475" y="485" class="label" text-anchor="middle" fill="#E65100">CV Routing &amp; Modulation Notes</text>')
 
     notes = [
         ("Mod Matrix:", "MicroBrute's patch panel routes LFO/Env to different destinations using front-panel switches", 510),
@@ -2071,7 +2071,7 @@ def generate_signal_flow_overview() -> str:
     circuits = [
         ("Noise Gen", 110),
         ("LFO", 150),
-        ("S&H", 190),
+        ("S&amp;H", 190),
         ("Clock Div", 230),
         ("Slew Limiter", 270),
         ("Attenuverter", 310),
