@@ -3,14 +3,23 @@
 Matches `firmware/pico/config.py`. All assignments verified against
 RP2040 datasheet for peripheral conflicts.
 
+## Phase 0 Bench-Validation Wiring
+
+The two diagrams above show the same Phase 0 circuit two ways:
+
+- **Schematic** — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
+- **Breadboard layout** — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
+
+Phase 0 covers: 0.96″ SSD1306 OLED · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ + 5 V1 zener clamp on IN). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
+
 ## Pin Assignment Table
 
 | GPIO | Pin# | Function | Interface | Direction | Notes |
 |------|------|----------|-----------|-----------|-------|
 | GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16) |
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15) |
-| GP4 | 6 | OLED SDA | I2C0 | In/Out | SH1106 1.3" display (0.96" SSD1306 fallback) |
-| GP5 | 7 | OLED SCL | I2C0 | Out | SH1106 1.3" display (0.96" SSD1306 fallback) |
+| GP4 | 6 | OLED SDA | I2C0 | In/Out | 0.96″ SSD1306 main (0x3C) + 0.91″ SSD1306 strip (0x3D) — shared bus |
+| GP5 | 7 | OLED SCL | I2C0 | Out | 0.96″ SSD1306 main (0x3C) + 0.91″ SSD1306 strip (0x3D) — shared bus |
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
 | GP9 | 12 | LED Gate | PWM4B | Out | Gate activity indicator |
 | GP10 | 14 | LED Mode | PWM5A | Out | Mode indicator |
@@ -29,7 +38,7 @@ RP2040 datasheet for peripheral conflicts.
 | Peripheral | Usage | Pins |
 |------------|-------|------|
 | UART0 | LPC2361 Pico Bridge (115200 baud) | GP0, GP1 |
-| I2C0 | OLED display (SH1106, 0x3C) | GP4, GP5 |
+| I2C0 | OLED display (SSD1306, 0x3C main + 0x3D strip) | GP4, GP5 |
 | PIO SM0 | Clock output | GP22 |
 | ADC | CV reading (spare) | GP26-28 |
 | PWM4 | LEDs (clock, gate) | GP8, GP9 |

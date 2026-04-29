@@ -48,6 +48,8 @@ SVG_MAP = {
     ],
     "schematics/pico_pinout.md": [
         "schematics/pico_pinout_diagram.svg",
+        "schematics/phase0_wiring_schematic.svg",
+        "schematics/phase0_breadboard.svg",
         "schematics/lpc2361_pinout_diagram.svg",
     ],
     "schematics/ic_pinout_reference.md": [
