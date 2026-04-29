@@ -150,11 +150,11 @@
 <line x1="796" y1="308" x2="788" y2="308" stroke="#1a1a1a" stroke-width="1.5"/>
 <line x1="796" y1="324" x2="788" y2="324" stroke="#1a1a1a" stroke-width="1.5"/>
 <rect x="900" y="245" width="180" height="80" fill="#FFF7E6" stroke="#D29922" stroke-width="1" rx="4"/>
-<text x="990" y="262" class="label" text-anchor="middle" font-size="9" fill="#5C4500">Optional RC debounce</text>
-<text x="990" y="278" class="value" text-anchor="middle" font-size="8">CLK/DT each: 10kΩ pull-up to +3V3</text>
-<text x="990" y="290" class="value" text-anchor="middle" font-size="8">+ 100nF cap to GND on Pico-side pad</text>
-<text x="990" y="305" class="value" text-anchor="middle" font-size="8">KY-040 has on-board 10k pull-ups —</text>
-<text x="990" y="316" class="value" text-anchor="middle" font-size="8">add caps only if jitter shows up</text>
+<text x="990" y="262" class="label" text-anchor="middle" font-size="9" fill="#5C4500">Pull-ups + debounce</text>
+<text x="990" y="278" class="value" text-anchor="middle" font-size="8">KY-040 has 10kΩ pulls on CLK/DT</text>
+<text x="990" y="290" class="value" text-anchor="middle" font-size="8">firmware also sets PULL_UP on</text>
+<text x="990" y="302" class="value" text-anchor="middle" font-size="8">GP13/14/15 — no resistors needed</text>
+<text x="990" y="316" class="value" text-anchor="middle" font-size="8">add 100nF→GND only on jitter</text>
 <rect x="560" y="380" width="110" height="80" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
 <text x="615.0" y="398" class="label" text-anchor="middle" fill="#FFF" font-size="10">Tap Button</text>
 <rect x="590" y="410" width="50" height="35" fill="#444" stroke="#888" stroke-width="1.5" rx="3"/>
@@ -224,12 +224,9 @@
 <rect x="1000" y="235" width="32" height="20" fill="#D9C3A0" stroke="#5C4500" stroke-width="1"/>
 <text x="1016" y="249" class="value" text-anchor="middle" font-size="7" fill="#1a1a1a">1k</text>
 <line x1="984" y1="245" x2="1000" y2="245" stroke="#1a1a1a" stroke-width="1.5"/>
-<line x1="1040" y1="245" x2="1040" y2="290" stroke="#1a1a1a" stroke-width="1.5"/>
-<polygon points="1035,265 1045,265 1040,275" fill="#1a1a1a"/>
-<line x1="1032" y1="275" x2="1048" y2="275" stroke="#1a1a1a" stroke-width="1.5"/>
-<text x="1056" y="272" class="value" font-size="7">5V1 zener</text>
-<line x1="1032" y1="290" x2="1048" y2="290" stroke="#1a1a1a" stroke-width="2"/>
-<line x1="1036" y1="294" x2="1044" y2="294" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="1015" y="268" class="value" font-size="7" fill="#666">GP21: PULL_DOWN, IRQ rising</text>
+<text x="1015" y="278" class="anno" font-size="7" fill="#0066CC">bench loopback only —</text>
+<text x="1015" y="288" class="anno" font-size="7" fill="#0066CC">no Eurorack signal here</text>
 <line x1="970" y1="164" x2="970" y2="190" stroke="#1a1a1a" stroke-width="1.5"/>
 <line x1="962" y1="190" x2="978" y2="190" stroke="#1a1a1a" stroke-width="2"/>
 <line x1="966" y1="194" x2="974" y2="194" stroke="#1a1a1a" stroke-width="1.5"/>

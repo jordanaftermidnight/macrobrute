@@ -1146,12 +1146,8 @@
 <rect x="955" y="360" width="36" height="20" fill="#D9C3A0" stroke="#5C4500"/>
 <text x="973" y="374" class="value" text-anchor="middle" font-size="7" fill="#1a1a1a">1k</text>
 <line x1="930" y1="370" x2="955" y2="370" stroke="#1a1a1a" stroke-width="1.5"/>
-<line x1="991" y1="370" x2="991" y2="410" stroke="#1a1a1a" stroke-width="1.5"/>
-<polygon points="986,388 996,388 991,398" fill="#1a1a1a"/>
-<line x1="982" y1="398" x2="1000" y2="398" stroke="#1a1a1a" stroke-width="1.5"/>
-<text x="973" y="420" class="value" font-size="6" text-anchor="end">5V1 zener</text>
-<line x1="991" y1="410" x2="991" y2="562" stroke="#333" stroke-width="2"/>
-<circle cx="991" cy="562" r="3" fill="#333"/>
+<text x="935.0" y="420" class="value" text-anchor="middle" font-size="7" fill="#0066CC">bench loopback only</text>
+<text x="935.0" y="432" class="value" text-anchor="middle" font-size="7" fill="#0066CC">±12V buffering on breakout</text>
 <rect x="987" y="236" width="8" height="8" fill="#888" stroke="#333"/>
 <rect x="987" y="366" width="8" height="8" fill="#888" stroke="#333"/>
 <path d="M210,351.0 L224,351.0 L224,240 L991,240" stroke="#9C27B0" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>

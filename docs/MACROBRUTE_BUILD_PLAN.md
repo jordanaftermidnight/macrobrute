@@ -35,10 +35,19 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 
 **Goal:** Validate Pico firmware on breadboard, confirm OLED choice, locate test points.
 
+### Wiring reference
+The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is rendered as two diagrams:
+
+- **`phase0_wiring_schematic.svg`** — flat schematic, elbow-routed nets, useful for understanding what connects to what.
+- **`phase0_breadboard.svg`** — top-down breadboard view, jumper paths colour-coded by net (red=+3V3, dark=GND, blue=I²C0, green=GPIO, orange=RGB drive, purple=clock).
+
+Both match `firmware/pico/config.py` exactly. Pin map covered: OLED on GP4/GP5 (I²C0 @ 0x3C), KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
+
 ### Tasks
 - [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics.
-- [ ] Confirm 1.3" SH1106 draws correctly. If artifacts: toggle `OLED_COL_OFFSET` (2↔0) or fall back to 0.96" SSD1306. LCD fallback requires a separate driver — defer unless both OLEDs fail.
-- [ ] Breadboard integration: OLED + encoder + RGB LED + clock I/O + tap button
+- [ ] Confirm 0.96″ SSD1306 main OLED draws at 0x3C. If display is blank: check SDA/SCL not swapped, then VCC vs GND polarity; toggle `OLED_COL_OFFSET` only if you fall back to a 1.3″ SH1106 (reserved for EFFIGY). LCD fallback requires a separate driver — defer unless both OLEDs fail.
+- [ ] Breadboard integration per the diagrams above: OLED + KY-040 encoder + tap button + RGB LED + clock IN/OUT
+- [ ] Self-loopback test: jumper GP22 → 1 kΩ → GP21 to confirm the firmware clock generator and IRQ-driven clock-in count match
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
 - [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)
 - [ ] Verify PL2303HX USB-TTL with serial loopback

@@ -97,6 +97,10 @@ SVG_MAP = {
         "schematics/touch_test_board.svg",
         "schematics/touch_plate_redesign.svg",
     ],
+    "docs/MACROBRUTE_BUILD_PLAN.md": [
+        "schematics/phase0_wiring_schematic.svg",
+        "schematics/phase0_breadboard.svg",
+    ],
     "docs/mods/macrobrute_mod_catalog.md": [
         "schematics/mod_m01_triangle_gain.svg",
         "schematics/mod_m02_soft_sync.svg",

@@ -3647,19 +3647,22 @@ def generate_phase0_wiring_schematic() -> str:
         r.elements.append(f'<line x1="{ex + ew - 4}" y1="{py}" x2="{ex + ew - 12}" y2="{py}" '
                           f'stroke="#1a1a1a" stroke-width="1.5"/>')
 
-    # RC filter callout (over CLK/DT lines)
+    # Encoder pulls + debounce callout.
+    # Pull-ups: KY-040 has 10kΩ on-board, AND firmware sets Pin.PULL_UP on
+    # GP13/GP14/GP15 (encoder.py:16-18) — both internal + external in parallel.
+    # No extra resistor required. Add 100nF to GND only if rotation jitters.
     r.elements.append(f'<rect x="900" y="245" width="180" height="80" fill="#FFF7E6" '
                       f'stroke="#D29922" stroke-width="1" rx="4"/>')
     r.elements.append(f'<text x="990" y="262" class="label" text-anchor="middle" '
-                      f'font-size="9" fill="#5C4500">Optional RC debounce</text>')
+                      f'font-size="9" fill="#5C4500">Pull-ups + debounce</text>')
     r.elements.append(f'<text x="990" y="278" class="value" text-anchor="middle" font-size="8">'
-                      f'CLK/DT each: 10kΩ pull-up to +3V3</text>')
+                      f'KY-040 has 10kΩ pulls on CLK/DT</text>')
     r.elements.append(f'<text x="990" y="290" class="value" text-anchor="middle" font-size="8">'
-                      f'+ 100nF cap to GND on Pico-side pad</text>')
-    r.elements.append(f'<text x="990" y="305" class="value" text-anchor="middle" font-size="8">'
-                      f'KY-040 has on-board 10k pull-ups —</text>')
+                      f'firmware also sets PULL_UP on</text>')
+    r.elements.append(f'<text x="990" y="302" class="value" text-anchor="middle" font-size="8">'
+                      f'GP13/14/15 — no resistors needed</text>')
     r.elements.append(f'<text x="990" y="316" class="value" text-anchor="middle" font-size="8">'
-                      f'add caps only if jitter shows up</text>')
+                      f'add 100nF→GND only on jitter</text>')
 
     # ─── Peripheral: Tap button ──────────────────────────────────────
     bx, by, bw, bh = 560, 380, 110, 80
@@ -3747,7 +3750,9 @@ def generate_phase0_wiring_schematic() -> str:
     r.elements.append(f'<line x1="{jx + 44}" y1="{jy + 60}" x2="{jx + 60}" y2="{jy + 60}" '
                       f'stroke="#1a1a1a" stroke-width="1.5"/>')
 
-    # IN jack (bottom) with zener clamp
+    # IN jack (bottom) — bench wiring, only 1kΩ series isolation.
+    # Eurorack-level clock signals must NOT feed GP21 directly; full ±12V
+    # input clamp + level shift lives on the breakout board, not here.
     r.elements.append(f'<text x="{jx + jw/2}" y="{jy + 130}" class="value" text-anchor="middle" '
                       f'fill="#FFF" font-size="9">IN (GP21)</text>')
     r.elements.append(f'<circle cx="{jx + 30}" cy="{jy + 155}" r="14" fill="none" '
@@ -3759,19 +3764,13 @@ def generate_phase0_wiring_schematic() -> str:
                       f'font-size="7" fill="#1a1a1a">1k</text>')
     r.elements.append(f'<line x1="{jx + 44}" y1="{jy + 155}" x2="{jx + 60}" y2="{jy + 155}" '
                       f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    # 5V1 zener to GND (downstream of 1k)
-    r.elements.append(f'<line x1="{jx + 100}" y1="{jy + 155}" x2="{jx + 100}" y2="{jy + 200}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<polygon points="{jx + 95},{jy + 175} {jx + 105},{jy + 175} {jx + 100},{jy + 185}" '
-                      f'fill="#1a1a1a"/>')
-    r.elements.append(f'<line x1="{jx + 92}" y1="{jy + 185}" x2="{jx + 108}" y2="{jy + 185}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<text x="{jx + 116}" y="{jy + 182}" class="value" font-size="7">5V1 zener</text>')
-    # ground at bottom of zener
-    r.elements.append(f'<line x1="{jx + 92}" y1="{jy + 200}" x2="{jx + 108}" y2="{jy + 200}" '
-                      f'stroke="#1a1a1a" stroke-width="2"/>')
-    r.elements.append(f'<line x1="{jx + 96}" y1="{jy + 204}" x2="{jx + 104}" y2="{jy + 204}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # Note: Pico GP21 is configured PULL_DOWN in firmware (clock.py).
+    r.elements.append(f'<text x="{jx + 75}" y="{jy + 178}" class="value" font-size="7" fill="#666">'
+                      f'GP21: PULL_DOWN, IRQ rising</text>')
+    r.elements.append(f'<text x="{jx + 75}" y="{jy + 188}" class="anno" font-size="7" '
+                      f'fill="#0066CC">bench loopback only —</text>')
+    r.elements.append(f'<text x="{jx + 75}" y="{jy + 198}" class="anno" font-size="7" '
+                      f'fill="#0066CC">no Eurorack signal here</text>')
 
     # OUT jack sleeve to GND (rail symbol)
     r.elements.append(f'<line x1="{jx + 30}" y1="{jy + 74}" x2="{jx + 30}" y2="{jy + 100}" '
@@ -4127,19 +4126,11 @@ def generate_phase0_breadboard() -> str:
                       f'font-size="7" fill="#1a1a1a">1k</text>')
     r.elements.append(f'<line x1="{j_x + 70}" y1="{j_y + 200}" x2="{j_x + 95}" y2="{j_y + 200}" '
                       f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    # zener clamp
-    r.elements.append(f'<line x1="{j_x + 131}" y1="{j_y + 200}" x2="{j_x + 131}" y2="{j_y + 240}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<polygon points="{j_x + 126},{j_y + 218} {j_x + 136},{j_y + 218} {j_x + 131},{j_y + 228}" '
-                      f'fill="#1a1a1a"/>')
-    r.elements.append(f'<line x1="{j_x + 122}" y1="{j_y + 228}" x2="{j_x + 140}" y2="{j_y + 228}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<text x="{j_x + 113}" y="{j_y + 250}" class="value" font-size="6" '
-                      f'text-anchor="end">5V1 zener</text>')
-    # zener to bottom GND rail
-    r.elements.append(f'<line x1="{j_x + 131}" y1="{j_y + 240}" x2="{j_x + 131}" y2="{bot_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2"/>')
-    r.elements.append(f'<circle cx="{j_x + 131}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # Bench loopback note (no Eurorack-level clamp at this stage).
+    r.elements.append(f'<text x="{j_x + j_w/2}" y="{j_y + 250}" class="value" text-anchor="middle" '
+                      f'font-size="7" fill="#0066CC">bench loopback only</text>')
+    r.elements.append(f'<text x="{j_x + j_w/2}" y="{j_y + 262}" class="value" text-anchor="middle" '
+                      f'font-size="7" fill="#0066CC">±12V buffering on breakout</text>')
 
     # OUT/IN tip pads on breadboard (right side of jack frame)
     out_pad = (j_x + 131, j_y + 70)
