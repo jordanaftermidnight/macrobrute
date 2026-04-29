@@ -44,6 +44,7 @@ SVG_MAP = {
         "schematics/power_distribution.svg",
         "schematics/output_buffer_board.svg",
         "schematics/power_regulation_diagram.svg",
+        "schematics/pico_power_protection.svg",
     ],
     "schematics/pico_pinout.md": [
         "schematics/pico_pinout_diagram.svg",
