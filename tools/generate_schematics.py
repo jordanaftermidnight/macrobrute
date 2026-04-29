@@ -3491,338 +3491,554 @@ def generate_mod_m14_vco_bias_starve() -> str:
 
 # ─── Phase 0 Bench Validation Wiring ────────────────────────────────
 # Two views of the same circuit:
-#   1. phase0_wiring_schematic.svg — flat schematic, elbow-routed
+#   1. phase0_wiring_schematic.svg — flat schematic, power-rail style
 #   2. phase0_breadboard.svg       — top-down breadboard layout
 #
 # Pin map (must match firmware/pico/config.py — keep in sync):
-#   0.96" OLED (SSD1306 @ 0x3C):   VCC=3V3, GND, SDA=GP4, SCL=GP5
-#   Rotary encoder (KY-040 style): CLK=GP14, DT=GP15, SW=GP13 (+RC filter)
-#   Tap button (momentary):        GP12 → pulled-up to 3V3 internally → GND
-#   RGB LED (common cathode):      R=GP8, G=GP9, B=GP10  (each via 220Ω) → K=GND
-#   Clock IN  (TS jack tip):       GP21 with 1kΩ series + 5V1 zener clamp
-#   Clock OUT (TS jack tip):       GP22 with 1kΩ series
+#   0.96" SSD1306 OLED (I²C0 @ 0x3C):  VCC=+3V3, GND, SDA=GP4, SCL=GP5
+#   KY-040 rotary encoder:             SW=GP13, CLK=GP14, DT=GP15
+#                                      (firmware enables Pin.PULL_UP on all 3)
+#                                      +=+3V3, GND
+#   Tap button (SPST momentary):       A=GP12 (firmware Pin.PULL_UP), B=GND
+#   RGB LED (common cathode):          R=GP8, G=GP9, B=GP10 (each via 220Ω) → K=GND
+#   Clock OUT (3.5mm TS tip):          GP22 → 1kΩ
+#   Clock IN  (3.5mm TS tip):          GP21 ← 1kΩ  (Pin.PULL_DOWN, IRQ rising)
+#                                      Both jack sleeves → GND
+#
+# Routing rules (avoid the visual mess we hit on the first pass):
+#   • +3V3 rail at the top of the canvas, GND rail at the bottom
+#   • Pico signal pins are placed at Y values that EXACTLY match the
+#     corresponding peripheral pin Y values — so each signal wire is
+#     a single straight horizontal line, never an elbow
+#   • Power/GND verticals each get their own unique X coordinate so
+#     they never share segments and never look like a bus
+#   • Inline 220Ω and 1kΩ resistor symbols are drawn explicitly on
+#     their wires so the circuit reads correctly without legend
+#   • Peripheral bodies are rendered as proper schematic symbols
+#     (switch contacts, LED with separate anodes, jack with sleeve)
+
 
 def generate_phase0_wiring_schematic() -> str:
-    """Phase 0 bench-validation wiring — flat schematic with elbow routing."""
+    """Phase 0 bench-validation wiring — flat schematic, power-rail style."""
     r = SchematicRenderer(
-        1100, 780,
+        1300, 760,
         "Phase 0 — Pico Bench Validation Schematic",
-        "0.96\" OLED + encoder + tap button + RGB LED + clock I/O · breadboard wiring",
+        '0.96" SSD1306 + KY-040 encoder + tap button + RGB LED + clock I/O · '
+        "every signal labeled, every pin Y aligned",
     )
 
-    # Net colours
-    C_3V3   = "#D44"   # red
-    C_GND   = "#333"   # dark grey/black
-    C_I2C   = "#2196F3"  # blue
-    C_GPIO  = "#4CAF50"  # green
-    C_CLK   = "#9C27B0"  # purple
-    C_LED   = "#FF9800"  # orange (RGB drive lines)
+    # Net colours (one per logical net)
+    C_3V3 = "#D44"
+    C_GND = "#333"
+    C_I2C = "#2196F3"
+    C_GPIO = "#4CAF50"
+    C_LED = "#FF9800"
+    C_CLK = "#9C27B0"
 
-    # ─── Pico block (centre-left) ────────────────────────────────────
-    pico_x, pico_y, pico_w, pico_h = 90, 90, 230, 600
-    r.elements.append(f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
-                      f'fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>')
-    r.elements.append(f'<text x="{pico_x + pico_w/2}" y="{pico_y + 26}" class="label" '
-                      f'text-anchor="middle" fill="#FFF" font-size="13">Raspberry Pi Pico WH</text>')
-    r.elements.append(f'<text x="{pico_x + pico_w/2}" y="{pico_y + 42}" class="value" '
-                      f'text-anchor="middle" fill="#AAA" font-size="9">RP2040 · 3V3 logic · USB-MIDI</text>')
+    RAIL_3V3_Y = 60
+    RAIL_GND_Y = 680
+    RAIL_X_LEFT = 70
+    RAIL_X_RIGHT = 1240
 
-    # USB stub at top
-    r.elements.append(f'<rect x="{pico_x + pico_w/2 - 30}" y="{pico_y - 14}" width="60" height="14" '
-                      f'fill="#E91E63" stroke="#AD1457" stroke-width="1"/>')
-    r.elements.append(f'<text x="{pico_x + pico_w/2}" y="{pico_y - 3}" class="value" '
-                      f'text-anchor="middle" fill="#FFF" font-size="8">µUSB</text>')
+    # ─── Power rails ────────────────────────────────────────────
+    r.elements.append(
+        f'<line x1="{RAIL_X_LEFT}" y1="{RAIL_3V3_Y}" '
+        f'x2="{RAIL_X_RIGHT}" y2="{RAIL_3V3_Y}" '
+        f'stroke="{C_3V3}" stroke-width="3"/>'
+    )
+    r.elements.append(
+        f'<text x="{RAIL_X_LEFT - 8}" y="{RAIL_3V3_Y + 4}" class="label" '
+        f'fill="{C_3V3}" font-size="11" text-anchor="end">+3V3</text>'
+    )
+    r.elements.append(
+        f'<text x="{RAIL_X_RIGHT + 8}" y="{RAIL_3V3_Y + 4}" class="label" '
+        f'fill="{C_3V3}" font-size="11">+3V3</text>'
+    )
+    r.elements.append(
+        f'<line x1="{RAIL_X_LEFT}" y1="{RAIL_GND_Y}" '
+        f'x2="{RAIL_X_RIGHT}" y2="{RAIL_GND_Y}" '
+        f'stroke="{C_GND}" stroke-width="3"/>'
+    )
+    r.elements.append(
+        f'<text x="{RAIL_X_LEFT - 8}" y="{RAIL_GND_Y + 4}" class="label" '
+        f'fill="{C_GND}" font-size="11" text-anchor="end">GND</text>'
+    )
+    r.elements.append(
+        f'<text x="{RAIL_X_RIGHT + 8}" y="{RAIL_GND_Y + 4}" class="label" '
+        f'fill="{C_GND}" font-size="11">GND</text>'
+    )
 
-    # Right-edge pins (the ones we actually use in Phase 0)
-    pin_x = pico_x + pico_w
-    pico_pins = [
-        # (gp_label, function, y, color)
-        ("3V3",   "+3V3 OUT",    100, C_3V3),
-        ("GND",   "GND",         126, C_GND),
-        ("GP4",   "I²C0 SDA",    160, C_I2C),
-        ("GP5",   "I²C0 SCL",    186, C_I2C),
-        ("GP8",   "LED R",       226, C_LED),
-        ("GP9",   "LED G",       252, C_LED),
-        ("GP10",  "LED B",       278, C_LED),
-        ("GP12",  "Tap Btn",     320, C_GPIO),
-        ("GP13",  "Enc SW",      350, C_GPIO),
-        ("GP14",  "Enc CLK",     376, C_GPIO),
-        ("GP15",  "Enc DT",      402, C_GPIO),
-        ("GP21",  "Clock IN",    448, C_CLK),
-        ("GP22",  "Clock OUT",   474, C_CLK),
+    # ─── Pico WH block ──────────────────────────────────────────
+    pico_x, pico_y, pico_w, pico_h = 80, 80, 220, 540
+    r.elements.append(
+        f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
+        f'fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>'
+    )
+    r.elements.append(
+        f'<text x="{pico_x + pico_w/2}" y="{pico_y + 24}" class="label" '
+        f'text-anchor="middle" fill="#FFF" font-size="13">Raspberry Pi Pico WH</text>'
+    )
+    r.elements.append(
+        f'<text x="{pico_x + pico_w/2}" y="{pico_y + 42}" class="value" '
+        f'text-anchor="middle" fill="#AAA" font-size="9">RP2040 · 3V3 logic</text>'
+    )
+    # USB stub
+    r.elements.append(
+        f'<rect x="{pico_x + pico_w/2 - 30}" y="{pico_y - 12}" width="60" height="12" '
+        f'fill="#E91E63" stroke="#AD1457" stroke-width="1"/>'
+    )
+    r.elements.append(
+        f'<text x="{pico_x + pico_w/2}" y="{pico_y - 3}" class="value" '
+        f'text-anchor="middle" fill="#FFF" font-size="7">µUSB</text>'
+    )
+
+    # 3V3 power pad on TOP edge of Pico — vertical tap UP to +3V3 rail
+    p3v3_x = pico_x + pico_w / 2 + 60
+    r.elements.append(
+        f'<circle cx="{p3v3_x}" cy="{pico_y}" r="5" fill="#C0C0C0" stroke="#666"/>'
+    )
+    r.elements.append(
+        f'<text x="{p3v3_x}" y="{pico_y + 16}" class="value" text-anchor="middle" '
+        f'fill="#AAA" font-size="7">3V3</text>'
+    )
+    r.elements.append(
+        f'<line x1="{p3v3_x}" y1="{pico_y}" x2="{p3v3_x}" y2="{RAIL_3V3_Y}" '
+        f'stroke="{C_3V3}" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{p3v3_x}" cy="{RAIL_3V3_Y}" r="3" fill="{C_3V3}"/>')
+
+    # GND power pad on BOTTOM edge — vertical tap DOWN to GND rail
+    pgnd_x = pico_x + pico_w / 2 + 60
+    r.elements.append(
+        f'<circle cx="{pgnd_x}" cy="{pico_y + pico_h}" r="5" fill="#C0C0C0" stroke="#666"/>'
+    )
+    r.elements.append(
+        f'<text x="{pgnd_x}" y="{pico_y + pico_h - 8}" class="value" '
+        f'text-anchor="middle" fill="#AAA" font-size="7">GND</text>'
+    )
+    r.elements.append(
+        f'<line x1="{pgnd_x}" y1="{pico_y + pico_h}" x2="{pgnd_x}" y2="{RAIL_GND_Y}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{pgnd_x}" cy="{RAIL_GND_Y}" r="3" fill="{C_GND}"/>')
+
+    # Right-edge signal pins. Y values chosen so each peripheral pin
+    # at the same Y receives a single straight horizontal wire.
+    pin_x_right = pico_x + pico_w
+    signals = [
+        ("GP4",  "I²C0 SDA", 130, C_I2C),
+        ("GP5",  "I²C0 SCL", 160, C_I2C),
+        ("GP8",  "LED R",    210, C_LED),
+        ("GP9",  "LED G",    240, C_LED),
+        ("GP10", "LED B",    270, C_LED),
+        ("GP12", "Tap Btn",  320, C_GPIO),
+        ("GP13", "Enc SW",   360, C_GPIO),
+        ("GP14", "Enc CLK",  390, C_GPIO),
+        ("GP15", "Enc DT",   420, C_GPIO),
+        ("GP21", "Clk IN",   480, C_CLK),
+        ("GP22", "Clk OUT",  510, C_CLK),
     ]
-    pin_anchor = {}  # pin label → (x,y) on pico right edge
+    pin_anchor = {}
+    for gp, func, py, color in signals:
+        # pin pad on Pico right edge
+        r.elements.append(
+            f'<circle cx="{pin_x_right}" cy="{py}" r="5" fill="#C0C0C0" stroke="#666"/>'
+        )
+        # pin-name label inside the Pico body
+        r.elements.append(
+            f'<text x="{pin_x_right - 10}" y="{py + 3}" class="value" text-anchor="end" '
+            f'fill="#AAA" font-size="8">{gp}</text>'
+        )
+        # function tag attached to the right side of the pin
+        tag_w = 78
+        r.elements.append(
+            f'<rect x="{pin_x_right + 8}" y="{py - 8}" width="{tag_w}" height="16" '
+            f'fill="{color}" stroke="#333" stroke-width="0.6" rx="2"/>'
+        )
+        r.elements.append(
+            f'<text x="{pin_x_right + 8 + tag_w/2}" y="{py + 3}" class="label" '
+            f'text-anchor="middle" fill="#FFF" font-size="8">{func}</text>'
+        )
+        # anchor for any wire that originates at this pin = right edge of tag
+        pin_anchor[gp] = (pin_x_right + 8 + tag_w, py)
 
-    for gp, func, dy, color in pico_pins:
-        py = pico_y + dy
-        # pin pad
-        r.elements.append(f'<circle cx="{pin_x}" cy="{py}" r="5" fill="#C0C0C0" stroke="#666"/>')
-        # pin label inside board
-        r.elements.append(f'<text x="{pin_x - 10}" y="{py + 3}" class="value" text-anchor="end" '
-                          f'fill="#AAA" font-size="8">{gp}</text>')
-        # function tag attached to pin
-        r.elements.append(f'<rect x="{pin_x + 8}" y="{py - 7}" width="78" height="14" '
-                          f'fill="{color}" stroke="#333" stroke-width="0.6" rx="2"/>')
-        r.elements.append(f'<text x="{pin_x + 47}" y="{py + 3}" class="label" text-anchor="middle" '
-                          f'fill="#FFF" font-size="8">{func}</text>')
-        pin_anchor[gp] = (pin_x + 86, py)
+    # Helper: draw a horizontal inline resistor and return the wire
+    def inline_resistor(x_start, x_end, y, color, label):
+        body_w = 40
+        rcx = (x_start + x_end) / 2
+        body_x = rcx - body_w / 2
+        # left lead
+        r.elements.append(
+            f'<line x1="{x_start}" y1="{y}" x2="{body_x}" y2="{y}" '
+            f'stroke="{color}" stroke-width="2"/>'
+        )
+        # body
+        r.elements.append(
+            f'<rect x="{body_x}" y="{y - 9}" width="{body_w}" height="18" '
+            f'fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>'
+        )
+        r.elements.append(
+            f'<text x="{rcx}" y="{y + 3}" class="value" text-anchor="middle" '
+            f'font-size="8" fill="#1a1a1a">{label}</text>'
+        )
+        # right lead
+        r.elements.append(
+            f'<line x1="{body_x + body_w}" y1="{y}" x2="{x_end}" y2="{y}" '
+            f'stroke="{color}" stroke-width="2"/>'
+        )
 
-    # ─── Helper: elbow path Pico→peripheral ──────────────────────────
-    def elbow(p1, p2, color, label=None, dash=False, label_above=True):
-        x1, y1 = p1; x2, y2 = p2
-        # horizontal-then-vertical-then-horizontal: ┐_┘ style
-        mx = (x1 + x2) // 2
-        path = f"M{x1},{y1} L{mx},{y1} L{mx},{y2} L{x2},{y2}"
-        attrs = f'stroke="{color}" stroke-width="2" fill="none"'
-        if dash:
-            attrs += ' stroke-dasharray="4,3"'
-        r.elements.append(f'<path d="{path}" {attrs}/>')
-        # net dot at peripheral end
-        r.elements.append(f'<circle cx="{x2}" cy="{y2}" r="2.5" fill="{color}"/>')
-        if label:
-            ly = y1 - 5 if label_above else y1 + 12
-            r.elements.append(f'<text x="{mx}" y="{ly}" class="value" text-anchor="middle" '
-                              f'fill="{color}" font-size="8">{label}</text>')
+    # Helper: power tap (vertical wire from a pad to a rail) at unique X
+    def tap_to_rail(x, y_start, y_end, color):
+        r.elements.append(
+            f'<line x1="{x}" y1="{y_start}" x2="{x}" y2="{y_end}" '
+            f'stroke="{color}" stroke-width="2"/>'
+        )
+        r.elements.append(f'<circle cx="{x}" cy="{y_end}" r="3" fill="{color}"/>')
 
-    # ─── Peripheral: 0.96" OLED (top right) ─────────────────────────
-    ox, oy, ow, oh = 560, 80, 240, 100
-    r.elements.append(f'<rect x="{ox}" y="{oy}" width="{ow}" height="{oh}" fill="#1a2530" '
-                      f'stroke="#444" stroke-width="2" rx="6"/>')
-    # screen area
-    r.elements.append(f'<rect x="{ox+18}" y="{oy+30}" width="{ow-36}" height="50" fill="#0a0e14" '
-                      f'stroke="#222" stroke-width="1"/>')
-    r.elements.append(f'<text x="{ox + ow/2}" y="{oy + 22}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="11">0.96" SSD1306 OLED · 128×64</text>')
-    r.elements.append(f'<text x="{ox + ow/2}" y="{oy + 60}" class="value" text-anchor="middle" '
-                      f'fill="#7AC4F2" font-size="10">I²C @ 0x3C</text>')
+    # Helper: pad on a peripheral edge (small grey rect)
+    def pad_left(x, y, label, color):
+        r.elements.append(
+            f'<rect x="{x - 8}" y="{y - 4}" width="8" height="8" fill="#888" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{x + 5}" y="{y + 3}" class="value" font-size="8" fill="{color}">{label}</text>'
+        )
 
-    # OLED pin row (along bottom)
-    oled_pins = [("GND", C_GND), ("VCC", C_3V3), ("SCL", C_I2C), ("SDA", C_I2C)]
-    for i, (lbl, color) in enumerate(oled_pins):
-        px = ox + 30 + i * 60
-        py = oy + oh
-        r.elements.append(f'<circle cx="{px}" cy="{py}" r="5" fill="#C0C0C0" stroke="#666"/>')
-        r.elements.append(f'<text x="{px}" y="{py + 18}" class="value" text-anchor="middle" '
-                          f'fill="{color}" font-size="9">{lbl}</text>')
+    def pad_right(x, y, label, color):
+        r.elements.append(
+            f'<rect x="{x}" y="{y - 4}" width="8" height="8" fill="#888" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{x - 5}" y="{y + 3}" class="value" text-anchor="end" '
+            f'font-size="8" fill="{color}">{label}</text>'
+        )
 
-    # OLED wires (run wires up to OLED pins from below, elbows from Pico)
-    elbow(pin_anchor["3V3"], (ox + 90,  oy + oh + 28), C_3V3, "+3V3", dash=False)
-    elbow(pin_anchor["GND"], (ox + 30,  oy + oh + 28), C_GND, "GND")
-    elbow(pin_anchor["GP5"], (ox + 150, oy + oh + 28), C_I2C, "SCL")
-    elbow(pin_anchor["GP4"], (ox + 210, oy + oh + 28), C_I2C, "SDA")
-    # Vertical drops from elbow horizontal back-down to pin
-    for px in (ox + 30, ox + 90, ox + 150, ox + 210):
-        r.elements.append(f'<line x1="{px}" y1="{oy + oh + 28}" x2="{px}" y2="{oy + oh + 5}" '
-                          f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    def pad_top(x, y, label, color):
+        r.elements.append(
+            f'<rect x="{x - 4}" y="{y - 8}" width="8" height="8" fill="#888" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{x}" y="{y + 13}" class="value" text-anchor="middle" '
+            f'font-size="8" fill="{color}">{label}</text>'
+        )
 
-    # ─── Peripheral: Encoder module (KY-040) ─────────────────────────
-    ex, ey, ew, eh = 560, 230, 240, 110
-    r.elements.append(f'<rect x="{ex}" y="{ey}" width="{ew}" height="{eh}" fill="#2a2a3a" '
-                      f'stroke="#444" stroke-width="2" rx="6"/>')
-    r.elements.append(f'<text x="{ex + ew/2}" y="{ey + 22}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="11">Rotary Encoder · KY-040</text>')
-    # encoder shaft
-    r.elements.append(f'<circle cx="{ex + 50}" cy="{ey + 65}" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>')
-    r.elements.append(f'<circle cx="{ex + 50}" cy="{ey + 65}" r="6" fill="#666"/>')
-    r.elements.append(f'<text x="{ex + 50}" y="{ey + 100}" class="value" text-anchor="middle" '
-                      f'fill="#AAA" font-size="8">push to click</text>')
+    def pad_bottom(x, y, label, color):
+        r.elements.append(
+            f'<rect x="{x - 4}" y="{y}" width="8" height="8" fill="#888" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{x}" y="{y - 4}" class="value" text-anchor="middle" '
+            f'font-size="8" fill="{color}">{label}</text>'
+        )
 
-    # encoder pins (right side: CLK, DT, SW, +, GND)
-    enc_pins = [("CLK", C_GPIO), ("DT", C_GPIO), ("SW", C_GPIO), ("+", C_3V3), ("GND", C_GND)]
-    for i, (lbl, color) in enumerate(enc_pins):
-        px = ex + ew
-        py = ey + 30 + i * 16
-        r.elements.append(f'<circle cx="{px}" cy="{py}" r="4" fill="#C0C0C0" stroke="#666"/>')
-        r.elements.append(f'<text x="{px - 8}" y="{py + 3}" class="value" text-anchor="end" '
-                          f'fill="{color}" font-size="9">{lbl}</text>')
+    # ─── 0.96" SSD1306 OLED (top of middle column) ──────────────
+    o_x, o_y, o_w, o_h = 460, 110, 280, 70
+    r.elements.append(
+        f'<rect x="{o_x}" y="{o_y}" width="{o_w}" height="{o_h}" fill="#101418" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    # screen detail (kept inside the body, not overlapping pin pads)
+    r.elements.append(
+        f'<rect x="{o_x + 60}" y="{o_y + 14}" width="{o_w - 130}" height="42" '
+        f'fill="#020a14" stroke="#222"/>'
+    )
+    r.elements.append(
+        f'<text x="{o_x + (o_w - 130)/2 + 60}" y="{o_y + 32}" class="value" '
+        f'text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3C</text>'
+    )
+    r.elements.append(
+        f'<text x="{o_x + (o_w - 130)/2 + 60}" y="{o_y + 47}" class="value" '
+        f'text-anchor="middle" fill="#7AC4F2" font-size="7">128 × 64</text>'
+    )
+    r.elements.append(
+        f'<text x="{o_x + o_w/2}" y="{o_y - 6}" class="label" text-anchor="middle" '
+        f'font-size="10">0.96" SSD1306 OLED</text>'
+    )
 
-    # encoder wires
-    elbow(pin_anchor["GP14"], (ex + ew, ey + 30),  C_GPIO, "CLK")
-    elbow(pin_anchor["GP15"], (ex + ew, ey + 46),  C_GPIO, "DT")
-    elbow(pin_anchor["GP13"], (ex + ew, ey + 62),  C_GPIO, "SW")
-    elbow(pin_anchor["3V3"],  (ex + ew, ey + 78),  C_3V3,  "+3V3", dash=True)
-    elbow(pin_anchor["GND"],  (ex + ew, ey + 94),  C_GND,  "GND",  dash=True)
-    # extend wires from encoder right-edge into the body
-    for py in (ey + 30, ey + 46, ey + 62, ey + 78, ey + 94):
-        r.elements.append(f'<line x1="{ex + ew - 4}" y1="{py}" x2="{ex + ew - 12}" y2="{py}" '
-                          f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # SDA / SCL pads on LEFT edge (signal pins), aligned with Pico GP4 / GP5
+    pad_left(o_x, 130, "SDA", C_I2C)
+    pad_left(o_x, 160, "SCL", C_I2C)
+    # VCC pad on TOP edge — vertical tap UP to +3V3 rail (above OLED, free space)
+    oled_vcc_x = o_x + o_w - 50
+    pad_top(oled_vcc_x, o_y, "VCC", C_3V3)
+    tap_to_rail(oled_vcc_x, o_y - 8, RAIL_3V3_Y, C_3V3)
+    # GND pad on BOTTOM edge — but the long drop straight down would cross every
+    # peripheral below. Jog LEFT into the empty margin (x = 430) and drop there.
+    oled_gnd_pad_x = o_x + 50
+    oled_gnd_drop_x = 430
+    pad_bottom(oled_gnd_pad_x, o_y + o_h, "GND", C_GND)
+    r.elements.append(
+        f'<line x1="{oled_gnd_pad_x}" y1="{o_y + o_h + 8}" x2="{oled_gnd_drop_x}" y2="{o_y + o_h + 8}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(oled_gnd_drop_x, o_y + o_h + 8, RAIL_GND_Y, C_GND)
 
-    # Encoder pulls + debounce callout.
-    # Pull-ups: KY-040 has 10kΩ on-board, AND firmware sets Pin.PULL_UP on
-    # GP13/GP14/GP15 (encoder.py:16-18) — both internal + external in parallel.
-    # No extra resistor required. Add 100nF to GND only if rotation jitters.
-    r.elements.append(f'<rect x="900" y="245" width="180" height="80" fill="#FFF7E6" '
-                      f'stroke="#D29922" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="990" y="262" class="label" text-anchor="middle" '
-                      f'font-size="9" fill="#5C4500">Pull-ups + debounce</text>')
-    r.elements.append(f'<text x="990" y="278" class="value" text-anchor="middle" font-size="8">'
-                      f'KY-040 has 10kΩ pulls on CLK/DT</text>')
-    r.elements.append(f'<text x="990" y="290" class="value" text-anchor="middle" font-size="8">'
-                      f'firmware also sets PULL_UP on</text>')
-    r.elements.append(f'<text x="990" y="302" class="value" text-anchor="middle" font-size="8">'
-                      f'GP13/14/15 — no resistors needed</text>')
-    r.elements.append(f'<text x="990" y="316" class="value" text-anchor="middle" font-size="8">'
-                      f'add 100nF→GND only on jitter</text>')
+    # Signal wires Pico → OLED (straight horizontal — same Y)
+    for gp, pad in [("GP4", (o_x, 130)), ("GP5", (o_x, 160))]:
+        a = pin_anchor[gp]
+        r.elements.append(
+            f'<line x1="{a[0]}" y1="{a[1]}" x2="{pad[0]}" y2="{pad[1]}" '
+            f'stroke="{C_I2C}" stroke-width="2"/>'
+        )
 
-    # ─── Peripheral: Tap button ──────────────────────────────────────
-    bx, by, bw, bh = 560, 380, 110, 80
-    r.elements.append(f'<rect x="{bx}" y="{by}" width="{bw}" height="{bh}" fill="#1a1a1a" '
-                      f'stroke="#444" stroke-width="2" rx="6"/>')
-    r.elements.append(f'<text x="{bx + bw/2}" y="{by + 18}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="10">Tap Button</text>')
-    # button body + plunger
-    r.elements.append(f'<rect x="{bx + 30}" y="{by + 30}" width="50" height="35" fill="#444" '
-                      f'stroke="#888" stroke-width="1.5" rx="3"/>')
-    r.elements.append(f'<circle cx="{bx + 55}" cy="{by + 47}" r="8" fill="#666" stroke="#AAA"/>')
-    # button pins
-    r.elements.append(f'<circle cx="{bx + bw}" cy="{by + 30}" r="4" fill="#C0C0C0" stroke="#666"/>')
-    r.elements.append(f'<text x="{bx + bw - 8}" y="{by + 33}" class="value" text-anchor="end" '
-                      f'fill="{C_GPIO}" font-size="9">A</text>')
-    r.elements.append(f'<circle cx="{bx + bw}" cy="{by + 60}" r="4" fill="#C0C0C0" stroke="#666"/>')
-    r.elements.append(f'<text x="{bx + bw - 8}" y="{by + 63}" class="value" text-anchor="end" '
-                      f'fill="{C_GND}" font-size="9">B</text>')
-
-    elbow(pin_anchor["GP12"], (bx + bw, by + 30), C_GPIO, "GP12")
-    elbow(pin_anchor["GND"],  (bx + bw, by + 60), C_GND,  "GND", dash=True)
-    r.elements.append(f'<text x="{bx + bw + 8}" y="{by + 47}" class="value" '
-                      f'fill="#666" font-size="8">internal pull-up</text>')
-
-    # ─── Peripheral: RGB LED + 220Ω current-limit ────────────────────
-    lx, ly, lw, lh = 700, 380, 200, 110
-    r.elements.append(f'<rect x="{lx}" y="{ly}" width="{lw}" height="{lh}" fill="#1a1a1a" '
-                      f'stroke="#444" stroke-width="2" rx="6"/>')
-    r.elements.append(f'<text x="{lx + lw/2}" y="{ly + 18}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="10">RGB LED · common cathode</text>')
-
-    # LED body
-    r.elements.append(f'<circle cx="{lx + lw/2}" cy="{ly + 60}" r="14" '
-                      f'fill="url(#rgbgrad)" stroke="#888" stroke-width="1.5"/>')
-    r.elements.append(f'<defs><radialGradient id="rgbgrad"><stop offset="0%" stop-color="#FFF"/>'
-                      f'<stop offset="60%" stop-color="#D44"/><stop offset="100%" stop-color="#222"/>'
+    # ─── RGB LED (common cathode) ───────────────────────────────
+    rgb_x, rgb_y, rgb_w, rgb_h = 460, 200, 320, 90
+    r.elements.append(
+        f'<rect x="{rgb_x}" y="{rgb_y}" width="{rgb_w}" height="{rgb_h}" fill="#1a1a1a" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<text x="{rgb_x + rgb_w/2}" y="{rgb_y - 6}" class="label" text-anchor="middle" '
+        f'font-size="10">RGB LED · common cathode (3 × 220 Ω inline)</text>'
+    )
+    # LED body (single visual representation with 3 inputs)
+    led_cx, led_cy = rgb_x + rgb_w - 50, rgb_y + rgb_h / 2
+    r.elements.append(f'<defs><radialGradient id="rgbgrad">'
+                      f'<stop offset="0%" stop-color="#FFF"/>'
+                      f'<stop offset="40%" stop-color="#D44"/>'
+                      f'<stop offset="100%" stop-color="#222"/>'
                       f'</radialGradient></defs>')
+    r.elements.append(
+        f'<circle cx="{led_cx}" cy="{led_cy}" r="20" fill="url(#rgbgrad)" '
+        f'stroke="#888" stroke-width="1.5"/>'
+    )
+    r.elements.append(
+        f'<text x="{led_cx}" y="{led_cy + 5}" class="value" text-anchor="middle" '
+        f'font-size="8" fill="#FFF" opacity="0.9">RGB</text>'
+    )
 
-    # 4 leg pads: R, G, B, K
-    leg_lbls = [("R", C_LED), ("G", C_LED), ("B", C_LED), ("K", C_GND)]
-    for i, (lbl, color) in enumerate(leg_lbls):
-        px = lx + 30 + i * 45
-        py = ly + lh
-        r.elements.append(f'<circle cx="{px}" cy="{py}" r="4" fill="#C0C0C0" stroke="#666"/>')
-        # 220Ω resistor between leg and Pico for R/G/B
-        if lbl != "K":
-            r.elements.append(f'<rect x="{px - 8}" y="{py - 30}" width="16" height="22" '
-                              f'fill="#D9C3A0" stroke="#5C4500" stroke-width="1"/>')
-            r.elements.append(f'<text x="{px}" y="{py - 14}" class="value" text-anchor="middle" '
-                              f'font-size="7" fill="#1a1a1a">220Ω</text>')
-            r.elements.append(f'<line x1="{px}" y1="{py - 8}" x2="{px}" y2="{py - 4}" '
-                              f'stroke="#1a1a1a" stroke-width="1.5"/>')
-            r.elements.append(f'<line x1="{px}" y1="{py - 36}" x2="{px}" y2="{py + 12}" '
-                              f'stroke="#1a1a1a" stroke-width="0" />')
-        r.elements.append(f'<text x="{px}" y="{py + 18}" class="value" text-anchor="middle" '
-                          f'fill="{color}" font-size="9">{lbl}</text>')
+    # 3 anode pads on LEFT edge, aligned to Pico GP8/9/10
+    rgb_anodes = [("R", "GP8", 210), ("G", "GP9", 240), ("B", "GP10", 270)]
+    for lbl, gp, py in rgb_anodes:
+        pad_left(rgb_x, py, lbl, C_LED)
+        # Pico → 220Ω inline → anode pad (single straight wire with inline R)
+        a = pin_anchor[gp]
+        inline_resistor(a[0], rgb_x, py, C_LED, "220Ω")
+        # tiny stub from pad inside RGB body to LED symbol
+        r.elements.append(
+            f'<line x1="{rgb_x + 8}" y1="{py}" x2="{led_cx - 22}" y2="{led_cy}" '
+            f'stroke="{C_LED}" stroke-width="1.2" opacity="0.45"/>'
+        )
 
-    # RGB wiring: each anode through 220Ω to GP8/9/10, K to GND
-    elbow(pin_anchor["GP8"],  (lx + 30,  ly + lh + 28), C_LED, "R→GP8")
-    elbow(pin_anchor["GP9"],  (lx + 75,  ly + lh + 28), C_LED, "G→GP9")
-    elbow(pin_anchor["GP10"], (lx + 120, ly + lh + 28), C_LED, "B→GP10")
-    elbow(pin_anchor["GND"],  (lx + 165, ly + lh + 28), C_GND, "K", dash=True)
-    for px in (lx + 30, lx + 75, lx + 120, lx + 165):
-        r.elements.append(f'<line x1="{px}" y1="{ly + lh + 28}" x2="{px}" y2="{ly + lh + 5}" '
-                          f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # K (cathode) pad on BOTTOM-RIGHT edge — jog RIGHT into the empty
+    # margin (x = 840) before dropping to the GND rail; a straight drop
+    # at the pad's X would pass through Tap, Encoder, and Clock blocks.
+    rgb_k_pad_x = rgb_x + rgb_w - 30
+    rgb_k_drop_x = 840
+    pad_bottom(rgb_k_pad_x, rgb_y + rgb_h, "K", C_GND)
+    # short stub from LED disc to K pad (visual)
+    r.elements.append(
+        f'<line x1="{led_cx}" y1="{led_cy + 20}" x2="{rgb_k_pad_x}" y2="{rgb_y + rgb_h - 2}" '
+        f'stroke="{C_GND}" stroke-width="1.2" opacity="0.45"/>'
+    )
+    # horizontal jog right, then vertical drop
+    r.elements.append(
+        f'<line x1="{rgb_k_pad_x}" y1="{rgb_y + rgb_h + 8}" x2="{rgb_k_drop_x}" y2="{rgb_y + rgb_h + 8}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(rgb_k_drop_x, rgb_y + rgb_h + 8, RAIL_GND_Y, C_GND)
 
-    # ─── Peripheral: Clock IN/OUT jacks ──────────────────────────────
-    jx, jy, jw, jh = 940, 90, 140, 250
-    r.elements.append(f'<rect x="{jx}" y="{jy}" width="{jw}" height="{jh}" fill="#1a1a1a" '
-                      f'stroke="#444" stroke-width="2" rx="6"/>')
-    r.elements.append(f'<text x="{jx + jw/2}" y="{jy + 18}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="10">Clock I/O · 3.5mm TS</text>')
+    # ─── Tap button (SPST momentary, NO) ────────────────────────
+    tap_x, tap_y, tap_w, tap_h = 460, 305, 220, 30
+    r.elements.append(
+        f'<rect x="{tap_x}" y="{tap_y}" width="{tap_w}" height="{tap_h}" fill="#1a1a1a" '
+        f'stroke="#444" stroke-width="2" rx="4"/>'
+    )
+    r.elements.append(
+        f'<text x="{tap_x + tap_w/2}" y="{tap_y - 5}" class="label" text-anchor="middle" '
+        f'font-size="10">Tap Button · SPST momentary</text>'
+    )
+    # Schematic switch glyph: two pads + a tilted lever that meets at one when pressed
+    sw_y = tap_y + tap_h / 2
+    sw_left = tap_x + 50
+    sw_right = tap_x + tap_w - 50
+    # leads in from the two pads
+    r.elements.append(
+        f'<line x1="{tap_x + 8}" y1="{sw_y}" x2="{sw_left}" y2="{sw_y}" '
+        f'stroke="#FFF" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{sw_right}" y1="{sw_y}" x2="{tap_x + tap_w - 8}" y2="{sw_y}" '
+        f'stroke="#FFF" stroke-width="2"/>'
+    )
+    # contact dots
+    r.elements.append(f'<circle cx="{sw_left}" cy="{sw_y}" r="2.5" fill="#FFF"/>')
+    r.elements.append(f'<circle cx="{sw_right}" cy="{sw_y}" r="2.5" fill="#FFF"/>')
+    # tilted lever (NO)
+    r.elements.append(
+        f'<line x1="{sw_left}" y1="{sw_y}" x2="{sw_right - 6}" y2="{sw_y - 12}" '
+        f'stroke="#FFF" stroke-width="2"/>'
+    )
+    # A pad on LEFT, B pad on RIGHT
+    pad_left(tap_x, sw_y, "A", C_GPIO)
+    pad_right(tap_x + tap_w, sw_y, "B", C_GND)
+    # Pico GP12 → A (straight horizontal)
+    a = pin_anchor["GP12"]
+    r.elements.append(
+        f'<line x1="{a[0]}" y1="{a[1]}" x2="{tap_x}" y2="{sw_y}" '
+        f'stroke="{C_GPIO}" stroke-width="2"/>'
+    )
+    # B → right-side jog → vertical drop to GND rail (unique X = 830, in the
+    # gap to the right of the encoder, clear of every other peripheral)
+    tap_b_drop_x = 830
+    r.elements.append(
+        f'<line x1="{tap_x + tap_w + 8}" y1="{sw_y}" x2="{tap_b_drop_x}" y2="{sw_y}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(tap_b_drop_x, sw_y, RAIL_GND_Y, C_GND)
 
-    # OUT jack (top)
-    r.elements.append(f'<text x="{jx + jw/2}" y="{jy + 38}" class="value" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">OUT (GP22)</text>')
-    r.elements.append(f'<circle cx="{jx + 30}" cy="{jy + 60}" r="14" fill="none" '
-                      f'stroke="#AAA" stroke-width="2"/>')
-    r.elements.append(f'<circle cx="{jx + 30}" cy="{jy + 60}" r="5" fill="#888"/>')
-    # 1kΩ series for OUT
-    r.elements.append(f'<rect x="{jx + 60}" y="{jy + 50}" width="32" height="20" '
-                      f'fill="#D9C3A0" stroke="#5C4500" stroke-width="1"/>')
-    r.elements.append(f'<text x="{jx + 76}" y="{jy + 64}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#1a1a1a">1k</text>')
-    r.elements.append(f'<line x1="{jx + 44}" y1="{jy + 60}" x2="{jx + 60}" y2="{jy + 60}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # ─── KY-040 Rotary Encoder ──────────────────────────────────
+    enc_x, enc_y, enc_w, enc_h = 460, 350, 320, 90
+    r.elements.append(
+        f'<rect x="{enc_x}" y="{enc_y}" width="{enc_w}" height="{enc_h}" fill="#272838" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<text x="{enc_x + enc_w/2}" y="{enc_y - 6}" class="label" text-anchor="middle" '
+        f'font-size="10">Rotary Encoder · KY-040 (firmware sets PULL_UP on SW/CLK/DT)</text>'
+    )
+    # Visual shaft
+    shaft_x, shaft_y = enc_x + enc_w - 50, enc_y + enc_h / 2
+    r.elements.append(
+        f'<circle cx="{shaft_x}" cy="{shaft_y}" r="22" fill="#444" '
+        f'stroke="#888" stroke-width="1.5"/>'
+    )
+    r.elements.append(f'<circle cx="{shaft_x}" cy="{shaft_y}" r="6" fill="#666"/>')
+    r.elements.append(
+        f'<text x="{shaft_x}" y="{shaft_y + 36}" class="value" text-anchor="middle" '
+        f'fill="#AAA" font-size="7">push to click</text>'
+    )
 
-    # IN jack (bottom) — bench wiring, only 1kΩ series isolation.
-    # Eurorack-level clock signals must NOT feed GP21 directly; full ±12V
-    # input clamp + level shift lives on the breakout board, not here.
-    r.elements.append(f'<text x="{jx + jw/2}" y="{jy + 130}" class="value" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">IN (GP21)</text>')
-    r.elements.append(f'<circle cx="{jx + 30}" cy="{jy + 155}" r="14" fill="none" '
-                      f'stroke="#AAA" stroke-width="2"/>')
-    r.elements.append(f'<circle cx="{jx + 30}" cy="{jy + 155}" r="5" fill="#888"/>')
-    r.elements.append(f'<rect x="{jx + 60}" y="{jy + 145}" width="32" height="20" '
-                      f'fill="#D9C3A0" stroke="#5C4500" stroke-width="1"/>')
-    r.elements.append(f'<text x="{jx + 76}" y="{jy + 159}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#1a1a1a">1k</text>')
-    r.elements.append(f'<line x1="{jx + 44}" y1="{jy + 155}" x2="{jx + 60}" y2="{jy + 155}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    # Note: Pico GP21 is configured PULL_DOWN in firmware (clock.py).
-    r.elements.append(f'<text x="{jx + 75}" y="{jy + 178}" class="value" font-size="7" fill="#666">'
-                      f'GP21: PULL_DOWN, IRQ rising</text>')
-    r.elements.append(f'<text x="{jx + 75}" y="{jy + 188}" class="anno" font-size="7" '
-                      f'fill="#0066CC">bench loopback only —</text>')
-    r.elements.append(f'<text x="{jx + 75}" y="{jy + 198}" class="anno" font-size="7" '
-                      f'fill="#0066CC">no Eurorack signal here</text>')
+    # 3 signal pads on LEFT edge — Y aligned to Pico GP13/14/15
+    enc_sigs = [("SW", "GP13", 360), ("CLK", "GP14", 390), ("DT", "GP15", 420)]
+    for lbl, gp, py in enc_sigs:
+        pad_left(enc_x, py, lbl, C_GPIO)
+        a = pin_anchor[gp]
+        r.elements.append(
+            f'<line x1="{a[0]}" y1="{a[1]}" x2="{enc_x}" y2="{py}" '
+            f'stroke="{C_GPIO}" stroke-width="2"/>'
+        )
 
-    # OUT jack sleeve to GND (rail symbol)
-    r.elements.append(f'<line x1="{jx + 30}" y1="{jy + 74}" x2="{jx + 30}" y2="{jy + 100}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<line x1="{jx + 22}" y1="{jy + 100}" x2="{jx + 38}" y2="{jy + 100}" '
-                      f'stroke="#1a1a1a" stroke-width="2"/>')
-    r.elements.append(f'<line x1="{jx + 26}" y1="{jy + 104}" x2="{jx + 34}" y2="{jy + 104}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    # IN jack sleeve to GND
-    r.elements.append(f'<line x1="{jx + 30}" y1="{jy + 169}" x2="{jx + 30}" y2="{jy + 195}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    r.elements.append(f'<line x1="{jx + 22}" y1="{jy + 195}" x2="{jx + 38}" y2="{jy + 195}" '
-                      f'stroke="#1a1a1a" stroke-width="2"/>')
-    r.elements.append(f'<line x1="{jx + 26}" y1="{jy + 199}" x2="{jx + 34}" y2="{jy + 199}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # + pad on TOP edge — straight UP would cross OLED, RGB, and Tap.
+    # Jog LEFT into the empty margin (x = 420) and tap UP from there.
+    enc_pos_pad_x = enc_x + 30
+    enc_pos_drop_x = 420
+    pad_top(enc_pos_pad_x, enc_y, "+", C_3V3)
+    r.elements.append(
+        f'<line x1="{enc_pos_pad_x}" y1="{enc_y - 8}" x2="{enc_pos_drop_x}" y2="{enc_y - 8}" '
+        f'stroke="{C_3V3}" stroke-width="2"/>'
+    )
+    tap_to_rail(enc_pos_drop_x, enc_y - 8, RAIL_3V3_Y, C_3V3)
+    # GND pad on BOTTOM edge — straight DOWN would cross the Clock block.
+    # Jog RIGHT into the empty margin (x = 870) and drop there.
+    enc_gnd_pad_x = enc_x + enc_w - 30
+    enc_gnd_drop_x = 890
+    pad_bottom(enc_gnd_pad_x, enc_y + enc_h, "GND", C_GND)
+    r.elements.append(
+        f'<line x1="{enc_gnd_pad_x}" y1="{enc_y + enc_h + 8}" x2="{enc_gnd_drop_x}" y2="{enc_y + enc_h + 8}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(enc_gnd_drop_x, enc_y + enc_h + 8, RAIL_GND_Y, C_GND)
 
-    # GP22 → 1k → OUT tip
-    elbow(pin_anchor["GP22"], (jx + 92, jy + 60), C_CLK, "OUT")
-    # GP21 ← 1k ← IN tip
-    elbow(pin_anchor["GP21"], (jx + 92, jy + 155), C_CLK, "IN")
+    # ─── Clock I/O block (3.5mm TS jacks) ───────────────────────
+    clk_x, clk_y, clk_w, clk_h = 460, 460, 320, 90
+    r.elements.append(
+        f'<rect x="{clk_x}" y="{clk_y}" width="{clk_w}" height="{clk_h}" fill="#1a1a1a" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<text x="{clk_x + clk_w/2}" y="{clk_y - 6}" class="label" text-anchor="middle" '
+        f'font-size="10">Clock I/O · 3.5 mm TS jacks (1 kΩ inline)</text>'
+    )
 
-    # ─── Notes panel ─────────────────────────────────────────────────
-    nx, ny, nw, nh = 60, 710, 1000, 60
-    r.elements.append(f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
-                      f'stroke="#D29922" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="{nx + 12}" y="{ny + 18}" class="label" font-size="10" fill="#5C4500">'
-                      f'Phase 0 bench targets</text>')
+    # IN jack (Y = 480, matches Pico GP21)
+    in_jack_cx = clk_x + clk_w - 70
+    in_jack_cy = 480
+    r.elements.append(
+        f'<circle cx="{in_jack_cx}" cy="{in_jack_cy}" r="14" fill="none" '
+        f'stroke="#AAA" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{in_jack_cx}" cy="{in_jack_cy}" r="6" fill="#888"/>')
+    r.elements.append(
+        f'<text x="{in_jack_cx + 22}" y="{in_jack_cy + 4}" class="value" '
+        f'font-size="9" fill="#FFF">IN</text>'
+    )
+
+    # OUT jack (Y = 510, matches Pico GP22)
+    out_jack_cx = clk_x + clk_w - 70
+    out_jack_cy = 510
+    r.elements.append(
+        f'<circle cx="{out_jack_cx}" cy="{out_jack_cy}" r="14" fill="none" '
+        f'stroke="#AAA" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{out_jack_cx}" cy="{out_jack_cy}" r="6" fill="#888"/>')
+    r.elements.append(
+        f'<text x="{out_jack_cx + 22}" y="{out_jack_cy + 4}" class="value" '
+        f'font-size="9" fill="#FFF">OUT</text>'
+    )
+
+    # IN tip pad LEFT edge → Pico GP21 via inline 1kΩ
+    pad_left(clk_x, in_jack_cy, "tip", C_CLK)
+    a = pin_anchor["GP21"]
+    inline_resistor(a[0], clk_x, in_jack_cy, C_CLK, "1kΩ")
+    r.elements.append(
+        f'<line x1="{clk_x + 8}" y1="{in_jack_cy}" x2="{in_jack_cx - 14}" y2="{in_jack_cy}" '
+        f'stroke="{C_CLK}" stroke-width="1.5" opacity="0.55"/>'
+    )
+
+    # OUT tip pad LEFT edge → Pico GP22 via inline 1kΩ
+    pad_left(clk_x, out_jack_cy, "tip", C_CLK)
+    a = pin_anchor["GP22"]
+    inline_resistor(a[0], clk_x, out_jack_cy, C_CLK, "1kΩ")
+    r.elements.append(
+        f'<line x1="{clk_x + 8}" y1="{out_jack_cy}" x2="{out_jack_cx - 14}" y2="{out_jack_cy}" '
+        f'stroke="{C_CLK}" stroke-width="1.5" opacity="0.55"/>'
+    )
+
+    # Sleeves go to GND rail at two unique drop X values, in the gap right of the block.
+    in_sleeve_drop_x = 850
+    out_sleeve_drop_x = 870
+    # IN jack sleeve
+    r.elements.append(
+        f'<line x1="{in_jack_cx}" y1="{in_jack_cy + 14}" '
+        f'x2="{in_jack_cx}" y2="{clk_y + clk_h - 12}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{in_jack_cx}" y1="{clk_y + clk_h - 12}" '
+        f'x2="{in_sleeve_drop_x}" y2="{clk_y + clk_h - 12}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(in_sleeve_drop_x, clk_y + clk_h - 12, RAIL_GND_Y, C_GND)
+    # OUT jack sleeve
+    r.elements.append(
+        f'<line x1="{out_jack_cx}" y1="{out_jack_cy + 14}" '
+        f'x2="{out_jack_cx}" y2="{clk_y + clk_h - 4}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{out_jack_cx}" y1="{clk_y + clk_h - 4}" '
+        f'x2="{out_sleeve_drop_x}" y2="{clk_y + clk_h - 4}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(out_sleeve_drop_x, clk_y + clk_h - 4, RAIL_GND_Y, C_GND)
+
+    # ─── Notes panel (below GND rail) ───────────────────────────
+    nx, ny, nw, nh = 70, 698, 1170, 50
+    r.elements.append(
+        f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
+        f'stroke="#D29922" stroke-width="1" rx="4"/>'
+    )
     notes = [
-        "1) Flash firmware/pico/main.py — splash on OLED confirms I²C @ 0x3C / GP4·GP5 + driver init",
-        "2) Encoder: rotate → counter increments (CLK/DT quadrature on GP14/15) · click → press event on GP13",
-        "3) RGB LED cycles R-G-B at boot · tap GP12 → master clock toggles · GP22 emits clock if loopback to GP21 reads pulses",
+        "Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.",
+        "All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.",
+        "GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.",
     ]
     for i, line in enumerate(notes):
-        r.elements.append(f'<text x="{nx + 14}" y="{ny + 33 + i*11}" class="value" '
-                          f'font-size="8.5" fill="#5C4500">{line}</text>')
-
-    # ─── Legend (bottom-left of canvas) ──────────────────────────────
-    lgx, lgy = 60, 660
-    legend_items = [
-        (C_3V3, "+3V3"),
-        (C_GND, "GND"),
-        (C_I2C, "I²C0"),
-        (C_GPIO, "GPIO"),
-        (C_LED, "RGB"),
-        (C_CLK, "Clock"),
-    ]
-    r.elements.append(f'<text x="{lgx}" y="{lgy - 6}" class="label" font-size="9">Net colours:</text>')
-    for i, (color, lbl) in enumerate(legend_items):
-        x = lgx + i * 95
-        r.elements.append(f'<rect x="{x}" y="{lgy}" width="14" height="10" fill="{color}" '
-                          f'stroke="#333" stroke-width="0.5"/>')
-        r.elements.append(f'<text x="{x + 18}" y="{lgy + 9}" class="value" font-size="8.5">{lbl}</text>')
+        r.elements.append(
+            f'<text x="{nx + 12}" y="{ny + 16 + i*12}" class="value" '
+            f'font-size="8.5" fill="#5C4500">{line}</text>'
+        )
 
     return r.render()
 
@@ -3830,389 +4046,535 @@ def generate_phase0_wiring_schematic() -> str:
 def generate_phase0_breadboard() -> str:
     """Phase 0 bench-validation wiring — top-down breadboard layout."""
     r = SchematicRenderer(
-        1100, 760,
+        1300, 760,
         "Phase 0 — Breadboard Layout (top-down)",
-        "Pico WH straddles centre channel · power rails on both sides · jumper paths colour-coded",
+        "Pico WH on a half-size breadboard · peripherals placed where they'd sit "
+        "physically · jumper paths colour-coded by net",
     )
 
-    BB_BG = "#F4E9D6"        # breadboard tan
-    BB_HOLE = "#666"
-    RAIL_POS = "#D44"
-    RAIL_GND = "#333"
+    # Net colours (must match the schematic for cross-reference)
+    C_3V3 = "#D44"
+    C_GND = "#333"
     C_I2C = "#2196F3"
     C_GPIO = "#4CAF50"
     C_LED = "#FF9800"
     C_CLK = "#9C27B0"
 
-    # ─── Breadboard background ──────────────────────────────────────
-    bb_x, bb_y, bb_w, bb_h = 60, 110, 980, 470
-    r.elements.append(f'<rect x="{bb_x}" y="{bb_y}" width="{bb_w}" height="{bb_h}" fill="{BB_BG}" '
-                      f'stroke="#9E7F4A" stroke-width="2" rx="6"/>')
+    # ─── Breadboard background + rails + holes ──────────────────
+    BB_BG = "#F4E9D6"
+    BB_HOLE = "#7A5C2A"
+    bb_x, bb_y, bb_w, bb_h = 60, 90, 1180, 540
+    r.elements.append(
+        f'<rect x="{bb_x}" y="{bb_y}" width="{bb_w}" height="{bb_h}" fill="{BB_BG}" '
+        f'stroke="#9E7F4A" stroke-width="2" rx="6"/>'
+    )
 
-    # power rail strips (top + bottom, two per side: + and -)
-    rail_rows = [
-        (bb_y + 18, RAIL_POS, "+ 3V3"),     # top +
-        (bb_y + 38, RAIL_GND, "− GND"),     # top −
-        (bb_y + bb_h - 38, RAIL_POS, "+ 3V3"),  # bot +
-        (bb_y + bb_h - 18, RAIL_GND, "− GND"),  # bot −
+    # Rail strips: top + (red), top − (blue/dark), bot + (red), bot − (dark)
+    rails = [
+        (bb_y + 22, C_3V3, "+ 3V3"),       # top +
+        (bb_y + 44, C_GND, "− GND"),       # top −
+        (bb_y + bb_h - 44, C_3V3, "+ 3V3"),  # bot +
+        (bb_y + bb_h - 22, C_GND, "− GND"),  # bot −
     ]
-    for ry, color, label in rail_rows:
-        r.elements.append(f'<line x1="{bb_x + 20}" y1="{ry}" x2="{bb_x + bb_w - 20}" y2="{ry}" '
-                          f'stroke="{color}" stroke-width="2.5"/>')
-        r.elements.append(f'<text x="{bb_x + 8}" y="{ry + 3}" class="value" font-size="8" '
-                          f'fill="{color}" text-anchor="end">{label}</text>')
-        # subtle hole pattern along rail
-        for hx in range(bb_x + 36, bb_x + bb_w - 20, 14):
-            r.elements.append(f'<circle cx="{hx}" cy="{ry}" r="1.4" fill="{BB_HOLE}"/>')
+    rail_y = {}
+    for ry, color, lbl in rails:
+        r.elements.append(
+            f'<line x1="{bb_x + 30}" y1="{ry}" x2="{bb_x + bb_w - 30}" y2="{ry}" '
+            f'stroke="{color}" stroke-width="2.5"/>'
+        )
+        r.elements.append(
+            f'<text x="{bb_x + 14}" y="{ry + 4}" class="value" font-size="9" '
+            f'fill="{color}" text-anchor="end">{lbl}</text>'
+        )
+        for hx in range(bb_x + 50, bb_x + bb_w - 30, 14):
+            r.elements.append(
+                f'<circle cx="{hx}" cy="{ry}" r="1.4" fill="{BB_HOLE}" opacity="0.7"/>'
+            )
+    rail_y["top_pos"] = rails[0][0]
+    rail_y["top_gnd"] = rails[1][0]
+    rail_y["bot_pos"] = rails[2][0]
+    rail_y["bot_gnd"] = rails[3][0]
 
-    # centre channel (the signature gully)
-    chan_y = bb_y + bb_h/2
-    r.elements.append(f'<rect x="{bb_x + 20}" y="{chan_y - 12}" width="{bb_w - 40}" height="24" '
-                      f'fill="#E0D5BC" stroke="#9E7F4A" stroke-width="1"/>')
-    r.elements.append(f'<text x="{bb_x + bb_w - 30}" y="{chan_y + 4}" class="value" '
-                      f'text-anchor="end" font-size="7" fill="#7A5C2A">centre channel</text>')
-
-    # rows above/below channel — light hole grid (decorative)
+    # Centre channel
+    chan_y = (rail_y["top_gnd"] + rail_y["bot_pos"]) / 2
+    r.elements.append(
+        f'<rect x="{bb_x + 30}" y="{chan_y - 12}" width="{bb_w - 60}" height="24" '
+        f'fill="#E0D5BC" stroke="#9E7F4A" stroke-width="1"/>'
+    )
+    r.elements.append(
+        f'<text x="{bb_x + bb_w - 38}" y="{chan_y + 4}" class="value" '
+        f'text-anchor="end" font-size="8" fill="#7A5C2A">centre channel</text>'
+    )
+    # decorative hole columns above + below the channel
     for side in (-1, 1):
         for row in range(5):
-            ry = chan_y + side * (16 + row * 12)
-            for hx in range(bb_x + 36, bb_x + bb_w - 20, 14):
-                r.elements.append(f'<circle cx="{hx}" cy="{ry}" r="1.2" fill="{BB_HOLE}" opacity="0.45"/>')
+            hy = chan_y + side * (16 + row * 12)
+            for hx in range(bb_x + 50, bb_x + bb_w - 30, 14):
+                r.elements.append(
+                    f'<circle cx="{hx}" cy="{hy}" r="1.2" fill="{BB_HOLE}" opacity="0.35"/>'
+                )
 
-    # ─── Pico WH on the breadboard ──────────────────────────────────
-    pico_x = bb_x + 60
-    pico_y = chan_y - 95
-    pico_w = 90
-    pico_h = 190
-    r.elements.append(f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
-                      f'fill="#1a3a1a" stroke="#0d260d" stroke-width="2" rx="6"/>')
-    r.elements.append(f'<text x="{pico_x + pico_w/2}" y="{pico_y + 16}" class="label" '
-                      f'text-anchor="middle" fill="#FFF" font-size="10">Pico WH</text>')
+    # ─── Pico WH straddling the centre channel (left side) ──────
+    pico_w, pico_h = 110, 220
+    pico_x = bb_x + 90
+    pico_y = chan_y - pico_h / 2
+    r.elements.append(
+        f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
+        f'fill="#1A3A1A" stroke="#0E2A0E" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<text x="{pico_x + pico_w/2}" y="{pico_y + 16}" class="label" '
+        f'text-anchor="middle" fill="#FFF" font-size="10">Pico WH</text>'
+    )
     # USB stub
-    r.elements.append(f'<rect x="{pico_x + pico_w/2 - 14}" y="{pico_y - 10}" width="28" height="10" '
-                      f'fill="#888" stroke="#333"/>')
-    # RP2040 chip
-    r.elements.append(f'<rect x="{pico_x + 22}" y="{pico_y + 70}" width="46" height="46" '
-                      f'fill="#000" stroke="#333" stroke-width="1"/>')
-    r.elements.append(f'<text x="{pico_x + 45}" y="{pico_y + 96}" class="value" text-anchor="middle" '
-                      f'fill="#FFF" font-size="6">RP2040</text>')
+    r.elements.append(
+        f'<rect x="{pico_x + pico_w/2 - 14}" y="{pico_y - 10}" width="28" height="10" '
+        f'fill="#888" stroke="#222"/>'
+    )
+    # RP2040 chip rectangle
+    r.elements.append(
+        f'<rect x="{pico_x + 30}" y="{pico_y + pico_h/2 - 22}" width="50" height="44" '
+        f'fill="#000" stroke="#333" stroke-width="1"/>'
+    )
+    r.elements.append(
+        f'<text x="{pico_x + 55}" y="{pico_y + pico_h/2 + 2}" class="value" '
+        f'text-anchor="middle" fill="#FFF" font-size="6">RP2040</text>'
+    )
 
-    # Pico pin holes — left column = GP0..GP15, right column = GP16..28+pwr (we only label what we use)
-    pin_left = [
+    # Pico left-edge pin row (GP0…GP15 + GND/3V3 in correct order),
+    # right-edge (GP16…GP28 + GND/3V3). We only label the pins we use.
+    LEFT_PINS = [
         ("GP0",  None),
         ("GP1",  None),
-        ("GND",  RAIL_GND),
+        ("GND",  C_GND),
         ("GP2",  None),
         ("GP3",  None),
-        ("GP4",  C_I2C),     # SDA
-        ("GP5",  C_I2C),     # SCL
-        ("GND",  RAIL_GND),
+        ("GP4",  C_I2C),
+        ("GP5",  C_I2C),
+        ("GND",  C_GND),
         ("GP6",  None),
         ("GP7",  None),
-        ("GP8",  C_LED),     # R
-        ("GP9",  C_LED),     # G
-        ("GP10", C_LED),     # B
+        ("GP8",  C_LED),
+        ("GP9",  C_LED),
+        ("GP10", C_LED),
         ("GP11", None),
-        ("GP12", C_GPIO),    # Tap
-        ("GP13", C_GPIO),    # SW
-        ("GP14", C_GPIO),    # CLK
-        ("GP15", C_GPIO),    # DT
+        ("GP12", C_GPIO),
+        ("GP13", C_GPIO),
+        ("GP14", C_GPIO),
+        ("GP15", C_GPIO),
     ]
-    pin_right = [
-        ("GP16", None), ("GP17", None), ("GND", RAIL_GND),
-        ("GP18", None), ("GP19", None), ("GP20", None),
-        ("GP21", C_CLK),    # Clock IN
-        ("GND",  RAIL_GND),
-        ("GP22", C_CLK),    # Clock OUT
-        ("GP26", None), ("GP27", None),
-        ("GND",  RAIL_GND),
+    RIGHT_PINS = [
+        ("GP16", None),
+        ("GP17", None),
+        ("GND",  C_GND),
+        ("GP18", None),
+        ("GP19", None),
+        ("GP20", None),
+        ("GP21", C_CLK),
+        ("GND",  C_GND),
+        ("GP22", C_CLK),
+        ("GP26", None),
+        ("GP27", None),
+        ("GND",  C_GND),
         ("GP28", None),
-        ("VBUS", RAIL_POS),
-        ("VSYS", RAIL_POS),
-        ("GND",  RAIL_GND),
-        ("3V3",  RAIL_POS),
+        ("VBUS", C_3V3),
+        ("VSYS", C_3V3),
+        ("GND",  C_GND),
+        ("3V3",  C_3V3),
     ]
 
-    # space pins evenly along left edge (top→bottom inside pico)
-    pin_anchor = {}
-    for i, (lbl, color) in enumerate(pin_left):
-        py = pico_y + 24 + i * (pico_h - 36) / (len(pin_left) - 1)
+    pin_step_left = (pico_h - 24) / (len(LEFT_PINS) - 1)
+    pin_step_right = (pico_h - 24) / (len(RIGHT_PINS) - 1)
+    pin_anchor = {}  # only the pins we actually wire
+    used_pins = {"GP4", "GP5", "GP8", "GP9", "GP10", "GP12", "GP13", "GP14", "GP15",
+                 "GP21", "GP22", "GND", "3V3"}
+
+    for i, (lbl, color) in enumerate(LEFT_PINS):
+        py = pico_y + 12 + i * pin_step_left
         px = pico_x
-        r.elements.append(f'<circle cx="{px}" cy="{py}" r="3" fill="#C0C0C0" stroke="#333"/>')
-        r.elements.append(f'<text x="{px - 4}" y="{py + 3}" class="value" text-anchor="end" '
-                          f'fill="#DDD" font-size="6">{lbl}</text>')
-        if color and lbl not in pin_anchor:
+        r.elements.append(
+            f'<circle cx="{px}" cy="{py}" r="3.2" fill="#C0C0C0" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{px - 4}" y="{py + 3}" class="value" text-anchor="end" '
+            f'fill="#DDD" font-size="6">{lbl}</text>'
+        )
+        if color and lbl in used_pins and lbl not in pin_anchor:
             pin_anchor[lbl] = (px, py)
-    for i, (lbl, color) in enumerate(pin_right):
-        py = pico_y + 24 + i * (pico_h - 36) / (len(pin_right) - 1)
+
+    for i, (lbl, color) in enumerate(RIGHT_PINS):
+        py = pico_y + 12 + i * pin_step_right
         px = pico_x + pico_w
-        r.elements.append(f'<circle cx="{px}" cy="{py}" r="3" fill="#C0C0C0" stroke="#333"/>')
-        r.elements.append(f'<text x="{px + 4}" y="{py + 3}" class="value" '
-                          f'fill="#DDD" font-size="6">{lbl}</text>')
-        if color and lbl not in pin_anchor:
+        r.elements.append(
+            f'<circle cx="{px}" cy="{py}" r="3.2" fill="#C0C0C0" stroke="#333"/>'
+        )
+        r.elements.append(
+            f'<text x="{px + 4}" y="{py + 3}" class="value" '
+            f'fill="#DDD" font-size="6">{lbl}</text>'
+        )
+        if color and lbl in used_pins and lbl not in pin_anchor:
             pin_anchor[lbl] = (px, py)
 
-    # ─── Helper: 90°-elbow jumper from Pico pin to peripheral ────────
-    def jumper(p1, p2, color, lbl=None):
-        x1, y1 = p1; x2, y2 = p2
-        # route: out from pin horizontally to a stub, then vertical to target row, then horizontal in
-        stub = 14
-        sx1 = x1 + (stub if x1 < x2 else -stub)
-        path = f"M{x1},{y1} L{sx1},{y1} L{sx1},{y2} L{x2},{y2}"
-        r.elements.append(f'<path d="{path}" stroke="{color}" stroke-width="2.4" fill="none" '
-                          f'stroke-linecap="round" stroke-linejoin="round"/>')
-        r.elements.append(f'<circle cx="{x2}" cy="{y2}" r="2.5" fill="{color}"/>')
-        if lbl:
-            mx = (sx1 + x2) // 2
-            r.elements.append(f'<text x="{mx}" y="{y2 - 4}" class="value" text-anchor="middle" '
-                              f'fill="{color}" font-size="7">{lbl}</text>')
+    # Pico-side power: jumper Pico 3V3 → both + rails, Pico GND → both − rails.
+    if "3V3" in pin_anchor:
+        ax, ay = pin_anchor["3V3"]
+        r.elements.append(
+            f'<line x1="{ax}" y1="{ay}" x2="{ax + 22}" y2="{ay}" '
+            f'stroke="{C_3V3}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<line x1="{ax + 22}" y1="{ay}" x2="{ax + 22}" y2="{rail_y["top_pos"]}" '
+            f'stroke="{C_3V3}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<circle cx="{ax + 22}" cy="{rail_y["top_pos"]}" r="3" fill="{C_3V3}"/>'
+        )
+        r.elements.append(
+            f'<line x1="{ax + 22}" y1="{ay}" x2="{ax + 22}" y2="{rail_y["bot_pos"]}" '
+            f'stroke="{C_3V3}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<circle cx="{ax + 22}" cy="{rail_y["bot_pos"]}" r="3" fill="{C_3V3}"/>'
+        )
+    if "GND" in pin_anchor:
+        ax, ay = pin_anchor["GND"]
+        r.elements.append(
+            f'<line x1="{ax}" y1="{ay}" x2="{ax + 30}" y2="{ay}" '
+            f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<line x1="{ax + 30}" y1="{ay}" x2="{ax + 30}" y2="{rail_y["top_gnd"]}" '
+            f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<circle cx="{ax + 30}" cy="{rail_y["top_gnd"]}" r="3" fill="{C_GND}"/>'
+        )
+        r.elements.append(
+            f'<line x1="{ax + 30}" y1="{ay}" x2="{ax + 30}" y2="{rail_y["bot_gnd"]}" '
+            f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<circle cx="{ax + 30}" cy="{rail_y["bot_gnd"]}" r="3" fill="{C_GND}"/>'
+        )
 
-    # ─── Peripheral footprint: OLED (top-right) ─────────────────────
-    o_x, o_y, o_w, o_h = bb_x + 280, bb_y + 60, 220, 100
-    r.elements.append(f'<rect x="{o_x}" y="{o_y}" width="{o_w}" height="{o_h}" fill="#101418" '
-                      f'stroke="#444" stroke-width="2" rx="4"/>')
-    r.elements.append(f'<rect x="{o_x + 15}" y="{o_y + 28}" width="{o_w - 30}" height="50" '
-                      f'fill="#020a14" stroke="#222"/>')
-    r.elements.append(f'<text x="{o_x + o_w/2}" y="{o_y + 22}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">0.96" SSD1306 OLED</text>')
-    r.elements.append(f'<text x="{o_x + o_w/2}" y="{o_y + 56}" class="value" text-anchor="middle" '
-                      f'fill="#7AC4F2" font-size="9">128 × 64 · I²C 0x3C</text>')
-    # 4-pin header (bottom edge)
-    o_pins = [("GND", RAIL_GND), ("VCC", RAIL_POS), ("SCL", C_I2C), ("SDA", C_I2C)]
+    # Helper: jumper path from Pico pin (p1) to peripheral pin (p2) using
+    # a 3-segment elbow; drop_x is given so each net has its own vertical.
+    def jumper(p1, p2, color, drop_x, label=None):
+        x1, y1 = p1
+        x2, y2 = p2
+        d = (
+            f"M{x1},{y1} L{drop_x},{y1} L{drop_x},{y2} L{x2},{y2}"
+        )
+        r.elements.append(
+            f'<path d="{d}" stroke="{color}" stroke-width="2.4" fill="none" '
+            f'stroke-linecap="round" stroke-linejoin="round"/>'
+        )
+        r.elements.append(f'<circle cx="{x2}" cy="{y2}" r="2.5" fill="{color}"/>')
+        if label:
+            r.elements.append(
+                f'<text x="{drop_x + 6}" y="{(y1 + y2)/2 + 3}" class="value" '
+                f'fill="{color}" font-size="7">{label}</text>'
+            )
+
+    # Helper: peripheral-side rail tap (vertical from a pin to a rail at unique X)
+    def rail_tap(pin, rail, color):
+        x, y = pin
+        r.elements.append(
+            f'<line x1="{x}" y1="{y}" x2="{x}" y2="{rail}" '
+            f'stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+        )
+        r.elements.append(f'<circle cx="{x}" cy="{rail}" r="3" fill="{color}"/>')
+
+    def pad(x, y):
+        r.elements.append(
+            f'<rect x="{x - 5}" y="{y - 5}" width="10" height="10" fill="#888" stroke="#222"/>'
+        )
+
+    # ─── OLED placement (top-right area of breadboard) ──────────
+    o_x, o_y, o_w, o_h = bb_x + 350, bb_y + 80, 230, 110
+    r.elements.append(
+        f'<rect x="{o_x}" y="{o_y}" width="{o_w}" height="{o_h}" fill="#101418" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<rect x="{o_x + 18}" y="{o_y + 28}" width="{o_w - 36}" height="58" '
+        f'fill="#020a14" stroke="#222"/>'
+    )
+    r.elements.append(
+        f'<text x="{o_x + o_w/2}" y="{o_y + 22}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="10">0.96" SSD1306 OLED</text>'
+    )
+    r.elements.append(
+        f'<text x="{o_x + o_w/2}" y="{o_y + 60}" class="value" text-anchor="middle" '
+        f'fill="#7AC4F2" font-size="9">128 × 64 · I²C 0x3C</text>'
+    )
+    # 4 pin pads on the OLED bottom edge (the real-world pin order: GND, VCC, SCL, SDA)
+    o_pins = [("GND", C_GND), ("VCC", C_3V3), ("SCL", C_I2C), ("SDA", C_I2C)]
     o_pin_at = {}
     for i, (lbl, color) in enumerate(o_pins):
-        px = o_x + 30 + i * 50
+        px = o_x + 30 + i * 55
         py = o_y + o_h
-        r.elements.append(f'<rect x="{px - 5}" y="{py - 4}" width="10" height="14" fill="#888" '
-                          f'stroke="#333"/>')
-        r.elements.append(f'<text x="{px}" y="{py + 22}" class="value" text-anchor="middle" '
-                          f'font-size="8" fill="{color}">{lbl}</text>')
-        o_pin_at[lbl] = (px, py + 4)
+        pad(px, py)
+        r.elements.append(
+            f'<text x="{px}" y="{py + 22}" class="value" text-anchor="middle" '
+            f'fill="{color}" font-size="8.5">{lbl}</text>'
+        )
+        o_pin_at[lbl] = (px, py)
 
-    # OLED jumpers
-    jumper(pin_anchor["GP4"], o_pin_at["SDA"], C_I2C, "SDA")
-    jumper(pin_anchor["GP5"], o_pin_at["SCL"], C_I2C, "SCL")
-    # power: rail-tap from top + rail to OLED VCC, top − to GND
-    rail_pos_y = bb_y + 18
-    rail_gnd_y = bb_y + 38
-    # 3V3 → VCC
-    r.elements.append(f'<line x1="{o_pin_at["VCC"][0]}" y1="{rail_pos_y}" '
-                      f'x2="{o_pin_at["VCC"][0]}" y2="{o_pin_at["VCC"][1]}" '
-                      f'stroke="{RAIL_POS}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{o_pin_at["VCC"][0]}" cy="{rail_pos_y}" r="3" fill="{RAIL_POS}"/>')
-    # GND
-    r.elements.append(f'<line x1="{o_pin_at["GND"][0]}" y1="{rail_gnd_y}" '
-                      f'x2="{o_pin_at["GND"][0]}" y2="{o_pin_at["GND"][1]}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{o_pin_at["GND"][0]}" cy="{rail_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # OLED jumpers (each at its own drop X — staggered by 12px)
+    jumper(pin_anchor["GP4"], o_pin_at["SDA"], C_I2C, drop_x=o_pin_at["SDA"][0] - 0, label="SDA")
+    jumper(pin_anchor["GP5"], o_pin_at["SCL"], C_I2C, drop_x=o_pin_at["SCL"][0] - 0, label="SCL")
+    # OLED VCC ↑ to top + rail (its own X)
+    rail_tap(o_pin_at["VCC"], rail_y["top_pos"], C_3V3)
+    # OLED GND ↑ to top − rail
+    rail_tap(o_pin_at["GND"], rail_y["top_gnd"], C_GND)
 
-    # ─── Peripheral footprint: encoder (mid-right) ──────────────────
-    e_x, e_y, e_w, e_h = bb_x + 280, chan_y + 30, 200, 100
-    r.elements.append(f'<rect x="{e_x}" y="{e_y}" width="{e_w}" height="{e_h}" fill="#272838" '
-                      f'stroke="#444" stroke-width="2" rx="4"/>')
-    r.elements.append(f'<text x="{e_x + e_w/2}" y="{e_y + 18}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">Rotary encoder · KY-040</text>')
-    r.elements.append(f'<circle cx="{e_x + 50}" cy="{e_y + 60}" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>')
-    r.elements.append(f'<circle cx="{e_x + 50}" cy="{e_y + 60}" r="6" fill="#666"/>')
+    # ─── Encoder placement (right-middle) ───────────────────────
+    e_x, e_y, e_w, e_h = bb_x + 380, chan_y + 30, 220, 130
+    r.elements.append(
+        f'<rect x="{e_x}" y="{e_y}" width="{e_w}" height="{e_h}" fill="#272838" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<text x="{e_x + e_w/2}" y="{e_y + 18}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="10">KY-040 Rotary Encoder</text>'
+    )
+    r.elements.append(
+        f'<circle cx="{e_x + 50}" cy="{e_y + 70}" r="22" fill="#444" '
+        f'stroke="#888" stroke-width="1.5"/>'
+    )
+    r.elements.append(f'<circle cx="{e_x + 50}" cy="{e_y + 70}" r="6" fill="#666"/>')
+    r.elements.append(
+        f'<text x="{e_x + 50}" y="{e_y + 110}" class="value" text-anchor="middle" '
+        f'fill="#AAA" font-size="7">push to click</text>'
+    )
 
-    e_pins = [("CLK", C_GPIO), ("DT", C_GPIO), ("SW", C_GPIO), ("+", RAIL_POS), ("GND", RAIL_GND)]
+    # 5 pin pads on encoder right edge (CLK, DT, SW, +, GND) — vertical stack
+    e_pins = [("CLK", "GP14", C_GPIO), ("DT", "GP15", C_GPIO),
+              ("SW", "GP13", C_GPIO), ("+", None, C_3V3), ("GND", None, C_GND)]
     e_pin_at = {}
-    for i, (lbl, color) in enumerate(e_pins):
-        px = e_x + 100 + (i * 18)
-        py = e_y + e_h
-        r.elements.append(f'<rect x="{px - 4}" y="{py - 4}" width="8" height="14" fill="#888" '
-                          f'stroke="#333"/>')
-        r.elements.append(f'<text x="{px}" y="{py + 22}" class="value" text-anchor="middle" '
-                          f'font-size="7.5" fill="{color}">{lbl}</text>')
-        e_pin_at[lbl] = (px, py + 4)
+    for i, (lbl, _gp, color) in enumerate(e_pins):
+        px = e_x + e_w
+        py = e_y + 30 + i * 18
+        pad(px, py)
+        r.elements.append(
+            f'<text x="{px + 8}" y="{py + 3}" class="value" font-size="8.5" '
+            f'fill="{color}">{lbl}</text>'
+        )
+        e_pin_at[lbl] = (px, py)
 
-    jumper(pin_anchor["GP14"], e_pin_at["CLK"], C_GPIO, "CLK")
-    jumper(pin_anchor["GP15"], e_pin_at["DT"],  C_GPIO, "DT")
-    jumper(pin_anchor["GP13"], e_pin_at["SW"],  C_GPIO, "SW")
-    # encoder + and GND go to bottom rail
-    bot_pos_y = bb_y + bb_h - 38
-    bot_gnd_y = bb_y + bb_h - 18
-    r.elements.append(f'<line x1="{e_pin_at["+"][0]}" y1="{e_pin_at["+"][1]}" '
-                      f'x2="{e_pin_at["+"][0]}" y2="{bot_pos_y}" '
-                      f'stroke="{RAIL_POS}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{e_pin_at["+"][0]}" cy="{bot_pos_y}" r="3" fill="{RAIL_POS}"/>')
-    r.elements.append(f'<line x1="{e_pin_at["GND"][0]}" y1="{e_pin_at["GND"][1]}" '
-                      f'x2="{e_pin_at["GND"][0]}" y2="{bot_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{e_pin_at["GND"][0]}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # Encoder signal jumpers
+    jumper(pin_anchor["GP14"], e_pin_at["CLK"], C_GPIO, drop_x=e_x - 50, label="CLK")
+    jumper(pin_anchor["GP15"], e_pin_at["DT"],  C_GPIO, drop_x=e_x - 35, label="DT")
+    jumper(pin_anchor["GP13"], e_pin_at["SW"],  C_GPIO, drop_x=e_x - 20, label="SW")
+    # Encoder + → bottom + rail (closer than top)
+    rail_tap(e_pin_at["+"], rail_y["bot_pos"], C_3V3)
+    rail_tap(e_pin_at["GND"], rail_y["bot_gnd"], C_GND)
 
-    # ─── Peripheral: tap button (bottom-left) ───────────────────────
-    t_x, t_y, t_w, t_h = bb_x + 200, bb_y + bb_h - 110, 90, 60
-    r.elements.append(f'<rect x="{t_x}" y="{t_y}" width="{t_w}" height="{t_h}" fill="#333" '
-                      f'stroke="#888" stroke-width="1.5" rx="4"/>')
-    r.elements.append(f'<text x="{t_x + t_w/2}" y="{t_y + 14}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="8">Tap button</text>')
-    r.elements.append(f'<circle cx="{t_x + t_w/2}" cy="{t_y + 36}" r="10" fill="#666" stroke="#AAA"/>')
-    # 2 leads (A,B)
-    t_a = (t_x + 18, t_y + t_h)
-    t_b = (t_x + t_w - 18, t_y + t_h)
-    for px, py, lbl, color in [(*t_a, "A", C_GPIO), (*t_b, "B", RAIL_GND)]:
-        r.elements.append(f'<rect x="{px - 4}" y="{py - 4}" width="8" height="12" fill="#888" stroke="#333"/>')
-        r.elements.append(f'<text x="{px}" y="{py + 19}" class="value" text-anchor="middle" '
-                          f'font-size="8" fill="{color}">{lbl}</text>')
-    jumper(pin_anchor["GP12"], t_a, C_GPIO, "Tap")
-    r.elements.append(f'<line x1="{t_b[0]}" y1="{t_b[1]}" x2="{t_b[0]}" y2="{bot_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{t_b[0]}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # ─── Tap button placement (bottom-left, between Pico and encoder) ───
+    t_x, t_y, t_w, t_h = bb_x + 230, chan_y + 80, 110, 70
+    r.elements.append(
+        f'<rect x="{t_x}" y="{t_y}" width="{t_w}" height="{t_h}" fill="#1a1a1a" '
+        f'stroke="#666" stroke-width="1.5" rx="4"/>'
+    )
+    r.elements.append(
+        f'<text x="{t_x + t_w/2}" y="{t_y + 14}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="9">Tap Button</text>'
+    )
+    r.elements.append(
+        f'<circle cx="{t_x + t_w/2}" cy="{t_y + 42}" r="11" fill="#666" stroke="#AAA" stroke-width="1.5"/>'
+    )
+    # 2 pads on button bottom edge: A (signal) on left, B (GND) on right
+    t_a = (t_x + 22, t_y + t_h)
+    t_b = (t_x + t_w - 22, t_y + t_h)
+    pad(*t_a)
+    pad(*t_b)
+    r.elements.append(
+        f'<text x="{t_a[0]}" y="{t_a[1] + 18}" class="value" text-anchor="middle" '
+        f'font-size="8.5" fill="{C_GPIO}">A</text>'
+    )
+    r.elements.append(
+        f'<text x="{t_b[0]}" y="{t_b[1] + 18}" class="value" text-anchor="middle" '
+        f'font-size="8.5" fill="{C_GND}">B</text>'
+    )
+    jumper(pin_anchor["GP12"], t_a, C_GPIO, drop_x=t_a[0], label="Tap")
+    rail_tap(t_b, rail_y["bot_gnd"], C_GND)
 
-    # ─── Peripheral: RGB LED with 3× 220Ω (bottom-right) ────────────
-    g_x, g_y, g_w, g_h = bb_x + 540, bb_y + bb_h - 130, 200, 80
-    r.elements.append(f'<rect x="{g_x}" y="{g_y}" width="{g_w}" height="{g_h}" fill="#1a1a1a" '
-                      f'stroke="#444" stroke-width="2" rx="4"/>')
-    r.elements.append(f'<text x="{g_x + g_w/2}" y="{g_y + 16}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">RGB LED · 3 × 220Ω</text>')
-    # LED
-    r.elements.append(f'<circle cx="{g_x + 35}" cy="{g_y + 46}" r="12" fill="#FFF" stroke="#888"/>')
-    r.elements.append(f'<circle cx="{g_x + 35}" cy="{g_y + 46}" r="9" fill="#D44" opacity="0.45"/>')
-    # 3 resistors lined up
-    rgb_pins = [("R", C_LED, "GP8"), ("G", C_LED, "GP9"), ("B", C_LED, "GP10"), ("K", RAIL_GND, None)]
-    g_pin_at = {}
-    for i, (lbl, color, _) in enumerate(rgb_pins):
-        px = g_x + 90 + i * 30
+    # ─── RGB LED placement (bottom-middle) ──────────────────────
+    g_x, g_y, g_w, g_h = bb_x + 600, chan_y + 80, 230, 90
+    r.elements.append(
+        f'<rect x="{g_x}" y="{g_y}" width="{g_w}" height="{g_h}" fill="#1a1a1a" '
+        f'stroke="#666" stroke-width="1.5" rx="4"/>'
+    )
+    r.elements.append(
+        f'<text x="{g_x + g_w/2}" y="{g_y + 14}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="9">RGB LED · 3 × 220 Ω</text>'
+    )
+    # LED disc
+    r.elements.append(
+        f'<circle cx="{g_x + 35}" cy="{g_y + 50}" r="12" fill="#FFF" stroke="#888" stroke-width="1.5"/>'
+    )
+    r.elements.append(
+        f'<circle cx="{g_x + 35}" cy="{g_y + 50}" r="9" fill="#D44" opacity="0.5"/>'
+    )
+    # 4 pads bottom edge: R, G, B, K — each anode has its own 220Ω footprint above the pad
+    rgb_pin_data = [("R", "GP8", C_LED), ("G", "GP9", C_LED), ("B", "GP10", C_LED),
+                    ("K", None, C_GND)]
+    rgb_pin_at = {}
+    for i, (lbl, _gp, color) in enumerate(rgb_pin_data):
+        px = g_x + 80 + i * 38
         py = g_y + g_h
-        # resistor body for R/G/B
+        # 220Ω footprint just above the pad (only for anodes)
         if lbl != "K":
-            r.elements.append(f'<rect x="{px - 7}" y="{py - 28}" width="14" height="18" '
-                              f'fill="#D9C3A0" stroke="#5C4500" stroke-width="0.8"/>')
-            r.elements.append(f'<text x="{px}" y="{py - 16}" class="value" text-anchor="middle" '
-                              f'font-size="6" fill="#1a1a1a">220Ω</text>')
-            r.elements.append(f'<line x1="{px}" y1="{py - 10}" x2="{px}" y2="{py - 4}" '
-                              f'stroke="#1a1a1a" stroke-width="1.5"/>')
-        r.elements.append(f'<rect x="{px - 4}" y="{py - 4}" width="8" height="12" fill="#888" stroke="#333"/>')
-        r.elements.append(f'<text x="{px}" y="{py + 18}" class="value" text-anchor="middle" '
-                          f'font-size="8" fill="{color}">{lbl}</text>')
-        g_pin_at[lbl] = (px, py + 4)
+            r.elements.append(
+                f'<rect x="{px - 9}" y="{py - 30}" width="18" height="18" '
+                f'fill="#F5E6C8" stroke="#5C4500" stroke-width="0.8"/>'
+            )
+            r.elements.append(
+                f'<text x="{px}" y="{py - 18}" class="value" text-anchor="middle" '
+                f'font-size="7" fill="#1a1a1a">220Ω</text>'
+            )
+            r.elements.append(
+                f'<line x1="{px}" y1="{py - 12}" x2="{px}" y2="{py - 4}" '
+                f'stroke="#1a1a1a" stroke-width="1.5"/>'
+            )
+        pad(px, py)
+        r.elements.append(
+            f'<text x="{px}" y="{py + 18}" class="value" text-anchor="middle" '
+            f'font-size="8.5" fill="{color}">{lbl}</text>'
+        )
+        rgb_pin_at[lbl] = (px, py)
 
-    jumper(pin_anchor["GP8"],  g_pin_at["R"], C_LED, "R")
-    jumper(pin_anchor["GP9"],  g_pin_at["G"], C_LED, "G")
-    jumper(pin_anchor["GP10"], g_pin_at["B"], C_LED, "B")
-    r.elements.append(f'<line x1="{g_pin_at["K"][0]}" y1="{g_pin_at["K"][1]}" '
-                      f'x2="{g_pin_at["K"][0]}" y2="{bot_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2.4" stroke-linecap="round"/>')
-    r.elements.append(f'<circle cx="{g_pin_at["K"][0]}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # RGB jumpers — each on its own drop X so verticals don't share segments
+    jumper(pin_anchor["GP8"],  rgb_pin_at["R"], C_LED, drop_x=rgb_pin_at["R"][0])
+    jumper(pin_anchor["GP9"],  rgb_pin_at["G"], C_LED, drop_x=rgb_pin_at["G"][0])
+    jumper(pin_anchor["GP10"], rgb_pin_at["B"], C_LED, drop_x=rgb_pin_at["B"][0])
+    rail_tap(rgb_pin_at["K"], rail_y["bot_gnd"], C_GND)
 
-    # ─── Peripheral: clock jacks (far right) ────────────────────────
-    j_x, j_y, j_w, j_h = bb_x + 800, bb_y + 60, 150, 380
-    r.elements.append(f'<rect x="{j_x}" y="{j_y}" width="{j_w}" height="{j_h}" fill="#1a1a1a" '
-                      f'stroke="#444" stroke-width="2" rx="4"/>')
-    r.elements.append(f'<text x="{j_x + j_w/2}" y="{j_y + 18}" class="label" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">Clock I/O · 3.5mm</text>')
-    # OUT jack (top)
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{j_y + 70}" r="20" fill="none" stroke="#AAA" stroke-width="2"/>')
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{j_y + 70}" r="8" fill="#888"/>')
-    r.elements.append(f'<text x="{j_x + 50}" y="{j_y + 105}" class="value" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">OUT</text>')
-    # series 1k for OUT
-    r.elements.append(f'<rect x="{j_x + 95}" y="{j_y + 60}" width="36" height="20" '
-                      f'fill="#D9C3A0" stroke="#5C4500"/>')
-    r.elements.append(f'<text x="{j_x + 113}" y="{j_y + 74}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#1a1a1a">1k</text>')
-    r.elements.append(f'<line x1="{j_x + 70}" y1="{j_y + 70}" x2="{j_x + 95}" y2="{j_y + 70}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
+    # ─── Clock I/O placement (top-right of the breadboard) ──────
+    j_x, j_y, j_w, j_h = bb_x + 900, bb_y + 80, 220, 230
+    r.elements.append(
+        f'<rect x="{j_x}" y="{j_y}" width="{j_w}" height="{j_h}" fill="#1a1a1a" '
+        f'stroke="#666" stroke-width="1.5" rx="4"/>'
+    )
+    r.elements.append(
+        f'<text x="{j_x + j_w/2}" y="{j_y + 16}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="9">Clock I/O · 3.5 mm jacks</text>'
+    )
 
-    # IN jack (bottom)
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{j_y + 200}" r="20" fill="none" stroke="#AAA" stroke-width="2"/>')
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{j_y + 200}" r="8" fill="#888"/>')
-    r.elements.append(f'<text x="{j_x + 50}" y="{j_y + 235}" class="value" text-anchor="middle" '
-                      f'fill="#FFF" font-size="9">IN</text>')
-    r.elements.append(f'<rect x="{j_x + 95}" y="{j_y + 190}" width="36" height="20" '
-                      f'fill="#D9C3A0" stroke="#5C4500"/>')
-    r.elements.append(f'<text x="{j_x + 113}" y="{j_y + 204}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#1a1a1a">1k</text>')
-    r.elements.append(f'<line x1="{j_x + 70}" y1="{j_y + 200}" x2="{j_x + 95}" y2="{j_y + 200}" '
-                      f'stroke="#1a1a1a" stroke-width="1.5"/>')
-    # Bench loopback note (no Eurorack-level clamp at this stage).
-    r.elements.append(f'<text x="{j_x + j_w/2}" y="{j_y + 250}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#0066CC">bench loopback only</text>')
-    r.elements.append(f'<text x="{j_x + j_w/2}" y="{j_y + 262}" class="value" text-anchor="middle" '
-                      f'font-size="7" fill="#0066CC">±12V buffering on breakout</text>')
+    # OUT jack (top of block)
+    r.elements.append(
+        f'<circle cx="{j_x + 40}" cy="{j_y + 60}" r="20" fill="none" stroke="#AAA" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{j_x + 40}" cy="{j_y + 60}" r="8" fill="#888"/>')
+    r.elements.append(
+        f'<text x="{j_x + 40}" y="{j_y + 96}" class="value" text-anchor="middle" '
+        f'fill="#FFF" font-size="9">OUT</text>'
+    )
+    # 1k for OUT — drawn between jack tip and the breadboard pad on the right
+    r.elements.append(
+        f'<rect x="{j_x + 90}" y="{j_y + 50}" width="36" height="20" '
+        f'fill="#F5E6C8" stroke="#5C4500"/>'
+    )
+    r.elements.append(
+        f'<text x="{j_x + 108}" y="{j_y + 64}" class="value" text-anchor="middle" '
+        f'font-size="7" fill="#1a1a1a">1 kΩ</text>'
+    )
+    r.elements.append(
+        f'<line x1="{j_x + 60}" y1="{j_y + 60}" x2="{j_x + 90}" y2="{j_y + 60}" '
+        f'stroke="#1a1a1a" stroke-width="1.5"/>'
+    )
 
-    # OUT/IN tip pads on breadboard (right side of jack frame)
-    out_pad = (j_x + 131, j_y + 70)
-    in_pad = (j_x + 131, j_y + 200)
-    r.elements.append(f'<rect x="{out_pad[0] - 4}" y="{out_pad[1] - 4}" width="8" height="8" '
-                      f'fill="#888" stroke="#333"/>')
-    r.elements.append(f'<rect x="{in_pad[0] - 4}" y="{in_pad[1] - 4}" width="8" height="8" '
-                      f'fill="#888" stroke="#333"/>')
+    # IN jack (bottom of block)
+    r.elements.append(
+        f'<circle cx="{j_x + 40}" cy="{j_y + 170}" r="20" fill="none" stroke="#AAA" stroke-width="2"/>'
+    )
+    r.elements.append(f'<circle cx="{j_x + 40}" cy="{j_y + 170}" r="8" fill="#888"/>')
+    r.elements.append(
+        f'<text x="{j_x + 40}" y="{j_y + 206}" class="value" text-anchor="middle" '
+        f'fill="#FFF" font-size="9">IN</text>'
+    )
+    r.elements.append(
+        f'<rect x="{j_x + 90}" y="{j_y + 160}" width="36" height="20" '
+        f'fill="#F5E6C8" stroke="#5C4500"/>'
+    )
+    r.elements.append(
+        f'<text x="{j_x + 108}" y="{j_y + 174}" class="value" text-anchor="middle" '
+        f'font-size="7" fill="#1a1a1a">1 kΩ</text>'
+    )
+    r.elements.append(
+        f'<line x1="{j_x + 60}" y1="{j_y + 170}" x2="{j_x + 90}" y2="{j_y + 170}" '
+        f'stroke="#1a1a1a" stroke-width="1.5"/>'
+    )
 
-    jumper(pin_anchor["GP22"], out_pad, C_CLK, "OUT")
-    jumper(pin_anchor["GP21"], in_pad,  C_CLK, "IN")
+    # OUT/IN tip pads on breadboard (right side of each 1k)
+    out_pad = (j_x + 132, j_y + 60)
+    in_pad = (j_x + 132, j_y + 170)
+    pad(*out_pad)
+    pad(*in_pad)
+    r.elements.append(
+        f'<text x="{out_pad[0]}" y="{out_pad[1] - 14}" class="value" '
+        f'text-anchor="middle" font-size="7" fill="{C_CLK}">tip→GP22</text>'
+    )
+    r.elements.append(
+        f'<text x="{in_pad[0]}" y="{in_pad[1] + 22}" class="value" '
+        f'text-anchor="middle" font-size="7" fill="{C_CLK}">tip→GP21</text>'
+    )
 
-    # OUT jack sleeve to top GND rail
-    r.elements.append(f'<line x1="{j_x + 50}" y1="{j_y + 90}" x2="{j_x + 50}" y2="{rail_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2" stroke-dasharray="3,2"/>')
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{rail_gnd_y}" r="3" fill="{RAIL_GND}"/>')
-    # IN jack sleeve to bottom GND rail
-    r.elements.append(f'<line x1="{j_x + 50}" y1="{j_y + 220}" x2="{j_x + 50}" y2="{bot_gnd_y}" '
-                      f'stroke="{RAIL_GND}" stroke-width="2" stroke-dasharray="3,2"/>')
-    r.elements.append(f'<circle cx="{j_x + 50}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
+    # Pico → tip pad jumpers (their own drop X each)
+    jumper(pin_anchor["GP22"], out_pad, C_CLK, drop_x=j_x - 30, label="OUT")
+    jumper(pin_anchor["GP21"], in_pad,  C_CLK, drop_x=j_x - 14, label="IN")
 
-    # ─── Power-rail bridge: Pico 3V3/GND → both rails ────────────────
-    # Pico right side has VBUS/VSYS/3V3 holes; we tap 3V3 and GND to top + bottom rails.
-    if "3V3" in pin_anchor:
-        p = pin_anchor["3V3"]
-        # bridge to top + rail
-        r.elements.append(f'<line x1="{p[0]}" y1="{p[1]}" x2="{p[0] + 20}" y2="{p[1]}" '
-                          f'stroke="{RAIL_POS}" stroke-width="2.4"/>')
-        r.elements.append(f'<line x1="{p[0] + 20}" y1="{p[1]}" x2="{p[0] + 20}" y2="{rail_pos_y}" '
-                          f'stroke="{RAIL_POS}" stroke-width="2.4"/>')
-        r.elements.append(f'<circle cx="{p[0] + 20}" cy="{rail_pos_y}" r="3" fill="{RAIL_POS}"/>')
-        # mirror to bottom + rail
-        r.elements.append(f'<line x1="{p[0] + 20}" y1="{p[1]}" x2="{p[0] + 20}" y2="{bot_pos_y}" '
-                          f'stroke="{RAIL_POS}" stroke-width="2.4"/>')
-        r.elements.append(f'<circle cx="{p[0] + 20}" cy="{bot_pos_y}" r="3" fill="{RAIL_POS}"/>')
+    # Sleeves go to the closest GND rail (top − for OUT, bottom − for IN)
+    r.elements.append(
+        f'<line x1="{j_x + 40}" y1="{j_y + 80}" x2="{j_x + 40}" y2="{rail_y["top_gnd"]}" '
+        f'stroke="{C_GND}" stroke-width="2.4" stroke-dasharray="3,2" stroke-linecap="round"/>'
+    )
+    r.elements.append(f'<circle cx="{j_x + 40}" cy="{rail_y["top_gnd"]}" r="3" fill="{C_GND}"/>')
+    r.elements.append(
+        f'<line x1="{j_x + 40}" y1="{j_y + 190}" x2="{j_x + 40}" y2="{rail_y["bot_gnd"]}" '
+        f'stroke="{C_GND}" stroke-width="2.4" stroke-dasharray="3,2" stroke-linecap="round"/>'
+    )
+    r.elements.append(f'<circle cx="{j_x + 40}" cy="{rail_y["bot_gnd"]}" r="3" fill="{C_GND}"/>')
 
-    # any GND pin → both GND rails (use leftmost/topmost GND on the right column)
-    gnd_anchor = pin_anchor.get("GND")
-    if gnd_anchor:
-        p = gnd_anchor
-        r.elements.append(f'<line x1="{p[0]}" y1="{p[1]}" x2="{p[0] + 30}" y2="{p[1]}" '
-                          f'stroke="{RAIL_GND}" stroke-width="2.4"/>')
-        r.elements.append(f'<line x1="{p[0] + 30}" y1="{p[1]}" x2="{p[0] + 30}" y2="{rail_gnd_y}" '
-                          f'stroke="{RAIL_GND}" stroke-width="2.4"/>')
-        r.elements.append(f'<circle cx="{p[0] + 30}" cy="{rail_gnd_y}" r="3" fill="{RAIL_GND}"/>')
-        r.elements.append(f'<line x1="{p[0] + 30}" y1="{p[1]}" x2="{p[0] + 30}" y2="{bot_gnd_y}" '
-                          f'stroke="{RAIL_GND}" stroke-width="2.4"/>')
-        r.elements.append(f'<circle cx="{p[0] + 30}" cy="{bot_gnd_y}" r="3" fill="{RAIL_GND}"/>')
-
-    # ─── Notes + legend ──────────────────────────────────────────────
-    nx, ny, nw, nh = 60, 605, 980, 90
-    r.elements.append(f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
-                      f'stroke="#D29922" stroke-width="1" rx="4"/>')
-    r.elements.append(f'<text x="{nx + 12}" y="{ny + 18}" class="label" font-size="10" fill="#5C4500">'
-                      f'Breadboard tips</text>')
+    # ─── Notes + legend ─────────────────────────────────────────
+    nx, ny, nw, nh = 60, 642, 1180, 60
+    r.elements.append(
+        f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
+        f'stroke="#D29922" stroke-width="1" rx="4"/>'
+    )
+    r.elements.append(
+        f'<text x="{nx + 12}" y="{ny + 16}" class="label" font-size="10" fill="#5C4500">'
+        f'Breadboard tips</text>'
+    )
     notes = [
-        "• Pico straddles centre channel — left column = GP0–15, right column = GP16+/power",
-        "• Bridge Pico 3V3 → both + rails and GND → both − rails so peripherals can pull from the closer side",
-        "• KY-040 has on-board 10k pull-ups; tap-button line uses Pico internal pull-up (set in firmware)",
-        "• Clock IN keeps 1kΩ + 5V1 zener clamp even at 3V3 — protects GP21 from accidental ±5V Eurorack swings",
-        "• Sanity check: with USB plugged in and no peripherals connected, 3V3 rail should read 3.30 ± 0.05 V",
+        "• Pico straddles the centre channel — left column = GP0–15, right column = GP16+ / power.",
+        "• Pico 3V3 jumpers up to BOTH + rails and Pico GND down to BOTH − rails so peripherals can pull from the closer side.",
+        "• Each net uses its own dedicated drop column — verticals never share an X, so jumper paths can't be mistaken for shorts.",
+        "• OLED VCC and GND go to the closest TOP rails; encoder + and GND go to the closest BOTTOM rails.",
     ]
     for i, line in enumerate(notes):
-        r.elements.append(f'<text x="{nx + 14}" y="{ny + 35 + i*11}" class="value" '
-                          f'font-size="8.5" fill="#5C4500">{line}</text>')
+        r.elements.append(
+            f'<text x="{nx + 14}" y="{ny + 32 + i*10}" class="value" '
+            f'font-size="8.5" fill="#5C4500">{line}</text>'
+        )
 
-    # legend strip (under notes)
-    lgx, lgy = 60, 715
-    legend_items = [
-        (RAIL_POS, "+3V3 rail"),
-        (RAIL_GND, "GND rail"),
-        (C_I2C,    "I²C0 (SDA/SCL)"),
-        (C_GPIO,   "GPIO (encoder/tap)"),
-        (C_LED,    "RGB LED drive"),
-        (C_CLK,    "Clock IN/OUT"),
-    ]
-    r.elements.append(f'<text x="{lgx}" y="{lgy - 5}" class="label" font-size="9">Jumper colours:</text>')
-    for i, (color, lbl) in enumerate(legend_items):
-        x = lgx + i * 160
-        r.elements.append(f'<rect x="{x}" y="{lgy}" width="14" height="10" fill="{color}" '
-                          f'stroke="#333" stroke-width="0.5"/>')
-        r.elements.append(f'<text x="{x + 18}" y="{lgy + 9}" class="value" font-size="9">{lbl}</text>')
+    # legend
+    lgx, lgy = 70, 720
+    items = [(C_3V3, "+3V3"), (C_GND, "GND"), (C_I2C, "I²C0"),
+             (C_GPIO, "GPIO"), (C_LED, "RGB"), (C_CLK, "Clock")]
+    r.elements.append(
+        f'<text x="{lgx}" y="{lgy - 5}" class="label" font-size="9">Jumper colours:</text>'
+    )
+    for i, (color, lbl) in enumerate(items):
+        x = lgx + i * 165
+        r.elements.append(
+            f'<rect x="{x}" y="{lgy}" width="14" height="10" fill="{color}" '
+            f'stroke="#333" stroke-width="0.5"/>'
+        )
+        r.elements.append(
+            f'<text x="{x + 18}" y="{lgy + 9}" class="value" font-size="9">{lbl}</text>'
+        )
 
     return r.render()
 
