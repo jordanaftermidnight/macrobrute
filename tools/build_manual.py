@@ -132,7 +132,6 @@ SECTIONS = [
     ]),
     ("3. System Architecture", "arch", [
         "docs/MACROBRUTE_CONNECTION_MAP.md",
-        "schematics/expander_block_diagram.md",
     ]),
     ("4. Interconnect & Wiring", "wire", [
         "schematics/wiring_diagram.md",
@@ -174,7 +173,7 @@ SECTIONS = [
         "docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
         "docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",
     ]),
-    ("13. Legacy & Archive", "legacy", [
+    ("12. Legacy & Archive", "legacy", [
         "docs/legacy/MACROBRUTE_FINAL_ARCHITECTURE.md",
         "docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md",
         "docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md",
