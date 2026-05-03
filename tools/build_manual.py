@@ -119,6 +119,238 @@ SVG_MAP = {
     ],
 }
 
+# ─── SVG Descriptions ────────────────────────────────────────────────
+# Short prose caption rendered BELOW each SVG. Keep each entry tight —
+# 1-3 sentences explaining what the diagram is showing and any non-obvious
+# detail. Markdown inline syntax (backticks for code, **bold**) is supported.
+SVG_DESCRIPTIONS = {
+    # Phase 0 (the diagrams the user will reference while wiring the breadboard)
+    "schematics/phase0_wiring_schematic.svg":
+        "**Flat schematic, power-rail style.** Pico WH on the left; +3V3 rail along the top, "
+        "GND rail along the bottom. Each Pico signal pin has its Y aligned with the matching "
+        "peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω "
+        "(RGB anodes) and 1 kΩ (clock series) resistors are drawn on their wires. Read this "
+        "diagram to understand *what connects to what* before looking at the breadboard view.",
+    "schematics/phase0_breadboard.svg":
+        "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
+        "physically sits on a half-size breadboard. Pico WH straddles the centre channel; +3V3 "
+        "and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use "
+        "this diagram while you're plugging wires in — peripheral positions match where they'd "
+        "naturally land relative to the Pico's pin columns.",
+
+    # Pinout / pin reference diagrams
+    "schematics/pico_pinout_diagram.svg":
+        "Full Pico WH GPIO pin map — every pin labeled with its MACROBRUTE function, colour-coded "
+        "by interface (I²C0 OLED · I²C1 EFFIGY · UART · clock · RGB LED · encoder · USB-MIDI · "
+        "EFFIGY INT · clock divider · aux · ADC · power). Authoritative against `firmware/pico/config.py`.",
+    "schematics/lpc2361_pinout_diagram.svg":
+        "NXP LPC2361 (100-LQFP, ARM7TDMI-S) pinout focused on the pins MACROBRUTE actually "
+        "touches — the UART1 bridge to the Pico (P0.15 RXD / P0.16 TXD) plus ISP entry pins "
+        "(P0.2 / P0.3 / P2.10) for any future firmware injection.",
+    "schematics/db9_connector_diagram.svg":
+        "Both DB-9 connectors that link the MicroBrute panel to the 17 HP expander. DB-9 A "
+        "carries audio/CV outputs *to* the expander; DB-9 B carries CV inputs, the I²C0 strip-OLED "
+        "bus, the UART bridge to LPC2361, and ±12 V power. Pin assignments are frozen.",
+    "schematics/testpoints_map.svg":
+        "TP / GP test-point map on the MicroBrute main PCB. Each labeled point is one place "
+        "where a stock signal can be tapped non-destructively for the buffered breakout — "
+        "verified by scope on the user's unit.",
+
+    # Power & protection
+    "schematics/pico_power_protection.svg":
+        "Three-part minimal power filter that lets the Pico run from the Eurorack +5 V bus: "
+        "1 N5817 Schottky (reverse-polarity protection, ~0.2 V drop) → 100 µF bulk electrolytic → "
+        "100 nF ceramic HF bypass → Pico VSYS. All parts are shop-stocked.",
+    "schematics/power_distribution.svg":
+        "Power distribution across the breakout PCB and 17 HP expander — Eurorack ±12 V bus, "
+        "78L05 local +5 V regulator, decoupling caps per supply pin pair, ferrite-bead noise "
+        "rejection on the +5 V branch.",
+    "schematics/power_regulation_diagram.svg":
+        "Detail of the +5 V regulator branch (78L05 in TO-92) for digital ICs that need 5 V "
+        "logic, plus decoupling and a current budget that stays well under the 78L05's 100 mA limit.",
+    "schematics/expander_power_distribution.svg":
+        "How the 17 HP expander distributes its share of Eurorack ±12 V to the noise generator, "
+        "LFO, S&H, slew, attenuverter, and clock divider — including local 78L05 for the CD4024.",
+
+    # System / signal flow
+    "schematics/system_architecture_block.svg":
+        "High-level block diagram of the whole MACROBRUTE system: MicroBrute core (VCO/VCF/VCA/LFO/Env), "
+        "breakout interface (DB-9 A/B + Pico + touch pads), and the expander modules. Useful for "
+        "orienting yourself before diving into specific schematics.",
+    "schematics/audio_signal_flow.svg":
+        "Audio path from VCO oscillator through filter, VCA, output buffers, to the front panel "
+        "main out and the expander's auxiliary audio outs (mix-pre-VCF, raw saw, raw square).",
+    "schematics/cv_control_flow.svg":
+        "CV control path — every CV input (filter, VCA, resonance, sync, mod, gate inputs) and "
+        "where it lands on the LPC2361 / op-amp chain.",
+    "schematics/signal_flow_overview.svg":
+        "Combined signal-flow overview that shows audio + CV + clock together on one canvas, "
+        "with the Pico bridge in the middle and DB-9 A/B as the only physical bus between sides.",
+    "schematics/midi_interface_circuit.svg":
+        "Stock MicroBrute MIDI input (6N138 optocoupler) plus the new USB-MIDI path through the "
+        "Pico — both can be active simultaneously; the Pico TinyUSB stack injects MIDI bytes into "
+        "the UART bridge.",
+    "schematics/interconnect_wiring.svg":
+        "End-to-end interconnect wiring: every wire that crosses between the MicroBrute panel and "
+        "the expander, including DB-9 A/B mapping, jack wiring, and ground topology.",
+    "schematics/wiring_overview.svg":
+        "Auto-generated wiring overview produced by `tools/generate_schematics.py`. Compact, "
+        "machine-rendered cousin of the hand-authored interconnect diagram.",
+    "schematics/wiring_internal.svg":
+        "Internal MicroBrute wiring — what stays inside the case, between the breakout PCB and "
+        "the stock CPU board / panel jacks. Use alongside the test-points map.",
+    "schematics/wiring_power_distribution.svg":
+        "Power-only view of the wiring: where ±12 V, +5 V, and GND travel between Eurorack bus, "
+        "breakout PCB, expander, and Pico filter.",
+
+    # Breakout buffers / per-channel circuits
+    "schematics/wiring_output_buffer.svg":
+        "Per-channel output buffer (TL072 unity-gain) used on every audio path that leaves the "
+        "MicroBrute via DB-9 A — input impedance > 100 kΩ, output series 1 kΩ for cable drive.",
+    "schematics/wiring_gate_buffer.svg":
+        "Gate buffer using a CD40106 Schmitt trigger for clean rising edges to the expander's "
+        "clock divider and any external trigger inputs.",
+    "schematics/wiring_vactrol_driver.svg":
+        "Vactrol driver (2N3904 + LED + LDR pair). Used for soft-knee filter modulation from "
+        "external CVs — slow attack/release, naturally smooth.",
+    "schematics/wiring_cv_protection.svg":
+        "Per-channel CV input protection (BAT54S Schottky to ±12 V rails + 1 kΩ series). Clamps "
+        "any input to ±12.3 V; series resistor limits fault current to ~12 mA.",
+    "schematics/breakout_layout.svg":
+        "Physical layout of the breakout stripboard — IC positions, power rails, decoupling caps, "
+        "and where each I/O wire enters/exits.",
+    "schematics/output_buffer_board.svg":
+        "Sub-section of the breakout dedicated to the audio output buffers (TL074 quad). Shows "
+        "where each channel sits relative to power rails and connectors.",
+    "schematics/zone_layout_stripboard.svg":
+        "Zoned overview of the breakout stripboard — analogue zone, digital zone, power zone — "
+        "so you can keep ground returns and decoupling local to each zone.",
+
+    # Expander circuits (analogue utility modules)
+    "schematics/noise_generator_schematic.svg":
+        "Thomas Henry / Yusynth white-noise generator: 2 N3904 base–emitter junction in avalanche "
+        "breakdown drives a TL072 ~47× amplifier; output is ~5–8 Vpp white noise.",
+    "schematics/lfo_schematic.svg":
+        "Triangle/square LFO built from a TL072 integrator + Schmitt trigger pair. 1 MΩ rate "
+        "pot gives ~0.04 Hz to ~40 Hz; square output divided to ±5 V Eurorack standard.",
+    "schematics/sah_schematic.svg":
+        "Sample & hold using LF398N (8-pin SOIC). External clock at the trigger input grabs the "
+        "noise input on each rising edge.",
+    "schematics/clock_divider_schematic.svg":
+        "CD4024 7-stage binary counter wired for /2, /4, /8 outputs with LED indicators per stage.",
+    "schematics/slew_limiter_schematic.svg":
+        "Voltage-controlled slew limiter using a TL072 integrator with steering diodes; rise and "
+        "fall times set independently by two pots.",
+    "schematics/attenuverter_schematic.svg":
+        "Bipolar attenuverter (–1 to +1 gain) per channel using a TL074 quad with a centre-detent pot.",
+    "schematics/expander_noise.svg":
+        "Stripboard layout for the noise generator module — IC + transistor placement, ground "
+        "topology, and trim adjustment for output level.",
+    "schematics/expander_lfo.svg":
+        "Stripboard layout for the LFO — integrator + Schmitt cells, rate pot, square output divider.",
+    "schematics/expander_clockdiv.svg":
+        "Stripboard layout for the clock divider — CD4024, 78L05 local regulator, three LED indicator strings.",
+    "schematics/expander_sah.svg":
+        "Stripboard layout for the sample & hold — LF398, hold cap, trigger input conditioning.",
+    "schematics/expander_slew.svg":
+        "Stripboard layout for the slew limiter — TL072, steering diodes, two rate pots.",
+    "schematics/expander_attenuverter.svg":
+        "Stripboard layout for the four-channel attenuverter array — TL074 + four centre-detent pots.",
+
+    # Touch & body-contact bends
+    "schematics/touch_plate_schematic.svg":
+        "Capacitive touch-plate front-end: brass M3 bolts as electrodes, 4.7 MΩ bias resistor, "
+        "TL074 buffer; output drives an analog mux (CD4051) so a single ADC reads all touch points.",
+    "schematics/touch_test_board.svg":
+        "Bench-test rig for prototyping touch sensitivity before committing to the panel — same "
+        "circuit on a small stripboard with four bolts on a piece of wood.",
+    "schematics/touch_plate_redesign.svg":
+        "Revised touch-plate front-end after the first prototype was too touchy. Adds a 100 nF "
+        "filter cap and lowers the bias resistor to 1 MΩ for cleaner discrimination.",
+
+    # Protection / safety
+    "schematics/led_driver_array_schematic.svg":
+        "Eight-channel LED driver array (2 N3904 saturated switches) for panel indicators. Each "
+        "channel takes a Pico GPIO and sinks up to 20 mA from the +5 V LED rail.",
+    "schematics/vactrol_full_schematic.svg":
+        "Complete vactrol-based VCA/filter modulator including the 2 N3904 LED driver, vactrol "
+        "(VTL5C3 or LED+LDR DIY), and the load-side coupling.",
+    "schematics/esd_protection_schematic.svg":
+        "Panel-jack ESD/static protection — 1 nF cap to ground + BAT54S series for the touch "
+        "plates, plus ferrite beads on every audio output for RF rejection.",
+    "schematics/cv_input_protection_diagram.svg":
+        "CV input protection topology that scales across all the expander's CV inputs — uses the "
+        "same BAT54S clamp + 1 kΩ series pattern as the breakout, but with attenuator pots "
+        "before the clamp for level control.",
+    "schematics/cd4051_multiplexer.svg":
+        "CD4051 8-channel analog multiplexer wiring: address pins, common Z, eight Y channels, "
+        "VEE tied to GND for unipolar operation. Used to multiplex touch plates and any spare CV inputs.",
+    "schematics/buffered_multiple_schematic.svg":
+        "Buffered 1×3 multiple: TL072 unity-gain followed by three 1 kΩ output isolators. Useful "
+        "for splitting one CV/clock to multiple destinations without loading the source.",
+    "schematics/manual_gate_button_schematic.svg":
+        "Front-panel manual gate button — momentary SPST, debounced through a CD40106 Schmitt "
+        "trigger so the gate output is clean even under fast taps.",
+
+    # IC reference
+    "schematics/ic_pinout_tl074.svg": "TL074 quad op-amp pinout (DIP-14).",
+    "schematics/ic_pinout_tl072.svg": "TL072 dual op-amp pinout (DIP-8).",
+    "schematics/ic_pinout_cd40106.svg": "CD40106 hex Schmitt trigger pinout (DIP-14).",
+    "schematics/ic_pinout_cd4051.svg": "CD4051 8-channel analog mux/demux pinout (DIP-16).",
+    "schematics/ic_pinout_cd4024.svg": "CD4024 7-stage binary counter pinout (DIP-14).",
+    "schematics/ic_pinout_cd4066.svg": "CD4066 quad bilateral switch pinout (DIP-14).",
+    "schematics/ic_pinout_lm358.svg": "LM358 dual op-amp pinout (DIP-8) — alternative to TL072 if you have it on hand.",
+    "schematics/dip_pinout_reference.svg":
+        "Side-by-side DIP-package pinout reference for all the ICs used across the project — "
+        "TL074, TL072, CD40106, CD4051, CD4024, CD4066, LM358.",
+
+    # Mod catalog (M01–M14)
+    "schematics/mod_m01_triangle_gain.svg":
+        "**M01 — Triangle gain mod.** Boosts the VCO triangle output level by ~6 dB so it sits "
+        "even with saw and square. Single pot on the panel; non-destructive.",
+    "schematics/mod_m02_soft_sync.svg":
+        "**M02 — Soft sync.** LM393 comparator generates a soft reset pulse from an external "
+        "audio-rate signal into the VCO; switch toggles between hard and soft sync.",
+    "schematics/mod_m03_sine_extract.svg":
+        "**M03 — Sine extraction.** Low-pass shapes the triangle into a near-sine output on a "
+        "dedicated jack, useful for FM bass tones.",
+    "schematics/mod_m04_metalizer_vca.svg":
+        "**M04 — Metalizer VCA.** LM13700 OTA squashes/folds the wave at the metalizer output "
+        "for harsh metallic tones; CV controllable from the modulation bus.",
+    "schematics/mod_m05_filter_selfosc_kill.svg":
+        "**M05 — Filter self-oscillation kill.** Toggle that mutes the VCF audio path while the "
+        "filter is self-oscillating, so the SP filter becomes a clean sine source.",
+    "schematics/mod_m06_pwm_cv.svg":
+        "**M06 — PWM CV input.** Adds a dedicated CV input for square-wave pulse-width "
+        "modulation (the stock panel only has manual PWM control).",
+    "schematics/mod_m07_pitch_starve.svg":
+        "**M07 — Pitch starve.** Touch bolt + 22 kΩ series + diode pulls the VCO pitch CV down "
+        "when touched; oscillator detunes / breaks up.",
+    "schematics/mod_m08_subharmonic.svg":
+        "**M08 — Sub-harmonic divider.** 74HC74 D-flip-flop divides the square wave by 2; "
+        "octave-down output on a dedicated jack.",
+    "schematics/mod_m09_pwm_selfmod.svg":
+        "**M09 — PWM self-modulation.** Patches LFO into PWM CV internally via a toggle, no "
+        "front-panel cable needed.",
+    "schematics/mod_m10_brute_extreme.svg":
+        "**M10 — Brute factor extreme.** Pulls more feedback resistance into the VCF feedback "
+        "loop for deeper distortion past the stock Brute Factor setting.",
+    "schematics/mod_m11_touch_envretrig.svg":
+        "**M11 — Touch envelope retrigger.** A 9th touch bolt that triggers the envelope when "
+        "touched; great for rhythmic noise-burst patterns.",
+    "schematics/mod_m12_arg.svg":
+        "**M12 — Audio-rate gate (ARG).** LM393 comparator turns any audio input into a gate "
+        "signal at audio rate. Output goes to the gate bus and can self-trigger the envelope.",
+    "schematics/mod_m13_vco_sync_env.svg":
+        "**M13 — VCO sync to envelope.** Routes the envelope rising edge into VCO sync; toggle "
+        "selects whether the envelope hard-syncs the oscillator each note.",
+    "schematics/mod_m14_vco_bias_starve.svg":
+        "**M14 — VCO bias starve (safe).** Touch bolt + 22 kΩ + 1 N4148 taps the high-Z VCO "
+        "pitch-bias node — NOT the supply rail. Touching detunes downward / glitches; LPC2361 "
+        "DAC and ±12 V are untouched.",
+
+}
+
 # ─── Document Organization ──────────────────────────────────────────
 
 QUICK_REF = [
@@ -538,6 +770,8 @@ tr:target td{animation:flash 1.5s ease}
 .svg-diagrams{margin:16px 0}
 .svg-wrap{margin:16px 0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--bg2)}
 .svg-caption{padding:8px 12px;background:var(--bg3);font-size:13px;font-weight:600;color:var(--txb);border-bottom:1px solid var(--border)}
+.svg-desc{padding:10px 14px;background:var(--bg3);font-size:12.5px;line-height:1.5;color:var(--tx);border-top:1px solid var(--border)}
+.svg-desc code{background:var(--bg);padding:1px 5px;border-radius:3px;font-size:12px}
 .svg-container{overflow-x:auto;padding:16px;background:var(--svg-bg,#F5F5F0);-webkit-overflow-scrolling:touch}
 .svg-container svg{max-width:none;display:block;margin:0 auto}
 /* Dark mode: all SVG text adapts to theme */
@@ -905,6 +1139,9 @@ def _embed_svgs(fpath):
                 embeds.append(f'<div class="svg-wrap">')
                 embeds.append(f'<div class="svg-caption">{_html.escape(caption)}</div>')
                 embeds.append(f'<div class="svg-container">{svg_content}</div>')
+                desc = SVG_DESCRIPTIONS.get(svg_path)
+                if desc:
+                    embeds.append(f'<div class="svg-desc">{_inline(desc)}</div>')
                 embeds.append('</div>')
             except Exception as e:
                 embeds.append(f'<!-- Error loading {svg_path}: {e} -->')
