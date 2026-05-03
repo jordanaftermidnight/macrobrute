@@ -3521,7 +3521,7 @@ def generate_mod_m14_vco_bias_starve() -> str:
 def generate_phase0_wiring_schematic() -> str:
     """Phase 0 bench-validation wiring — flat schematic, power-rail style."""
     r = SchematicRenderer(
-        1300, 830,
+        1300, 870,
         "Phase 0 — Pico Bench Validation Schematic",
         '0.96" main OLED + 0.91" strip OLED + KY-040 encoder + tap button + '
         "RGB LED + clock I/O · shared I²C0 bus, every pin Y aligned",
@@ -3536,7 +3536,7 @@ def generate_phase0_wiring_schematic() -> str:
     C_CLK = "#9C27B0"
 
     RAIL_3V3_Y = 60
-    RAIL_GND_Y = 740
+    RAIL_GND_Y = 770
     RAIL_X_LEFT = 70
     RAIL_X_RIGHT = 1240
 
@@ -3569,7 +3569,7 @@ def generate_phase0_wiring_schematic() -> str:
     )
 
     # ─── Pico WH block ──────────────────────────────────────────
-    pico_x, pico_y, pico_w, pico_h = 80, 80, 220, 610
+    pico_x, pico_y, pico_w, pico_h = 80, 80, 220, 640
     r.elements.append(
         f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
         f'fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>'
@@ -3628,15 +3628,15 @@ def generate_phase0_wiring_schematic() -> str:
     signals = [
         ("GP4",  "I²C0 SDA", 130, C_I2C),  # → both OLEDs (shared bus)
         ("GP5",  "I²C0 SCL", 160, C_I2C),  # → both OLEDs (shared bus)
-        ("GP8",  "LED R",    280, C_LED),
-        ("GP9",  "LED G",    310, C_LED),
-        ("GP10", "LED B",    340, C_LED),
-        ("GP12", "Tap Btn",  390, C_GPIO),
-        ("GP13", "Enc SW",   430, C_GPIO),
-        ("GP14", "Enc CLK",  460, C_GPIO),
-        ("GP15", "Enc DT",   490, C_GPIO),
-        ("GP21", "Clk IN",   550, C_CLK),
-        ("GP22", "Clk OUT",  580, C_CLK),
+        ("GP8",  "LED R",    310, C_LED),
+        ("GP9",  "LED G",    340, C_LED),
+        ("GP10", "LED B",    370, C_LED),
+        ("GP12", "Tap Btn",  420, C_GPIO),
+        ("GP13", "Enc SW",   460, C_GPIO),
+        ("GP14", "Enc CLK",  490, C_GPIO),
+        ("GP15", "Enc DT",   520, C_GPIO),
+        ("GP21", "Clk IN",   580, C_CLK),
+        ("GP22", "Clk OUT",  610, C_CLK),
     ]
     pin_anchor = {}
     for gp, func, py, color in signals:
@@ -3765,7 +3765,7 @@ def generate_phase0_wiring_schematic() -> str:
     # GND pad on BOTTOM edge — but the long drop straight down would cross every
     # peripheral below. Jog LEFT into the empty margin (x = 430) and drop there.
     oled_gnd_pad_x = o_x + 50
-    oled_gnd_drop_x = 430
+    oled_gnd_drop_x = 395  # left of the RGB inline resistor body x range (403-443)
     pad_bottom(oled_gnd_pad_x, o_y + o_h, "GND", C_GND)
     r.elements.append(
         f'<line x1="{oled_gnd_pad_x}" y1="{o_y + o_h + 8}" x2="{oled_gnd_drop_x}" y2="{o_y + o_h + 8}" '
@@ -3807,7 +3807,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(strip_vcc_x, s_y - 8, RAIL_3V3_Y, C_3V3)
     # GND pad on BOTTOM edge — jog LEFT into margin (x = 425) for the drop
     strip_gnd_pad_x = s_x + 30
-    strip_gnd_drop_x = 425
+    strip_gnd_drop_x = 388  # left of the RGB inline resistor body x range, distinct from main
     pad_bottom(strip_gnd_pad_x, s_y + s_h, "GND", C_GND)
     r.elements.append(
         f'<line x1="{strip_gnd_pad_x}" y1="{s_y + s_h + 8}" x2="{strip_gnd_drop_x}" y2="{s_y + s_h + 8}" '
@@ -3868,9 +3868,19 @@ def generate_phase0_wiring_schematic() -> str:
     r.elements.append(
         f'<circle cx="{scl_branch_x}" cy="160" r="3.5" fill="{C_I2C}"/>'
     )
+    # Bus net labels next to the branch dots — make the shared-bus
+    # topology unambiguous at a glance.
+    r.elements.append(
+        f'<text x="{sda_branch_x - 5}" y="125" class="value" font-size="8" '
+        f'text-anchor="end" fill="{C_I2C}">I²C0 SDA → 0x3C, 0x3D</text>'
+    )
+    r.elements.append(
+        f'<text x="{scl_branch_x - 5}" y="155" class="value" font-size="8" '
+        f'text-anchor="end" fill="{C_I2C}">I²C0 SCL → 0x3C, 0x3D</text>'
+    )
 
     # ─── RGB LED (common cathode) ───────────────────────────────
-    rgb_x, rgb_y, rgb_w, rgb_h = 460, 270, 320, 90
+    rgb_x, rgb_y, rgb_w, rgb_h = 460, 300, 320, 90
     r.elements.append(
         f'<rect x="{rgb_x}" y="{rgb_y}" width="{rgb_w}" height="{rgb_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -3896,7 +3906,7 @@ def generate_phase0_wiring_schematic() -> str:
     )
 
     # 3 anode pads on LEFT edge, aligned to Pico GP8/9/10
-    rgb_anodes = [("R", "GP8", 210), ("G", "GP9", 240), ("B", "GP10", 270)]
+    rgb_anodes = [("R", "GP8", 310), ("G", "GP9", 340), ("B", "GP10", 370)]
     for lbl, gp, py in rgb_anodes:
         pad_left(rgb_x, py, lbl, C_LED)
         # Pico → 220Ω inline → anode pad (single straight wire with inline R)
@@ -3927,7 +3937,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(rgb_k_drop_x, rgb_y + rgb_h + 8, RAIL_GND_Y, C_GND)
 
     # ─── Tap button (SPST momentary, NO) ────────────────────────
-    tap_x, tap_y, tap_w, tap_h = 460, 375, 220, 30
+    tap_x, tap_y, tap_w, tap_h = 460, 405, 220, 30
     r.elements.append(
         f'<rect x="{tap_x}" y="{tap_y}" width="{tap_w}" height="{tap_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="4"/>'
@@ -3976,7 +3986,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(tap_b_drop_x, sw_y, RAIL_GND_Y, C_GND)
 
     # ─── KY-040 Rotary Encoder ──────────────────────────────────
-    enc_x, enc_y, enc_w, enc_h = 460, 420, 320, 90
+    enc_x, enc_y, enc_w, enc_h = 460, 450, 320, 90
     r.elements.append(
         f'<rect x="{enc_x}" y="{enc_y}" width="{enc_w}" height="{enc_h}" fill="#272838" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -3998,7 +4008,7 @@ def generate_phase0_wiring_schematic() -> str:
     )
 
     # 3 signal pads on LEFT edge — Y aligned to Pico GP13/14/15
-    enc_sigs = [("SW", "GP13", 360), ("CLK", "GP14", 390), ("DT", "GP15", 420)]
+    enc_sigs = [("SW", "GP13", 460), ("CLK", "GP14", 490), ("DT", "GP15", 520)]
     for lbl, gp, py in enc_sigs:
         pad_left(enc_x, py, lbl, C_GPIO)
         a = pin_anchor[gp]
@@ -4010,7 +4020,7 @@ def generate_phase0_wiring_schematic() -> str:
     # + pad on TOP edge — straight UP would cross OLED, RGB, and Tap.
     # Jog LEFT into the empty margin (x = 420) and tap UP from there.
     enc_pos_pad_x = enc_x + 30
-    enc_pos_drop_x = 420
+    enc_pos_drop_x = 450  # right of RGB resistor body x range (403-443), in left margin
     pad_top(enc_pos_pad_x, enc_y, "+", C_3V3)
     r.elements.append(
         f'<line x1="{enc_pos_pad_x}" y1="{enc_y - 8}" x2="{enc_pos_drop_x}" y2="{enc_y - 8}" '
@@ -4029,7 +4039,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(enc_gnd_drop_x, enc_y + enc_h + 8, RAIL_GND_Y, C_GND)
 
     # ─── Clock I/O block (3.5mm TS jacks) ───────────────────────
-    clk_x, clk_y, clk_w, clk_h = 460, 530, 320, 90
+    clk_x, clk_y, clk_w, clk_h = 460, 560, 320, 90
     r.elements.append(
         f'<rect x="{clk_x}" y="{clk_y}" width="{clk_w}" height="{clk_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -4041,7 +4051,7 @@ def generate_phase0_wiring_schematic() -> str:
 
     # IN jack (Y = 480, matches Pico GP21)
     in_jack_cx = clk_x + clk_w - 70
-    in_jack_cy = 550
+    in_jack_cy = 580
     r.elements.append(
         f'<circle cx="{in_jack_cx}" cy="{in_jack_cy}" r="14" fill="none" '
         f'stroke="#AAA" stroke-width="2"/>'
@@ -4054,7 +4064,7 @@ def generate_phase0_wiring_schematic() -> str:
 
     # OUT jack (Y = 510, matches Pico GP22)
     out_jack_cx = clk_x + clk_w - 70
-    out_jack_cy = 580
+    out_jack_cy = 610
     r.elements.append(
         f'<circle cx="{out_jack_cx}" cy="{out_jack_cy}" r="14" fill="none" '
         f'stroke="#AAA" stroke-width="2"/>'
@@ -4112,7 +4122,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(out_sleeve_drop_x, clk_y + clk_h - 4, RAIL_GND_Y, C_GND)
 
     # ─── Notes panel (below GND rail) ───────────────────────────
-    nx, ny, nw, nh = 70, 758, 1170, 62
+    nx, ny, nw, nh = 70, 788, 1170, 72
     r.elements.append(
         f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
         f'stroke="#D29922" stroke-width="1" rx="4"/>'
@@ -4326,24 +4336,28 @@ def generate_phase0_breadboard() -> str:
             f'<circle cx="{ax + 22}" cy="{rail_y["bot_pos"]}" r="3" fill="{C_3V3}"/>'
         )
     if "GND" in pin_anchor:
+        # GND pin is on Pico's LEFT edge; bridge LEFT (away from Pico body)
+        # so the vertical sits in the empty margin instead of inside the
+        # Pico's outline.
         ax, ay = pin_anchor["GND"]
+        gnd_drop_x = ax - 30
         r.elements.append(
-            f'<line x1="{ax}" y1="{ay}" x2="{ax + 30}" y2="{ay}" '
+            f'<line x1="{ax}" y1="{ay}" x2="{gnd_drop_x}" y2="{ay}" '
             f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
         )
         r.elements.append(
-            f'<line x1="{ax + 30}" y1="{ay}" x2="{ax + 30}" y2="{rail_y["top_gnd"]}" '
+            f'<line x1="{gnd_drop_x}" y1="{ay}" x2="{gnd_drop_x}" y2="{rail_y["top_gnd"]}" '
             f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
         )
         r.elements.append(
-            f'<circle cx="{ax + 30}" cy="{rail_y["top_gnd"]}" r="3" fill="{C_GND}"/>'
+            f'<circle cx="{gnd_drop_x}" cy="{rail_y["top_gnd"]}" r="3" fill="{C_GND}"/>'
         )
         r.elements.append(
-            f'<line x1="{ax + 30}" y1="{ay}" x2="{ax + 30}" y2="{rail_y["bot_gnd"]}" '
+            f'<line x1="{gnd_drop_x}" y1="{ay}" x2="{gnd_drop_x}" y2="{rail_y["bot_gnd"]}" '
             f'stroke="{C_GND}" stroke-width="2.5" stroke-linecap="round"/>'
         )
         r.elements.append(
-            f'<circle cx="{ax + 30}" cy="{rail_y["bot_gnd"]}" r="3" fill="{C_GND}"/>'
+            f'<circle cx="{gnd_drop_x}" cy="{rail_y["bot_gnd"]}" r="3" fill="{C_GND}"/>'
         )
 
     # Helper: jumper path from Pico pin (p1) to peripheral pin (p2) using
@@ -4373,6 +4387,26 @@ def generate_phase0_breadboard() -> str:
             f'stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
         )
         r.elements.append(f'<circle cx="{x}" cy="{rail}" r="3" fill="{color}"/>')
+
+    def rail_tap_jog(pin, drop_x, rail, color, stub_dy=8):
+        """Pin → small stub down OUT of body → horizontal jog to drop_x →
+        vertical to rail. Use when a straight rail_tap would pass through
+        the peripheral body itself or a different peripheral."""
+        x, y = pin
+        sy = y + stub_dy  # stub OUT of the bottom-edge pad
+        r.elements.append(
+            f'<line x1="{x}" y1="{y}" x2="{x}" y2="{sy}" '
+            f'stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<line x1="{x}" y1="{sy}" x2="{drop_x}" y2="{sy}" '
+            f'stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+        )
+        r.elements.append(
+            f'<line x1="{drop_x}" y1="{sy}" x2="{drop_x}" y2="{rail}" '
+            f'stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+        )
+        r.elements.append(f'<circle cx="{drop_x}" cy="{rail}" r="3" fill="{color}"/>')
 
     def pad(x, y):
         r.elements.append(
@@ -4413,15 +4447,22 @@ def generate_phase0_breadboard() -> str:
     # OLED jumpers (each at its own drop X — staggered by 12px)
     jumper(pin_anchor["GP4"], o_pin_at["SDA"], C_I2C, drop_x=o_pin_at["SDA"][0] - 0, label="SDA")
     jumper(pin_anchor["GP5"], o_pin_at["SCL"], C_I2C, drop_x=o_pin_at["SCL"][0] - 0, label="SCL")
-    # OLED VCC ↑ to top + rail (its own X)
-    rail_tap(o_pin_at["VCC"], rail_y["top_pos"], C_3V3)
-    # OLED GND ↑ to top − rail
-    rail_tap(o_pin_at["GND"], rail_y["top_gnd"], C_GND)
+    # OLED power/GND: jog OUT of OLED body before going up to rail so the
+    # vertical sits in the empty margin instead of inside the OLED outline.
+    # VCC drops down 8px, jogs RIGHT to x=660 (just past OLED right edge
+    # at x=640), then up to top + rail.
+    rail_tap_jog(o_pin_at["VCC"], drop_x=660, rail=rail_y["top_pos"], color=C_3V3)
+    # GND drops down 8px, jogs LEFT to x=390 (in the empty Pico-OLED gap),
+    # then up to top − rail.
+    rail_tap_jog(o_pin_at["GND"], drop_x=390, rail=rail_y["top_gnd"], color=C_GND)
 
-    # ─── Strip OLED placement (below main OLED) ─────────────────
+    # ─── Strip OLED placement (upper-mid-RIGHT, between main OLED and clock) ─
     # Same I²C0 bus as the main OLED; address 0x3D set on the module's
-    # ADDR pin / solder jumper. Smaller block — physically ~30 × 12 mm.
-    s_x, s_y, s_w, s_h = bb_x + 350, bb_y + 210, 230, 50
+    # ADDR pin / solder jumper. Placed RIGHT of the main OLED (rather
+    # than below it) so its VCC / GND taps go straight up to the top
+    # rails through clear space — stacking it below the main OLED would
+    # send those long taps through the main OLED's body.
+    s_x, s_y, s_w, s_h = bb_x + 670, bb_y + 95, 220, 50
     r.elements.append(
         f'<rect x="{s_x}" y="{s_y}" width="{s_w}" height="{s_h}" fill="#101418" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -4431,14 +4472,19 @@ def generate_phase0_breadboard() -> str:
         f'fill="#020a14" stroke="#222"/>'
     )
     r.elements.append(
+        f'<text x="{s_x + s_w/2}" y="{s_y + 28}" class="value" text-anchor="middle" '
+        f'fill="#7AC4F2" font-size="9">SSD1306 0x3D · 128×32</text>'
+    )
+    r.elements.append(
         f'<text x="{s_x + s_w/2}" y="{s_y - 4}" class="label" text-anchor="middle" '
-        f'fill="#FFF" font-size="10">0.91" SSD1306 strip · 128 × 32 · 0x3D</text>'
+        f'fill="#FFF" font-size="10">0.91" SSD1306 strip OLED</text>'
     )
     # 4 pin pads on the strip-OLED bottom edge (same pin order as main)
     s_pins = [("GND", C_GND), ("VCC", C_3V3), ("SCL", C_I2C), ("SDA", C_I2C)]
     s_pin_at = {}
+    pad_pitch = 50
     for i, (lbl, color) in enumerate(s_pins):
-        px = s_x + 30 + i * 55
+        px = s_x + 25 + i * pad_pitch
         py = s_y + s_h
         pad(px, py)
         r.elements.append(
@@ -4446,17 +4492,21 @@ def generate_phase0_breadboard() -> str:
             f'fill="{color}" font-size="8.5">{lbl}</text>'
         )
         s_pin_at[lbl] = (px, py)
-    # Jumpers: from Pico GP4/GP5 to strip pads. Use drop columns just to
-    # the LEFT of the main-OLED drop columns so the two devices' SDA/SCL
-    # paths sit visually adjacent and don't share verticals.
+    # I²C jumpers from Pico GP4/GP5 — each goes to its own drop column
+    # just to the LEFT of the main-OLED drop columns so verticals don't
+    # collide between the two devices.
     jumper(pin_anchor["GP4"], s_pin_at["SDA"], C_I2C,
-           drop_x=s_pin_at["SDA"][0] - 12, label="SDA")
+           drop_x=s_pin_at["SDA"][0] - 14, label="SDA")
     jumper(pin_anchor["GP5"], s_pin_at["SCL"], C_I2C,
-           drop_x=s_pin_at["SCL"][0] - 12, label="SCL")
-    # Strip OLED VCC ↑ to top + rail
-    rail_tap(s_pin_at["VCC"], rail_y["top_pos"], C_3V3)
-    # Strip OLED GND ↑ to top − rail
-    rail_tap(s_pin_at["GND"], rail_y["top_gnd"], C_GND)
+           drop_x=s_pin_at["SCL"][0] - 14, label="SCL")
+    # Strip OLED power/GND: jog OUT of strip OLED body before going up.
+    # VCC drops down 8px, jogs RIGHT to x=965 (just past strip's right
+    # edge at x=890, before Clock at x=960...). Wait — Clock starts at
+    # x=960 so jog must go LEFT instead.
+    # VCC jogs LEFT to x=700 (between main OLED at x=410-640 and strip
+    # OLED at x=730-890), GND jogs LEFT to x=710. Two unique columns.
+    rail_tap_jog(s_pin_at["VCC"], drop_x=700, rail=rail_y["top_pos"], color=C_3V3)
+    rail_tap_jog(s_pin_at["GND"], drop_x=710, rail=rail_y["top_gnd"], color=C_GND)
 
     # ─── Encoder placement (right-middle) ───────────────────────
     e_x, e_y, e_w, e_h = bb_x + 380, chan_y + 30, 220, 130

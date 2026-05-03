@@ -136,11 +136,14 @@ SVG_DESCRIPTIONS = {
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
         "physically sits on a half-size breadboard. Pico WH straddles the centre channel; both "
-        "OLEDs sit on the upper half (main `0x3C` above, strip `0x3D` below); +3V3 and GND rails "
-        "run along the top and bottom; jumper paths are colour-coded by net. Use this diagram "
-        "while you're plugging wires in. **Address note:** most generic SSD1306 modules ship at "
-        "`0x3C` by default; set the strip OLED to `0x3D` via its on-board ADDR pin or solder "
-        "jumper before powering it up alongside the main OLED.",
+        "OLEDs sit on the upper half (main `0x3C` on the left, strip `0x3D` to its right, "
+        "between the main OLED and the Clock I/O jacks); +3V3 and GND rails run along the top "
+        "and bottom; jumper paths are colour-coded by net. Each OLED's VCC and GND lines jog "
+        "horizontally OUT of the OLED's body before going up to the rails so power wires never "
+        "cross the OLED outlines. Use this diagram while you're plugging wires in. **Address "
+        "note:** most generic SSD1306 modules ship at `0x3C` by default; set the strip OLED to "
+        "`0x3D` via its on-board ADDR pin or solder jumper before powering it up alongside the "
+        "main OLED.",
 
     # Pinout / pin reference diagrams
     "schematics/pico_pinout_diagram.svg":
