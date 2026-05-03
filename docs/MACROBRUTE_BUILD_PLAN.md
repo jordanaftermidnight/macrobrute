@@ -41,12 +41,13 @@ The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is re
 - **`phase0_wiring_schematic.svg`** — flat schematic, elbow-routed nets, useful for understanding what connects to what.
 - **`phase0_breadboard.svg`** — top-down breadboard view, jumper paths colour-coded by net (red=+3V3, dark=GND, blue=I²C0, green=GPIO, orange=RGB drive, purple=clock).
 
-Both match `firmware/pico/config.py` exactly. Pin map covered: OLED on GP4/GP5 (I²C0 @ 0x3C), KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
+Both match `firmware/pico/config.py` exactly. Pin map covered: **two OLEDs share I²C0** on GP4/GP5 — 0.96″ SSD1306 main at `0x3C` (later mounted on the expander panel) and 0.91″ SSD1306 strip at `0x3D` (later mounted over the "micro" in the MicroBrute logo). KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
 
 ### Tasks
-- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics.
-- [ ] Confirm 0.96″ SSD1306 main OLED draws at 0x3C. If display is blank: check SDA/SCL not swapped, then VCC vs GND polarity; toggle `OLED_COL_OFFSET` only if you fall back to a 1.3″ SH1106 (reserved for EFFIGY). LCD fallback requires a separate driver — defer unless both OLEDs fail.
-- [ ] Breadboard integration per the diagrams above: OLED + KY-040 encoder + tap button + RGB LED + clock IN/OUT
+- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics — should detect both OLEDs at `0x3C` and `0x3D`.
+- [ ] Set the strip OLED's I²C address to `0x3D` (ADDR pin or solder-jumper on the module) **before** powering it up alongside the main OLED — both default to `0x3C` out of the box.
+- [ ] Confirm both OLEDs draw their boot splash. Strip OLED is the same SSD1306 driver, just shorter framebuffer (128 × 32 vs 128 × 64). If a display is blank: check SDA/SCL not swapped, then VCC vs GND polarity. Splash for both OLEDs renders the MACRO logo (full size on main, compact on strip).
+- [ ] Breadboard integration per the diagrams above: both OLEDs + KY-040 encoder + tap button + RGB LED + clock IN/OUT
 - [ ] Self-loopback test: jumper GP22 → 1 kΩ → GP21 to confirm the firmware clock generator and IRQ-driven clock-in count match
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
 - [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)

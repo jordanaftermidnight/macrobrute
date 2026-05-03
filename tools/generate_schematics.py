@@ -3521,10 +3521,10 @@ def generate_mod_m14_vco_bias_starve() -> str:
 def generate_phase0_wiring_schematic() -> str:
     """Phase 0 bench-validation wiring — flat schematic, power-rail style."""
     r = SchematicRenderer(
-        1300, 760,
+        1300, 830,
         "Phase 0 — Pico Bench Validation Schematic",
-        '0.96" SSD1306 + KY-040 encoder + tap button + RGB LED + clock I/O · '
-        "every signal labeled, every pin Y aligned",
+        '0.96" main OLED + 0.91" strip OLED + KY-040 encoder + tap button + '
+        "RGB LED + clock I/O · shared I²C0 bus, every pin Y aligned",
     )
 
     # Net colours (one per logical net)
@@ -3536,7 +3536,7 @@ def generate_phase0_wiring_schematic() -> str:
     C_CLK = "#9C27B0"
 
     RAIL_3V3_Y = 60
-    RAIL_GND_Y = 680
+    RAIL_GND_Y = 740
     RAIL_X_LEFT = 70
     RAIL_X_RIGHT = 1240
 
@@ -3569,7 +3569,7 @@ def generate_phase0_wiring_schematic() -> str:
     )
 
     # ─── Pico WH block ──────────────────────────────────────────
-    pico_x, pico_y, pico_w, pico_h = 80, 80, 220, 540
+    pico_x, pico_y, pico_w, pico_h = 80, 80, 220, 610
     r.elements.append(
         f'<rect x="{pico_x}" y="{pico_y}" width="{pico_w}" height="{pico_h}" '
         f'fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>'
@@ -3626,17 +3626,17 @@ def generate_phase0_wiring_schematic() -> str:
     # at the same Y receives a single straight horizontal wire.
     pin_x_right = pico_x + pico_w
     signals = [
-        ("GP4",  "I²C0 SDA", 130, C_I2C),
-        ("GP5",  "I²C0 SCL", 160, C_I2C),
-        ("GP8",  "LED R",    210, C_LED),
-        ("GP9",  "LED G",    240, C_LED),
-        ("GP10", "LED B",    270, C_LED),
-        ("GP12", "Tap Btn",  320, C_GPIO),
-        ("GP13", "Enc SW",   360, C_GPIO),
-        ("GP14", "Enc CLK",  390, C_GPIO),
-        ("GP15", "Enc DT",   420, C_GPIO),
-        ("GP21", "Clk IN",   480, C_CLK),
-        ("GP22", "Clk OUT",  510, C_CLK),
+        ("GP4",  "I²C0 SDA", 130, C_I2C),  # → both OLEDs (shared bus)
+        ("GP5",  "I²C0 SCL", 160, C_I2C),  # → both OLEDs (shared bus)
+        ("GP8",  "LED R",    280, C_LED),
+        ("GP9",  "LED G",    310, C_LED),
+        ("GP10", "LED B",    340, C_LED),
+        ("GP12", "Tap Btn",  390, C_GPIO),
+        ("GP13", "Enc SW",   430, C_GPIO),
+        ("GP14", "Enc CLK",  460, C_GPIO),
+        ("GP15", "Enc DT",   490, C_GPIO),
+        ("GP21", "Clk IN",   550, C_CLK),
+        ("GP22", "Clk OUT",  580, C_CLK),
     ]
     pin_anchor = {}
     for gp, func, py, color in signals:
@@ -3773,16 +3773,104 @@ def generate_phase0_wiring_schematic() -> str:
     )
     tap_to_rail(oled_gnd_drop_x, o_y + o_h + 8, RAIL_GND_Y, C_GND)
 
-    # Signal wires Pico → OLED (straight horizontal — same Y)
-    for gp, pad in [("GP4", (o_x, 130)), ("GP5", (o_x, 160))]:
-        a = pin_anchor[gp]
-        r.elements.append(
-            f'<line x1="{a[0]}" y1="{a[1]}" x2="{pad[0]}" y2="{pad[1]}" '
-            f'stroke="{C_I2C}" stroke-width="2"/>'
-        )
+    # ─── 0.91" SSD1306 strip OLED (below the main OLED) ────────────
+    # Same I²C0 bus, different address (0x3D via solder-jumper or ADDR
+    # pin on the module). Smaller block — physically the strip is
+    # ~30 × 12 mm, but we draw it slightly larger here for legibility.
+    s_x, s_y, s_w, s_h = 460, 200, 320, 60
+    r.elements.append(
+        f'<rect x="{s_x}" y="{s_y}" width="{s_w}" height="{s_h}" fill="#101418" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    # narrow screen strip
+    r.elements.append(
+        f'<rect x="{s_x + 60}" y="{s_y + 12}" width="{s_w - 130}" height="34" '
+        f'fill="#020a14" stroke="#222"/>'
+    )
+    r.elements.append(
+        f'<text x="{s_x + (s_w - 130)/2 + 60}" y="{s_y + 33}" class="value" '
+        f'text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3D</text>'
+    )
+    r.elements.append(
+        f'<text x="{s_x + s_w/2}" y="{s_y - 6}" class="label" text-anchor="middle" '
+        f'font-size="10">0.91" SSD1306 strip OLED · 128 × 32</text>'
+    )
+
+    # SDA/SCL pads on LEFT edge (aligned at strip-internal Y so each branch
+    # arrives as a single straight horizontal stub from the bus column)
+    pad_left(s_x, 220, "SDA", C_I2C)
+    pad_left(s_x, 240, "SCL", C_I2C)
+    # VCC pad on TOP edge (right side, away from main OLED's VCC tap X
+    # so verticals don't share a column)
+    strip_vcc_x = s_x + s_w - 30
+    pad_top(strip_vcc_x, s_y, "VCC", C_3V3)
+    tap_to_rail(strip_vcc_x, s_y - 8, RAIL_3V3_Y, C_3V3)
+    # GND pad on BOTTOM edge — jog LEFT into margin (x = 425) for the drop
+    strip_gnd_pad_x = s_x + 30
+    strip_gnd_drop_x = 425
+    pad_bottom(strip_gnd_pad_x, s_y + s_h, "GND", C_GND)
+    r.elements.append(
+        f'<line x1="{strip_gnd_pad_x}" y1="{s_y + s_h + 8}" x2="{strip_gnd_drop_x}" y2="{s_y + s_h + 8}" '
+        f'stroke="{C_GND}" stroke-width="2"/>'
+    )
+    tap_to_rail(strip_gnd_drop_x, s_y + s_h + 8, RAIL_GND_Y, C_GND)
+
+    # ─── I²C0 bus: Pico → branch → both OLEDs ──────────────────────
+    # Junction column sits in the left margin so the bus visibly forks
+    # from one shared net into two devices. Branch X is unique per net
+    # so SDA and SCL verticals never overlap.
+    sda_branch_x = 445
+    scl_branch_x = 440
+    sda_anchor = pin_anchor["GP4"]
+    scl_anchor = pin_anchor["GP5"]
+
+    # SDA: Pico GP4 → junction at (445, 130) → main SDA pad → branch
+    # down to strip SDA pad at (460, 220)
+    r.elements.append(
+        f'<line x1="{sda_anchor[0]}" y1="{sda_anchor[1]}" x2="{sda_branch_x}" y2="130" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{sda_branch_x}" y1="130" x2="{o_x}" y2="130" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{sda_branch_x}" y1="130" x2="{sda_branch_x}" y2="220" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{sda_branch_x}" y1="220" x2="{s_x}" y2="220" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    # Junction dot at the branch point
+    r.elements.append(
+        f'<circle cx="{sda_branch_x}" cy="130" r="3.5" fill="{C_I2C}"/>'
+    )
+
+    # SCL: Pico GP5 → junction at (440, 160) → main SCL pad → branch
+    # down to strip SCL pad at (460, 240)
+    r.elements.append(
+        f'<line x1="{scl_anchor[0]}" y1="{scl_anchor[1]}" x2="{scl_branch_x}" y2="160" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{scl_branch_x}" y1="160" x2="{o_x}" y2="160" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{scl_branch_x}" y1="160" x2="{scl_branch_x}" y2="240" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<line x1="{scl_branch_x}" y1="240" x2="{s_x}" y2="240" '
+        f'stroke="{C_I2C}" stroke-width="2"/>'
+    )
+    r.elements.append(
+        f'<circle cx="{scl_branch_x}" cy="160" r="3.5" fill="{C_I2C}"/>'
+    )
 
     # ─── RGB LED (common cathode) ───────────────────────────────
-    rgb_x, rgb_y, rgb_w, rgb_h = 460, 200, 320, 90
+    rgb_x, rgb_y, rgb_w, rgb_h = 460, 270, 320, 90
     r.elements.append(
         f'<rect x="{rgb_x}" y="{rgb_y}" width="{rgb_w}" height="{rgb_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -3839,7 +3927,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(rgb_k_drop_x, rgb_y + rgb_h + 8, RAIL_GND_Y, C_GND)
 
     # ─── Tap button (SPST momentary, NO) ────────────────────────
-    tap_x, tap_y, tap_w, tap_h = 460, 305, 220, 30
+    tap_x, tap_y, tap_w, tap_h = 460, 375, 220, 30
     r.elements.append(
         f'<rect x="{tap_x}" y="{tap_y}" width="{tap_w}" height="{tap_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="4"/>'
@@ -3888,7 +3976,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(tap_b_drop_x, sw_y, RAIL_GND_Y, C_GND)
 
     # ─── KY-040 Rotary Encoder ──────────────────────────────────
-    enc_x, enc_y, enc_w, enc_h = 460, 350, 320, 90
+    enc_x, enc_y, enc_w, enc_h = 460, 420, 320, 90
     r.elements.append(
         f'<rect x="{enc_x}" y="{enc_y}" width="{enc_w}" height="{enc_h}" fill="#272838" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -3941,7 +4029,7 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(enc_gnd_drop_x, enc_y + enc_h + 8, RAIL_GND_Y, C_GND)
 
     # ─── Clock I/O block (3.5mm TS jacks) ───────────────────────
-    clk_x, clk_y, clk_w, clk_h = 460, 460, 320, 90
+    clk_x, clk_y, clk_w, clk_h = 460, 530, 320, 90
     r.elements.append(
         f'<rect x="{clk_x}" y="{clk_y}" width="{clk_w}" height="{clk_h}" fill="#1a1a1a" '
         f'stroke="#444" stroke-width="2" rx="6"/>'
@@ -3953,7 +4041,7 @@ def generate_phase0_wiring_schematic() -> str:
 
     # IN jack (Y = 480, matches Pico GP21)
     in_jack_cx = clk_x + clk_w - 70
-    in_jack_cy = 480
+    in_jack_cy = 550
     r.elements.append(
         f'<circle cx="{in_jack_cx}" cy="{in_jack_cy}" r="14" fill="none" '
         f'stroke="#AAA" stroke-width="2"/>'
@@ -3966,7 +4054,7 @@ def generate_phase0_wiring_schematic() -> str:
 
     # OUT jack (Y = 510, matches Pico GP22)
     out_jack_cx = clk_x + clk_w - 70
-    out_jack_cy = 510
+    out_jack_cy = 580
     r.elements.append(
         f'<circle cx="{out_jack_cx}" cy="{out_jack_cy}" r="14" fill="none" '
         f'stroke="#AAA" stroke-width="2"/>'
@@ -4024,13 +4112,14 @@ def generate_phase0_wiring_schematic() -> str:
     tap_to_rail(out_sleeve_drop_x, clk_y + clk_h - 4, RAIL_GND_Y, C_GND)
 
     # ─── Notes panel (below GND rail) ───────────────────────────
-    nx, ny, nw, nh = 70, 698, 1170, 50
+    nx, ny, nw, nh = 70, 758, 1170, 62
     r.elements.append(
         f'<rect x="{nx}" y="{ny}" width="{nw}" height="{nh}" fill="#FFF7E6" '
         f'stroke="#D29922" stroke-width="1" rx="4"/>'
     )
     notes = [
         "Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.",
+        "Both OLEDs share the same I²C0 bus on GP4/GP5; the bus forks at the junction dot in the left margin so SDA reaches both modules from one wire. Main OLED = 0x3C, strip OLED = 0x3D — set the strip's address via its on-module solder jumper or ADDR pin.",
         "All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.",
         "GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.",
     ]
@@ -4328,6 +4417,46 @@ def generate_phase0_breadboard() -> str:
     rail_tap(o_pin_at["VCC"], rail_y["top_pos"], C_3V3)
     # OLED GND ↑ to top − rail
     rail_tap(o_pin_at["GND"], rail_y["top_gnd"], C_GND)
+
+    # ─── Strip OLED placement (below main OLED) ─────────────────
+    # Same I²C0 bus as the main OLED; address 0x3D set on the module's
+    # ADDR pin / solder jumper. Smaller block — physically ~30 × 12 mm.
+    s_x, s_y, s_w, s_h = bb_x + 350, bb_y + 210, 230, 50
+    r.elements.append(
+        f'<rect x="{s_x}" y="{s_y}" width="{s_w}" height="{s_h}" fill="#101418" '
+        f'stroke="#444" stroke-width="2" rx="6"/>'
+    )
+    r.elements.append(
+        f'<rect x="{s_x + 18}" y="{s_y + 12}" width="{s_w - 36}" height="22" '
+        f'fill="#020a14" stroke="#222"/>'
+    )
+    r.elements.append(
+        f'<text x="{s_x + s_w/2}" y="{s_y - 4}" class="label" text-anchor="middle" '
+        f'fill="#FFF" font-size="10">0.91" SSD1306 strip · 128 × 32 · 0x3D</text>'
+    )
+    # 4 pin pads on the strip-OLED bottom edge (same pin order as main)
+    s_pins = [("GND", C_GND), ("VCC", C_3V3), ("SCL", C_I2C), ("SDA", C_I2C)]
+    s_pin_at = {}
+    for i, (lbl, color) in enumerate(s_pins):
+        px = s_x + 30 + i * 55
+        py = s_y + s_h
+        pad(px, py)
+        r.elements.append(
+            f'<text x="{px}" y="{py + 22}" class="value" text-anchor="middle" '
+            f'fill="{color}" font-size="8.5">{lbl}</text>'
+        )
+        s_pin_at[lbl] = (px, py)
+    # Jumpers: from Pico GP4/GP5 to strip pads. Use drop columns just to
+    # the LEFT of the main-OLED drop columns so the two devices' SDA/SCL
+    # paths sit visually adjacent and don't share verticals.
+    jumper(pin_anchor["GP4"], s_pin_at["SDA"], C_I2C,
+           drop_x=s_pin_at["SDA"][0] - 12, label="SDA")
+    jumper(pin_anchor["GP5"], s_pin_at["SCL"], C_I2C,
+           drop_x=s_pin_at["SCL"][0] - 12, label="SCL")
+    # Strip OLED VCC ↑ to top + rail
+    rail_tap(s_pin_at["VCC"], rail_y["top_pos"], C_3V3)
+    # Strip OLED GND ↑ to top − rail
+    rail_tap(s_pin_at["GND"], rail_y["top_gnd"], C_GND)
 
     # ─── Encoder placement (right-middle) ───────────────────────
     e_x, e_y, e_w, e_h = bb_x + 380, chan_y + 30, 220, 130

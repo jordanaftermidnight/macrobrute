@@ -10,7 +10,7 @@ The two diagrams above show the same Phase 0 circuit two ways:
 - **Schematic** — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
 - **Breadboard layout** — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
-Phase 0 covers: 0.96″ SSD1306 OLED · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ + 5 V1 zener clamp on IN). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
+Phase 0 covers: **two OLEDs sharing I²C0** (0.96″ SSD1306 at `0x3C`, 0.91″ SSD1306 strip at `0x3D`) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side. Set the strip OLED's address to `0x3D` (ADDR pin / solder jumper on the module) **before** powering it up beside the main OLED — both default to `0x3C` out of the box.
 
 ## Pin Assignment Table
 

@@ -127,16 +127,20 @@ SVG_DESCRIPTIONS = {
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
         "**Flat schematic, power-rail style.** Pico WH on the left; +3V3 rail along the top, "
-        "GND rail along the bottom. Each Pico signal pin has its Y aligned with the matching "
-        "peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω "
-        "(RGB anodes) and 1 kΩ (clock series) resistors are drawn on their wires. Read this "
-        "diagram to understand *what connects to what* before looking at the breadboard view.",
+        "GND rail along the bottom. Both OLEDs (0.96\" main at `0x3C`, 0.91\" strip at `0x3D`) "
+        "share the I²C0 bus on `GP4`/`GP5` — the bus forks at the junction dot in the left "
+        "margin and reaches both modules from one wire. Each Pico signal pin has its Y aligned "
+        "with the matching peripheral pin so signal wires are single straight horizontal lines. "
+        "Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors drawn on their wires. "
+        "Read this diagram to understand *what connects to what* before looking at the breadboard view.",
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
-        "physically sits on a half-size breadboard. Pico WH straddles the centre channel; +3V3 "
-        "and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use "
-        "this diagram while you're plugging wires in — peripheral positions match where they'd "
-        "naturally land relative to the Pico's pin columns.",
+        "physically sits on a half-size breadboard. Pico WH straddles the centre channel; both "
+        "OLEDs sit on the upper half (main `0x3C` above, strip `0x3D` below); +3V3 and GND rails "
+        "run along the top and bottom; jumper paths are colour-coded by net. Use this diagram "
+        "while you're plugging wires in. **Address note:** most generic SSD1306 modules ship at "
+        "`0x3C` by default; set the strip OLED to `0x3D` via its on-board ADDR pin or solder "
+        "jumper before powering it up alongside the main OLED.",
 
     # Pinout / pin reference diagrams
     "schematics/pico_pinout_diagram.svg":

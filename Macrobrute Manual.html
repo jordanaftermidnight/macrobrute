@@ -1071,7 +1071,7 @@ body:not(.light-mode) .svg-container svg polygon[fill="#333"],body:not(.light-mo
 <h2 id="qr-gpio--phase-0-bench-validation-wiring">Phase 0 Bench-Validation Wiring</h2>
 <p>The two diagrams above show the same Phase 0 circuit two ways:</p>
 <ul><li><strong>Schematic</strong> — flat view, elbow-routed nets, useful for understanding <em>what</em> connects to <em>what</em>.</li><li><strong>Breadboard layout</strong> — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.</li></ul>
-<p>Phase 0 covers: 0.96″ SSD1306 OLED · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ + 5 V1 zener clamp on IN). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.</p>
+<p>Phase 0 covers: <strong>two OLEDs sharing I²C0</strong> (0.96″ SSD1306 at <code>0x3C</code>, 0.91″ SSD1306 strip at <code>0x3D</code>) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side. Set the strip OLED&#x27;s address to <code>0x3D</code> (ADDR pin / solder jumper on the module) <strong>before</strong> powering it up beside the main OLED — both default to <code>0x3C</code> out of the box.</p>
 <h2 id="qr-gpio--pin-assignment-table">Pin Assignment Table</h2>
 <div class="table-wrap"><table><thead><tr>
 <th>GPIO</th>
@@ -4576,7 +4576,7 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <div class="svg-wrap">
 <div class="svg-caption">Phase 0 — Pico Bench Validation Schematic</div>
 <div class="svg-container"><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 760" width="1300" height="760">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 830" width="1300" height="830">
 <defs>
   
   <style>
@@ -4600,14 +4600,14 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 </defs>
 
 <text x="650" y="25" class="title" text-anchor="middle">Phase 0 — Pico Bench Validation Schematic</text>
-<text x="650" y="42" class="subtitle" text-anchor="middle">0.96" SSD1306 + KY-040 encoder + tap button + RGB LED + clock I/O · every signal labeled, every pin Y aligned</text>
+<text x="650" y="42" class="subtitle" text-anchor="middle">0.96" main OLED + 0.91" strip OLED + KY-040 encoder + tap button + RGB LED + clock I/O · shared I²C0 bus, every pin Y aligned</text>
 <line x1="70" y1="60" x2="1240" y2="60" stroke="#D44" stroke-width="3"/>
 <text x="62" y="64" class="label" fill="#D44" font-size="11" text-anchor="end">+3V3</text>
 <text x="1248" y="64" class="label" fill="#D44" font-size="11">+3V3</text>
-<line x1="70" y1="680" x2="1240" y2="680" stroke="#333" stroke-width="3"/>
-<text x="62" y="684" class="label" fill="#333" font-size="11" text-anchor="end">GND</text>
-<text x="1248" y="684" class="label" fill="#333" font-size="11">GND</text>
-<rect x="80" y="80" width="220" height="540" fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>
+<line x1="70" y1="740" x2="1240" y2="740" stroke="#333" stroke-width="3"/>
+<text x="62" y="744" class="label" fill="#333" font-size="11" text-anchor="end">GND</text>
+<text x="1248" y="744" class="label" fill="#333" font-size="11">GND</text>
+<rect x="80" y="80" width="220" height="610" fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>
 <text x="190.0" y="104" class="label" text-anchor="middle" fill="#FFF" font-size="13">Raspberry Pi Pico WH</text>
 <text x="190.0" y="122" class="value" text-anchor="middle" fill="#AAA" font-size="9">RP2040 · 3V3 logic</text>
 <rect x="160.0" y="68" width="60" height="12" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>
@@ -4616,10 +4616,10 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <text x="250.0" y="96" class="value" text-anchor="middle" fill="#AAA" font-size="7">3V3</text>
 <line x1="250.0" y1="80" x2="250.0" y2="60" stroke="#D44" stroke-width="2"/>
 <circle cx="250.0" cy="60" r="3" fill="#D44"/>
-<circle cx="250.0" cy="620" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="250.0" y="612" class="value" text-anchor="middle" fill="#AAA" font-size="7">GND</text>
-<line x1="250.0" y1="620" x2="250.0" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="250.0" cy="680" r="3" fill="#333"/>
+<circle cx="250.0" cy="690" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="250.0" y="682" class="value" text-anchor="middle" fill="#AAA" font-size="7">GND</text>
+<line x1="250.0" y1="690" x2="250.0" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="250.0" cy="740" r="3" fill="#333"/>
 <circle cx="300" cy="130" r="5" fill="#C0C0C0" stroke="#666"/>
 <text x="290" y="133" class="value" text-anchor="end" fill="#AAA" font-size="8">GP4</text>
 <rect x="308" y="122" width="78" height="16" fill="#2196F3" stroke="#333" stroke-width="0.6" rx="2"/>
@@ -4628,42 +4628,42 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <text x="290" y="163" class="value" text-anchor="end" fill="#AAA" font-size="8">GP5</text>
 <rect x="308" y="152" width="78" height="16" fill="#2196F3" stroke="#333" stroke-width="0.6" rx="2"/>
 <text x="347.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="8">I²C0 SCL</text>
-<circle cx="300" cy="210" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="213" class="value" text-anchor="end" fill="#AAA" font-size="8">GP8</text>
-<rect x="308" y="202" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="213" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED R</text>
-<circle cx="300" cy="240" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="243" class="value" text-anchor="end" fill="#AAA" font-size="8">GP9</text>
-<rect x="308" y="232" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED G</text>
-<circle cx="300" cy="270" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="273" class="value" text-anchor="end" fill="#AAA" font-size="8">GP10</text>
-<rect x="308" y="262" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="273" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED B</text>
-<circle cx="300" cy="320" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="323" class="value" text-anchor="end" fill="#AAA" font-size="8">GP12</text>
-<rect x="308" y="312" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="323" class="label" text-anchor="middle" fill="#FFF" font-size="8">Tap Btn</text>
-<circle cx="300" cy="360" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="363" class="value" text-anchor="end" fill="#AAA" font-size="8">GP13</text>
-<rect x="308" y="352" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc SW</text>
+<circle cx="300" cy="280" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="283" class="value" text-anchor="end" fill="#AAA" font-size="8">GP8</text>
+<rect x="308" y="272" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="283" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED R</text>
+<circle cx="300" cy="310" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="313" class="value" text-anchor="end" fill="#AAA" font-size="8">GP9</text>
+<rect x="308" y="302" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="313" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED G</text>
+<circle cx="300" cy="340" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="343" class="value" text-anchor="end" fill="#AAA" font-size="8">GP10</text>
+<rect x="308" y="332" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="343" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED B</text>
 <circle cx="300" cy="390" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="393" class="value" text-anchor="end" fill="#AAA" font-size="8">GP14</text>
+<text x="290" y="393" class="value" text-anchor="end" fill="#AAA" font-size="8">GP12</text>
 <rect x="308" y="382" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="393" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc CLK</text>
-<circle cx="300" cy="420" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="423" class="value" text-anchor="end" fill="#AAA" font-size="8">GP15</text>
-<rect x="308" y="412" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="423" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc DT</text>
-<circle cx="300" cy="480" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="483" class="value" text-anchor="end" fill="#AAA" font-size="8">GP21</text>
-<rect x="308" y="472" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="483" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk IN</text>
-<circle cx="300" cy="510" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="513" class="value" text-anchor="end" fill="#AAA" font-size="8">GP22</text>
-<rect x="308" y="502" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="513" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk OUT</text>
+<text x="347.0" y="393" class="label" text-anchor="middle" fill="#FFF" font-size="8">Tap Btn</text>
+<circle cx="300" cy="430" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="433" class="value" text-anchor="end" fill="#AAA" font-size="8">GP13</text>
+<rect x="308" y="422" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="433" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc SW</text>
+<circle cx="300" cy="460" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="463" class="value" text-anchor="end" fill="#AAA" font-size="8">GP14</text>
+<rect x="308" y="452" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="463" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc CLK</text>
+<circle cx="300" cy="490" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="493" class="value" text-anchor="end" fill="#AAA" font-size="8">GP15</text>
+<rect x="308" y="482" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="493" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc DT</text>
+<circle cx="300" cy="550" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="553" class="value" text-anchor="end" fill="#AAA" font-size="8">GP21</text>
+<rect x="308" y="542" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="553" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk IN</text>
+<circle cx="300" cy="580" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="583" class="value" text-anchor="end" fill="#AAA" font-size="8">GP22</text>
+<rect x="308" y="572" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="583" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk OUT</text>
 
 <rect x="520" y="124" width="150" height="42" fill="#020a14" stroke="#222"/>
 <text x="595.0" y="142" class="value" text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3C</text>
@@ -4680,116 +4680,142 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <rect x="506" y="180" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="510" y="176" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
 <line x1="510" y1="188" x2="430" y2="188" stroke="#333" stroke-width="2"/>
-<line x1="430" y1="188" x2="430" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="430" cy="680" r="3" fill="#333"/>
-<line x1="386" y1="130" x2="460" y2="130" stroke="#2196F3" stroke-width="2"/>
-<line x1="386" y1="160" x2="460" y2="160" stroke="#2196F3" stroke-width="2"/>
-<rect x="460" y="200" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="194" class="label" text-anchor="middle" font-size="10">RGB LED · common cathode (3 × 220 Ω inline)</text>
+<line x1="430" y1="188" x2="430" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="430" cy="740" r="3" fill="#333"/>
+<rect x="460" y="200" width="320" height="60" fill="#101418" stroke="#444" stroke-width="2" rx="6"/>
+<rect x="520" y="212" width="190" height="34" fill="#020a14" stroke="#222"/>
+<text x="615.0" y="233" class="value" text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3D</text>
+<text x="620.0" y="194" class="label" text-anchor="middle" font-size="10">0.91" SSD1306 strip OLED · 128 × 32</text>
+<rect x="452" y="216" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="223" class="value" font-size="8" fill="#2196F3">SDA</text>
+<rect x="452" y="236" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="243" class="value" font-size="8" fill="#2196F3">SCL</text>
+<rect x="746" y="192" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="213" class="value" text-anchor="middle" font-size="8" fill="#D44">VCC</text>
+<line x1="750" y1="192" x2="750" y2="60" stroke="#D44" stroke-width="2"/>
+<circle cx="750" cy="60" r="3" fill="#D44"/>
+<rect x="486" y="260" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="490" y="256" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
+<line x1="490" y1="268" x2="425" y2="268" stroke="#333" stroke-width="2"/>
+<line x1="425" y1="268" x2="425" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="425" cy="740" r="3" fill="#333"/>
+<line x1="386" y1="130" x2="445" y2="130" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="130" x2="460" y2="130" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="130" x2="445" y2="220" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="220" x2="460" y2="220" stroke="#2196F3" stroke-width="2"/>
+<circle cx="445" cy="130" r="3.5" fill="#2196F3"/>
+<line x1="386" y1="160" x2="440" y2="160" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="160" x2="460" y2="160" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="160" x2="440" y2="240" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="240" x2="460" y2="240" stroke="#2196F3" stroke-width="2"/>
+<circle cx="440" cy="160" r="3.5" fill="#2196F3"/>
+<rect x="460" y="270" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="264" class="label" text-anchor="middle" font-size="10">RGB LED · common cathode (3 × 220 Ω inline)</text>
 <defs><radialGradient id="rgbgrad"><stop offset="0%" stop-color="#FFF"/><stop offset="40%" stop-color="#D44"/><stop offset="100%" stop-color="#222"/></radialGradient></defs>
-<circle cx="730" cy="245.0" r="20" fill="url(#rgbgrad)" stroke="#888" stroke-width="1.5"/>
-<text x="730" y="250.0" class="value" text-anchor="middle" font-size="8" fill="#FFF" opacity="0.9">RGB</text>
+<circle cx="730" cy="315.0" r="20" fill="url(#rgbgrad)" stroke="#888" stroke-width="1.5"/>
+<text x="730" y="320.0" class="value" text-anchor="middle" font-size="8" fill="#FFF" opacity="0.9">RGB</text>
 <rect x="452" y="206" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="213" class="value" font-size="8" fill="#FF9800">R</text>
 <line x1="386" y1="210" x2="403.0" y2="210" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="201" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="213" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="210" x2="460" y2="210" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="210" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<line x1="468" y1="210" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
 <rect x="452" y="236" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="243" class="value" font-size="8" fill="#FF9800">G</text>
 <line x1="386" y1="240" x2="403.0" y2="240" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="231" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="243" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="240" x2="460" y2="240" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="240" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<line x1="468" y1="240" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
 <rect x="452" y="266" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="273" class="value" font-size="8" fill="#FF9800">B</text>
 <line x1="386" y1="270" x2="403.0" y2="270" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="261" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="273" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="270" x2="460" y2="270" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="270" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
-<rect x="746" y="290" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="750" y="286" class="value" text-anchor="middle" font-size="8" fill="#333">K</text>
-<line x1="730" y1="265.0" x2="750" y2="288" stroke="#333" stroke-width="1.2" opacity="0.45"/>
-<line x1="750" y1="298" x2="840" y2="298" stroke="#333" stroke-width="2"/>
-<line x1="840" y1="298" x2="840" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="840" cy="680" r="3" fill="#333"/>
-<rect x="460" y="305" width="220" height="30" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="4"/>
-<text x="570.0" y="300" class="label" text-anchor="middle" font-size="10">Tap Button · SPST momentary</text>
-<line x1="468" y1="320.0" x2="510" y2="320.0" stroke="#FFF" stroke-width="2"/>
-<line x1="630" y1="320.0" x2="672" y2="320.0" stroke="#FFF" stroke-width="2"/>
-<circle cx="510" cy="320.0" r="2.5" fill="#FFF"/>
-<circle cx="630" cy="320.0" r="2.5" fill="#FFF"/>
-<line x1="510" y1="320.0" x2="624" y2="308.0" stroke="#FFF" stroke-width="2"/>
-<rect x="452" y="316.0" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="323.0" class="value" font-size="8" fill="#4CAF50">A</text>
-<rect x="680" y="316.0" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="675" y="323.0" class="value" text-anchor="end" font-size="8" fill="#333">B</text>
-<line x1="386" y1="320" x2="460" y2="320.0" stroke="#4CAF50" stroke-width="2"/>
-<line x1="688" y1="320.0" x2="830" y2="320.0" stroke="#333" stroke-width="2"/>
-<line x1="830" y1="320.0" x2="830" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="830" cy="680" r="3" fill="#333"/>
-<rect x="460" y="350" width="320" height="90" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="344" class="label" text-anchor="middle" font-size="10">Rotary Encoder · KY-040 (firmware sets PULL_UP on SW/CLK/DT)</text>
-<circle cx="730" cy="395.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
-<circle cx="730" cy="395.0" r="6" fill="#666"/>
-<text x="730" y="431.0" class="value" text-anchor="middle" fill="#AAA" font-size="7">push to click</text>
+<line x1="468" y1="270" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<rect x="746" y="360" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="356" class="value" text-anchor="middle" font-size="8" fill="#333">K</text>
+<line x1="730" y1="335.0" x2="750" y2="358" stroke="#333" stroke-width="1.2" opacity="0.45"/>
+<line x1="750" y1="368" x2="840" y2="368" stroke="#333" stroke-width="2"/>
+<line x1="840" y1="368" x2="840" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="840" cy="740" r="3" fill="#333"/>
+<rect x="460" y="375" width="220" height="30" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="4"/>
+<text x="570.0" y="370" class="label" text-anchor="middle" font-size="10">Tap Button · SPST momentary</text>
+<line x1="468" y1="390.0" x2="510" y2="390.0" stroke="#FFF" stroke-width="2"/>
+<line x1="630" y1="390.0" x2="672" y2="390.0" stroke="#FFF" stroke-width="2"/>
+<circle cx="510" cy="390.0" r="2.5" fill="#FFF"/>
+<circle cx="630" cy="390.0" r="2.5" fill="#FFF"/>
+<line x1="510" y1="390.0" x2="624" y2="378.0" stroke="#FFF" stroke-width="2"/>
+<rect x="452" y="386.0" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="393.0" class="value" font-size="8" fill="#4CAF50">A</text>
+<rect x="680" y="386.0" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="675" y="393.0" class="value" text-anchor="end" font-size="8" fill="#333">B</text>
+<line x1="386" y1="390" x2="460" y2="390.0" stroke="#4CAF50" stroke-width="2"/>
+<line x1="688" y1="390.0" x2="830" y2="390.0" stroke="#333" stroke-width="2"/>
+<line x1="830" y1="390.0" x2="830" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="830" cy="740" r="3" fill="#333"/>
+<rect x="460" y="420" width="320" height="90" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="414" class="label" text-anchor="middle" font-size="10">Rotary Encoder · KY-040 (firmware sets PULL_UP on SW/CLK/DT)</text>
+<circle cx="730" cy="465.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
+<circle cx="730" cy="465.0" r="6" fill="#666"/>
+<text x="730" y="501.0" class="value" text-anchor="middle" fill="#AAA" font-size="7">push to click</text>
 <rect x="452" y="356" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="363" class="value" font-size="8" fill="#4CAF50">SW</text>
-<line x1="386" y1="360" x2="460" y2="360" stroke="#4CAF50" stroke-width="2"/>
+<line x1="386" y1="430" x2="460" y2="360" stroke="#4CAF50" stroke-width="2"/>
 <rect x="452" y="386" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="393" class="value" font-size="8" fill="#4CAF50">CLK</text>
-<line x1="386" y1="390" x2="460" y2="390" stroke="#4CAF50" stroke-width="2"/>
+<line x1="386" y1="460" x2="460" y2="390" stroke="#4CAF50" stroke-width="2"/>
 <rect x="452" y="416" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="423" class="value" font-size="8" fill="#4CAF50">DT</text>
-<line x1="386" y1="420" x2="460" y2="420" stroke="#4CAF50" stroke-width="2"/>
-<rect x="486" y="342" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="490" y="363" class="value" text-anchor="middle" font-size="8" fill="#D44">+</text>
-<line x1="490" y1="342" x2="420" y2="342" stroke="#D44" stroke-width="2"/>
-<line x1="420" y1="342" x2="420" y2="60" stroke="#D44" stroke-width="2"/>
+<line x1="386" y1="490" x2="460" y2="420" stroke="#4CAF50" stroke-width="2"/>
+<rect x="486" y="412" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="490" y="433" class="value" text-anchor="middle" font-size="8" fill="#D44">+</text>
+<line x1="490" y1="412" x2="420" y2="412" stroke="#D44" stroke-width="2"/>
+<line x1="420" y1="412" x2="420" y2="60" stroke="#D44" stroke-width="2"/>
 <circle cx="420" cy="60" r="3" fill="#D44"/>
-<rect x="746" y="440" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="750" y="436" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
-<line x1="750" y1="448" x2="890" y2="448" stroke="#333" stroke-width="2"/>
-<line x1="890" y1="448" x2="890" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="890" cy="680" r="3" fill="#333"/>
-<rect x="460" y="460" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="454" class="label" text-anchor="middle" font-size="10">Clock I/O · 3.5 mm TS jacks (1 kΩ inline)</text>
-<circle cx="710" cy="480" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
-<circle cx="710" cy="480" r="6" fill="#888"/>
-<text x="732" y="484" class="value" font-size="9" fill="#FFF">IN</text>
-<circle cx="710" cy="510" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
-<circle cx="710" cy="510" r="6" fill="#888"/>
-<text x="732" y="514" class="value" font-size="9" fill="#FFF">OUT</text>
-<rect x="452" y="476" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="483" class="value" font-size="8" fill="#9C27B0">tip</text>
-<line x1="386" y1="480" x2="403.0" y2="480" stroke="#9C27B0" stroke-width="2"/>
-<rect x="403.0" y="471" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
-<text x="423.0" y="483" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
-<line x1="443.0" y1="480" x2="460" y2="480" stroke="#9C27B0" stroke-width="2"/>
-<line x1="468" y1="480" x2="696" y2="480" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
-<rect x="452" y="506" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="513" class="value" font-size="8" fill="#9C27B0">tip</text>
-<line x1="386" y1="510" x2="403.0" y2="510" stroke="#9C27B0" stroke-width="2"/>
-<rect x="403.0" y="501" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
-<text x="423.0" y="513" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
-<line x1="443.0" y1="510" x2="460" y2="510" stroke="#9C27B0" stroke-width="2"/>
-<line x1="468" y1="510" x2="696" y2="510" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
-<line x1="710" y1="494" x2="710" y2="538" stroke="#333" stroke-width="2"/>
-<line x1="710" y1="538" x2="850" y2="538" stroke="#333" stroke-width="2"/>
-<line x1="850" y1="538" x2="850" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="850" cy="680" r="3" fill="#333"/>
-<line x1="710" y1="524" x2="710" y2="546" stroke="#333" stroke-width="2"/>
-<line x1="710" y1="546" x2="870" y2="546" stroke="#333" stroke-width="2"/>
-<line x1="870" y1="546" x2="870" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="870" cy="680" r="3" fill="#333"/>
-<rect x="70" y="698" width="1170" height="50" fill="#FFF7E6" stroke="#D29922" stroke-width="1" rx="4"/>
-<text x="82" y="714" class="value" font-size="8.5" fill="#5C4500">Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.</text>
-<text x="82" y="726" class="value" font-size="8.5" fill="#5C4500">All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.</text>
-<text x="82" y="738" class="value" font-size="8.5" fill="#5C4500">GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.</text></svg></div>
-<div class="svg-desc"><strong>Flat schematic, power-rail style.</strong> Pico WH on the left; +3V3 rail along the top, GND rail along the bottom. Each Pico signal pin has its Y aligned with the matching peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors are drawn on their wires. Read this diagram to understand <em>what connects to what</em> before looking at the breadboard view.</div>
+<rect x="746" y="510" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="506" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
+<line x1="750" y1="518" x2="890" y2="518" stroke="#333" stroke-width="2"/>
+<line x1="890" y1="518" x2="890" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="890" cy="740" r="3" fill="#333"/>
+<rect x="460" y="530" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="524" class="label" text-anchor="middle" font-size="10">Clock I/O · 3.5 mm TS jacks (1 kΩ inline)</text>
+<circle cx="710" cy="550" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
+<circle cx="710" cy="550" r="6" fill="#888"/>
+<text x="732" y="554" class="value" font-size="9" fill="#FFF">IN</text>
+<circle cx="710" cy="580" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
+<circle cx="710" cy="580" r="6" fill="#888"/>
+<text x="732" y="584" class="value" font-size="9" fill="#FFF">OUT</text>
+<rect x="452" y="546" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="553" class="value" font-size="8" fill="#9C27B0">tip</text>
+<line x1="386" y1="550" x2="403.0" y2="550" stroke="#9C27B0" stroke-width="2"/>
+<rect x="403.0" y="541" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
+<text x="423.0" y="553" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
+<line x1="443.0" y1="550" x2="460" y2="550" stroke="#9C27B0" stroke-width="2"/>
+<line x1="468" y1="550" x2="696" y2="550" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
+<rect x="452" y="576" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="583" class="value" font-size="8" fill="#9C27B0">tip</text>
+<line x1="386" y1="580" x2="403.0" y2="580" stroke="#9C27B0" stroke-width="2"/>
+<rect x="403.0" y="571" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
+<text x="423.0" y="583" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
+<line x1="443.0" y1="580" x2="460" y2="580" stroke="#9C27B0" stroke-width="2"/>
+<line x1="468" y1="580" x2="696" y2="580" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
+<line x1="710" y1="564" x2="710" y2="608" stroke="#333" stroke-width="2"/>
+<line x1="710" y1="608" x2="850" y2="608" stroke="#333" stroke-width="2"/>
+<line x1="850" y1="608" x2="850" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="850" cy="740" r="3" fill="#333"/>
+<line x1="710" y1="594" x2="710" y2="616" stroke="#333" stroke-width="2"/>
+<line x1="710" y1="616" x2="870" y2="616" stroke="#333" stroke-width="2"/>
+<line x1="870" y1="616" x2="870" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="870" cy="740" r="3" fill="#333"/>
+<rect x="70" y="758" width="1170" height="62" fill="#FFF7E6" stroke="#D29922" stroke-width="1" rx="4"/>
+<text x="82" y="774" class="value" font-size="8.5" fill="#5C4500">Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.</text>
+<text x="82" y="786" class="value" font-size="8.5" fill="#5C4500">Both OLEDs share the same I²C0 bus on GP4/GP5; the bus forks at the junction dot in the left margin so SDA reaches both modules from one wire. Main OLED = 0x3C, strip OLED = 0x3D — set the strip's address via its on-module solder jumper or ADDR pin.</text>
+<text x="82" y="798" class="value" font-size="8.5" fill="#5C4500">All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.</text>
+<text x="82" y="810" class="value" font-size="8.5" fill="#5C4500">GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.</text></svg></div>
+<div class="svg-desc"><strong>Flat schematic, power-rail style.</strong> Pico WH on the left; +3V3 rail along the top, GND rail along the bottom. Both OLEDs (0.96&quot; main at <code>0x3C</code>, 0.91&quot; strip at <code>0x3D</code>) share the I²C0 bus on <code>GP4</code>/<code>GP5</code> — the bus forks at the junction dot in the left margin and reaches both modules from one wire. Each Pico signal pin has its Y aligned with the matching peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors drawn on their wires. Read this diagram to understand <em>what connects to what</em> before looking at the breadboard view.</div>
 </div>
 <div class="svg-wrap">
 <div class="svg-caption">Phase 0 — Breadboard Layout (top-down)</div>
@@ -6043,6 +6069,27 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <circle cx="495" cy="112" r="3" fill="#D44"/>
 <line x1="440" y1="280" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
 <circle cx="440" cy="134" r="3" fill="#333"/>
+<rect x="410" y="300" width="230" height="50" fill="#101418" stroke="#444" stroke-width="2" rx="6"/>
+<rect x="428" y="312" width="194" height="22" fill="#020a14" stroke="#222"/>
+<text x="525.0" y="296" class="label" text-anchor="middle" fill="#FFF" font-size="10">0.91" SSD1306 strip · 128 × 32 · 0x3D</text>
+<rect x="435" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="440" y="372" class="value" text-anchor="middle" fill="#333" font-size="8.5">GND</text>
+<rect x="490" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="495" y="372" class="value" text-anchor="middle" fill="#D44" font-size="8.5">VCC</text>
+<rect x="545" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="550" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SCL</text>
+<rect x="600" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="605" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SDA</text>
+<path d="M150,319.6470588235294 L593,319.6470588235294 L593,350 L605,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="605" cy="350" r="2.5" fill="#2196F3"/>
+<text x="599" y="337.8235294117647" class="value" fill="#2196F3" font-size="7">SDA</text>
+<path d="M150,331.1764705882353 L538,331.1764705882353 L538,350 L550,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="550" cy="350" r="2.5" fill="#2196F3"/>
+<text x="544" y="343.5882352941177" class="value" fill="#2196F3" font-size="7">SCL</text>
+<line x1="495" y1="350" x2="495" y2="112" stroke="#D44" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="495" cy="112" r="3" fill="#D44"/>
+<line x1="440" y1="350" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="440" cy="134" r="3" fill="#333"/>
 <rect x="440" y="390.0" width="220" height="130" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
 <text x="550.0" y="408.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">KY-040 Rotary Encoder</text>
 <circle cx="490" cy="460.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
@@ -6159,7 +6206,7 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <text x="748" y="729" class="value" font-size="9">RGB</text>
 <rect x="895" y="720" width="14" height="10" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
 <text x="913" y="729" class="value" font-size="9">Clock</text></svg></div>
-<div class="svg-desc"><strong>Top-down breadboard layout.</strong> Same circuit as the schematic above, drawn the way it physically sits on a half-size breadboard. Pico WH straddles the centre channel; +3V3 and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use this diagram while you&#x27;re plugging wires in — peripheral positions match where they&#x27;d naturally land relative to the Pico&#x27;s pin columns.</div>
+<div class="svg-desc"><strong>Top-down breadboard layout.</strong> Same circuit as the schematic above, drawn the way it physically sits on a half-size breadboard. Pico WH straddles the centre channel; both OLEDs sit on the upper half (main <code>0x3C</code> above, strip <code>0x3D</code> below); +3V3 and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use this diagram while you&#x27;re plugging wires in. <strong>Address note:</strong> most generic SSD1306 modules ship at <code>0x3C</code> by default; set the strip OLED to <code>0x3D</code> via its on-board ADDR pin or solder jumper before powering it up alongside the main OLED.</div>
 </div>
 </div><h2 id="docs-macrobrute-build-plan--context">Context</h2>
 <p>The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (14 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.</p>
@@ -6248,9 +6295,9 @@ LFO: TP21 ──→ Buffer ──→ DB-9 A ──→ Expander LFO jack</code></
 <h3 id="docs-macrobrute-build-plan--wiring-reference">Wiring reference</h3>
 <p>The breadboard layout for Phase 0 lives in <code>schematics/pico_pinout.md</code> and is rendered as two diagrams:</p>
 <ul><li><strong><code>phase0_wiring_schematic.svg</code></strong> — flat schematic, elbow-routed nets, useful for understanding what connects to what.</li><li><strong><code>phase0_breadboard.svg</code></strong> — top-down breadboard view, jumper paths colour-coded by net (red=+3V3, dark=GND, blue=I²C0, green=GPIO, orange=RGB drive, purple=clock).</li></ul>
-<p>Both match <code>firmware/pico/config.py</code> exactly. Pin map covered: OLED on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> (I²C0 @ 0x3C), KY-040 encoder on <a class="ref gp" href="#gp-14">GP14</a>/<a class="ref gp" href="#gp-15">GP15</a>/<a class="ref gp" href="#gp-13">GP13</a> (firmware enables <code>Pin.PULL_UP</code> on all three), tap button on <a class="ref gp" href="#gp-12">GP12</a> (active-LOW, <code>Pin.PULL_UP</code>), RGB LED (common cathode) R/G/B on <a class="ref gp" href="#gp-8">GP8</a>/<a class="ref gp" href="#gp-9">GP9</a>/<a class="ref gp" href="#gp-10">GP10</a> via 220 Ω, clock OUT on <a class="ref gp" href="#gp-22">GP22</a>, clock IN on <a class="ref gp" href="#gp-21">GP21</a> (<code>Pin.PULL_DOWN</code>, IRQ on rising edge).</p>
+<p>Both match <code>firmware/pico/config.py</code> exactly. Pin map covered: <strong>two OLEDs share I²C0</strong> on <a class="ref gp" href="#gp-4">GP4</a>/<a class="ref gp" href="#gp-5">GP5</a> — 0.96″ SSD1306 main at <code>0x3C</code> (later mounted on the expander panel) and 0.91″ SSD1306 strip at <code>0x3D</code> (later mounted over the &quot;micro&quot; in the MicroBrute logo). KY-040 encoder on <a class="ref gp" href="#gp-14">GP14</a>/<a class="ref gp" href="#gp-15">GP15</a>/<a class="ref gp" href="#gp-13">GP13</a> (firmware enables <code>Pin.PULL_UP</code> on all three), tap button on <a class="ref gp" href="#gp-12">GP12</a> (active-LOW, <code>Pin.PULL_UP</code>), RGB LED (common cathode) R/G/B on <a class="ref gp" href="#gp-8">GP8</a>/<a class="ref gp" href="#gp-9">GP9</a>/<a class="ref gp" href="#gp-10">GP10</a> via 220 Ω, clock OUT on <a class="ref gp" href="#gp-22">GP22</a>, clock IN on <a class="ref gp" href="#gp-21">GP21</a> (<code>Pin.PULL_DOWN</code>, IRQ on rising edge).</p>
 <h3 id="docs-macrobrute-build-plan--tasks">Tasks</h3>
-<ul class="checklist"><li class="ck">&#9744; Flash Pico firmware (<code>tools/flash_pico.sh</code>). Run <code>test_hw.py</code> first for per-peripheral diagnostics.</li><li class="ck">&#9744; Confirm 0.96″ SSD1306 main OLED draws at 0x3C. If display is blank: check SDA/SCL not swapped, then VCC vs GND polarity; toggle <code>OLED_COL_OFFSET</code> only if you fall back to a 1.3″ SH1106 (reserved for EFFIGY). LCD fallback requires a separate driver — defer unless both OLEDs fail.</li><li class="ck">&#9744; Breadboard integration per the diagrams above: OLED + KY-040 encoder + tap button + RGB LED + clock IN/OUT</li><li class="ck">&#9744; Self-loopback test: jumper <a class="ref gp" href="#gp-22">GP22</a> → 1 kΩ → <a class="ref gp" href="#gp-21">GP21</a> to confirm the firmware clock generator and IRQ-driven clock-in count match</li><li class="ck">&#9744; MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — <strong>DONE</strong> (teardown photos taken)</li><li class="ck">&#9744; LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)</li><li class="ck">&#9744; Verify PL2303HX USB-TTL with serial loopback</li></ul>
+<ul class="checklist"><li class="ck">&#9744; Flash Pico firmware (<code>tools/flash_pico.sh</code>). Run <code>test_hw.py</code> first for per-peripheral diagnostics — should detect both OLEDs at <code>0x3C</code> and <code>0x3D</code>.</li><li class="ck">&#9744; Set the strip OLED&#x27;s I²C address to <code>0x3D</code> (ADDR pin or solder-jumper on the module) <strong>before</strong> powering it up alongside the main OLED — both default to <code>0x3C</code> out of the box.</li><li class="ck">&#9744; Confirm both OLEDs draw their boot splash. Strip OLED is the same SSD1306 driver, just shorter framebuffer (128 × 32 vs 128 × 64). If a display is blank: check SDA/SCL not swapped, then VCC vs GND polarity. Splash for both OLEDs renders the MACRO logo (full size on main, compact on strip).</li><li class="ck">&#9744; Breadboard integration per the diagrams above: both OLEDs + KY-040 encoder + tap button + RGB LED + clock IN/OUT</li><li class="ck">&#9744; Self-loopback test: jumper <a class="ref gp" href="#gp-22">GP22</a> → 1 kΩ → <a class="ref gp" href="#gp-21">GP21</a> to confirm the firmware clock generator and IRQ-driven clock-in count match</li><li class="ck">&#9744; MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — <strong>DONE</strong> (teardown photos taken)</li><li class="ck">&#9744; LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)</li><li class="ck">&#9744; Verify PL2303HX USB-TTL with serial loopback</li></ul>
 <h3 id="docs-macrobrute-build-plan--toolchain-setup-macos">Toolchain Setup (macOS)</h3>
 <pre><code>brew install lpc21isp             # already installed
 brew install --cask ghidra        # installed: Ghidra 12.0.4
@@ -15842,7 +15889,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <div class="svg-wrap">
 <div class="svg-caption">Phase 0 — Pico Bench Validation Schematic</div>
 <div class="svg-container"><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 760" width="1300" height="760">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 830" width="1300" height="830">
 <defs>
   
   <style>
@@ -15866,14 +15913,14 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 </defs>
 
 <text x="650" y="25" class="title" text-anchor="middle">Phase 0 — Pico Bench Validation Schematic</text>
-<text x="650" y="42" class="subtitle" text-anchor="middle">0.96" SSD1306 + KY-040 encoder + tap button + RGB LED + clock I/O · every signal labeled, every pin Y aligned</text>
+<text x="650" y="42" class="subtitle" text-anchor="middle">0.96" main OLED + 0.91" strip OLED + KY-040 encoder + tap button + RGB LED + clock I/O · shared I²C0 bus, every pin Y aligned</text>
 <line x1="70" y1="60" x2="1240" y2="60" stroke="#D44" stroke-width="3"/>
 <text x="62" y="64" class="label" fill="#D44" font-size="11" text-anchor="end">+3V3</text>
 <text x="1248" y="64" class="label" fill="#D44" font-size="11">+3V3</text>
-<line x1="70" y1="680" x2="1240" y2="680" stroke="#333" stroke-width="3"/>
-<text x="62" y="684" class="label" fill="#333" font-size="11" text-anchor="end">GND</text>
-<text x="1248" y="684" class="label" fill="#333" font-size="11">GND</text>
-<rect x="80" y="80" width="220" height="540" fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>
+<line x1="70" y1="740" x2="1240" y2="740" stroke="#333" stroke-width="3"/>
+<text x="62" y="744" class="label" fill="#333" font-size="11" text-anchor="end">GND</text>
+<text x="1248" y="744" class="label" fill="#333" font-size="11">GND</text>
+<rect x="80" y="80" width="220" height="610" fill="#1a1a1a" stroke="#555" stroke-width="2.5" rx="10"/>
 <text x="190.0" y="104" class="label" text-anchor="middle" fill="#FFF" font-size="13">Raspberry Pi Pico WH</text>
 <text x="190.0" y="122" class="value" text-anchor="middle" fill="#AAA" font-size="9">RP2040 · 3V3 logic</text>
 <rect x="160.0" y="68" width="60" height="12" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>
@@ -15882,10 +15929,10 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="250.0" y="96" class="value" text-anchor="middle" fill="#AAA" font-size="7">3V3</text>
 <line x1="250.0" y1="80" x2="250.0" y2="60" stroke="#D44" stroke-width="2"/>
 <circle cx="250.0" cy="60" r="3" fill="#D44"/>
-<circle cx="250.0" cy="620" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="250.0" y="612" class="value" text-anchor="middle" fill="#AAA" font-size="7">GND</text>
-<line x1="250.0" y1="620" x2="250.0" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="250.0" cy="680" r="3" fill="#333"/>
+<circle cx="250.0" cy="690" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="250.0" y="682" class="value" text-anchor="middle" fill="#AAA" font-size="7">GND</text>
+<line x1="250.0" y1="690" x2="250.0" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="250.0" cy="740" r="3" fill="#333"/>
 <circle cx="300" cy="130" r="5" fill="#C0C0C0" stroke="#666"/>
 <text x="290" y="133" class="value" text-anchor="end" fill="#AAA" font-size="8">GP4</text>
 <rect x="308" y="122" width="78" height="16" fill="#2196F3" stroke="#333" stroke-width="0.6" rx="2"/>
@@ -15894,42 +15941,42 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="290" y="163" class="value" text-anchor="end" fill="#AAA" font-size="8">GP5</text>
 <rect x="308" y="152" width="78" height="16" fill="#2196F3" stroke="#333" stroke-width="0.6" rx="2"/>
 <text x="347.0" y="163" class="label" text-anchor="middle" fill="#FFF" font-size="8">I²C0 SCL</text>
-<circle cx="300" cy="210" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="213" class="value" text-anchor="end" fill="#AAA" font-size="8">GP8</text>
-<rect x="308" y="202" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="213" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED R</text>
-<circle cx="300" cy="240" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="243" class="value" text-anchor="end" fill="#AAA" font-size="8">GP9</text>
-<rect x="308" y="232" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="243" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED G</text>
-<circle cx="300" cy="270" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="273" class="value" text-anchor="end" fill="#AAA" font-size="8">GP10</text>
-<rect x="308" y="262" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="273" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED B</text>
-<circle cx="300" cy="320" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="323" class="value" text-anchor="end" fill="#AAA" font-size="8">GP12</text>
-<rect x="308" y="312" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="323" class="label" text-anchor="middle" fill="#FFF" font-size="8">Tap Btn</text>
-<circle cx="300" cy="360" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="363" class="value" text-anchor="end" fill="#AAA" font-size="8">GP13</text>
-<rect x="308" y="352" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc SW</text>
+<circle cx="300" cy="280" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="283" class="value" text-anchor="end" fill="#AAA" font-size="8">GP8</text>
+<rect x="308" y="272" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="283" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED R</text>
+<circle cx="300" cy="310" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="313" class="value" text-anchor="end" fill="#AAA" font-size="8">GP9</text>
+<rect x="308" y="302" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="313" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED G</text>
+<circle cx="300" cy="340" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="343" class="value" text-anchor="end" fill="#AAA" font-size="8">GP10</text>
+<rect x="308" y="332" width="78" height="16" fill="#FF9800" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="343" class="label" text-anchor="middle" fill="#FFF" font-size="8">LED B</text>
 <circle cx="300" cy="390" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="393" class="value" text-anchor="end" fill="#AAA" font-size="8">GP14</text>
+<text x="290" y="393" class="value" text-anchor="end" fill="#AAA" font-size="8">GP12</text>
 <rect x="308" y="382" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="393" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc CLK</text>
-<circle cx="300" cy="420" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="423" class="value" text-anchor="end" fill="#AAA" font-size="8">GP15</text>
-<rect x="308" y="412" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="423" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc DT</text>
-<circle cx="300" cy="480" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="483" class="value" text-anchor="end" fill="#AAA" font-size="8">GP21</text>
-<rect x="308" y="472" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="483" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk IN</text>
-<circle cx="300" cy="510" r="5" fill="#C0C0C0" stroke="#666"/>
-<text x="290" y="513" class="value" text-anchor="end" fill="#AAA" font-size="8">GP22</text>
-<rect x="308" y="502" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
-<text x="347.0" y="513" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk OUT</text>
+<text x="347.0" y="393" class="label" text-anchor="middle" fill="#FFF" font-size="8">Tap Btn</text>
+<circle cx="300" cy="430" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="433" class="value" text-anchor="end" fill="#AAA" font-size="8">GP13</text>
+<rect x="308" y="422" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="433" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc SW</text>
+<circle cx="300" cy="460" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="463" class="value" text-anchor="end" fill="#AAA" font-size="8">GP14</text>
+<rect x="308" y="452" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="463" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc CLK</text>
+<circle cx="300" cy="490" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="493" class="value" text-anchor="end" fill="#AAA" font-size="8">GP15</text>
+<rect x="308" y="482" width="78" height="16" fill="#4CAF50" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="493" class="label" text-anchor="middle" fill="#FFF" font-size="8">Enc DT</text>
+<circle cx="300" cy="550" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="553" class="value" text-anchor="end" fill="#AAA" font-size="8">GP21</text>
+<rect x="308" y="542" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="553" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk IN</text>
+<circle cx="300" cy="580" r="5" fill="#C0C0C0" stroke="#666"/>
+<text x="290" y="583" class="value" text-anchor="end" fill="#AAA" font-size="8">GP22</text>
+<rect x="308" y="572" width="78" height="16" fill="#9C27B0" stroke="#333" stroke-width="0.6" rx="2"/>
+<text x="347.0" y="583" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clk OUT</text>
 
 <rect x="520" y="124" width="150" height="42" fill="#020a14" stroke="#222"/>
 <text x="595.0" y="142" class="value" text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3C</text>
@@ -15946,116 +15993,142 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <rect x="506" y="180" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="510" y="176" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
 <line x1="510" y1="188" x2="430" y2="188" stroke="#333" stroke-width="2"/>
-<line x1="430" y1="188" x2="430" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="430" cy="680" r="3" fill="#333"/>
-<line x1="386" y1="130" x2="460" y2="130" stroke="#2196F3" stroke-width="2"/>
-<line x1="386" y1="160" x2="460" y2="160" stroke="#2196F3" stroke-width="2"/>
-<rect x="460" y="200" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="194" class="label" text-anchor="middle" font-size="10">RGB LED · common cathode (3 × 220 Ω inline)</text>
+<line x1="430" y1="188" x2="430" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="430" cy="740" r="3" fill="#333"/>
+<rect x="460" y="200" width="320" height="60" fill="#101418" stroke="#444" stroke-width="2" rx="6"/>
+<rect x="520" y="212" width="190" height="34" fill="#020a14" stroke="#222"/>
+<text x="615.0" y="233" class="value" text-anchor="middle" fill="#7AC4F2" font-size="9">SSD1306 0x3D</text>
+<text x="620.0" y="194" class="label" text-anchor="middle" font-size="10">0.91" SSD1306 strip OLED · 128 × 32</text>
+<rect x="452" y="216" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="223" class="value" font-size="8" fill="#2196F3">SDA</text>
+<rect x="452" y="236" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="243" class="value" font-size="8" fill="#2196F3">SCL</text>
+<rect x="746" y="192" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="213" class="value" text-anchor="middle" font-size="8" fill="#D44">VCC</text>
+<line x1="750" y1="192" x2="750" y2="60" stroke="#D44" stroke-width="2"/>
+<circle cx="750" cy="60" r="3" fill="#D44"/>
+<rect x="486" y="260" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="490" y="256" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
+<line x1="490" y1="268" x2="425" y2="268" stroke="#333" stroke-width="2"/>
+<line x1="425" y1="268" x2="425" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="425" cy="740" r="3" fill="#333"/>
+<line x1="386" y1="130" x2="445" y2="130" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="130" x2="460" y2="130" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="130" x2="445" y2="220" stroke="#2196F3" stroke-width="2"/>
+<line x1="445" y1="220" x2="460" y2="220" stroke="#2196F3" stroke-width="2"/>
+<circle cx="445" cy="130" r="3.5" fill="#2196F3"/>
+<line x1="386" y1="160" x2="440" y2="160" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="160" x2="460" y2="160" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="160" x2="440" y2="240" stroke="#2196F3" stroke-width="2"/>
+<line x1="440" y1="240" x2="460" y2="240" stroke="#2196F3" stroke-width="2"/>
+<circle cx="440" cy="160" r="3.5" fill="#2196F3"/>
+<rect x="460" y="270" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="264" class="label" text-anchor="middle" font-size="10">RGB LED · common cathode (3 × 220 Ω inline)</text>
 <defs><radialGradient id="rgbgrad"><stop offset="0%" stop-color="#FFF"/><stop offset="40%" stop-color="#D44"/><stop offset="100%" stop-color="#222"/></radialGradient></defs>
-<circle cx="730" cy="245.0" r="20" fill="url(#rgbgrad)" stroke="#888" stroke-width="1.5"/>
-<text x="730" y="250.0" class="value" text-anchor="middle" font-size="8" fill="#FFF" opacity="0.9">RGB</text>
+<circle cx="730" cy="315.0" r="20" fill="url(#rgbgrad)" stroke="#888" stroke-width="1.5"/>
+<text x="730" y="320.0" class="value" text-anchor="middle" font-size="8" fill="#FFF" opacity="0.9">RGB</text>
 <rect x="452" y="206" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="213" class="value" font-size="8" fill="#FF9800">R</text>
 <line x1="386" y1="210" x2="403.0" y2="210" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="201" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="213" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="210" x2="460" y2="210" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="210" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<line x1="468" y1="210" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
 <rect x="452" y="236" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="243" class="value" font-size="8" fill="#FF9800">G</text>
 <line x1="386" y1="240" x2="403.0" y2="240" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="231" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="243" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="240" x2="460" y2="240" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="240" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<line x1="468" y1="240" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
 <rect x="452" y="266" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="273" class="value" font-size="8" fill="#FF9800">B</text>
 <line x1="386" y1="270" x2="403.0" y2="270" stroke="#FF9800" stroke-width="2"/>
 <rect x="403.0" y="261" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
 <text x="423.0" y="273" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">220Ω</text>
 <line x1="443.0" y1="270" x2="460" y2="270" stroke="#FF9800" stroke-width="2"/>
-<line x1="468" y1="270" x2="708" y2="245.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
-<rect x="746" y="290" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="750" y="286" class="value" text-anchor="middle" font-size="8" fill="#333">K</text>
-<line x1="730" y1="265.0" x2="750" y2="288" stroke="#333" stroke-width="1.2" opacity="0.45"/>
-<line x1="750" y1="298" x2="840" y2="298" stroke="#333" stroke-width="2"/>
-<line x1="840" y1="298" x2="840" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="840" cy="680" r="3" fill="#333"/>
-<rect x="460" y="305" width="220" height="30" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="4"/>
-<text x="570.0" y="300" class="label" text-anchor="middle" font-size="10">Tap Button · SPST momentary</text>
-<line x1="468" y1="320.0" x2="510" y2="320.0" stroke="#FFF" stroke-width="2"/>
-<line x1="630" y1="320.0" x2="672" y2="320.0" stroke="#FFF" stroke-width="2"/>
-<circle cx="510" cy="320.0" r="2.5" fill="#FFF"/>
-<circle cx="630" cy="320.0" r="2.5" fill="#FFF"/>
-<line x1="510" y1="320.0" x2="624" y2="308.0" stroke="#FFF" stroke-width="2"/>
-<rect x="452" y="316.0" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="323.0" class="value" font-size="8" fill="#4CAF50">A</text>
-<rect x="680" y="316.0" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="675" y="323.0" class="value" text-anchor="end" font-size="8" fill="#333">B</text>
-<line x1="386" y1="320" x2="460" y2="320.0" stroke="#4CAF50" stroke-width="2"/>
-<line x1="688" y1="320.0" x2="830" y2="320.0" stroke="#333" stroke-width="2"/>
-<line x1="830" y1="320.0" x2="830" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="830" cy="680" r="3" fill="#333"/>
-<rect x="460" y="350" width="320" height="90" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="344" class="label" text-anchor="middle" font-size="10">Rotary Encoder · KY-040 (firmware sets PULL_UP on SW/CLK/DT)</text>
-<circle cx="730" cy="395.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
-<circle cx="730" cy="395.0" r="6" fill="#666"/>
-<text x="730" y="431.0" class="value" text-anchor="middle" fill="#AAA" font-size="7">push to click</text>
+<line x1="468" y1="270" x2="708" y2="315.0" stroke="#FF9800" stroke-width="1.2" opacity="0.45"/>
+<rect x="746" y="360" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="356" class="value" text-anchor="middle" font-size="8" fill="#333">K</text>
+<line x1="730" y1="335.0" x2="750" y2="358" stroke="#333" stroke-width="1.2" opacity="0.45"/>
+<line x1="750" y1="368" x2="840" y2="368" stroke="#333" stroke-width="2"/>
+<line x1="840" y1="368" x2="840" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="840" cy="740" r="3" fill="#333"/>
+<rect x="460" y="375" width="220" height="30" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="4"/>
+<text x="570.0" y="370" class="label" text-anchor="middle" font-size="10">Tap Button · SPST momentary</text>
+<line x1="468" y1="390.0" x2="510" y2="390.0" stroke="#FFF" stroke-width="2"/>
+<line x1="630" y1="390.0" x2="672" y2="390.0" stroke="#FFF" stroke-width="2"/>
+<circle cx="510" cy="390.0" r="2.5" fill="#FFF"/>
+<circle cx="630" cy="390.0" r="2.5" fill="#FFF"/>
+<line x1="510" y1="390.0" x2="624" y2="378.0" stroke="#FFF" stroke-width="2"/>
+<rect x="452" y="386.0" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="393.0" class="value" font-size="8" fill="#4CAF50">A</text>
+<rect x="680" y="386.0" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="675" y="393.0" class="value" text-anchor="end" font-size="8" fill="#333">B</text>
+<line x1="386" y1="390" x2="460" y2="390.0" stroke="#4CAF50" stroke-width="2"/>
+<line x1="688" y1="390.0" x2="830" y2="390.0" stroke="#333" stroke-width="2"/>
+<line x1="830" y1="390.0" x2="830" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="830" cy="740" r="3" fill="#333"/>
+<rect x="460" y="420" width="320" height="90" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="414" class="label" text-anchor="middle" font-size="10">Rotary Encoder · KY-040 (firmware sets PULL_UP on SW/CLK/DT)</text>
+<circle cx="730" cy="465.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
+<circle cx="730" cy="465.0" r="6" fill="#666"/>
+<text x="730" y="501.0" class="value" text-anchor="middle" fill="#AAA" font-size="7">push to click</text>
 <rect x="452" y="356" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="363" class="value" font-size="8" fill="#4CAF50">SW</text>
-<line x1="386" y1="360" x2="460" y2="360" stroke="#4CAF50" stroke-width="2"/>
+<line x1="386" y1="430" x2="460" y2="360" stroke="#4CAF50" stroke-width="2"/>
 <rect x="452" y="386" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="393" class="value" font-size="8" fill="#4CAF50">CLK</text>
-<line x1="386" y1="390" x2="460" y2="390" stroke="#4CAF50" stroke-width="2"/>
+<line x1="386" y1="460" x2="460" y2="390" stroke="#4CAF50" stroke-width="2"/>
 <rect x="452" y="416" width="8" height="8" fill="#888" stroke="#333"/>
 <text x="465" y="423" class="value" font-size="8" fill="#4CAF50">DT</text>
-<line x1="386" y1="420" x2="460" y2="420" stroke="#4CAF50" stroke-width="2"/>
-<rect x="486" y="342" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="490" y="363" class="value" text-anchor="middle" font-size="8" fill="#D44">+</text>
-<line x1="490" y1="342" x2="420" y2="342" stroke="#D44" stroke-width="2"/>
-<line x1="420" y1="342" x2="420" y2="60" stroke="#D44" stroke-width="2"/>
+<line x1="386" y1="490" x2="460" y2="420" stroke="#4CAF50" stroke-width="2"/>
+<rect x="486" y="412" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="490" y="433" class="value" text-anchor="middle" font-size="8" fill="#D44">+</text>
+<line x1="490" y1="412" x2="420" y2="412" stroke="#D44" stroke-width="2"/>
+<line x1="420" y1="412" x2="420" y2="60" stroke="#D44" stroke-width="2"/>
 <circle cx="420" cy="60" r="3" fill="#D44"/>
-<rect x="746" y="440" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="750" y="436" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
-<line x1="750" y1="448" x2="890" y2="448" stroke="#333" stroke-width="2"/>
-<line x1="890" y1="448" x2="890" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="890" cy="680" r="3" fill="#333"/>
-<rect x="460" y="460" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
-<text x="620.0" y="454" class="label" text-anchor="middle" font-size="10">Clock I/O · 3.5 mm TS jacks (1 kΩ inline)</text>
-<circle cx="710" cy="480" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
-<circle cx="710" cy="480" r="6" fill="#888"/>
-<text x="732" y="484" class="value" font-size="9" fill="#FFF">IN</text>
-<circle cx="710" cy="510" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
-<circle cx="710" cy="510" r="6" fill="#888"/>
-<text x="732" y="514" class="value" font-size="9" fill="#FFF">OUT</text>
-<rect x="452" y="476" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="483" class="value" font-size="8" fill="#9C27B0">tip</text>
-<line x1="386" y1="480" x2="403.0" y2="480" stroke="#9C27B0" stroke-width="2"/>
-<rect x="403.0" y="471" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
-<text x="423.0" y="483" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
-<line x1="443.0" y1="480" x2="460" y2="480" stroke="#9C27B0" stroke-width="2"/>
-<line x1="468" y1="480" x2="696" y2="480" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
-<rect x="452" y="506" width="8" height="8" fill="#888" stroke="#333"/>
-<text x="465" y="513" class="value" font-size="8" fill="#9C27B0">tip</text>
-<line x1="386" y1="510" x2="403.0" y2="510" stroke="#9C27B0" stroke-width="2"/>
-<rect x="403.0" y="501" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
-<text x="423.0" y="513" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
-<line x1="443.0" y1="510" x2="460" y2="510" stroke="#9C27B0" stroke-width="2"/>
-<line x1="468" y1="510" x2="696" y2="510" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
-<line x1="710" y1="494" x2="710" y2="538" stroke="#333" stroke-width="2"/>
-<line x1="710" y1="538" x2="850" y2="538" stroke="#333" stroke-width="2"/>
-<line x1="850" y1="538" x2="850" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="850" cy="680" r="3" fill="#333"/>
-<line x1="710" y1="524" x2="710" y2="546" stroke="#333" stroke-width="2"/>
-<line x1="710" y1="546" x2="870" y2="546" stroke="#333" stroke-width="2"/>
-<line x1="870" y1="546" x2="870" y2="680" stroke="#333" stroke-width="2"/>
-<circle cx="870" cy="680" r="3" fill="#333"/>
-<rect x="70" y="698" width="1170" height="50" fill="#FFF7E6" stroke="#D29922" stroke-width="1" rx="4"/>
-<text x="82" y="714" class="value" font-size="8.5" fill="#5C4500">Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.</text>
-<text x="82" y="726" class="value" font-size="8.5" fill="#5C4500">All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.</text>
-<text x="82" y="738" class="value" font-size="8.5" fill="#5C4500">GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.</text></svg></div>
-<div class="svg-desc"><strong>Flat schematic, power-rail style.</strong> Pico WH on the left; +3V3 rail along the top, GND rail along the bottom. Each Pico signal pin has its Y aligned with the matching peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors are drawn on their wires. Read this diagram to understand <em>what connects to what</em> before looking at the breadboard view.</div>
+<rect x="746" y="510" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="750" y="506" class="value" text-anchor="middle" font-size="8" fill="#333">GND</text>
+<line x1="750" y1="518" x2="890" y2="518" stroke="#333" stroke-width="2"/>
+<line x1="890" y1="518" x2="890" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="890" cy="740" r="3" fill="#333"/>
+<rect x="460" y="530" width="320" height="90" fill="#1a1a1a" stroke="#444" stroke-width="2" rx="6"/>
+<text x="620.0" y="524" class="label" text-anchor="middle" font-size="10">Clock I/O · 3.5 mm TS jacks (1 kΩ inline)</text>
+<circle cx="710" cy="550" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
+<circle cx="710" cy="550" r="6" fill="#888"/>
+<text x="732" y="554" class="value" font-size="9" fill="#FFF">IN</text>
+<circle cx="710" cy="580" r="14" fill="none" stroke="#AAA" stroke-width="2"/>
+<circle cx="710" cy="580" r="6" fill="#888"/>
+<text x="732" y="584" class="value" font-size="9" fill="#FFF">OUT</text>
+<rect x="452" y="546" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="553" class="value" font-size="8" fill="#9C27B0">tip</text>
+<line x1="386" y1="550" x2="403.0" y2="550" stroke="#9C27B0" stroke-width="2"/>
+<rect x="403.0" y="541" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
+<text x="423.0" y="553" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
+<line x1="443.0" y1="550" x2="460" y2="550" stroke="#9C27B0" stroke-width="2"/>
+<line x1="468" y1="550" x2="696" y2="550" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
+<rect x="452" y="576" width="8" height="8" fill="#888" stroke="#333"/>
+<text x="465" y="583" class="value" font-size="8" fill="#9C27B0">tip</text>
+<line x1="386" y1="580" x2="403.0" y2="580" stroke="#9C27B0" stroke-width="2"/>
+<rect x="403.0" y="571" width="40" height="18" fill="#F5E6C8" stroke="#5C4500" stroke-width="1"/>
+<text x="423.0" y="583" class="value" text-anchor="middle" font-size="8" fill="#1a1a1a">1kΩ</text>
+<line x1="443.0" y1="580" x2="460" y2="580" stroke="#9C27B0" stroke-width="2"/>
+<line x1="468" y1="580" x2="696" y2="580" stroke="#9C27B0" stroke-width="1.5" opacity="0.55"/>
+<line x1="710" y1="564" x2="710" y2="608" stroke="#333" stroke-width="2"/>
+<line x1="710" y1="608" x2="850" y2="608" stroke="#333" stroke-width="2"/>
+<line x1="850" y1="608" x2="850" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="850" cy="740" r="3" fill="#333"/>
+<line x1="710" y1="594" x2="710" y2="616" stroke="#333" stroke-width="2"/>
+<line x1="710" y1="616" x2="870" y2="616" stroke="#333" stroke-width="2"/>
+<line x1="870" y1="616" x2="870" y2="740" stroke="#333" stroke-width="2"/>
+<circle cx="870" cy="740" r="3" fill="#333"/>
+<rect x="70" y="758" width="1170" height="62" fill="#FFF7E6" stroke="#D29922" stroke-width="1" rx="4"/>
+<text x="82" y="774" class="value" font-size="8.5" fill="#5C4500">Phase 0 bench validation — wire per this diagram on a breadboard, then flash firmware/pico/main.py and run test_hw.py for per-peripheral diagnostics.</text>
+<text x="82" y="786" class="value" font-size="8.5" fill="#5C4500">Both OLEDs share the same I²C0 bus on GP4/GP5; the bus forks at the junction dot in the left margin so SDA reaches both modules from one wire. Main OLED = 0x3C, strip OLED = 0x3D — set the strip's address via its on-module solder jumper or ADDR pin.</text>
+<text x="82" y="798" class="value" font-size="8.5" fill="#5C4500">All 220 Ω and 1 kΩ resistors are shown inline. KY-040 has on-board 10 kΩ pull-ups; firmware enables Pin.PULL_UP on GP12/13/14/15 — no external pulls required.</text>
+<text x="82" y="810" class="value" font-size="8.5" fill="#5C4500">GP21 (Clk IN) = Pin.PULL_DOWN with rising-edge IRQ. Phase 0 only loops GP22 → 1 kΩ → GP21 for self-test; ±12 V Eurorack input buffering belongs on the breakout board.</text></svg></div>
+<div class="svg-desc"><strong>Flat schematic, power-rail style.</strong> Pico WH on the left; +3V3 rail along the top, GND rail along the bottom. Both OLEDs (0.96&quot; main at <code>0x3C</code>, 0.91&quot; strip at <code>0x3D</code>) share the I²C0 bus on <code>GP4</code>/<code>GP5</code> — the bus forks at the junction dot in the left margin and reaches both modules from one wire. Each Pico signal pin has its Y aligned with the matching peripheral pin so signal wires are single straight horizontal lines. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors drawn on their wires. Read this diagram to understand <em>what connects to what</em> before looking at the breadboard view.</div>
 </div>
 <div class="svg-wrap">
 <div class="svg-caption">Phase 0 — Breadboard Layout (top-down)</div>
@@ -17309,6 +17382,27 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <circle cx="495" cy="112" r="3" fill="#D44"/>
 <line x1="440" y1="280" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
 <circle cx="440" cy="134" r="3" fill="#333"/>
+<rect x="410" y="300" width="230" height="50" fill="#101418" stroke="#444" stroke-width="2" rx="6"/>
+<rect x="428" y="312" width="194" height="22" fill="#020a14" stroke="#222"/>
+<text x="525.0" y="296" class="label" text-anchor="middle" fill="#FFF" font-size="10">0.91" SSD1306 strip · 128 × 32 · 0x3D</text>
+<rect x="435" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="440" y="372" class="value" text-anchor="middle" fill="#333" font-size="8.5">GND</text>
+<rect x="490" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="495" y="372" class="value" text-anchor="middle" fill="#D44" font-size="8.5">VCC</text>
+<rect x="545" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="550" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SCL</text>
+<rect x="600" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="605" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SDA</text>
+<path d="M150,319.6470588235294 L593,319.6470588235294 L593,350 L605,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="605" cy="350" r="2.5" fill="#2196F3"/>
+<text x="599" y="337.8235294117647" class="value" fill="#2196F3" font-size="7">SDA</text>
+<path d="M150,331.1764705882353 L538,331.1764705882353 L538,350 L550,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="550" cy="350" r="2.5" fill="#2196F3"/>
+<text x="544" y="343.5882352941177" class="value" fill="#2196F3" font-size="7">SCL</text>
+<line x1="495" y1="350" x2="495" y2="112" stroke="#D44" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="495" cy="112" r="3" fill="#D44"/>
+<line x1="440" y1="350" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="440" cy="134" r="3" fill="#333"/>
 <rect x="440" y="390.0" width="220" height="130" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
 <text x="550.0" y="408.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">KY-040 Rotary Encoder</text>
 <circle cx="490" cy="460.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
@@ -17425,7 +17519,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <text x="748" y="729" class="value" font-size="9">RGB</text>
 <rect x="895" y="720" width="14" height="10" fill="#9C27B0" stroke="#333" stroke-width="0.5"/>
 <text x="913" y="729" class="value" font-size="9">Clock</text></svg></div>
-<div class="svg-desc"><strong>Top-down breadboard layout.</strong> Same circuit as the schematic above, drawn the way it physically sits on a half-size breadboard. Pico WH straddles the centre channel; +3V3 and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use this diagram while you&#x27;re plugging wires in — peripheral positions match where they&#x27;d naturally land relative to the Pico&#x27;s pin columns.</div>
+<div class="svg-desc"><strong>Top-down breadboard layout.</strong> Same circuit as the schematic above, drawn the way it physically sits on a half-size breadboard. Pico WH straddles the centre channel; both OLEDs sit on the upper half (main <code>0x3C</code> above, strip <code>0x3D</code> below); +3V3 and GND rails run along the top and bottom; jumper paths are colour-coded by net. Use this diagram while you&#x27;re plugging wires in. <strong>Address note:</strong> most generic SSD1306 modules ship at <code>0x3C</code> by default; set the strip OLED to <code>0x3D</code> via its on-board ADDR pin or solder jumper before powering it up alongside the main OLED.</div>
 </div>
 <div class="svg-wrap">
 <div class="svg-caption">NXP LPC2361 Pinout (MACROBRUTE usage)</div>
@@ -17502,7 +17596,7 @@ Pico 3V3_OUT (pin 36) ── 3V3 rail for OLED, encoder pull-ups</code></pre>
 <h2 id="schematics-pico-pinout--phase-0-bench-validation-wiring">Phase 0 Bench-Validation Wiring</h2>
 <p>The two diagrams above show the same Phase 0 circuit two ways:</p>
 <ul><li><strong>Schematic</strong> — flat view, elbow-routed nets, useful for understanding <em>what</em> connects to <em>what</em>.</li><li><strong>Breadboard layout</strong> — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.</li></ul>
-<p>Phase 0 covers: 0.96″ SSD1306 OLED · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ + 5 V1 zener clamp on IN). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.</p>
+<p>Phase 0 covers: <strong>two OLEDs sharing I²C0</strong> (0.96″ SSD1306 at <code>0x3C</code>, 0.91″ SSD1306 strip at <code>0x3D</code>) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side. Set the strip OLED&#x27;s address to <code>0x3D</code> (ADDR pin / solder jumper on the module) <strong>before</strong> powering it up beside the main OLED — both default to <code>0x3C</code> out of the box.</p>
 <h2 id="schematics-pico-pinout--pin-assignment-table">Pin Assignment Table</h2>
 <div class="table-wrap"><table><thead><tr>
 <th>GPIO</th>

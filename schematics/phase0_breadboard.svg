@@ -1253,6 +1253,27 @@
 <circle cx="495" cy="112" r="3" fill="#D44"/>
 <line x1="440" y1="280" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
 <circle cx="440" cy="134" r="3" fill="#333"/>
+<rect x="410" y="300" width="230" height="50" fill="#101418" stroke="#444" stroke-width="2" rx="6"/>
+<rect x="428" y="312" width="194" height="22" fill="#020a14" stroke="#222"/>
+<text x="525.0" y="296" class="label" text-anchor="middle" fill="#FFF" font-size="10">0.91" SSD1306 strip · 128 × 32 · 0x3D</text>
+<rect x="435" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="440" y="372" class="value" text-anchor="middle" fill="#333" font-size="8.5">GND</text>
+<rect x="490" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="495" y="372" class="value" text-anchor="middle" fill="#D44" font-size="8.5">VCC</text>
+<rect x="545" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="550" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SCL</text>
+<rect x="600" y="345" width="10" height="10" fill="#888" stroke="#222"/>
+<text x="605" y="372" class="value" text-anchor="middle" fill="#2196F3" font-size="8.5">SDA</text>
+<path d="M150,319.6470588235294 L593,319.6470588235294 L593,350 L605,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="605" cy="350" r="2.5" fill="#2196F3"/>
+<text x="599" y="337.8235294117647" class="value" fill="#2196F3" font-size="7">SDA</text>
+<path d="M150,331.1764705882353 L538,331.1764705882353 L538,350 L550,350" stroke="#2196F3" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="550" cy="350" r="2.5" fill="#2196F3"/>
+<text x="544" y="343.5882352941177" class="value" fill="#2196F3" font-size="7">SCL</text>
+<line x1="495" y1="350" x2="495" y2="112" stroke="#D44" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="495" cy="112" r="3" fill="#D44"/>
+<line x1="440" y1="350" x2="440" y2="134" stroke="#333" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="440" cy="134" r="3" fill="#333"/>
 <rect x="440" y="390.0" width="220" height="130" fill="#272838" stroke="#444" stroke-width="2" rx="6"/>
 <text x="550.0" y="408.0" class="label" text-anchor="middle" fill="#FFF" font-size="10">KY-040 Rotary Encoder</text>
 <circle cx="490" cy="460.0" r="22" fill="#444" stroke="#888" stroke-width="1.5"/>
