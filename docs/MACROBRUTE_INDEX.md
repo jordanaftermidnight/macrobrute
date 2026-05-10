@@ -47,7 +47,6 @@
 
 ### Architecture & Research
 - `docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md` — every tap/inject/bend point
-- `docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md` — component/circuit research
 - `docs/research/mbf_analysis.md` — .mbf firmware decryption + Ghidra findings (43 SysEx cmds, 427 fns)
 - `docs/research/firmware_re_findings.md` — CRP bypass methods, tools
 - `spinoffs/jf33-eurorack/docs/pt2399_dso138_findings.md` — moved with the JF-33 spinoff
@@ -90,10 +89,10 @@
 
 ### Mods (`docs/mods/`)
 - `touch_bend_specs.md` — 8 circuit bends with specs (select 6)
+- `macrobrute_mod_catalog.md` — full curated catalog (Phase 1 + Phase 2 additions)
 - `microbrute_mods_guide.md` — standard mods reference
 - `microbrute_circuit_bending_guide.md` — body contacts, shorts
 - `deep_circuit_bending.md` — advanced techniques
-- `ultimate_microbrute_project.md` — comprehensive overview
 
 ### Tools (`tools/`)
 - `mbf_decrypt.py` / `mbf_encrypt.py` — XOR cipher, roundtrip verified (52 tests)
@@ -103,13 +102,15 @@
 - `analyze_firmware.py` + `ghidra_label_firmware.py` + `LabelMicroBruteFirmware.java` — legacy RE helpers
 - `ghidra/` — current Ghidra labeling toolchain
 
-### Legacy (`docs/legacy/`) — superseded, kept for reference
+### Legacy (`docs/legacy/`) — superseded, kept on disk for reference
 - `MACROBRUTE_FINAL_ARCHITECTURE.md` — pre-reconciliation architecture draft (Apr 15)
 - `MACROBRUTE_PROJECT_HANDOFF.md` — early handoff doc
-- `MACROBRUTE_EXPANDER_DB37_PINOUT.md` — obsolete DB-37 design (pre-DB-9 decision)
 - `MACROBRUTE_MASTER_PLAN.md` — early planning
 - `MACROBRUTE_V2_SPEC.md` / `MACROBRUTE_V2_COMPLETE_SPEC.md` — earlier spec revisions
 - `MACROBRUTE_REVISED_SPEC.md` — DB-9 correction from DB-25
+- `MACROBRUTE_EXPANDER_DB37_PINOUT.md`, `architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md`,
+  `mods/ultimate_microbrute_project.md` — kept on disk but no longer included in the manual
+  (off-scope ÜBERBRUTE brainstorm + obsolete DB-37 + stale JF-33/DSO138 research)
 
 ---
 

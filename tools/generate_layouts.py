@@ -1346,6 +1346,308 @@ def generate_touch_test():
 
 
 # ============================================================
+# MOD STRIPBOARDS — small, focused boards for individual mods
+# ============================================================
+
+def generate_mod_m02_soft_sync():
+    """M02 — Active soft sync (LM393 comparator).
+
+    Replaces the broken stock soft-sync with a clean comparator-based
+    pulse generator. Off-board: SPDT toggle (hard/soft selector) + sync
+    input/output jacks. On-board: LM393 with bias network and pull-up.
+    """
+    COLS = 12
+    ROWS = 9
+    lines = svg_start(COLS, ROWS, "M02 — Active Soft Sync Stripboard", extra_h=110)
+    lines += svg_board(COLS, ROWS)
+
+    # Power rails
+    lines += svg_rail(1, COLS, "GND",  C_RAIL_GND)
+    lines += svg_rail(2, COLS, "+5V",  C_RAIL_5V)
+
+    # LM393 DIP-8 at rows 4-7, cols 5-8
+    lines += svg_dip("U1", "LM393", 4, 5, 8, col_span=4,
+                     pin_labels_l=["OUT-A", "-IN-A", "+IN-A", "GND"],
+                     pin_labels_r=["VCC", "+IN-B", "-IN-B", "OUT-B"])
+
+    # Track cuts between left/right pins of the DIP
+    for r in range(4, 8):
+        lines += svg_track_cut(r, 7)
+
+    # Power: VCC pin 8 (row 4 col 8) → +5V rail (row 2 col 8)
+    lines += svg_jumper(2, 9, 4, 9, 0)
+    # GND pin 4 (row 7 col 5) → GND rail (row 1 col 5)
+    lines += svg_jumper(1, 4, 7, 4, 1)
+
+    # Decoupling cap (100n) at VCC corner
+    lines += svg_cap_v(2, 4, 10, "100n")
+
+    # Threshold divider: 100k from +5V to pin 2 (-IN-A row 5 col 5)
+    #                    100k from pin 2 to GND  → ≈ +2.5V reference
+    lines += svg_resistor_v(2, 5, 3, "100k Vref+")
+    lines += svg_resistor_v(5, 8, 3, "100k Vref−")
+    lines += svg_jumper(5, 3, 5, 4, 2)  # divider midpoint → pin 2
+
+    # AC coupling: SYNC_IN header at col 1, 100nF on row 6 → pin 3 (+IN-A)
+    lines += svg_header_block(6, 1, 1, "SYNC")
+    lines += svg_cap_h(6, 2, 4, "100n")
+    # Track cut to force series cap path
+    lines += svg_track_cut(6, 4)
+    lines += svg_jumper(6, 4, 6, 5, 3)  # cap output → +IN-A
+
+    # 1N4148 clamp from pin 3 to GND (protects against >5V or <0V sync)
+    lines += svg_diode_h(8, 5, 7, "1N4148")
+    lines += svg_jumper(6, 5, 8, 5, 4)  # +IN-A → diode anode
+    lines += svg_jumper(8, 7, 1, 7, 1)  # diode cathode → GND
+
+    # Pull-up: 10k from OUT-A (pin 1, row 4 col 5) to +5V
+    lines += svg_resistor_v(2, 4, 2, "10k pull")
+    lines += svg_jumper(4, 2, 4, 5, 5)  # pull-up node → OUT-A
+
+    # SPDT toggle + SYNC_OUT off-board (3-pin header)
+    lines += svg_header_block(4, 12, 12, "OUT")
+    lines += svg_jumper(4, 5, 4, 12, 5)  # OUT-A → off-board to SPDT pole
+
+    # Off-board indicator
+    lines += svg_callout(8, 9, [
+        "Off-board:",
+        "• SPDT toggle (hard/soft)",
+        "• SYNC_OUT → VCO pin",
+    ], color="#0066CC", anchor="start")
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC,        "LM393 (DIP-8)"),
+        ("rect", C_RESISTOR,  "Resistor"),
+        ("rect", C_CAP_CER,   "Ceramic 100nF"),
+        ("rect", C_DIODE,     "1N4148 clamp"),
+        ("x",    C_CUT,       "Track cut"),
+        ("line", C_JUMPER[0], "Jumper wire"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+def generate_mod_m04_metalizer_vca():
+    """M04 — Metalizer CV depth (LM13700 OTA).
+
+    Inserts an LM13700 OTA into the Metalizer feedback loop so a panel
+    CV can modulate fold intensity. Most invasive of the new mods —
+    requires cutting the existing Metalizer feedback trace.
+    """
+    COLS = 14
+    ROWS = 12
+    lines = svg_start(COLS, ROWS, "M04 — Metalizer VCA Stripboard", extra_h=110)
+    lines += svg_board(COLS, ROWS)
+
+    # Power rails (need ±12V for the LM13700)
+    lines += svg_rail(1,  COLS, "+12V", C_RAIL_12V)
+    lines += svg_rail(2,  COLS, "−12V", C_RAIL_N12V)
+    lines += svg_rail(12, COLS, "GND",  C_RAIL_GND)
+
+    # LM13700 DIP-16 at rows 4-11, cols 5-8
+    lines += svg_dip("U1", "LM13700", 4, 5, 16, col_span=4,
+                     pin_labels_l=["OUT-A", "DB-A", "−IN-A", "+IN-A",
+                                   "Iabc-A", "V−", "BufIn-A", "BufOut-A"],
+                     pin_labels_r=["BufOut-B", "BufIn-B", "V+", "Iabc-B",
+                                   "+IN-B", "−IN-B", "DB-B", "OUT-B"])
+
+    # Track cuts between left/right pins
+    for r in range(4, 12):
+        lines += svg_track_cut(r, 7)
+
+    # Power: V+ (pin 11, row 6 right) → +12V; V- (pin 6, row 9 left) → −12V
+    lines += svg_jumper(1, 9, 6, 9, 0)   # +12V → V+
+    lines += svg_jumper(2, 4, 9, 4, 1)   # −12V → V-
+
+    # Decoupling caps near power pins
+    lines += svg_cap_v(1, 4, 10, "100n V+")
+    lines += svg_cap_v(2, 5, 10, "100n V-")
+
+    # Signal IN (Metalizer feedback tap) → 100k → pin 3 (-IN-A row 6 left col 5)
+    lines += svg_header_block(6, 1, 1, "FB-IN")
+    lines += svg_resistor_h(6, 2, 4, "100k")
+
+    # +IN-A (pin 4, row 7 col 5) → GND reference
+    lines += svg_jumper(7, 5, 12, 5, 2)
+
+    # Iabc-A (pin 5, row 8 col 5) ← 10kΩ ← CV+pot mixing node
+    lines += svg_resistor_h(8, 2, 4, "10k")
+    lines += svg_jumper(8, 4, 8, 5, 3)
+
+    # Pot (Amount) off-board, 3-pin header at row 8 col 11..13
+    lines += svg_pot(8, 11, "Amount", "100k", pin1_label="GND", pin2_label="W", pin3_label="+12V")
+    lines += svg_jumper(8, 12, 8, 8, 4)   # pot wiper → through-track to Iabc network
+
+    # CV input jack header
+    lines += svg_header_block(10, 1, 1, "CV-IN")
+    lines += svg_resistor_h(10, 2, 4, "100k")
+    lines += svg_jumper(10, 4, 8, 4, 5)   # CV summing node
+
+    # Output: OUT-A (pin 1, row 4 col 5) → off-board back to Metalizer return
+    lines += svg_jumper(4, 5, 4, 14, 5)
+    lines += svg_header_block(4, 14, 14, "FB-OUT")
+
+    lines += svg_callout(11, 9, [
+        "Cut Metalizer fb trace,",
+        "splice in FB-IN / FB-OUT",
+        "around the wavefolder.",
+    ], color="#CC0000", anchor="start")
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC,        "LM13700 (DIP-16)"),
+        ("rect", C_RESISTOR,  "Resistor"),
+        ("rect", C_CAP_CER,   "Ceramic 100nF"),
+        ("circle", "#C0C0C0", "Panel pot (off-board)"),
+        ("x",    C_CUT,       "Track cut"),
+        ("line", C_JUMPER[0], "Jumper wire"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+def generate_mod_m08_subharmonic():
+    """M08 — Sub-harmonic divider (74HC74 D flip-flop /2).
+
+    Square wave → CD40106 buffer (existing breakout) → 74HC74 clock →
+    Q output is /2. AC-coupled and pot-mixed back into VCF input.
+    """
+    COLS = 13
+    ROWS = 10
+    lines = svg_start(COLS, ROWS, "M08 — Sub-Harmonic Divider Stripboard", extra_h=110)
+    lines += svg_board(COLS, ROWS)
+
+    lines += svg_rail(1, COLS, "+5V", C_RAIL_5V)
+    lines += svg_rail(2, COLS, "GND", C_RAIL_GND)
+
+    # 74HC74 DIP-14 at rows 3-9, cols 5-8
+    lines += svg_dip("U1", "74HC74", 3, 5, 14, col_span=4,
+                     pin_labels_l=["1CLR", "1D", "1CLK", "1PRE", "1Q", "1Q'", "GND"],
+                     pin_labels_r=["VCC", "2CLR", "2D", "2CLK", "2PRE", "2Q", "2Q'"])
+
+    for r in range(3, 10):
+        lines += svg_track_cut(r, 7)
+
+    # Power: VCC (pin 14, row 3 right col 8) → +5V; GND (pin 7, row 9 left col 5) → GND rail
+    lines += svg_jumper(1, 9, 3, 9, 0)    # +5V → VCC
+    lines += svg_jumper(2, 4, 9, 4, 1)    # GND  → pin 7
+
+    # Decoupling
+    lines += svg_cap_v(1, 3, 10, "100n V+")
+
+    # Tie unused 2nd flip-flop pins safely (PRE/CLR high, D to GND)
+    lines += svg_jumper(1, 11, 7, 8, 2)   # 2PRE (pin 10) → +5V
+    lines += svg_jumper(1, 12, 4, 8, 3)   # 2CLR (pin 13) → +5V
+    # Active section: tie 1PRE & 1CLR HIGH so flip-flop runs free
+    lines += svg_jumper(1, 6, 6, 5, 4)    # 1PRE (pin 4) → +5V
+    lines += svg_jumper(1, 5, 3, 5, 5)    # 1CLR (pin 1) → +5V
+    # /2 mode: D (pin 2) ← Q' (pin 6)
+    lines += svg_jumper(4, 5, 8, 5, 0)
+
+    # CLK input: SQ_IN at col 1, AC-couple via 100n, into 1CLK (pin 3, row 5 col 5)
+    lines += svg_header_block(5, 1, 1, "SQ-IN")
+    lines += svg_cap_h(5, 2, 4, "100n")
+    lines += svg_track_cut(5, 4)
+    lines += svg_jumper(5, 4, 5, 5, 1)
+
+    # Output: 1Q (pin 5, row 7 col 5) → 1µF AC couple → mix pot
+    lines += svg_jumper(7, 5, 7, 9, 2)
+    lines += svg_cap_h(7, 9, 11, "1µF", electrolytic=True)
+
+    # Mix pot (off-board) at row 7 col 11..13
+    lines += svg_pot(7, 11, "Sub Mix", "10k log", pin1_label="GND", pin2_label="W→VCF", pin3_label="OUT")
+
+    # SPDT enable header at row 9 col 11..13 — interrupts pot wiper to mixer
+    lines += svg_header_block(9, 11, 13, "SPDT")
+    lines += svg_callout(10, 11, [
+        "SPDT in series",
+        "with wiper → mixer",
+    ], color="#0066CC", anchor="start")
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC,        "74HC74 (DIP-14)"),
+        ("rect", C_CAP_CER,   "Ceramic 100nF"),
+        ("rect", C_CAP_ELEC,  "Electro 1µF"),
+        ("circle", "#C0C0C0", "Panel pot (off-board)"),
+        ("x",    C_CUT,       "Track cut"),
+        ("line", C_JUMPER[0], "Jumper wire"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+def generate_mod_m12_arg():
+    """M12 — ARG audio-rate gate (LM393 zero-crossing → gate).
+
+    Audio in → DC-block → comparator with panel-set threshold →
+    open-collector gate out (with pull-up).
+    """
+    COLS = 12
+    ROWS = 9
+    lines = svg_start(COLS, ROWS, "M12 — ARG Audio-Rate Gate Stripboard", extra_h=110)
+    lines += svg_board(COLS, ROWS)
+
+    lines += svg_rail(1, COLS, "GND", C_RAIL_GND)
+    lines += svg_rail(2, COLS, "+5V", C_RAIL_5V)
+
+    # LM393 DIP-8 at rows 4-7, cols 5-8
+    lines += svg_dip("U1", "LM393", 4, 5, 8, col_span=4,
+                     pin_labels_l=["OUT-A", "-IN-A", "+IN-A", "GND"],
+                     pin_labels_r=["VCC", "+IN-B", "-IN-B", "OUT-B"])
+    for r in range(4, 8):
+        lines += svg_track_cut(r, 7)
+
+    # Power
+    lines += svg_jumper(2, 9, 4, 9, 0)    # +5V → VCC (pin 8, row 4 col 8)
+    lines += svg_jumper(1, 4, 7, 4, 1)    # GND → pin 4 (row 7 col 5)
+    lines += svg_cap_v(2, 4, 10, "100n V+")
+
+    # Audio in (col 1) → DC-block 100n → +IN-A (pin 3, row 6 col 5)
+    lines += svg_header_block(6, 1, 1, "AUDIO")
+    lines += svg_cap_h(6, 2, 4, "100n")
+    lines += svg_track_cut(6, 4)
+    lines += svg_jumper(6, 4, 6, 5, 2)
+
+    # Threshold via panel pot (100k) → -IN-A (pin 2, row 5 col 5)
+    lines += svg_pot(5, 11, "Thresh", "100k", pin1_label="+5V", pin2_label="W", pin3_label="GND")
+    lines += svg_jumper(5, 12, 5, 8, 3)
+    lines += svg_jumper(5, 8, 5, 5, 4)    # wiper → -IN-A
+
+    # Pull-up 10k on OUT-A (open collector)
+    lines += svg_resistor_v(2, 4, 2, "10k pull")
+    lines += svg_jumper(4, 2, 4, 5, 5)
+
+    # Gate output header
+    lines += svg_header_block(4, 12, 12, "GATE")
+    lines += svg_jumper(4, 5, 4, 12, 5)
+
+    lines += svg_callout(8, 9, [
+        "Off-board:",
+        "• Panel pot (Threshold)",
+        "• 6mm audio jack → AUDIO",
+        "• GATE → env-retrig / aux",
+    ], color="#0066CC", anchor="start")
+
+    legend_y = MARGIN_T + ROWS * CELL + PAD + 10
+    lines += svg_legend(legend_y, [
+        ("rect", C_IC,        "LM393 (DIP-8)"),
+        ("rect", C_RESISTOR,  "Resistor"),
+        ("rect", C_CAP_CER,   "Ceramic 100nF"),
+        ("circle", "#C0C0C0", "Panel pot (off-board)"),
+        ("x",    C_CUT,       "Track cut"),
+        ("line", C_JUMPER[0], "Jumper wire"),
+    ], COLS)
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
+
+
+# ============================================================
 # Main
 # ============================================================
 
@@ -1362,6 +1664,10 @@ def main():
         "expander_slew.svg": generate_expander_slew,
         "expander_attenuverter.svg": generate_expander_attenuverter,
         "touch_test_board.svg": generate_touch_test,
+        "mod_m02_soft_sync_stripboard.svg":     generate_mod_m02_soft_sync,
+        "mod_m04_metalizer_vca_stripboard.svg": generate_mod_m04_metalizer_vca,
+        "mod_m08_subharmonic_stripboard.svg":   generate_mod_m08_subharmonic,
+        "mod_m12_arg_stripboard.svg":           generate_mod_m12_arg,
     }
 
     for filename, generator in layouts.items():

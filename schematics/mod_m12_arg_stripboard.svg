@@ -1,0 +1,293 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 465" width="480" height="465">
+<defs>
+  <style>
+    text { font-family: "SF Mono", Consolas, "Liberation Mono", monospace; }
+    .title { font-size: 16px; font-weight: bold; fill: #222; }
+    .subtitle { font-size: 11px; fill: #555; }
+    .row-label { font-size: 11px; fill: #444; font-weight: bold; text-anchor: end; dominant-baseline: central; }
+    .col-label { font-size: 11px; fill: #444; font-weight: bold; text-anchor: middle; }
+    .ic-name { font-size: 12px; fill: #FFF; text-anchor: middle; font-weight: bold; dominant-baseline: central; }
+    .ic-type { font-size: 10px; fill: #DDD; text-anchor: middle; dominant-baseline: central; }
+    .pin { font-size: 9px; fill: #222; font-weight: bold; text-anchor: middle; dominant-baseline: central; filter: url(#textshadow); }
+    .comp { font-size: 9px; fill: #111; font-weight: bold; text-anchor: middle; dominant-baseline: central; filter: url(#textshadow); }
+    .rail { font-size: 11px; fill: #FFF; font-weight: bold; dominant-baseline: central; }
+    .cut-x { stroke: #FF0000; stroke-width: 2.5; stroke-linecap: round; }
+    .legend-text { font-size: 10px; fill: #333; dominant-baseline: central; }
+    .legend-title { font-size: 11px; fill: #222; font-weight: bold; dominant-baseline: central; }
+    .zone-label { font-size: 10px; fill: #444; font-weight: bold; font-style: italic; dominant-baseline: central; filter: url(#textshadow); }
+    .note { font-size: 9px; fill: #222; dominant-baseline: central; filter: url(#textshadow); }
+  </style>
+  <filter id="textshadow" x="-5%" y="-5%" width="110%" height="110%">
+    <feFlood flood-color="white" flood-opacity="0.85" result="bg"/>
+    <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="dilated"/>
+    <feComposite in="bg" in2="dilated" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+    <polygon points="0 0, 6 2, 0 4" fill="#CC0000"/>
+  </marker>
+</defs>
+<rect width="480" height="465" fill="#F5F5F0"/>
+<text x="240" y="20" class="title" text-anchor="middle">M12 — ARG Audio-Rate Gate Stripboard</text>
+<text x="240" y="36" class="subtitle" text-anchor="middle">Component side (top view) — Copper tracks run horizontally</text>
+<rect x="82" y="47" width="376" height="286" fill="#E8D5A3" rx="4" stroke="#B8A070" stroke-width="1.5"/>
+<rect x="86" y="58" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="88" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="118" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="148" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="178" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="208" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="238" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="268" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<rect x="86" y="298" width="368" height="24" fill="#CD853F" opacity="0.25" rx="2"/>
+<circle cx="105" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="70" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="100" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="130" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="160" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="190" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="220" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="250" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="280" r="4" fill="#444" opacity="0.5"/>
+<circle cx="105" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="135" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="165" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="195" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="225" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="255" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="285" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="315" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="345" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="375" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="405" cy="310" r="4" fill="#444" opacity="0.5"/>
+<circle cx="435" cy="310" r="4" fill="#444" opacity="0.5"/>
+<text x="76" y="70" class="row-label">1</text>
+<text x="76" y="100" class="row-label">2</text>
+<text x="76" y="130" class="row-label">3</text>
+<text x="76" y="160" class="row-label">4</text>
+<text x="76" y="190" class="row-label">5</text>
+<text x="76" y="220" class="row-label">6</text>
+<text x="76" y="250" class="row-label">7</text>
+<text x="76" y="280" class="row-label">8</text>
+<text x="76" y="310" class="row-label">9</text>
+<text x="105" y="41" class="col-label">1</text>
+<text x="135" y="41" class="col-label">2</text>
+<text x="165" y="41" class="col-label">3</text>
+<text x="195" y="41" class="col-label">4</text>
+<text x="225" y="41" class="col-label">5</text>
+<text x="255" y="41" class="col-label">6</text>
+<text x="285" y="41" class="col-label">7</text>
+<text x="315" y="41" class="col-label">8</text>
+<text x="345" y="41" class="col-label">9</text>
+<text x="375" y="41" class="col-label">10</text>
+<text x="405" y="41" class="col-label">11</text>
+<text x="435" y="41" class="col-label">12</text>
+<rect x="86" y="57" width="368" height="26" fill="#4A4" opacity="0.7" rx="3"/>
+<text x="94" y="70" class="rail">GND</text>
+<rect x="86" y="87" width="368" height="26" fill="#D84" opacity="0.7" rx="3"/>
+<text x="94" y="100" class="rail">+5V</text>
+<rect x="213" y="148" width="114" height="114" fill="#2D2D2D" rx="3"/>
+<circle cx="270" cy="150" r="5" fill="#555"/>
+<text x="270" y="199" class="ic-name">U1</text>
+<text x="270" y="213" class="ic-type">LM393</text>
+<line x1="212" y1="160" x2="210" y2="160" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="225" cy="160" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="212" y="160" class="pin">1</text>
+<text x="199" y="160" class="note" text-anchor="end">OUT-A</text>
+<line x1="328" y1="160" x2="330" y2="160" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="315" cy="160" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="328" y="160" class="pin">8</text>
+<text x="341" y="160" class="note">VCC</text>
+<line x1="212" y1="190" x2="210" y2="190" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="225" cy="190" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="212" y="190" class="pin">2</text>
+<text x="199" y="190" class="note" text-anchor="end">-IN-A</text>
+<line x1="328" y1="190" x2="330" y2="190" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="315" cy="190" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="328" y="190" class="pin">7</text>
+<text x="341" y="190" class="note">+IN-B</text>
+<line x1="212" y1="220" x2="210" y2="220" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="225" cy="220" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="212" y="220" class="pin">3</text>
+<text x="199" y="220" class="note" text-anchor="end">+IN-A</text>
+<line x1="328" y1="220" x2="330" y2="220" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="315" cy="220" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="328" y="220" class="pin">6</text>
+<text x="341" y="220" class="note">-IN-B</text>
+<line x1="212" y1="250" x2="210" y2="250" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="225" cy="250" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="212" y="250" class="pin">4</text>
+<text x="199" y="250" class="note" text-anchor="end">GND</text>
+<line x1="328" y1="250" x2="330" y2="250" stroke="#CD853F" stroke-width="2" opacity="0.6"/>
+<circle cx="315" cy="250" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<text x="328" y="250" class="pin">5</text>
+<text x="341" y="250" class="note">OUT-B</text>
+<line x1="280" y1="155" x2="290" y2="165" class="cut-x"/>
+<line x1="290" y1="155" x2="280" y2="165" class="cut-x"/>
+<line x1="280" y1="185" x2="290" y2="195" class="cut-x"/>
+<line x1="290" y1="185" x2="280" y2="195" class="cut-x"/>
+<line x1="280" y1="215" x2="290" y2="225" class="cut-x"/>
+<line x1="290" y1="215" x2="280" y2="225" class="cut-x"/>
+<line x1="280" y1="245" x2="290" y2="255" class="cut-x"/>
+<line x1="290" y1="245" x2="280" y2="255" class="cut-x"/>
+<path d="M345,100 Q375,82 345,160" fill="none" stroke="#0066CC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="345" cy="100" r="4" fill="#0066CC" stroke="white" stroke-width="1"/>
+<circle cx="345" cy="160" r="4" fill="#0066CC" stroke="white" stroke-width="1"/>
+<path d="M195,70 Q225,52 195,250" fill="none" stroke="#CC6600" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="195" cy="70" r="4" fill="#CC6600" stroke="white" stroke-width="1"/>
+<circle cx="195" cy="250" r="4" fill="#CC6600" stroke="white" stroke-width="1"/>
+<line x1="375" y1="100" x2="375" y2="126" stroke="#666" stroke-width="1.5"/>
+<rect x="370" y="125" width="10" height="10" fill="#4A90D9" rx="1" stroke="#333" stroke-width="0.5"/>
+<line x1="375" y1="135" x2="375" y2="160" stroke="#666" stroke-width="1.5"/>
+<text x="387" y="130" class="comp">100n V+</text>
+<rect x="99" y="214" width="12" height="12" fill="#666" rx="2" stroke="#333" stroke-width="0.5"/>
+<text x="105" y="210" class="comp">AUDIO</text>
+<line x1="135" y1="220" x2="161" y2="220" stroke="#666" stroke-width="1.5"/>
+<rect x="159" y="215" width="12" height="10" fill="#4A90D9" rx="1" stroke="#333" stroke-width="0.5"/>
+<line x1="169" y1="220" x2="195" y2="220" stroke="#666" stroke-width="1.5"/>
+<text x="165" y="211" class="comp">100n</text>
+<line x1="190" y1="215" x2="200" y2="225" class="cut-x"/>
+<line x1="200" y1="215" x2="190" y2="225" class="cut-x"/>
+<path d="M195,220 Q210,202 225,220" fill="none" stroke="#009933" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="195" cy="220" r="4" fill="#009933" stroke="white" stroke-width="1"/>
+<circle cx="225" cy="220" r="4" fill="#009933" stroke="white" stroke-width="1"/>
+<circle cx="435" cy="162" r="14" fill="#C0C0C0" stroke="#888" stroke-width="1.5"/>
+<circle cx="435" cy="162" r="3" fill="#666"/>
+<text x="435" y="144" class="comp">Thresh</text>
+<text x="435" y="163" class="comp" font-size="9">100k</text>
+<line x1="405" y1="176" x2="405" y2="190" stroke="#888" stroke-width="1.5"/>
+<line x1="435" y1="176" x2="435" y2="190" stroke="#888" stroke-width="1.5"/>
+<line x1="465" y1="176" x2="465" y2="190" stroke="#888" stroke-width="1.5"/>
+<circle cx="405" cy="190" r="3" fill="#888"/>
+<circle cx="435" cy="190" r="3" fill="#D80"/>
+<circle cx="465" cy="190" r="3" fill="#888"/>
+<text x="405" y="202" class="comp" font-size="9">+5V</text>
+<text x="435" y="202" class="comp" font-size="9" fill="#D80">W</text>
+<text x="465" y="202" class="comp" font-size="9">GND</text>
+<path d="M435,190 Q375,172 315,190" fill="none" stroke="#CC0066" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="435" cy="190" r="4" fill="#CC0066" stroke="white" stroke-width="1"/>
+<circle cx="315" cy="190" r="4" fill="#CC0066" stroke="white" stroke-width="1"/>
+<path d="M315,190 Q270,172 225,190" fill="none" stroke="#6600CC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="315" cy="190" r="4" fill="#6600CC" stroke="white" stroke-width="1"/>
+<circle cx="225" cy="190" r="4" fill="#6600CC" stroke="white" stroke-width="1"/>
+<circle cx="135" cy="100" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<circle cx="135" cy="160" r="3" fill="#FFA500" stroke="#C80" stroke-width="0.5"/>
+<line x1="135" y1="100" x2="135" y2="118" stroke="#666" stroke-width="1.5"/>
+<rect x="131" y="118" width="8" height="24" fill="#C4A265" rx="2" stroke="#8B6914" stroke-width="0.5"/>
+<line x1="135" y1="142" x2="135" y2="160" stroke="#666" stroke-width="1.5"/>
+<text x="145" y="130" class="comp">10k pull</text>
+<path d="M135,160 Q180,142 225,160" fill="none" stroke="#CC9900" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="135" cy="160" r="4" fill="#CC9900" stroke="white" stroke-width="1"/>
+<circle cx="225" cy="160" r="4" fill="#CC9900" stroke="white" stroke-width="1"/>
+<rect x="429" y="154" width="12" height="12" fill="#666" rx="2" stroke="#333" stroke-width="0.5"/>
+<text x="435" y="150" class="comp">GATE</text>
+<path d="M225,160 Q330,142 435,160" fill="none" stroke="#CC9900" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+<circle cx="225" cy="160" r="4" fill="#CC9900" stroke="white" stroke-width="1"/>
+<circle cx="435" cy="160" r="4" fill="#CC9900" stroke="white" stroke-width="1"/>
+<rect x="349" y="250" width="162" height="60" fill="white" stroke="#0066CC" stroke-width="1.5" rx="3" opacity="0.95"/>
+<text x="355" y="265" font-size="8" fill="#0066CC" font-family="sans-serif" font-weight="bold">Off-board:</text>
+<text x="355" y="278" font-size="8" fill="#0066CC" font-family="sans-serif" >• Panel pot (Threshold)</text>
+<text x="355" y="291" font-size="8" fill="#0066CC" font-family="sans-serif" >• 6mm audio jack → AUDIO</text>
+<text x="355" y="304" font-size="8" fill="#0066CC" font-family="sans-serif" >• GATE → env-retrig / aux</text>
+<text x="90" y="365" class="legend-title">Legend</text>
+<rect x="90" y="380" width="14" height="10" fill="#2D2D2D" rx="2"/>
+<text x="110" y="386" class="legend-text">LM393 (DIP-8)</text>
+<rect x="270" y="380" width="14" height="10" fill="#C4A265" rx="2"/>
+<text x="290" y="386" class="legend-text">Resistor</text>
+<rect x="90" y="398" width="14" height="10" fill="#4A90D9" rx="2"/>
+<text x="110" y="404" class="legend-text">Ceramic 100nF</text>
+<circle cx="277" cy="403" r="5" fill="#C0C0C0"/>
+<text x="290" y="404" class="legend-text">Panel pot (off-board)</text>
+<line x1="92" y1="417" x2="102" y2="425" stroke="#FF0000" stroke-width="2"/>
+<line x1="102" y1="417" x2="92" y2="425" stroke="#FF0000" stroke-width="2"/>
+<text x="110" y="422" class="legend-text">Track cut</text>
+<line x1="270" y1="421" x2="284" y2="421" stroke="#0066CC" stroke-width="2.5"/>
+<text x="290" y="422" class="legend-text">Jumper wire</text>
+</svg>

@@ -34,7 +34,7 @@
 <text x="140" y="172" class="anno" text-anchor="middle" font-size="9">existing trace cut</text>
 <rect x="240" y="160" width="160" height="120" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="3"/>
 <circle cx="248" cy="168" r="3" fill="gold"/>
-<text x="320.0" y="220.0" class="label" text-anchor="middle" fill="#FFF" font-size="11">LM13700</text>
+<text x="320.0" y="220.0" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="11">LM13700</text>
 <circle cx="236" cy="174.0" r="2.5" fill="gold"/>
 <text x="232" y="177.0" class="value" text-anchor="end" font-size="8">IN+</text>
 <circle cx="236" cy="207.33333333333334" r="2.5" fill="gold"/>

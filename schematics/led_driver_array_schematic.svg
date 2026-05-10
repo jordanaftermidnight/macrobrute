@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 550" width="650" height="550">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 620" width="650" height="620">
 <defs>
   <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
     <feFlood flood-color="white" flood-opacity="0.9" result="bg"/>
@@ -26,7 +26,7 @@
     <polygon points="0 0, 8 3, 0 6" fill="#0066CC"/>
   </marker>
 </defs>
-<rect width="650" height="550" fill="#FEFEFE"/>
+<rect width="650" height="620" fill="#FEFEFE"/>
 <text x="325" y="25" class="title" text-anchor="middle">LED Driver Array</text>
 <text x="325" y="42" class="subtitle" text-anchor="middle">3× 2N3904 NPN Drivers for RGB LED + Status LEDs</text>
 <text x="50" y="50" class="label">From Pico GPIO</text>
@@ -132,20 +132,21 @@
 <text x="450" y="150" class="label" font-size="10">Common Cathode RGB LED</text>
 <text x="450" y="170" class="value" font-size="9">All cathodes tied to</text>
 <text x="450" y="185" class="value" font-size="9">Q1-Q2-Q3 collectors</text>
-<rect x="50" y="320" width="550" height="180" fill="#F5F5F5" stroke="#666" stroke-width="1" rx="4"/>
-<text x="325" y="345" class="label" text-anchor="middle">Component Values</text>
-<text x="70" y="365" class="label" font-size="9">Q1-Q3:</text>
-<text x="150" y="365" class="value" font-size="9">2N3904 NPN Transistor</text>
-<text x="70" y="385" class="label" font-size="9">Rbase:</text>
-<text x="150" y="385" class="value" font-size="9">470Ω (limits base current to ~5mA)</text>
-<text x="70" y="405" class="label" font-size="9">Rpulldown:</text>
-<text x="150" y="405" class="value" font-size="9">10kΩ (ensures OFF state)</text>
-<text x="70" y="425" class="label" font-size="9">Rled:</text>
-<text x="150" y="425" class="value" font-size="9">220Ω (LED current ~10mA)</text>
-<text x="70" y="445" class="label" font-size="9">Vcc:</text>
-<text x="150" y="445" class="value" font-size="9">+5V from Pico VSYS</text>
-<text x="70" y="480" class="label" font-size="10">How it works:</text>
-<text x="70" y="498" class="value" font-size="8">• GPIO HIGH → NPN ON → LED current flows → LED lights up</text>
-<text x="70" y="513" class="value" font-size="8">• GPIO LOW → NPN OFF → No current → LED dark</text>
-<text x="70" y="528" class="value" font-size="8">• 470Ω base resistor limits current into transistor base</text>
-<text x="70" y="543" class="value" font-size="8">• 10kΩ pulldown ensures transistor stays OFF when GPIO floats</text></svg>
+<rect x="50" y="320" width="550" height="130" fill="#F5F5F5" stroke="#666" stroke-width="1" rx="4"/>
+<text x="325" y="342" class="label" text-anchor="middle">Component Values</text>
+<text x="70" y="360" class="label" font-size="9">Q1-Q3:</text>
+<text x="160" y="360" class="value" font-size="9">2N3904 NPN Transistor</text>
+<text x="70" y="378" class="label" font-size="9">Rbase:</text>
+<text x="160" y="378" class="value" font-size="9">470Ω (limits base current to ~5mA)</text>
+<text x="70" y="396" class="label" font-size="9">Rpulldown:</text>
+<text x="160" y="396" class="value" font-size="9">10kΩ (ensures OFF state)</text>
+<text x="70" y="414" class="label" font-size="9">Rled:</text>
+<text x="160" y="414" class="value" font-size="9">220Ω (LED current ~10mA)</text>
+<text x="70" y="432" class="label" font-size="9">Vcc:</text>
+<text x="160" y="432" class="value" font-size="9">+5V from Pico VSYS</text>
+<rect x="50" y="470" width="550" height="130" fill="#F5F5F5" stroke="#666" stroke-width="1" rx="4"/>
+<text x="325" y="492" class="label" text-anchor="middle">How it works</text>
+<text x="70" y="512" class="value" font-size="8">• GPIO HIGH → NPN ON → LED current flows → LED lights up</text>
+<text x="70" y="530" class="value" font-size="8">• GPIO LOW → NPN OFF → No current → LED dark</text>
+<text x="70" y="548" class="value" font-size="8">• 470Ω base resistor limits current into transistor base</text>
+<text x="70" y="566" class="value" font-size="8">• 10kΩ pulldown ensures transistor stays OFF when GPIO floats</text></svg>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MACROBRUTE 17HP expander — finished panel mockup.
+  This is a visualization of the assembled module — not a drilling
+  template (see expander_17hp.svg for that).
+  Rendered at 4× the physical size so labels are readable at sensible
+  zoom levels in the manual.
+
+  Text uses class="comp-label" so the manual CSS resolves fill to
+  the cream tone in both light and dark page modes — the panel is
+  always dark, so the labels need to stay light.
+  Coloured labels use inline style with !important to beat the
+  manual's .svg-container text {fill:... !important} override.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 348 514"
+     width="348" height="514">
+
+  <defs>
+    <radialGradient id="led-on" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#ffd0d0"/>
+      <stop offset="40%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#7a3030"/>
+    </radialGradient>
+    <radialGradient id="knob-tex" cx="35%" cy="35%">
+      <stop offset="0%" stop-color="#f1e9db"/>
+      <stop offset="65%" stop-color="#a39b8b"/>
+      <stop offset="100%" stop-color="#5d564c"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Panel surface + Eurorack mounting screws -->
+  <rect x="0" y="0" width="348" height="514" rx="4" fill="#2a2520"/>
+  <rect x="1" y="1" width="346" height="512" rx="4" fill="none" stroke="#1a1208" stroke-width="2"/>
+  <g fill="#4a4239" stroke="#1a1208" stroke-width="0.6">
+    <circle cx="16" cy="12" r="6"/>
+    <circle cx="332" cy="12" r="6"/>
+    <circle cx="16" cy="502" r="6"/>
+    <circle cx="332" cy="502" r="6"/>
+  </g>
+
+  <!-- Title -->
+  <text x="174" y="34" class="comp-label" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="3">MACROBRUTE</text>
+  <text x="174" y="50" class="comp-label" text-anchor="middle" font-size="7" letter-spacing="1.5" style="fill:#9ca3db !important">17HP · EURORACK EXPANDER</text>
+
+  <!-- ─── Main OLED (0.96") ──────────────────────────────────── -->
+  <g transform="translate(100, 60)">
+    <rect width="148" height="64" rx="3" fill="#0a0604" stroke="#4a4239" stroke-width="1"/>
+    <rect x="6" y="6" width="136" height="52" fill="#050308"/>
+    <text x="14" y="22" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">128 BPM</text>
+    <text x="14" y="34" font-size="5.5" style="fill:#5dd6a5 !important">SEQ · 16/16</text>
+    <text x="84" y="22" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">CLK ▶</text>
+    <text x="84" y="34" font-size="5.5" style="fill:#5dd6a5 !important">SLW 32%</text>
+    <rect x="14" y="42" width="124" height="3" fill="#0c1612"/>
+    <rect x="14" y="42" width="76" height="3" style="fill:#5dd6a5"/>
+    <rect x="14" y="48" width="124" height="3" fill="#0c1612"/>
+    <rect x="14" y="48" width="44" height="3" style="fill:#5dd6a5"/>
+  </g>
+
+  <!-- ─── Strip OLED (0.91") ─────────────────────────────────── -->
+  <g transform="translate(100, 134)">
+    <rect width="148" height="22" rx="2" fill="#0a0604" stroke="#4a4239" stroke-width="1"/>
+    <rect x="5" y="5" width="138" height="12" fill="#050308"/>
+    <text x="10" y="14" font-size="6" style="fill:#5dd6a5 !important">CV→A1 A2 A3 A4 · TAP-LFO</text>
+  </g>
+
+  <!-- ─── UI controls row: encoder, tap, LED ─────────────────── -->
+  <text x="174" y="178" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" letter-spacing="2" style="fill:#677db7 !important">UI · CLOCK</text>
+  <!-- Encoder -->
+  <g transform="translate(96, 200)">
+    <circle r="13" fill="#1a1208" stroke="#4a4239" stroke-width="0.8"/>
+    <circle r="9" fill="url(#knob-tex)"/>
+    <line x1="0" y1="-7" x2="0" y2="-2" stroke="#322a26" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+  <text x="96" y="226" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700">ENCODER</text>
+  <text x="96" y="234" class="comp-label" text-anchor="middle" font-size="5" style="fill:#9ca3db !important">menu · push</text>
+  <!-- Tap button -->
+  <g transform="translate(174, 200)">
+    <circle r="9" fill="#1a1208" stroke="#4a4239" stroke-width="0.8"/>
+    <circle r="6.4" fill="#d8d2c9" stroke="#4a4239" stroke-width="0.6"/>
+  </g>
+  <text x="174" y="226" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700">TAP</text>
+  <text x="174" y="234" class="comp-label" text-anchor="middle" font-size="5" style="fill:#5dd6a5 !important">tempo / gate</text>
+  <!-- RGB LED -->
+  <g transform="translate(252, 200)">
+    <circle r="12" fill="#d68b8b" opacity="0.35"/>
+    <circle r="6" fill="url(#led-on)"/>
+    <circle cx="-1.5" cy="-1.5" r="1.2" fill="#ffd0d0"/>
+  </g>
+  <text x="252" y="226" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700">LED</text>
+  <text x="252" y="234" class="comp-label" text-anchor="middle" font-size="5">clock · gate · mode</text>
+
+  <!-- ─── Clock I/O ──────────────────────────────────────────── -->
+  <rect x="14" y="248" width="320" height="44" rx="2" fill="#322a26" opacity="0.4"/>
+  <text x="174" y="262" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700" letter-spacing="2" style="fill:#677db7 !important">CLOCK I/O · 3.5 MM TS</text>
+  <g transform="translate(100, 278)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="100" y="297" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">CLK IN</text>
+  <g transform="translate(248, 278)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="248" y="297" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">CLK OUT</text>
+
+  <!-- ─── Clock divider /2 /4 /8 ─────────────────────────────── -->
+  <text x="174" y="312" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700" letter-spacing="2" style="fill:#677db7 !important">CLOCK DIVIDER · FIRMWARE</text>
+  <g transform="translate(68, 330)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="68" y="348" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">/2</text>
+  <g transform="translate(174, 330)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="174" y="348" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">/4</text>
+  <g transform="translate(280, 330)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="280" y="348" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#5dd6a5 !important">/8</text>
+
+  <!-- ─── Slew limiter (IN, RATE, OUT) ───────────────────────── -->
+  <rect x="14" y="362" width="320" height="52" rx="2" fill="#322a26" opacity="0.4"/>
+  <text x="174" y="376" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700" letter-spacing="2" style="fill:#677db7 !important">SLEW LIMITER · ANALOG</text>
+  <g transform="translate(56, 394)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="56" y="412" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">IN</text>
+  <g transform="translate(174, 394)">
+    <circle r="14" fill="#1a1208" stroke="#4a4239" stroke-width="0.8"/>
+    <circle r="10" fill="url(#knob-tex)"/>
+    <line x1="-5" y1="-7" x2="-2" y2="-4" stroke="#322a26" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+  <text x="174" y="412" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#9ca3db !important">RATE</text>
+  <g transform="translate(292, 394)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="292" y="412" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">OUT</text>
+
+  <!-- ─── Aux outs A1-A4 ─────────────────────────────────────── -->
+  <text x="174" y="430" class="comp-label" text-anchor="middle" font-size="6.5" font-weight="700" letter-spacing="2" style="fill:#677db7 !important">AUX OUT · ASSIGNABLE</text>
+  <g transform="translate(54, 448)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="54" y="466" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">A1</text>
+  <g transform="translate(134, 448)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="134" y="466" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">A2</text>
+  <g transform="translate(214, 448)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="214" y="466" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">A3</text>
+  <g transform="translate(294, 448)">
+    <circle r="7" fill="#0a0604" opacity="0.55"/>
+    <circle r="6.4" fill="#1a1208" stroke="#4a4239" stroke-width="1"/>
+    <circle r="4.8" fill="none" stroke="#d4ba7c" stroke-width="1"/>
+    <circle r="2.2" fill="#d4ba7c"/>
+  </g>
+  <text x="294" y="466" class="comp-label" text-anchor="middle" font-size="7" font-weight="700" style="fill:#d4ba7c !important">A4</text>
+
+  <!-- Footer -->
+  <text x="174" y="488" class="comp-label" text-anchor="middle" font-size="6" letter-spacing="1.5" style="fill:#9ca3db !important">DB-9 A · DB-9 B · CP1A POWER (rear)</text>
+</svg>

@@ -22,6 +22,10 @@ OUTPUT = PROJECT / "Macrobrute Manual.html"
 # ─── SVG Mappings ───────────────────────────────────────────────────
 # Maps markdown files to their associated SVG layout diagrams
 SVG_MAP = {
+    "docs/MACROBRUTE_VISION.md": [
+        "panel/expander_finished_panel.svg",
+        "panel/microbrute_finished_panel.svg",
+    ],
     "schematics/wiring_diagram.md": [
         "schematics/system_architecture_block.svg",
         "schematics/audio_signal_flow.svg",
@@ -63,7 +67,6 @@ SVG_MAP = {
     ],
     "schematics/breakout_stripboard.md": [
         "schematics/breakout_layout.svg",
-        "schematics/zone_layout_stripboard.svg",
     ],
     "schematics/expander_circuits.md": [
         "schematics/noise_generator_schematic.svg",
@@ -104,16 +107,20 @@ SVG_MAP = {
     "docs/mods/macrobrute_mod_catalog.md": [
         "schematics/mod_m01_triangle_gain.svg",
         "schematics/mod_m02_soft_sync.svg",
+        "schematics/mod_m02_soft_sync_stripboard.svg",
         "schematics/mod_m03_sine_extract.svg",
         "schematics/mod_m04_metalizer_vca.svg",
+        "schematics/mod_m04_metalizer_vca_stripboard.svg",
         "schematics/mod_m05_filter_selfosc_kill.svg",
         "schematics/mod_m06_pwm_cv.svg",
         "schematics/mod_m07_pitch_starve.svg",
         "schematics/mod_m08_subharmonic.svg",
+        "schematics/mod_m08_subharmonic_stripboard.svg",
         "schematics/mod_m09_pwm_selfmod.svg",
         "schematics/mod_m10_brute_extreme.svg",
         "schematics/mod_m11_touch_envretrig.svg",
         "schematics/mod_m12_arg.svg",
+        "schematics/mod_m12_arg_stripboard.svg",
         "schematics/mod_m13_vco_sync_env.svg",
         "schematics/mod_m14_vco_bias_starve.svg",
     ],
@@ -124,6 +131,20 @@ SVG_MAP = {
 # 1-3 sentences explaining what the diagram is showing and any non-obvious
 # detail. Markdown inline syntax (backticks for code, **bold**) is supported.
 SVG_DESCRIPTIONS = {
+    # Vision — finished panel mockups
+    "panel/expander_finished_panel.svg":
+        "**The 17 HP expander, finished.** Visualization of the assembled module, "
+        "labelled by signal type: blue = audio, **gold** = CV, **green** = gate/clock, "
+        "**lavender** = pot/switch. The faux OLED frame shows the kind of UI the firmware "
+        "draws (BPM, sequencer state, level meters). For drilling dimensions see "
+        "`panel/expander_17hp.svg`.",
+    "panel/microbrute_finished_panel.svg":
+        "**MicroBrute panel additions in their final positions.** Stock controls are ghosted "
+        "for spatial reference — the mod adds a strip OLED, 8 new 3.5 mm jacks (4 inserts + 4 "
+        "Phase-2 mod jacks), 5 SPDT toggles, and 6 brass touch bolts plus a GND return bolt. "
+        "Color coding matches the expander mockup. For drilling dimensions see "
+        "`panel/microbrute_panel_template.svg`.",
+
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
         "**Flat schematic, power-rail style.** Pico WH on the left; +3V3 rail along the top, "
@@ -229,9 +250,6 @@ SVG_DESCRIPTIONS = {
     "schematics/output_buffer_board.svg":
         "Sub-section of the breakout dedicated to the audio output buffers (TL074 quad). Shows "
         "where each channel sits relative to power rails and connectors.",
-    "schematics/zone_layout_stripboard.svg":
-        "Zoned overview of the breakout stripboard — analogue zone, digital zone, power zone — "
-        "so you can keep ground returns and decoupling local to each zone.",
 
     # Expander circuits (analogue utility modules)
     "schematics/noise_generator_schematic.svg":
@@ -318,12 +336,22 @@ SVG_DESCRIPTIONS = {
     "schematics/mod_m02_soft_sync.svg":
         "**M02 — Soft sync.** LM393 comparator generates a soft reset pulse from an external "
         "audio-rate signal into the VCO; switch toggles between hard and soft sync.",
+    "schematics/mod_m02_soft_sync_stripboard.svg":
+        "**M02 stripboard.** LM393 (DIP-8) on a 12×9 board with a +5 V / GND rail pair. "
+        "Vref is a 100 k:100 k divider into −IN-A; +IN-A is AC-coupled from the SYNC input "
+        "with a 1N4148 clamp; OUT-A has a 10 kΩ pull-up to +5 V (open-collector LM393). "
+        "Off-board: SPDT toggle (hard/soft) + sync jacks.",
     "schematics/mod_m03_sine_extract.svg":
         "**M03 — Sine extraction.** Low-pass shapes the triangle into a near-sine output on a "
         "dedicated jack, useful for FM bass tones.",
     "schematics/mod_m04_metalizer_vca.svg":
         "**M04 — Metalizer VCA.** LM13700 OTA squashes/folds the wave at the metalizer output "
         "for harsh metallic tones; CV controllable from the modulation bus.",
+    "schematics/mod_m04_metalizer_vca_stripboard.svg":
+        "**M04 stripboard.** LM13700 (DIP-16) on a 14×12 board with ±12 V + GND rails. Uses one "
+        "OTA section: 100 kΩ series at the −IN-A input, 10 kΩ into the Iabc summing node fed "
+        "from CV-IN (100 kΩ) and the Amount panel pot. Off-board: pot, CV jack, and the splice "
+        "back into the cut Metalizer feedback trace.",
     "schematics/mod_m05_filter_selfosc_kill.svg":
         "**M05 — Filter self-oscillation kill.** Toggle that mutes the VCF audio path while the "
         "filter is self-oscillating, so the SP filter becomes a clean sine source.",
@@ -336,6 +364,11 @@ SVG_DESCRIPTIONS = {
     "schematics/mod_m08_subharmonic.svg":
         "**M08 — Sub-harmonic divider.** 74HC74 D-flip-flop divides the square wave by 2; "
         "octave-down output on a dedicated jack.",
+    "schematics/mod_m08_subharmonic_stripboard.svg":
+        "**M08 stripboard.** 74HC74 (DIP-14) on a 13×10 board, +5 V / GND rails. Active section "
+        "wired as ÷2 (D ← Q', PRE/CLR tied high); square in is AC-coupled into 1CLK, Q out goes "
+        "through a 1 µF AC couple into a 10 kΩ Sub-Mix pot, then SPDT enable to the VCF "
+        "summing node. Unused 2nd flip-flop is tied off cleanly.",
     "schematics/mod_m09_pwm_selfmod.svg":
         "**M09 — PWM self-modulation.** Patches LFO into PWM CV internally via a toggle, no "
         "front-panel cable needed.",
@@ -348,6 +381,11 @@ SVG_DESCRIPTIONS = {
     "schematics/mod_m12_arg.svg":
         "**M12 — Audio-rate gate (ARG).** LM393 comparator turns any audio input into a gate "
         "signal at audio rate. Output goes to the gate bus and can self-trigger the envelope.",
+    "schematics/mod_m12_arg_stripboard.svg":
+        "**M12 stripboard.** LM393 (DIP-8) on a 12×9 board, +5 V / GND rails. Audio is "
+        "DC-blocked by 100 nF into +IN-A; threshold comes from a 100 kΩ panel pot into −IN-A; "
+        "OUT-A is open-collector with a 10 kΩ pull-up to +5 V driving the GATE header. "
+        "Off-board: input jack and threshold pot.",
     "schematics/mod_m13_vco_sync_env.svg":
         "**M13 — VCO sync to envelope.** Routes the envelope rising edge into VCO sync; toggle "
         "selects whether the envelope hard-syncs the oscillator each note.",
@@ -367,62 +405,69 @@ QUICK_REF = [
 ]
 
 SECTIONS = [
-    ("1. Getting Started", "start", [
+    # Each tuple: (title, id, group, [files])
+    # group ∈ {"PLAN", "BUILD", "REFERENCE"} drives the super-section
+    # cluster headers in the sidebar.
+    ("0. Start Here", "readme", "PLAN", [
+        "docs/MACROBRUTE_README.md",
+        "docs/MACROBRUTE_VISION.md",
+    ]),
+    ("1. Getting Started", "start", "PLAN", [
         "docs/MACROBRUTE_INDEX.md",
     ]),
-    ("2. Planning & Preparation", "plan", [
+    ("2. Planning & Preparation", "plan", "PLAN", [
+        "docs/hardware/MACROBRUTE_PHASE0_BOM.md",
         "docs/hardware/MACROBRUTE_BOM.md",
         "docs/hardware/MACROBRUTE_SHOPPING_LIST.md",
         "docs/MACROBRUTE_MOD_SELECTION.md",
         "docs/MACROBRUTE_BUILD_PLAN.md",
     ]),
-    ("3. System Architecture", "arch", [
+    ("3. System Architecture", "arch", "PLAN", [
         "docs/MACROBRUTE_CONNECTION_MAP.md",
     ]),
-    ("4. Interconnect & Wiring", "wire", [
+    ("4. Interconnect & Wiring", "wire", "BUILD", [
         "schematics/wiring_diagram.md",
     ]),
-    ("5. Breakout Board", "breakout", [
+    ("5. Breakout Board", "breakout", "BUILD", [
         "schematics/breakout_pcb.md",
         "schematics/breakout_stripboard.md",
         "schematics/pico_pinout.md",
     ]),
-    ("6. Expander Modules", "expander", [
+    ("6. Expander Modules", "expander", "BUILD", [
         "schematics/expander_circuits.md",
         "schematics/expander_stripboard.md",
     ]),
-    ("7. Protection & Safety", "protection", [
+    ("7. Protection & Safety", "protection", "BUILD", [
         "schematics/CIRCUIT_REVIEW.md",
     ]),
-    ("8. Control & Interface", "control", [
+    ("8. Control & Interface", "control", "BUILD", [
         "schematics/touch_plates.md",
         "docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md",
         "docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md",
     ]),
-    ("9. Hardware Reference", "hw", [
+    ("9. Hardware Reference", "hw", "REFERENCE", [
         "docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md",
         "schematics/ic_pinout_reference.md",
+        "docs/MACROBRUTE_GLOSSARY.md",
+        "docs/MACROBRUTE_TROUBLESHOOTING.md",
     ]),
-    ("10. Mods & Extensions", "mods", [
+    ("10. Mods & Extensions", "mods", "REFERENCE", [
         "docs/mods/touch_bend_specs.md",
         "docs/mods/macrobrute_mod_catalog.md",
         "docs/mods/microbrute_mods_guide.md",
         "docs/mods/microbrute_circuit_bending_guide.md",
         "docs/mods/deep_circuit_bending.md",
-        "docs/mods/ultimate_microbrute_project.md",
     ]),
-    ("11. Research", "research", [
+    ("11. Research", "research", "REFERENCE", [
         "docs/research/additional_mods_findings.md",
         "docs/research/mbf_analysis.md",
         "docs/research/firmware_re_findings.md",
         "docs/firmware/lpc2361_investigation_guide.md",
         "docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
-        "docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",
     ]),
-    ("12. Legacy & Archive", "legacy", [
+    ("12. Legacy & Archive", "legacy", "REFERENCE", [
         "docs/legacy/MACROBRUTE_FINAL_ARCHITECTURE.md",
         "docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md",
-        "docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md",
         "docs/legacy/MACROBRUTE_MASTER_PLAN.md",
         "docs/legacy/MACROBRUTE_REVISED_SPEC.md",
         "docs/legacy/MACROBRUTE_V2_SPEC.md",
@@ -454,6 +499,14 @@ def _inline(text):
         url = _html.unescape(m.group(2))
         return f'<a href="{_html.escape(url)}" target="_blank">{m.group(1)}</a>'
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", _link, text)
+    # Status badges [[NAME]] → <span class="badge badge-name">NAME</span>
+    # Recognised: VERIFIED, UNTESTED, DRAFT, DESTRUCTIVE, REVERSIBLE,
+    #             LOCKED, IN FLUX, BUILT, BLOCKED. Anything else falls through.
+    def _badge(m):
+        name = m.group(1).strip()
+        slug = name.lower().replace(" ", "-")
+        return f'<span class="badge badge-{slug}">{name}</span>'
+    text = re.sub(r"\[\[([A-Z][A-Z 0-9/-]{1,24})\]\]", _badge, text)
 
     # Restore code spans
     for i, c in enumerate(codes):
@@ -668,18 +721,22 @@ def _short(title):
 # ─── CSS ─────────────────────────────────────────────────────────────
 
 CSS = """\
+/* Palette — dark mode uses coolors #191308-322a26-454b66-677db7-9ca3db
+   with cream highlights from #f1e9db; light mode uses #dcdcdd-c5c3c6-46494c-4c5c68-1985a1.
+   Both stay close to the base hues so generated SVGs (which mostly use
+   theme-aware var(--svg-tx*) text) keep contrast against either ground. */
 :root {
-    --bg:#0d1117; --bg2:#161b22; --bg3:#21262d; --bg4:#1c2129;
-    --tx:#c9d1d9; --txd:#8b949e; --txb:#f0f6fc;
-    --blue:#58a6ff; --green:#3fb950; --red:#f85149;
-    --yel:#d29922; --purple:#bc8cff; --border:#30363d; --r:6px;
+    --bg:#191308; --bg2:#1f1811; --bg3:#322a26; --bg4:#3a3128;
+    --tx:#d8d2c9; --txd:#9ca3db; --txb:#f1e9db;
+    --blue:#677db7; --green:#5dd6a5; --red:#d68b8b;
+    --yel:#d4ba7c; --purple:#9ca3db; --border:#454b66; --r:6px;
 }
 /* Light mode variables */
 body.light-mode {
-    --bg:#ffffff; --bg2:#f6f8fa; --bg3:#eaeef2; --bg4:#f3f4f6;
-    --tx:#1f2328; --txd:#57606a; --txb:#24292f;
-    --blue:#0969da; --green:#1a7f37; --red:#cf222e;
-    --yel:#9a6700; --purple:#8250df; --border:#d0d7de; --r:6px;
+    --bg:#dcdcdd; --bg2:#d2d0d3; --bg3:#c5c3c6; --bg4:#cac8cb;
+    --tx:#46494c; --txd:#4c5c68; --txb:#2a2d30;
+    --blue:#1985a1; --green:#2a7f5f; --red:#a85a5a;
+    --yel:#8b7028; --purple:#5e6b9a; --border:#b5b3b6; --r:6px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
@@ -699,6 +756,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 #q-hint{font-size:11px;color:var(--txd);margin-top:4px}
 #toc{flex:1;overflow-y:auto;padding:8px 0}
 .ts{padding:4px 16px}
+.ts-group{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--blue);
+    padding:14px 12px 6px;border-top:1px solid var(--border);margin-top:8px;
+    text-transform:uppercase}
+.ts-group:first-of-type{border-top:none;margin-top:0;padding-top:8px}
+.super-cat{font-size:13px;font-weight:800;letter-spacing:3px;color:var(--blue);
+    text-transform:uppercase;margin:36px 0 4px;padding-bottom:6px;
+    border-bottom:2px solid var(--blue);opacity:.85}
+.super-cat:first-of-type{margin-top:8px}
 .ts-t{font-size:11px;font-weight:700;color:var(--txd);text-transform:uppercase;
     letter-spacing:.5px;padding:8px 0 4px}
 .tl{display:block;padding:4px 8px;color:var(--tx);text-decoration:none;font-size:13px;
@@ -804,20 +869,47 @@ tr:target td{animation:flash 1.5s ease}
 .svg-container .pin,.svg-container .pin-num,.svg-container .pin-func,
 .svg-container .comp,.svg-container .component,.svg-container .zone-label,
 .svg-container .p,.svg-container .vl,.svg-container .connector,
-.svg-container .ic-label,.svg-container .ic-type,
+.svg-container .ic-type,
 .svg-container .func,.svg-container .net-label,.svg-container .gnd-label,
 .svg-container .section-head,.svg-container .sect
 {fill:var(--svg-txm,#222) !important}
+/* IC labels sit inside dark IC bodies (#333 fills) — promote to light. */
+.svg-container .ic-label
+{fill:var(--svg-txl,#f0f6fc) !important}
 /* Summary/highlight text — keep themed */
 .svg-container .sum{fill:var(--svg-tx,#1a1a1a) !important;font-weight:700 !important}
 /* Row/column labels in stripboard layouts */
 .svg-container .row-label,.svg-container .col-label
 {fill:var(--svg-txm,#333) !important;font-weight:700 !important}
+/* Light-on-dark — placed LAST so .comp-label wins cascade even when
+   combined with .label/.value/.title (which appear earlier). Used for
+   text rendered on dark coloured fills (power rails, IC bodies, etc.). */
+.svg-container .comp-label,.svg-container .light-on-dark
+{fill:var(--svg-txl,#f0f6fc) !important}
 /* No text-shadow — just use fill color */
 .svg-container text{text-shadow:none !important}
 /* Theme-specific backgrounds and colors */
-body.light-mode .svg-container{--svg-bg:#F5F5F0;--svg-tx:#1a1a1a;--svg-txd:#555;--svg-txm:#222;--svg-txl:#f0f6fc;background:#F5F5F0}
-body:not(.light-mode) .svg-container{--svg-bg:#2d333b;--svg-tx:#c9d1d9;--svg-txd:#8b949e;--svg-txm:#b0b8c1;--svg-txl:#f0f6fc;background:#2d333b}
+body.light-mode .svg-container{--svg-bg:#f1ede4;--svg-tx:#46494c;--svg-txd:#4c5c68;--svg-txm:#2a2d30;--svg-txl:#f1e9db;background:#f1ede4}
+body:not(.light-mode) .svg-container{--svg-bg:#322a26;--svg-tx:#d8d2c9;--svg-txd:#9ca3db;--svg-txm:#c8c0b6;--svg-txl:#f1e9db;background:#322a26}
+
+/* ─── Status badges — inline pills using palette tones ───────────── */
+.badge{display:inline-block;padding:1px 7px;margin:0 2px;border-radius:10px;
+    font-size:11px;font-weight:700;letter-spacing:.4px;line-height:1.5;
+    border:1px solid currentColor;vertical-align:baseline;white-space:nowrap}
+.badge-verified  {color:#5dd6a5;background:rgba(93,214,165,.10)}
+.badge-built     {color:#5dd6a5;background:rgba(93,214,165,.10)}
+.badge-untested  {color:#d4ba7c;background:rgba(212,186,124,.12)}
+.badge-draft     {color:#9ca3db;background:rgba(156,163,219,.12)}
+.badge-destructive{color:#d68b8b;background:rgba(214,139,139,.12)}
+.badge-reversible{color:#677db7;background:rgba(103,125,183,.14)}
+.badge-locked    {color:#9ca3db;background:rgba(156,163,219,.10);font-style:italic}
+.badge-in-flux   {color:#d4ba7c;background:rgba(212,186,124,.10);font-style:italic}
+.badge-blocked   {color:#d68b8b;background:rgba(214,139,139,.18)}
+body.light-mode .badge-verified,body.light-mode .badge-built{color:#2a7f5f;background:rgba(42,127,95,.10)}
+body.light-mode .badge-untested,body.light-mode .badge-in-flux{color:#8b7028;background:rgba(139,112,40,.12)}
+body.light-mode .badge-draft,body.light-mode .badge-locked{color:#5e6b9a;background:rgba(94,107,154,.10)}
+body.light-mode .badge-destructive,body.light-mode .badge-blocked{color:#a85a5a;background:rgba(168,90,90,.10)}
+body.light-mode .badge-reversible{color:#1985a1;background:rgba(25,133,161,.12)}
 @media(max-width:768px){.svg-container{padding:8px}.svg-container svg{height:auto}}
 #no-res{text-align:center;padding:48px;color:var(--txd);font-size:16px;display:none}
 
@@ -1076,7 +1168,13 @@ def _sidebar():
     toc = []
     toc.append('<div class="ts"><a class="tl" href="#quick-ref" '
                'style="color:var(--yel)">Quick Reference</a></div>')
-    for cat_title, cat_id, files in SECTIONS:
+    # Cluster the 13 numbered sections under three super-headers (PLAN /
+    # BUILD / REFERENCE) so the sidebar is scannable at a glance.
+    last_group = None
+    for cat_title, cat_id, group, files in SECTIONS:
+        if group != last_group:
+            toc.append(f'<div class="ts-group">{group}</div>')
+            last_group = group
         toc.append(f'<div class="ts"><div class="ts-t">{cat_title}</div>')
         for fp in files:
             did = _make_id(fp)
@@ -1193,7 +1291,7 @@ def _doc_section(fpath):
 
 def _count_docs():
     seen = set()
-    for _, _, files in SECTIONS:
+    for _, _, _, files in SECTIONS:
         seen.update(files)
     return len(seen)
 
@@ -1223,7 +1321,11 @@ def build():
         '<div id="no-res">No matching documents</div>',
     ]
 
-    for cat_title, cat_id, files in SECTIONS:
+    last_group = None
+    for cat_title, cat_id, group, files in SECTIONS:
+        if group != last_group:
+            parts.append(f'<div class="super-cat">{group}</div>')
+            last_group = group
         parts.append(f'<div class="cg" id="cat-{cat_id}">')
         parts.append(f'<div class="cat">{_html.escape(cat_title)}</div>')
         for fp in files:

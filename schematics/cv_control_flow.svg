@@ -29,79 +29,79 @@
 <rect width="950" height="700" fill="#FEFEFE"/>
 <text x="475" y="25" class="title" text-anchor="middle">CV Control Flow</text>
 <text x="475" y="42" class="subtitle" text-anchor="middle">Modulation and Control Voltage Routing</text>
-<text x="120" y="45" class="label" font-size="11" fill="#9C27B0">Modulation Sources</text>
-<text x="450" y="45" class="label" font-size="11" fill="#2196F3">Modulation Targets</text>
-<text x="750" y="45" class="label" font-size="11" fill="#FF9800">External CV Inputs</text>
-<rect x="70" y="70" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="87.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">LFO</text>
-<text x="120.0" y="104.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">0-5V △</text>
-<rect x="70" y="130" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="147.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Envelope</text>
-<text x="120.0" y="164.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">0-5V ADSR</text>
-<rect x="70" y="190" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="207.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Pitch CV</text>
-<text x="120.0" y="224.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">1V/oct</text>
-<rect x="70" y="250" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="267.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Mod Wheel</text>
-<text x="120.0" y="284.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">0-5V</text>
-<rect x="70" y="330" width="100" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="347.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Exp LFO</text>
-<text x="120.0" y="364.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Free Run</text>
-<rect x="70" y="390" width="100" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="120.0" y="407.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Exp S&amp;H</text>
-<text x="120.0" y="424.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">S&amp;H</text>
-<rect x="400" y="70" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="87.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Pitch</text>
-<text x="450.0" y="104.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">VCO Freq</text>
-<rect x="400" y="130" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="147.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Filter</text>
-<text x="450.0" y="164.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Cutoff</text>
-<rect x="400" y="190" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="207.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Resonance</text>
-<text x="450.0" y="224.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Peak</text>
-<rect x="400" y="250" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="267.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">VCA</text>
-<text x="450.0" y="284.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Amplitude</text>
-<rect x="400" y="310" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="327.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">PWM</text>
-<text x="450.0" y="344.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Pulse Width</text>
-<rect x="400" y="370" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="450.0" y="387.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Metalizer</text>
-<text x="450.0" y="404.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Harmonics</text>
-<rect x="720" y="70" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="775.0" y="87.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Filter CV</text>
-<text x="775.0" y="104.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P1</text>
-<rect x="720" y="130" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="775.0" y="147.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">VCA CV</text>
-<text x="775.0" y="164.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P2</text>
-<rect x="720" y="190" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="775.0" y="207.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Res CV</text>
-<text x="775.0" y="224.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">Vactrol</text>
-<rect x="720" y="250" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="775.0" y="267.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Gate In</text>
-<text x="775.0" y="284.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P5</text>
-<rect x="720" y="310" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="775.0" y="327.5" class="label" text-anchor="middle" fill="#FFF" font-size="9">Sync</text>
-<text x="775.0" y="344.5" class="value" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P4</text>
-<path d="M170,92 L285,92 L285,92 L400,92" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,100 L280,100 L280,152 L390,152" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,108 L275,108 L275,272 L380,272" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,152 L290,152 L290,112 L410,112" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,160 L285,160 L285,272 L400,272" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,212 L285,212 L285,92 L400,92" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,272 L290,272 L290,100 L410,100" stroke="#9C27B0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,352 L285,352 L285,212 L400,212" stroke="#4CAF50" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M170,412 L290,412 L290,220 L410,220" stroke="#4CAF50" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<path d="M720,92 L610,92 L610,152 L500,152" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<text x="610" y="89" class="value" text-anchor="middle" fill="#FF9800" font-size="8">Filter CV</text>
-<path d="M720,152 L610,152 L610,272 L500,272" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<text x="610" y="149" class="value" text-anchor="middle" fill="#FF9800" font-size="8">VCA CV</text>
-<path d="M720,212 L610,212 L610,212 L500,212" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<text x="610" y="209" class="value" text-anchor="middle" fill="#FF9800" font-size="8">Res CV</text>
-<path d="M720,272 L610,272 L610,332 L500,332" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<text x="610" y="269" class="value" text-anchor="middle" fill="#FF9800" font-size="8">Gate</text>
-<path d="M720,332 L610,332 L610,392 L500,392" stroke="#FF9800" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-<text x="610" y="329" class="value" text-anchor="middle" fill="#FF9800" font-size="8">Sync</text>
+<text x="120" y="72" class="label" font-size="11" fill="#9C27B0">Modulation Sources</text>
+<text x="450" y="72" class="label" font-size="11" fill="#2196F3">Modulation Targets</text>
+<text x="750" y="72" class="label" font-size="11" fill="#FF9800">External CV Inputs</text>
+<rect x="70" y="95" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="112.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">LFO</text>
+<text x="120.0" y="129.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">0–5V △</text>
+<rect x="70" y="155" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="172.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Envelope</text>
+<text x="120.0" y="189.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">0–5V ADSR</text>
+<rect x="70" y="215" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="232.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Pitch CV</text>
+<text x="120.0" y="249.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">1V/oct</text>
+<rect x="70" y="275" width="100" height="45" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="292.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Mod Wheel</text>
+<text x="120.0" y="309.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">0–5V</text>
+<rect x="70" y="355" width="100" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="372.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Exp LFO</text>
+<text x="120.0" y="389.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Free Run</text>
+<rect x="70" y="415" width="100" height="45" fill="#4CAF50" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="120.0" y="432.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Exp S&amp;H</text>
+<text x="120.0" y="449.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">S&amp;H</text>
+<rect x="400" y="95" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="112.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Pitch</text>
+<text x="450.0" y="129.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">VCO Freq</text>
+<rect x="400" y="155" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="172.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Filter</text>
+<text x="450.0" y="189.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Cutoff</text>
+<rect x="400" y="215" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="232.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Resonance</text>
+<text x="450.0" y="249.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Peak</text>
+<rect x="400" y="275" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="292.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">VCA</text>
+<text x="450.0" y="309.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Amplitude</text>
+<rect x="400" y="335" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="352.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">PWM</text>
+<text x="450.0" y="369.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Pulse Width</text>
+<rect x="400" y="395" width="100" height="45" fill="#2196F3" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="450.0" y="412.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Metalizer</text>
+<text x="450.0" y="429.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Harmonics</text>
+<rect x="720" y="95" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="775.0" y="112.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Filter CV</text>
+<text x="775.0" y="129.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P1</text>
+<rect x="720" y="155" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="775.0" y="172.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">VCA CV</text>
+<text x="775.0" y="189.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P2</text>
+<rect x="720" y="215" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="775.0" y="232.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Res CV</text>
+<text x="775.0" y="249.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Vactrol</text>
+<rect x="720" y="275" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="775.0" y="292.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Gate In</text>
+<text x="775.0" y="309.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P5</text>
+<rect x="720" y="335" width="110" height="45" fill="#FF9800" stroke="#1a1a1a" stroke-width="2" rx="4"/>
+<text x="775.0" y="352.5" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">Sync</text>
+<text x="775.0" y="369.5" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">DB-9 B P4</text>
+<path d="M170,117.5 L195,117.5 L195,117.5 L400,117.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,117.5 L219,117.5 L219,177.5 L400,177.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,117.5 L243,117.5 L243,297.5 L400,297.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,177.5 L267,177.5 L267,177.5 L400,177.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,177.5 L291,177.5 L291,297.5 L400,297.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,237.5 L315,237.5 L315,117.5 L400,117.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,297.5 L339,297.5 L339,117.5 L400,117.5" stroke="#9C27B0" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,377.5 L363,377.5 L363,237.5 L400,237.5" stroke="#4CAF50" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M170,437.5 L387,437.5 L387,237.5 L400,237.5" stroke="#4CAF50" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<path d="M720,117.5 L695,117.5 L695,177.5 L500,177.5" stroke="#FF9800" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<text x="716" y="111.5" class="value" text-anchor="end" fill="#FF9800" font-size="8">→ Filter</text>
+<path d="M720,177.5 L655,177.5 L655,297.5 L500,297.5" stroke="#FF9800" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<text x="716" y="171.5" class="value" text-anchor="end" fill="#FF9800" font-size="8">→ VCA</text>
+<path d="M720,237.5 L615,237.5 L615,237.5 L500,237.5" stroke="#FF9800" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<text x="716" y="231.5" class="value" text-anchor="end" fill="#FF9800" font-size="8">→ Resonance</text>
+<path d="M720,297.5 L575,297.5 L575,357.5 L500,357.5" stroke="#FF9800" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<text x="716" y="291.5" class="value" text-anchor="end" fill="#FF9800" font-size="8">→ PWM</text>
+<path d="M720,357.5 L535,357.5 L535,417.5 L500,417.5" stroke="#FF9800" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+<text x="716" y="351.5" class="value" text-anchor="end" fill="#FF9800" font-size="8">→ Metalizer</text>
 <rect x="50" y="460" width="850" height="220" fill="#FFF3E0" stroke="#FF9800" stroke-width="1" rx="4"/>
 <text x="475" y="485" class="label" text-anchor="middle" fill="#E65100">CV Routing &amp; Modulation Notes</text>
 <text x="70" y="510" class="label" font-size="8" fill="#E65100">Mod Matrix:</text>

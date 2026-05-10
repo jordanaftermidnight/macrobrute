@@ -92,7 +92,7 @@
 <rect x="280" y="410" width="220" height="140" fill="#FFF0F5" stroke="#E91E63" stroke-width="1.5" rx="4"/>
 <text x="390.0" y="430" class="label" text-anchor="middle" font-size="11" fill="#E91E63">Pico WH · micro-USB</text>
 <rect x="300" y="440" width="40" height="20" fill="#E91E63" stroke="#AD1457"/>
-<text x="320" y="454" class="value" text-anchor="middle" font-size="8" fill="#FFF">USB</text>
+<text x="320" y="454" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">USB</text>
 <text x="390" y="452" class="value" font-size="9">VBUS +5V → VSYS</text>
 <text x="390" y="467" class="value" font-size="9">D+/D- → RP2040 USB PHY</text>
 <text x="390" y="490" class="value" font-size="9">TinyUSB (MicroPython)</text>

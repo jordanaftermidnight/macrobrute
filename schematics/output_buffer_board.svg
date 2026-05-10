@@ -199,7 +199,7 @@
 
 <!-- Power decoupling note -->
 <rect x="560" y="340" width="220" height="100" fill="#0a0a0a" stroke="#555" stroke-width="0.5" rx="4"/>
-<text x="670" y="358" text-anchor="middle" font-size="10" fill="#ccc" font-family="sans-serif" font-weight="bold">Power Decoupling</text>
+<text class="comp-label" x="670" y="358" text-anchor="middle" font-size="10" fill="#ccc" font-family="sans-serif" font-weight="bold">Power Decoupling</text>
 <text x="670" y="374" text-anchor="middle" class="val">100nF each V+ to GND:</text>
 <text x="670" y="388" text-anchor="middle" class="val">U1 pin 4 (+12V_BRK)</text>
 <text x="670" y="402" text-anchor="middle" class="val">U1 pin 11 (-12V_BRK)</text>

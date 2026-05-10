@@ -23,8 +23,8 @@
 <rect x="175" y="80" width="150" height="320" fill="#9C27B0" stroke="#1a1a1a" stroke-width="2" rx="5"/>
 <circle cx="190" cy="95" r="5" fill="gold"/>
 <text x="190" y="110" class="value" text-anchor="middle" fill="gold" font-size="8">Pin 1</text>
-<text x="250.0" y="240.0" class="label" text-anchor="middle" fill="#FFF" font-size="14">CD4051</text>
-<text x="250.0" y="260.0" class="value" text-anchor="middle" fill="#CCC" font-size="9">DIP-16</text>
+<text x="250.0" y="240.0" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="14">CD4051</text>
+<text x="250.0" y="260.0" class="value comp-label" text-anchor="middle" fill="#CCC" font-size="9">DIP-16</text>
 <circle cx="175" cy="115" r="6" fill="#C0C0C0" stroke="#666" stroke-width="1"/>
 <text x="163" y="118" class="pin-num" text-anchor="end">1</text>
 <text x="187" y="118" class="pin-func" font-size="8">X4</text>

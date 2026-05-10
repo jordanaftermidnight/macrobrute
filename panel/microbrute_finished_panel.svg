@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MACROBRUTE — MicroBrute panel additions, finished view.
+  Stylized "additions only" view: the new strip OLED, jacks, toggles,
+  and touch bolts in their final layout. Stock OSC/VCF/VCA/EG knobs
+  and the 25-key keyboard are drawn as ghosts for spatial context.
+  For drilling dimensions, use microbrute_panel_template.svg (1:1 mm).
+
+  Theming: text is rendered with class="comp-label" (cream #f1e9db in
+  both light and dark modes via the manual CSS variable) plus inline
+  style overrides for accent-coloured signal labels.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 840 260"
+     width="840" height="260"
+     font-family="SF Mono, Consolas, monospace">
+  <defs>
+    <style>
+      .panel-bg     { fill: #2a2520; }
+      .panel-edge   { fill: none; stroke: #1a1208; stroke-width: 1.5; }
+      .stock-ghost  { fill: none; stroke: #4a4239; stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.55; }
+      .jack-bezel   { fill: #1a1208; stroke: #4a4239; stroke-width: 1.2; }
+      .jack-ring    { fill: none; stroke: #d4ba7c; stroke-width: 1.2; }
+      .jack-tip     { fill: #d4ba7c; }
+      .jack-shadow  { fill: #0a0604; opacity: 0.5; }
+      .toggle-base  { fill: #4a4239; stroke: #1a1208; stroke-width: 1; }
+      .toggle-stem  { fill: #d8d2c9; stroke: #1a1208; stroke-width: 0.8; }
+      .touch-rim    { fill: #6b5b3a; stroke: #322a1a; stroke-width: 1; }
+      .touch-bolt   { fill: #d4ba7c; stroke: #8b6914; stroke-width: 0.8; }
+      .touch-cross  { stroke: #322a1a; stroke-width: 0.8; }
+      .oled-frame   { fill: #0a0604; stroke: #4a4239; stroke-width: 1.2; }
+      .oled-glass   { fill: #050308; }
+      .group-bg     { fill: #322a26; opacity: 0.55; }
+    </style>
+  </defs>
+
+  <!-- Panel surface -->
+  <rect class="panel-bg" x="0" y="0" width="840" height="260" rx="6"/>
+  <rect class="panel-edge" x="2" y="2" width="836" height="256" rx="6"/>
+
+  <!-- ─── Title strip ──────────────────────────────────────────────── -->
+  <text class="comp-label" x="20" y="24" font-size="16" font-weight="bold" letter-spacing="2"
+        style="fill:#f1e9db !important">MACROBRUTE</text>
+  <text class="comp-label" x="20" y="40" font-size="9" letter-spacing="1"
+        style="fill:#9ca3db !important">MicroBrute panel additions · finished view</text>
+
+  <!-- ─── Strip OLED row (replaces "MICROBRUTE" silkscreen) ──────── -->
+  <g transform="translate(40, 60)">
+    <text class="comp-label" x="0" y="-4" font-size="8" font-weight="bold" letter-spacing="1.5"
+          style="fill:#677db7 !important">STRIP OLED · 0.91" · 0x3D</text>
+    <rect class="oled-frame" x="0" y="0" width="140" height="30" rx="2"/>
+    <rect class="oled-glass" x="6" y="5" width="128" height="20"/>
+    <text x="12" y="19" font-size="9" font-weight="bold"
+          style="fill:#5dd6a5 !important">CV→A1 · TAP-LFO · SEQ 16</text>
+  </g>
+
+  <!-- ─── New panel jacks (top centre row) ──────────────────────── -->
+  <g transform="translate(200, 60)">
+    <rect class="group-bg" x="-8" y="-8" width="408" height="50" rx="4"/>
+    <text class="comp-label" x="196" y="-12" text-anchor="middle"
+          font-size="8" font-weight="bold" letter-spacing="1.5"
+          style="fill:#677db7 !important">NEW PANEL JACKS · 3.5 MM</text>
+
+    <!-- 8 jacks across, 50 px spacing -->
+    <g>
+      <g transform="translate(20,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="20" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">RES CV</text>
+      <text class="comp-label" x="20" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">RES</text>
+
+      <g transform="translate(70,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="70" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">INSERT</text>
+      <text class="comp-label" x="70" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">VCF</text>
+
+      <g transform="translate(120,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="120" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">INSERT</text>
+      <text class="comp-label" x="120" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">METAL</text>
+
+      <g transform="translate(170,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="170" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">CV</text>
+      <text class="comp-label" x="170" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">VCA</text>
+
+      <g transform="translate(220,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="220" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#677db7 !important">M03</text>
+      <text class="comp-label" x="220" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#677db7 !important">SINE</text>
+
+      <g transform="translate(270,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="270" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">M06</text>
+      <text class="comp-label" x="270" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">PWM</text>
+
+      <g transform="translate(320,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="320" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d4ba7c !important">M04</text>
+      <text class="comp-label" x="320" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d4ba7c !important">M·CV</text>
+
+      <g transform="translate(370,18)"><circle class="jack-shadow" cx="0" cy="2" r="9"/><circle class="jack-bezel" r="8"/><circle class="jack-ring" r="6"/><circle class="jack-tip" r="2.5"/></g>
+      <text class="comp-label" x="370" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#5dd6a5 !important">M12</text>
+      <text class="comp-label" x="370" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#5dd6a5 !important">ARG</text>
+    </g>
+  </g>
+
+  <!-- ─── Toggles (right side, horizontal row of 5) ─────────────── -->
+  <g transform="translate(620, 60)">
+    <rect class="group-bg" x="-8" y="-8" width="208" height="50" rx="4"/>
+    <text class="comp-label" x="96" y="-12" text-anchor="middle"
+          font-size="8" font-weight="bold" letter-spacing="1.5"
+          style="fill:#677db7 !important">PANEL TOGGLES · SPDT</text>
+
+    <!-- M05 filter self-osc kill -->
+    <g transform="translate(20,18)">
+      <rect class="toggle-base" x="-6" y="-9" width="12" height="18" rx="2"/>
+      <line class="toggle-stem" x1="0" y1="-9" x2="-3" y2="-15" stroke-width="2.5"/>
+      <circle class="toggle-stem" cx="-3" cy="-15" r="1.6"/>
+    </g>
+    <text class="comp-label" x="20" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#9ca3db !important">M05</text>
+    <text class="comp-label" x="20" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#9ca3db !important">FILT-K</text>
+
+    <!-- M07 pitch starve -->
+    <g transform="translate(60,18)">
+      <rect class="toggle-base" x="-6" y="-9" width="12" height="18" rx="2"/>
+      <line class="toggle-stem" x1="0" y1="-9" x2="3" y2="-15" stroke-width="2.5"/>
+      <circle class="toggle-stem" cx="3" cy="-15" r="1.6"/>
+    </g>
+    <text class="comp-label" x="60" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#9ca3db !important">M07</text>
+    <text class="comp-label" x="60" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#9ca3db !important">P·STV</text>
+
+    <!-- M09 PWM self-mod normalled -->
+    <g transform="translate(100,18)">
+      <rect class="toggle-base" x="-6" y="-9" width="12" height="18" rx="2"/>
+      <line class="toggle-stem" x1="0" y1="-9" x2="0" y2="-15" stroke-width="2.5"/>
+      <circle class="toggle-stem" cx="0" cy="-15" r="1.6"/>
+    </g>
+    <text class="comp-label" x="100" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#9ca3db !important">M09</text>
+    <text class="comp-label" x="100" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#9ca3db !important">PWM·M</text>
+
+    <!-- M10 brute extreme -->
+    <g transform="translate(140,18)">
+      <rect class="toggle-base" x="-6" y="-9" width="12" height="18" rx="2"/>
+      <line class="toggle-stem" x1="0" y1="-9" x2="3" y2="-15" stroke-width="2.5"/>
+      <circle class="toggle-stem" cx="3" cy="-15" r="1.6"/>
+    </g>
+    <text class="comp-label" x="140" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#9ca3db !important">M10</text>
+    <text class="comp-label" x="140" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#9ca3db !important">BF-EXT</text>
+
+    <!-- M13 VCO sync to env -->
+    <g transform="translate(180,18)">
+      <rect class="toggle-base" x="-6" y="-9" width="12" height="18" rx="2"/>
+      <line class="toggle-stem" x1="0" y1="-9" x2="-3" y2="-15" stroke-width="2.5"/>
+      <circle class="toggle-stem" cx="-3" cy="-15" r="1.6"/>
+    </g>
+    <text class="comp-label" x="180" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#9ca3db !important">M13</text>
+    <text class="comp-label" x="180" y="40" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#9ca3db !important">SYNC-E</text>
+  </g>
+
+  <!-- ─── Faint stock-controls outline (so additions have spatial context) ─── -->
+  <g opacity="0.55">
+    <!-- Stock OSC / VCF / VCA / EG knobs row, ghosted -->
+    <g class="stock-ghost">
+      <circle cx="120" cy="140" r="20"/>
+      <circle cx="200" cy="140" r="20"/>
+      <circle cx="280" cy="140" r="20"/>
+      <circle cx="360" cy="140" r="20"/>
+      <circle cx="440" cy="140" r="20"/>
+      <circle cx="520" cy="140" r="20"/>
+      <circle cx="600" cy="140" r="20"/>
+      <circle cx="680" cy="140" r="20"/>
+      <circle cx="760" cy="140" r="20"/>
+    </g>
+    <g style="fill:#7a7065 !important" font-size="8" font-style="italic" text-anchor="middle">
+      <text x="120" y="172">VCO</text>
+      <text x="200" y="172">SUB</text>
+      <text x="280" y="172">PWM</text>
+      <text x="360" y="172">METAL</text>
+      <text x="440" y="172">CUTOFF</text>
+      <text x="520" y="172">RES</text>
+      <text x="600" y="172">ENV</text>
+      <text x="680" y="172">LFO</text>
+      <text x="760" y="172">VOL</text>
+    </g>
+  </g>
+
+  <!-- ─── Touch bolts (front edge) ─────────────────────────────── -->
+  <g transform="translate(0, 188)">
+    <text class="comp-label" x="20" y="0" font-size="8" font-weight="bold" letter-spacing="1.5"
+          style="fill:#677db7 !important">TOUCH BOLTS · BRASS M3 · CIRCUIT-BEND</text>
+    <!-- 6 brass bolts spread along the front edge of the panel -->
+    <g transform="translate(60,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="60"  y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">PITCH</text>
+    <text class="comp-label" x="60"  y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T1</text>
+
+    <g transform="translate(160,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="160" y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">CRUNCH</text>
+    <text class="comp-label" x="160" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T2</text>
+
+    <g transform="translate(260,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="260" y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">WAH</text>
+    <text class="comp-label" x="260" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T3</text>
+
+    <g transform="translate(360,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="360" y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">DISTORT</text>
+    <text class="comp-label" x="360" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T4</text>
+
+    <g transform="translate(460,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="460" y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">HARM</text>
+    <text class="comp-label" x="460" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T5</text>
+
+    <g transform="translate(560,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7"/>
+      <line class="touch-cross" x1="-4" y1="0" x2="4" y2="0"/>
+      <line class="touch-cross" x1="0" y1="-4" x2="0" y2="4"/>
+    </g>
+    <text class="comp-label" x="560" y="44" text-anchor="middle" font-size="9" font-weight="bold" style="fill:#d68b8b !important">FB-GATE</text>
+    <text class="comp-label" x="560" y="6"  text-anchor="middle" font-size="7" font-weight="bold" style="fill:#d68b8b !important">T6</text>
+
+    <!-- ground reference bolt (always-touched) -->
+    <g transform="translate(720,18)">
+      <circle class="touch-rim" r="11"/><circle class="touch-bolt" r="7" opacity="0.7"/>
+      <line class="touch-cross" x1="-4" y1="-4" x2="4" y2="4"/>
+      <line class="touch-cross" x1="4" y1="-4" x2="-4" y2="4"/>
+    </g>
+    <text class="comp-label" x="720" y="44" text-anchor="middle" font-size="9" font-weight="bold"
+          style="fill:#f1e9db !important">GND</text>
+    <text class="comp-label" x="720" y="6"  text-anchor="middle" font-size="7"
+          style="fill:#9ca3db !important">return path</text>
+  </g>
+
+  <!-- Footer -->
+  <text class="comp-label" x="20" y="252" font-size="9"
+        style="fill:#9ca3db !important">stock OSC/VCF/VCA/EG/LFO knobs untouched · 6 bolts + 8 jacks + 5 toggles + strip OLED added</text>
+</svg>

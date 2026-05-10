@@ -14,8 +14,10 @@
 .buf-box{fill:none;stroke:#9C27B0}
 .pin-box{fill:#e0e0e0;stroke:#666}
 .exp-box{fill:none;stroke:#4CAF50}
-.cable-line{stroke:#888;stroke-width:4;fill:none}
-.cable-arrow{font:14px sans-serif;fill:#888}
+.cable-wire{stroke-width:2.5}
+.cable-sheath{fill:#2a2a2a;stroke:#666;stroke-width:1.5}
+.cable-clamp{fill:#444;stroke:#888;stroke-width:1}
+.cable-tag{font:bold 10px sans-serif;fill:#aaa;letter-spacing:1px}
 .section-head{font:bold 13px sans-serif;fill:#ff9800}
 .gnd-label{font:bold 9px sans-serif;fill:#F44336}
 </style>
@@ -31,6 +33,15 @@
 <text x="720" y="62" text-anchor="middle" class="colhead">DB-9 A</text>
 <text x="875" y="62" text-anchor="middle" class="colhead">EXPANDER</text>
 
+<!-- ===== DB-9 RIBBON CABLE SHEATH (drawn first so wires render on top) ===== -->
+<!-- Outer jacket covers all signal rows + GND in the cable column.        -->
+<rect class="cable-sheath" x="465" y="82" width="230" height="486" rx="14"/>
+<!-- Strain-relief clamps at each end of the cable -->
+<rect class="cable-clamp" x="463" y="82" width="14" height="486" rx="4"/>
+<rect class="cable-clamp" x="683" y="82" width="14" height="486" rx="4"/>
+<!-- Sheath label -->
+<text x="580" y="328" text-anchor="middle" class="cable-tag" transform="rotate(-90 580 328)">DB-9 RIBBON CABLE · 9 conductor</text>
+
 <!-- ===== OUTPUT SIGNALS (Top Section) ===== -->
 <text x="10" y="80" class="section-head">OUTPUTS (MicroBrute → Expander)</text>
 
@@ -43,8 +54,7 @@
 <line x1="350" y1="99" x2="415" y2="99" class="audio"/>
 <rect x="415" y="88" width="50" height="22" class="box pin-box"/>
 <text x="440" y="103" text-anchor="middle" class="pin">7</text>
-<line x1="465" y1="99" x2="535" y2="99" class="audio cable-line"/>
-<text x="500" y="96" class="cable-arrow">↔</text>
+<line x1="465" y1="99" x2="695" y2="99" class="audio cable-wire"/>
 <line x1="585" y1="99" x2="695" y2="99" class="audio"/>
 <rect x="695" y="88" width="50" height="22" class="box pin-box"/>
 <text x="720" y="103" text-anchor="middle" class="pin">7</text>
@@ -61,8 +71,7 @@
 <line x1="350" y1="129" x2="415" y2="129" class="audio"/>
 <rect x="415" y="118" width="50" height="22" class="box pin-box"/>
 <text x="440" y="133" text-anchor="middle" class="pin">8</text>
-<line x1="465" y1="129" x2="535" y2="129" class="audio cable-line"/>
-<text x="500" y="126" class="cable-arrow">↔</text>
+<line x1="465" y1="129" x2="695" y2="129" class="audio cable-wire"/>
 <line x1="585" y1="129" x2="695" y2="129" class="audio"/>
 <rect x="695" y="118" width="50" height="22" class="box pin-box"/>
 <text x="720" y="133" text-anchor="middle" class="pin">8</text>
@@ -79,8 +88,7 @@
 <line x1="350" y1="159" x2="415" y2="159" class="audio"/>
 <rect x="415" y="148" width="50" height="22" class="box pin-box"/>
 <text x="440" y="163" text-anchor="middle" class="pin">5</text>
-<line x1="465" y1="159" x2="535" y2="159" class="audio cable-line"/>
-<text x="500" y="156" class="cable-arrow">↔</text>
+<line x1="465" y1="159" x2="695" y2="159" class="audio cable-wire"/>
 <line x1="585" y1="159" x2="695" y2="159" class="audio"/>
 <rect x="695" y="148" width="50" height="22" class="box pin-box"/>
 <text x="720" y="163" text-anchor="middle" class="pin">5</text>
@@ -97,8 +105,7 @@
 <line x1="350" y1="189" x2="415" y2="189" class="audio"/>
 <rect x="415" y="178" width="50" height="22" class="box pin-box"/>
 <text x="440" y="193" text-anchor="middle" class="pin">6</text>
-<line x1="465" y1="189" x2="535" y2="189" class="audio cable-line"/>
-<text x="500" y="186" class="cable-arrow">↔</text>
+<line x1="465" y1="189" x2="695" y2="189" class="audio cable-wire"/>
 <line x1="585" y1="189" x2="695" y2="189" class="audio"/>
 <rect x="695" y="178" width="50" height="22" class="box pin-box"/>
 <text x="720" y="193" text-anchor="middle" class="pin">6</text>
@@ -115,8 +122,7 @@
 <line x1="350" y1="219" x2="415" y2="219" class="gate"/>
 <rect x="415" y="208" width="50" height="22" class="box pin-box"/>
 <text x="440" y="223" text-anchor="middle" class="pin">1</text>
-<line x1="465" y1="219" x2="535" y2="219" class="gate cable-line"/>
-<text x="500" y="216" class="cable-arrow">↔</text>
+<line x1="465" y1="219" x2="695" y2="219" class="gate cable-wire"/>
 <line x1="585" y1="219" x2="695" y2="219" class="gate"/>
 <rect x="695" y="208" width="50" height="22" class="box pin-box"/>
 <text x="720" y="223" text-anchor="middle" class="pin">1</text>
@@ -133,8 +139,7 @@
 <line x1="350" y1="249" x2="415" y2="249" class="cv"/>
 <rect x="415" y="238" width="50" height="22" class="box pin-box"/>
 <text x="440" y="253" text-anchor="middle" class="pin">2</text>
-<line x1="465" y1="249" x2="535" y2="249" class="cv cable-line"/>
-<text x="500" y="246" class="cable-arrow">↔</text>
+<line x1="465" y1="249" x2="695" y2="249" class="cv cable-wire"/>
 <line x1="585" y1="249" x2="695" y2="249" class="cv"/>
 <rect x="695" y="238" width="50" height="22" class="box pin-box"/>
 <text x="720" y="253" text-anchor="middle" class="pin">2</text>
@@ -151,8 +156,7 @@
 <line x1="350" y1="279" x2="415" y2="279" class="cv"/>
 <rect x="415" y="268" width="50" height="22" class="box pin-box"/>
 <text x="440" y="283" text-anchor="middle" class="pin">3</text>
-<line x1="465" y1="279" x2="535" y2="279" class="cv cable-line"/>
-<text x="500" y="276" class="cable-arrow">↔</text>
+<line x1="465" y1="279" x2="695" y2="279" class="cv cable-wire"/>
 <line x1="585" y1="279" x2="695" y2="279" class="cv"/>
 <rect x="695" y="268" width="50" height="22" class="box pin-box"/>
 <text x="720" y="283" text-anchor="middle" class="pin">3</text>
@@ -169,8 +173,7 @@
 <line x1="350" y1="309" x2="415" y2="309" class="cv"/>
 <rect x="415" y="298" width="50" height="22" class="box pin-box"/>
 <text x="440" y="313" text-anchor="middle" class="pin">4</text>
-<line x1="465" y1="309" x2="535" y2="309" class="cv cable-line"/>
-<text x="500" y="306" class="cable-arrow">↔</text>
+<line x1="465" y1="309" x2="695" y2="309" class="cv cable-wire"/>
 <line x1="585" y1="309" x2="695" y2="309" class="cv"/>
 <rect x="695" y="298" width="50" height="22" class="box pin-box"/>
 <text x="720" y="313" text-anchor="middle" class="pin">4</text>
@@ -184,8 +187,7 @@
 <line x1="150" y1="339" x2="415" y2="339" class="power"/>
 <rect x="415" y="328" width="50" height="22" class="box pin-box" style="stroke:#F44336"/>
 <text x="440" y="343" text-anchor="middle" class="pin">9</text>
-<line x1="465" y1="339" x2="535" y2="339" class="power cable-line"/>
-<text x="500" y="336" class="cable-arrow">↔</text>
+<line x1="465" y1="339" x2="695" y2="339" class="power cable-wire"/>
 <line x1="585" y1="339" x2="695" y2="339" class="power"/>
 <rect x="695" y="328" width="50" height="22" class="box pin-box" style="stroke:#F44336"/>
 <text x="720" y="343" text-anchor="middle" class="pin">9</text>
@@ -202,8 +204,7 @@
 <line x1="800" y1="399" x2="745" y2="399" class="cv"/>
 <rect x="695" y="388" width="50" height="22" class="box pin-box"/>
 <text x="720" y="403" text-anchor="middle" class="pin">6*</text>
-<line x1="695" y1="399" x2="585" y2="399" class="cv cable-line"/>
-<text x="560" y="396" class="cable-arrow">↔</text>
+<line x1="695" y1="399" x2="465" y2="399" class="cv cable-wire"/>
 <line x1="535" y1="399" x2="465" y2="399" class="cv"/>
 <rect x="415" y="388" width="50" height="22" class="box pin-box"/>
 <text x="440" y="403" text-anchor="middle" class="pin">6*</text>
@@ -220,8 +221,7 @@
 <line x1="800" y1="429" x2="745" y2="429" class="cv"/>
 <rect x="695" y="418" width="50" height="22" class="box pin-box"/>
 <text x="720" y="433" text-anchor="middle" class="pin">7*</text>
-<line x1="695" y1="429" x2="585" y2="429" class="cv cable-line"/>
-<text x="560" y="426" class="cable-arrow">↔</text>
+<line x1="695" y1="429" x2="465" y2="429" class="cv cable-wire"/>
 <line x1="535" y1="429" x2="465" y2="429" class="cv"/>
 <rect x="415" y="418" width="50" height="22" class="box pin-box"/>
 <text x="440" y="433" text-anchor="middle" class="pin">7*</text>
@@ -238,8 +238,7 @@
 <line x1="800" y1="459" x2="745" y2="459" class="cv"/>
 <rect x="695" y="448" width="50" height="22" class="box pin-box"/>
 <text x="720" y="463" text-anchor="middle" class="pin">8*</text>
-<line x1="695" y1="459" x2="585" y2="459" class="cv cable-line"/>
-<text x="560" y="456" class="cable-arrow">↔</text>
+<line x1="695" y1="459" x2="465" y2="459" class="cv cable-wire"/>
 <line x1="535" y1="459" x2="465" y2="459" class="cv"/>
 <rect x="415" y="448" width="50" height="22" class="box pin-box"/>
 <text x="440" y="463" text-anchor="middle" class="pin">8*</text>
@@ -256,8 +255,7 @@
 <line x1="800" y1="489" x2="745" y2="489" class="gate"/>
 <rect x="695" y="478" width="50" height="22" class="box pin-box"/>
 <text x="720" y="493" text-anchor="middle" class="pin">5*</text>
-<line x1="695" y1="489" x2="585" y2="489" class="gate cable-line"/>
-<text x="560" y="486" class="cable-arrow">↔</text>
+<line x1="695" y1="489" x2="465" y2="489" class="gate cable-wire"/>
 <line x1="535" y1="489" x2="465" y2="489" class="gate"/>
 <rect x="415" y="478" width="50" height="22" class="box pin-box"/>
 <text x="440" y="493" text-anchor="middle" class="pin">5*</text>
@@ -274,8 +272,7 @@
 <line x1="800" y1="519" x2="745" y2="519" class="gate"/>
 <rect x="695" y="508" width="50" height="22" class="box pin-box"/>
 <text x="720" y="523" text-anchor="middle" class="pin">3*</text>
-<line x1="695" y1="519" x2="585" y2="519" class="gate cable-line"/>
-<text x="560" y="516" class="cable-arrow">↔</text>
+<line x1="695" y1="519" x2="465" y2="519" class="gate cable-wire"/>
 <line x1="535" y1="519" x2="465" y2="519" class="gate"/>
 <rect x="415" y="508" width="50" height="22" class="box pin-box"/>
 <text x="440" y="523" text-anchor="middle" class="pin">3*</text>
@@ -292,8 +289,7 @@
 <line x1="800" y1="549" x2="745" y2="549" class="audio"/>
 <rect x="695" y="538" width="50" height="22" class="box pin-box"/>
 <text x="720" y="553" text-anchor="middle" class="pin">1*</text>
-<line x1="695" y1="549" x2="585" y2="549" class="audio cable-line"/>
-<text x="560" y="546" class="cable-arrow">↔</text>
+<line x1="695" y1="549" x2="465" y2="549" class="audio cable-wire"/>
 <line x1="535" y1="549" x2="465" y2="549" class="audio"/>
 <rect x="415" y="538" width="50" height="22" class="box pin-box"/>
 <text x="440" y="553" text-anchor="middle" class="pin">1*</text>
@@ -352,8 +348,7 @@
 <line x1="350" y1="497" x2="415" y2="497" class="power"/>
 <rect x="415" y="686" width="50" height="22" class="box pin-box" style="stroke:#9E9E9E"/>
 <text x="440" y="701" text-anchor="middle" class="pin">9</text>
-<line x1="465" y1="497" x2="535" y2="497" class="power cable-line"/>
-<text x="500" y="694" class="cable-arrow">↔</text>
+<line x1="465" y1="497" x2="695" y2="497" class="power cable-wire"/>
 <line x1="585" y1="497" x2="695" y2="497" class="power"/>
 <rect x="695" y="686" width="50" height="22" class="box pin-box" style="stroke:#9E9E9E"/>
 <text x="720" y="701" text-anchor="middle" class="pin">9</text>

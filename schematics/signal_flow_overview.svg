@@ -60,37 +60,37 @@
 <circle cx="230" cy="597" r="3" fill="#1a1a1a"/>
 <rect x="280" y="70" width="140" height="550" fill="#FEF3E2" stroke="#F5A623" stroke-width="2" rx="5"/>
 <rect x="300" y="85" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="100" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074 A
+<text x="350" y="100" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074 A
 Saw</text>
 <text x="350" y="122" class="value" text-anchor="middle" font-size="7">1kΩ</text>
 <rect x="300" y="125" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="140" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074 B
+<text x="350" y="140" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074 B
 Square</text>
 <text x="350" y="162" class="value" text-anchor="middle" font-size="7">1kΩ</text>
 <rect x="300" y="165" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="180" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074 C
+<text x="350" y="180" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074 C
 Mix</text>
 <text x="350" y="202" class="value" text-anchor="middle" font-size="7">1kΩ</text>
 <rect x="300" y="205" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="220" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074 D
+<text x="350" y="220" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074 D
 VCF</text>
 <text x="350" y="242" class="value" text-anchor="middle" font-size="7">1kΩ</text>
 <rect x="300" y="245" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="260" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL072
+<text x="350" y="260" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL072
 Triangle</text>
 <text x="350" y="282" class="value" text-anchor="middle" font-size="7">2× gain</text>
 <rect x="300" y="305" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="320" class="label" text-anchor="middle" fill="#FFF" font-size="7">CD40106
+<text x="350" y="320" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">CD40106
 Gate</text>
 <text x="350" y="342" class="value" text-anchor="middle" font-size="7">10kΩ</text>
 <rect x="300" y="345" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="360" class="label" text-anchor="middle" fill="#FFF" font-size="7">Direct</text>
+<text x="350" y="360" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Direct</text>
 <rect x="300" y="385" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="400" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074
+<text x="350" y="400" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074
 Env</text>
 <text x="350" y="422" class="value" text-anchor="middle" font-size="7">10kΩ</text>
 <rect x="300" y="425" width="100" height="30" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="350" y="440" class="label" text-anchor="middle" fill="#FFF" font-size="7">TL074
+<text x="350" y="440" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">TL074
 LFO</text>
 <text x="350" y="462" class="value" text-anchor="middle" font-size="7">10kΩ</text>
 <rect x="300" y="500" width="100" height="110" fill="#FFEBEE" stroke="#CC0000" stroke-width="1" rx="3"/>
@@ -123,35 +123,35 @@ LFO</text>
 <rect x="680" y="70" width="280" height="550" fill="#F3E5F5" stroke="#BD10E0" stroke-width="2" rx="5"/>
 <text x="820" y="90" class="label" text-anchor="middle" font-size="9">Expander Modules</text>
 <rect x="700" y="100" width="80" height="20" fill="#0066CC" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="113" class="label" text-anchor="middle" fill="#FFF" font-size="7">Saw OUT</text>
+<text x="740" y="113" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Saw OUT</text>
 <rect x="700" y="130" width="80" height="20" fill="#0066CC" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="143" class="label" text-anchor="middle" fill="#FFF" font-size="7">Square OUT</text>
+<text x="740" y="143" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Square OUT</text>
 <rect x="700" y="170" width="80" height="20" fill="#0066CC" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="183" class="label" text-anchor="middle" fill="#FFF" font-size="7">Mix OUT</text>
+<text x="740" y="183" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Mix OUT</text>
 <rect x="700" y="210" width="80" height="20" fill="#0066CC" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="223" class="label" text-anchor="middle" fill="#FFF" font-size="7">VCF OUT</text>
+<text x="740" y="223" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">VCF OUT</text>
 <rect x="700" y="250" width="80" height="20" fill="#0066CC" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="263" class="label" text-anchor="middle" fill="#FFF" font-size="7">Triangle OUT</text>
+<text x="740" y="263" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Triangle OUT</text>
 <rect x="700" y="310" width="80" height="20" fill="#009933" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="323" class="label" text-anchor="middle" fill="#FFF" font-size="7">Gate OUT</text>
+<text x="740" y="323" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Gate OUT</text>
 <rect x="700" y="350" width="80" height="20" fill="#CC6600" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="363" class="label" text-anchor="middle" fill="#FFF" font-size="7">Pitch IN</text>
+<text x="740" y="363" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Pitch IN</text>
 <rect x="700" y="390" width="80" height="20" fill="#CC6600" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="403" class="label" text-anchor="middle" fill="#FFF" font-size="7">Env IN</text>
+<text x="740" y="403" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">Env IN</text>
 <rect x="700" y="430" width="80" height="20" fill="#CC6600" stroke="#333" stroke-width="1" rx="3"/>
-<text x="740" y="443" class="label" text-anchor="middle" fill="#FFF" font-size="7">LFO IN</text>
+<text x="740" y="443" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="7">LFO IN</text>
 <rect x="800" y="100" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="113" class="label" text-anchor="middle" fill="#FFF" font-size="8">Noise Gen</text>
+<text x="845" y="113" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">Noise Gen</text>
 <rect x="800" y="140" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="153" class="label" text-anchor="middle" fill="#FFF" font-size="8">LFO</text>
+<text x="845" y="153" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">LFO</text>
 <rect x="800" y="180" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="193" class="label" text-anchor="middle" fill="#FFF" font-size="8">S&amp;H</text>
+<text x="845" y="193" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">S&amp;H</text>
 <rect x="800" y="220" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="233" class="label" text-anchor="middle" fill="#FFF" font-size="8">Clock Div</text>
+<text x="845" y="233" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">Clock Div</text>
 <rect x="800" y="260" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="273" class="label" text-anchor="middle" fill="#FFF" font-size="8">Slew Limiter</text>
+<text x="845" y="273" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">Slew Limiter</text>
 <rect x="800" y="300" width="90" height="25" fill="#9C27B0" stroke="#333" stroke-width="1" rx="3"/>
-<text x="845" y="313" class="label" text-anchor="middle" fill="#FFF" font-size="8">Attenuverter</text>
+<text x="845" y="313" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">Attenuverter</text>
 <rect x="700" y="500" width="240" height="100" fill="#FFEBEE" stroke="#CC0000" stroke-width="1" rx="3"/>
 <text x="820" y="525" class="label" text-anchor="middle" font-size="9">Eurorack Power</text>
 <text x="820" y="555" class="value" text-anchor="middle" font-size="8">+12V / -12V / +5V / GND</text>
@@ -184,6 +184,24 @@ LFO</text>
 <line x1="630" y1="235" x2="700" y2="220" stroke="#0066CC" stroke-width="1.5"/>
 <line x1="630" y1="260" x2="700" y2="110" stroke="#0066CC" stroke-width="1.5"/>
 <line x1="630" y1="285" x2="700" y2="140" stroke="#0066CC" stroke-width="1.5"/>
+<path d="M890,150 L860,150 L860,380 L630,380" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="380" x2="420" y2="380" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M890,190 L860,190 L860,405 L630,405" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="405" x2="420" y2="405" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M890,270 L860,270 L860,430 L630,430" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="430" x2="420" y2="430" stroke="#CC6600" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M890,230 L860,230 L860,455 L630,455" stroke="#009933" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="455" x2="420" y2="455" stroke="#009933" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M890,310 L860,310 L860,480 L630,480" stroke="#009933" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="480" x2="420" y2="480" stroke="#009933" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M890,110 L860,110 L860,505 L630,505" stroke="#0066CC" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+<line x1="470" y1="505" x2="420" y2="505" stroke="#0066CC" stroke-width="1.5" stroke-dasharray="4,2"/>
+<path d="M400,545 L435,545 L435,535 L470,535" stroke="#CC0000" stroke-width="2" fill="none"/>
+<path d="M630,535 L665,535 L665,555 L700,555" stroke="#CC0000" stroke-width="2" fill="none"/>
+<path d="M400,565 L435,565 L435,560 L470,560" stroke="#0000CC" stroke-width="2" fill="none"/>
+<path d="M630,560 L665,560 L665,555 L700,555" stroke="#0000CC" stroke-width="2" fill="none"/>
+<path d="M400,585 L435,585 L435,585 L470,585" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+<path d="M630,585 L665,585 L665,585 L700,585" stroke="#1a1a1a" stroke-width="2" fill="none"/>
 <rect x="50" y="640" width="900" height="50" fill="#F5F5F5" stroke="#999" stroke-width="1" rx="4"/>
 <text x="500" y="655" class="label" text-anchor="middle" font-size="9">Signal Type Legend</text>
 <rect x="100" y="665" width="15" height="10" fill="#0066CC" stroke="#333" stroke-width="0.5"/>

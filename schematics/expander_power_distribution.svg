@@ -30,20 +30,20 @@
 <text x="550" y="25" class="title" text-anchor="middle">Expander Power Distribution (17HP)</text>
 <text x="550" y="42" class="subtitle" text-anchor="middle">Behringer CP1A bus → Pico (filtered) + slew op-amp · 5-pin rear I²C header (EFFIGY) · clock divider in firmware</text>
 <rect x="40" y="80" width="180" height="200" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-<text x="130" y="105" class="label" text-anchor="middle" fill="#FFF" font-size="12">CP1A Bus</text>
-<text x="130" y="122" class="value" text-anchor="middle" fill="#CCC" font-size="9">16-pin Eurorack IDC</text>
+<text x="130" y="105" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="12">CP1A Bus</text>
+<text x="130" y="122" class="value comp-label" text-anchor="middle" fill="#CCC" font-size="9">16-pin Eurorack IDC</text>
 <rect x="60" y="150" width="140" height="14" fill="#D44"/>
-<text x="130" y="160" class="value" text-anchor="middle" font-size="8" fill="#FFF">+12V</text>
+<text x="130" y="160" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">+12V</text>
 <rect x="60" y="170" width="140" height="14" fill="#4A4"/>
-<text x="130" y="180" class="value" text-anchor="middle" font-size="8" fill="#FFF">GND</text>
+<text x="130" y="180" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">GND</text>
 <rect x="60" y="190" width="140" height="14" fill="#4A4"/>
-<text x="130" y="200" class="value" text-anchor="middle" font-size="8" fill="#FFF">GND</text>
+<text x="130" y="200" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">GND</text>
 <rect x="60" y="210" width="140" height="14" fill="#44D"/>
-<text x="130" y="220" class="value" text-anchor="middle" font-size="8" fill="#FFF">-12V</text>
+<text x="130" y="220" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">-12V</text>
 <rect x="60" y="230" width="140" height="14" fill="#CC6600"/>
-<text x="130" y="240" class="value" text-anchor="middle" font-size="8" fill="#FFF">+5V</text>
+<text x="130" y="240" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">+5V</text>
 <rect x="60" y="250" width="140" height="14" fill="#888"/>
-<text x="130" y="260" class="value" text-anchor="middle" font-size="8" fill="#FFF">CV/Gate</text>
+<text x="130" y="260" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">CV/Gate</text>
 <rect x="250" y="80" width="200" height="220" fill="#FFF0F0" stroke="#D44" stroke-width="1.5" rx="4"/>
 <text x="350" y="105" class="label" text-anchor="middle" font-size="11" fill="#D44">Pico power filter</text>
 <text x="350" y="122" class="value" text-anchor="middle" font-size="9">3 commodity parts</text>
@@ -90,8 +90,10 @@
 <line x1="450" y1="170" x2="480" y2="170" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
 <line x1="660" y1="130" x2="690" y2="130" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
 <line x1="660" y1="245" x2="690" y2="245" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
-<line x1="220" y1="220" x2="900" y2="220" stroke="#44D" stroke-width="1.5" stroke-dasharray="6,4"/>
-<text x="560" y="215" class="anno" text-anchor="middle" font-size="8" fill="#44D">±12V via DB-9 B → MB</text>
+<line x1="130" y1="280" x2="130" y2="315" stroke="#44D" stroke-width="1.5"/>
+<line x1="130" y1="315" x2="990" y2="315" stroke="#44D" stroke-width="1.5" stroke-dasharray="6,4"/>
+<line x1="990" y1="315" x2="990" y2="302" stroke="#44D" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="560" y="311" class="anno" text-anchor="middle" font-size="9" fill="#44D" font-weight="bold">±12V via DB-9 B → MB breakout</text>
 <rect x="40" y="330" width="500" height="220" fill="#E0F2F1" stroke="#009688" stroke-width="2" rx="4"/>
 <text x="290" y="355" class="label" text-anchor="middle" font-size="13" fill="#009688">REAR I²C HEADER → EFFIGY (hidden, 5-pin)</text>
 <text x="290" y="372" class="value" text-anchor="middle" font-size="9">5-pin JST-XH · mounted behind panel · accessed with case open</text>

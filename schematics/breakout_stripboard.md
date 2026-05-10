@@ -8,55 +8,11 @@ pin headers (mounted separately with standoffs or VHB tape).
 **Tracks:** Horizontal copper strips (left → right)
 **View:** All diagrams show COMPONENT SIDE (top view, looking down)
 
----
-
-## DIP Pinouts (reference during build)
-
-```
-  U1 TL074 (DIP-14)           U2 TL072 (DIP-8)         U3 CD40106 (DIP-14)
-  ┌───U───┐                   ┌───U───┐                 ┌───U───┐
-  │1  OUT_A  14│ OUT_D        │1  OUT_A   8│ V+         │1  IN_A   14│ VDD +5V
-  │2  -IN_A  13│ -IN_D        │2  -IN_A   7│ OUT_B      │2  OUT_A  13│ IN_F
-  │3  +IN_A  12│ +IN_D        │3  +IN_A   6│ -IN_B      │3  IN_B   12│ OUT_F
-  │4  V+     11│ V-           │4  V-       5│ +IN_B      │4  OUT_B  11│ IN_E
-  │5  +IN_B  10│ +IN_C        └───────┘                  │5  IN_C   10│ OUT_E
-  │6  -IN_B   9│ -IN_C                                   │6  OUT_C   9│ IN_D
-  │7  OUT_B   8│ OUT_C                                   │7  VSS GND  8│ OUT_D
-  └───────┘                                              └───────┘
-```
-
----
-
-## Zone Layout (Component Side)
-
-```
-     1    5    10   15   20   25   30   35
-     │    │    │    │    │    │    │    │
- 1 ──┤ J_PWR ──── D1 D2 D3 ─── FB1 FB2 ─── C_bulk ──┤── Row 1-2: Power input
- 2 ──┤ diodes + ferrites + bulk caps                  │
- 3 ──┤═══════════ +12V RAIL ═══════════════════════════│── Row 3: +12V
- 4 ──┤═══════════ -12V RAIL ═══════════════════════════│── Row 4: -12V
- 5 ──┤═══════════ GND RAIL  ═══════════════════════════│── Row 5: GND
-     │                                                 │
- 6 ──┤ R_in ┌────U1────┐ R_out    ┌──U2──┐ R         │── Row 6-12: Buffers
- 7 ──┤      │  TL074   │          │TL072 │            │
- 8 ──┤ R_in │ 4ch buf  │ R_out    │env/  │            │
- 9 ──┤      │          │          │LFO/  │            │
-10 ──┤ R_in │          │ R_out    │tri/  │            │
-11 ──┤      │          │          │vact  │            │
-12 ──┤ R_in └──────────┘ R_out    └──────┘            │
-     │                                                 │
-13 ──┤  ┌────U3────┐     Q1──R──LED1                  │── Row 13-19: Gate + LEDs
-14 ──┤  │ CD40106  │     Q2──R──LED2                  │
-15 ──┤  │ gate buf │     Q3──R──LED3                  │
-16 ──┤  │          │                                   │
-17 ──┤  │          │                                   │
-18 ──┤  │          │                                   │
-19 ──┤  └──────────┘                                   │
-     │                                                 │
-20 ──┤ J_IN (8pin)    J_OUT (DB-9)     J_PICO (12pin) │── Row 20: Connectors
-     └─────────────────────────────────────────────────┘
-```
+For pin-by-pin DIP layouts during the build, see the **DIP IC Pinout Reference**
+SVG (TL074 / TL072 / CD40106 plus the regulator and transistor) in this manual.
+For the spatial component placement on the stripboard itself, see the
+**MACROBRUTE — Breakout Board Stripboard Layout** and **Zone Layout** SVGs in
+this section — they replace the ASCII overview that previously lived here.
 
 ---
 

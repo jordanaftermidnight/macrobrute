@@ -38,7 +38,7 @@
 <polygon points="220,145 220,175 260,160" fill="none" stroke="#333" stroke-width="1.5"/>
 <!-- Inversion bubble -->
 <circle cx="263" cy="160" r="4" fill="none" stroke="#333" stroke-width="1.5"/>
-<text x="230" y="160" class="value" fill="#FFF" font-size="6">!</text>
+<text x="230" y="160" class="value comp-label" fill="#FFF" font-size="6">!</text>
 <text x="240" y="142" class="value" font-size="7">CD40106</text>
 <text x="240" y="192" class="value" font-size="7">Schmitt</text>
 <text x="240" y="202" class="value" font-size="7">Trigger</text>

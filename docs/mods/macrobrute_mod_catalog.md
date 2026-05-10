@@ -22,11 +22,17 @@ curation/triage doc; this is the build-detail counterpart.
 > mod taps a digital rail or DAC, the safety analysis is called out
 > explicitly.
 
+> **Badge legend:** each mod heading shows its current state and reversibility.
+> [[VERIFIED]] built and tested · [[BUILT]] built but not fully tested ·
+> [[UNTESTED]] designed, not yet built · [[DRAFT]] design in progress.
+> [[REVERSIBLE]] no PCB cuts — undo by unsoldering · [[DESTRUCTIVE]] involves
+> a trace cut or panel hole, plan accordingly.
+
 ---
 
 ## Phase 1 — Restore tonal balance
 
-### M01. Triangle output gain ×2
+### M01. Triangle output gain ×2 [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -48,7 +54,7 @@ buffer) with a 33 kΩ + 16 kΩ ground leg to make the stage 2× gain
 
 ## Phase 2 — Synth-nature enhancements
 
-### M02. Active soft sync
+### M02. Active soft sync [[UNTESTED]] [[DESTRUCTIVE]]
 
 | Field | Value |
 |---|---|
@@ -69,7 +75,7 @@ VCO without forcing it. The comparator threshold is set by a 100k/100k
 divider biased mid-rail; hysteresis comes from the diode + 10 kΩ in the
 feedback path.
 
-### M03. Sine extraction + buffer
+### M03. Sine extraction + buffer [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -87,7 +93,7 @@ buffer (called out in `pt_124_area` on the rear PCB). The shaper produces
 a quasi-sine that reads visually as 'rounded triangle' on a scope. A
 unity-gain TL074 buffer prevents loading the original signal path.
 
-### M04. Metalizer CV depth (VCA)
+### M04. Metalizer CV depth (VCA) [[UNTESTED]] [[DESTRUCTIVE]]
 
 | Field | Value |
 |---|---|
@@ -107,7 +113,7 @@ the OTA's signal input. CV (0–5 V from expander or panel jack) feeds the
 OTA control current via a 100 kΩ resistor; CV at +5 V → full feedback,
 CV at 0 V → muted. The amount pot manually offsets the CV bias.
 
-### M05. Filter self-oscillation kill switch
+### M05. Filter self-oscillation kill switch [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -124,7 +130,7 @@ CV at 0 V → muted. The amount pot manually offsets the CV bias.
 SPST toggle in series. Closed = stock behaviour (resonance can self-osc).
 Open = no feedback path → resonance peaks but doesn't oscillate.
 
-### M06. PWM CV input
+### M06. PWM CV input [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -145,7 +151,7 @@ the PWM at its knob position; CV swings shift it.
 
 ## Phase 2 — Circuit-bent additions
 
-### M07. Pitch CV starve toggle
+### M07. Pitch CV starve toggle [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -162,7 +168,7 @@ the PWM at its knob position; CV swings shift it.
 Position B = via 470 Ω → GND. The voltage drop on the pitch summing
 network produces a slow oscillator drift that's musically interesting.
 
-### M08. Sub-harmonic divider
+### M08. Sub-harmonic divider [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -181,7 +187,7 @@ network produces a slow oscillator drift that's musically interesting.
 node. The sub adds a 1 octave-down square that grits up the bass — pair
 with circuit bend T6 (gate feedback) for big metallic textures.
 
-### M09. PWM self-modulation normalled jack
+### M09. PWM self-modulation normalled jack [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -198,7 +204,7 @@ with circuit bend T6 (gate feedback) for big metallic textures.
 saw-tap (via 100 kΩ R). Tip is the M06 PWM CV input. Plug inserted →
 breaks the saw → PWM internal connection, lets external CV take over.
 
-### M10. Brute Factor "extreme" toggle
+### M10. Brute Factor "extreme" toggle [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -215,7 +221,7 @@ breaks the saw → PWM internal connection, lets external CV take over.
 leaves it in circuit. Use a 1 kΩ series R inline between the SPDT and the
 feedback path to prevent dead-short transients during switching.
 
-### M11. 9th touch bolt — envelope retrigger
+### M11. 9th touch bolt — envelope retrigger [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -232,7 +238,7 @@ feedback path to prevent dead-short transients during switching.
 + diode shape the touch into a short pulse rather than holding the gate
 high indefinitely.
 
-### M12. ARG — audio-rate gate input
+### M12. ARG — audio-rate gate input [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -250,7 +256,7 @@ high indefinitely.
 −input. Comparator output (with 10 kΩ pull-up) drives the gate node.
 Hysteresis from the LM393's natural ~few-mV gives clean gate edges.
 
-### M13. VCO sync to envelope (toggle)
+### M13. VCO sync to envelope (toggle) [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|
@@ -268,7 +274,7 @@ Hysteresis from the LM393's natural ~few-mV gives clean gate edges.
 node. Same modulation can be done with patch cables — this is the
 quick-toggle version.
 
-### M14. Safe VCO bias starve (NOT supply rail)
+### M14. Safe VCO bias starve (NOT supply rail) [[UNTESTED]] [[REVERSIBLE]]
 
 | Field | Value |
 |---|---|

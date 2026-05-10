@@ -30,8 +30,8 @@
 <text x="400" y="25" class="title" text-anchor="middle">CD4051 Analog Multiplexer</text>
 <text x="400" y="42" class="subtitle" text-anchor="middle">8-Channel Signal Selector for Oscilloscope</text>
 <rect x="300" y="150" width="200" height="300" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="5"/>
-<text x="400" y="175" class="label" text-anchor="middle" fill="#FFF" font-size="12">CD4051</text>
-<text x="400" y="195" class="value" text-anchor="middle" fill="#CCC" font-size="9">8-Ch Analog MUX</text>
+<text x="400" y="175" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="12">CD4051</text>
+<text x="400" y="195" class="value comp-label" text-anchor="middle" fill="#CCC" font-size="9">8-Ch Analog MUX</text>
 <text x="230" y="220" class="value" text-anchor="end" font-size="8">X0: Saw</text>
 <line x1="235" y1="217" x2="300" y2="217" stroke="#1a1a1a" stroke-width="1.5"/>
 <rect x="245" y="212" width="20" height="10" fill="#f5f5f5" stroke="#333" stroke-width="1"/>
@@ -67,8 +67,8 @@
 <text x="570" y="300" class="value" font-size="9">COM (Output)</text>
 <line x1="500" y1="297" x2="560" y2="297" stroke="#1a1a1a" stroke-width="2"/>
 <rect x="580" y="280" width="60" height="35" fill="#F5A623" stroke="#333" stroke-width="1" rx="3"/>
-<text x="610" y="297" class="label" text-anchor="middle" fill="#FFF" font-size="8">TL072</text>
-<text x="610" y="308" class="value" text-anchor="middle" fill="#FFF" font-size="7">Buffer</text>
+<text x="610" y="297" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="8">TL072</text>
+<text x="610" y="308" class="value comp-label" text-anchor="middle" fill="#FFF" font-size="7">Buffer</text>
 <line x1="640" y1="297" x2="700" y2="297" stroke="#1a1a1a" stroke-width="2"/>
 <text x="710" y="300" class="label" font-size="9">To DSO138 IN</text>
 <line x1="340" y1="450" x2="340" y2="460" stroke="#1a1a1a" stroke-width="1.5"/>

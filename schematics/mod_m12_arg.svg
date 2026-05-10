@@ -39,7 +39,7 @@
 <line x1="192" y1="200" x2="260" y2="200" stroke="#1a1a1a" stroke-width="1.5"/>
 <rect x="280" y="160" width="150" height="90" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2" rx="3"/>
 <circle cx="288" cy="168" r="3" fill="gold"/>
-<text x="355.0" y="205.0" class="label" text-anchor="middle" fill="#FFF" font-size="11">LM393</text>
+<text x="355.0" y="205.0" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="11">LM393</text>
 <circle cx="276" cy="174.0" r="2.5" fill="gold"/>
 <text x="272" y="177.0" class="value" text-anchor="end" font-size="8">IN+</text>
 <circle cx="276" cy="209.0" r="2.5" fill="gold"/>

@@ -1,101 +1,63 @@
 # MACROBRUTE Firmware Project Structure
-## Open Source Firmware for MicroBrute Expansion
+
+The firmware lives in two trees, one per processor. Both compile and flash
+independently — the Pico runs UI/clock and the LPC2361 runs the synth engine.
+They communicate over UART0 at 115 200 baud through a small framed protocol
+(see `firmware/lpc2361/src/ui/pico_comm.{c,h}` and `firmware/pico/main.py`).
+
+## firmware/pico/ — Raspberry Pi Pico WH (MicroPython)
 
 ```
-/uberbrute-firmware
-│
-├── README.md                    # Main documentation
-├── LICENSE                      # MIT or GPL
-├── CHANGELOG.md                 # Version history
-├── CONTRIBUTING.md              # How to contribute
-│
-├── /docs
-│   ├── hardware.md              # Pin mappings, test points, wiring
-│   ├── debugging.md             # Printf debugging guide
-│   ├── isp-flashing.md          # How to flash via ISP
-│   ├── protocol.md              # Pico <-> LPC2361 UART protocol
-│   └── architecture.md          # System design overview
-│
-├── /src
-│   ├── main.c                   # Entry point, main loop
-│   ├── config.h                 # Build configuration, feature flags
-│   │
-│   ├── /core
-│   │   ├── system.c             # Clock setup, init
-│   │   ├── system.h
-│   │   ├── interrupts.c         # IRQ handlers
-│   │   └── interrupts.h
-│   │
-│   ├── /drivers
-│   │   ├── uart.c               # UART for MIDI + debug
-│   │   ├── uart.h
-│   │   ├── gpio.c               # GPIO configuration
-│   │   ├── gpio.h
-│   │   ├── dac.c                # 10-bit DAC for pitch CV
-│   │   ├── dac.h
-│   │   ├── adc.c                # ADC for pots/keyboard
-│   │   ├── adc.h
-│   │   ├── timer.c              # System tick, timing
-│   │   └── timer.h
-│   │
-│   ├── /synth
-│   │   ├── keyboard.c           # Matrix scanning
-│   │   ├── keyboard.h
-│   │   ├── sequencer.c          # Step sequencer engine
-│   │   ├── sequencer.h
-│   │   ├── arpeggiator.c        # Arp patterns
-│   │   ├── arpeggiator.h
-│   │   ├── cv_engine.c          # CV/Gate generation
-│   │   ├── cv_engine.h
-│   │   ├── clock.c              # Tempo, sync, clock div
-│   │   └── clock.h
-│   │
-│   ├── /midi
-│   │   ├── midi_parser.c        # MIDI byte parsing
-│   │   ├── midi_parser.h
-│   │   ├── midi_handler.c       # Note/CC/Clock handlers
-│   │   ├── midi_handler.h
-│   │   ├── midi_output.c        # MIDI TX (if MIDI out mod)
-│   │   └── midi_output.h
-│   │
-│   ├── /ui
-│   │   ├── pico_comm.c          # UART protocol to Pico
-│   │   ├── pico_comm.h
-│   │   ├── params.c             # Parameter management
-│   │   └── params.h
-│   │
-│   └── /utils
-│       ├── debug.h              # Printf macros (CRITICAL)
-│       ├── ring_buffer.c        # FIFO for MIDI/UART
-│       ├── ring_buffer.h
-│       ├── math_utils.c         # Pitch tables, random
-│       ├── math_utils.h
-│       ├── state_machine.h      # State machine macros
-│       └── types.h              # Common typedefs
-│
-├── /include
-│   └── lpc2361.h                # Register definitions
-│
-├── /linker
-│   └── lpc2361.ld               # Memory layout
-│
-├── /startup
-│   ├── startup.s                # Vector table, reset handler
-│   └── syscalls.c               # Newlib stubs (_write, etc)
-│
-├── /tools
-│   ├── flash.sh                 # ISP flash script (Linux)
-│   ├── flash.bat                # ISP flash script (Windows)
-│   └── monitor.sh               # Open serial monitor
-│
-├── /test
-│   ├── test_sequencer.c         # Unit tests (run on host)
-│   ├── test_midi_parser.c
-│   └── Makefile
-│
-├── Makefile                     # Main build
-└── openocd.cfg                  # For future JTAG use
+firmware/pico/
+├── main.py             # Entry point: init, run loop, message dispatch
+├── config.py           # GPIO pin map (mirrors schematics/pico_pinout.md)
+├── display.py          # SSD1306 0x3C main OLED driver
+├── strip_display.py    # SSD1306 0x3D strip OLED driver
+├── encoder.py          # KY-040 rotary encoder + button debounce
+├── leds.py             # RGB status LED PWM
+├── menu.py             # On-device UI state machine
+├── clock.py            # Tap-tempo + external clock-in capture
+├── clock_divider.py    # /2 /4 /8 derived clock outputs
+├── midi.py             # 5-pin DIN MIDI (LPC bridge side)
+├── usbmidi.py          # USB-MIDI class device (TinyUSB)
+├── aux_outputs.py      # PWM CV / gate outputs to expander
+├── effigy_bridge.py    # Inter-module ii bridge to EFFIGY/Norns
+├── _effigy_constants.py
+└── test_hw.py          # Per-peripheral self-test harness
 ```
+
+Flash by mounting the Pico's `RPI-RP2` storage and copying the `.py` files
+into the MicroPython filesystem; `main.py` runs at boot.
+
+## firmware/lpc2361/ — LPC2361 ARM7TDMI (bare-metal C)
+
+```
+firmware/lpc2361/
+├── Makefile              # arm-none-eabi build, ISP flash target
+├── linker/lpc2361.ld     # 128 KB Flash / 34 KB RAM memory map
+├── startup/              # Reset handler, vector table, newlib syscalls
+├── include/lpc2361.h     # Register/peripheral macros
+├── src/
+│   ├── main.c            # Entry point, main loop
+│   ├── config.h          # Build flags
+│   ├── core/             # system.c (clocks), interrupts.c (IRQ vectors)
+│   ├── drivers/          # uart, gpio, dac, adc, timer
+│   ├── synth/            # keyboard scan, sequencer, cv_engine, clock
+│   ├── midi/             # midi_parser, midi_handler, midi_output
+│   ├── ui/               # pico_comm (UART framing), params
+│   └── utils/            # debug.h printf, ring_buffer, math_utils,
+│                         #   state_machine, types
+└── tools/                # flash + monitor helpers
+```
+
+Build with `make` (requires `arm-none-eabi-gcc`); flash via ISP UART using
+the included `tools/flash.sh`. JTAG is wired but unused — printf-over-UART
+is the primary debug path.
+
+> **Note on the rest of this document:** sections after this header contain
+> the original design specification (file-by-file content sketches, debug-
+> guide, Makefile template, etc.). They are *intent*, not the live source.
+> For current code, browse the trees above directly.
 
 ---
 

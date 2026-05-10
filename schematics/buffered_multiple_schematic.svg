@@ -70,7 +70,7 @@
 <text x="350" y="242" class="value" font-size="7">→ Expander jack</text>
 <!-- TL074 chip label -->
 <rect x="145" y="290" width="60" height="30" fill="#333" stroke="#1a1a1a" stroke-width="1" rx="3"/>
-<text x="175" y="309" class="label" text-anchor="middle" fill="#FFF" font-size="9">TL074</text>
+<text x="175" y="309" class="label comp-label" text-anchor="middle" fill="#FFF" font-size="9">TL074</text>
 <text x="175" y="340" class="value" text-anchor="middle" font-size="8">Section D (pins 12-14) unused — tie IN3+ to GND</text>
 <!-- Notes -->
 <rect x="50" y="355" width="600" height="35" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="4"/>

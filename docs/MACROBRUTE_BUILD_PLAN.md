@@ -31,7 +31,15 @@ The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular indu
 
 ---
 
-## Phase 0: Bench Validation — non-destructive (Week 1)
+> **Badge legend:** each phase heading shows its state and reversibility.
+> [[VERIFIED]] built and tested on this rig · [[UNTESTED]] designed, not
+> yet built · [[DRAFT]] still in design.
+> [[REVERSIBLE]] no irreversible changes to the synth ·
+> [[DESTRUCTIVE]] involves panel cuts or trace cuts — plan accordingly.
+
+---
+
+## Phase 0: Bench Validation — non-destructive (Week 1) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Validate Pico firmware on breadboard, confirm OLED choice, locate test points.
 
@@ -153,7 +161,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 
 **Estimated total: €135-175** (excluding tools)
 
-## Phase 1: Breakout Board Build (Week 2-3)
+## Phase 1: Breakout Board Build (Week 2-3) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Build breakout PCB on stripboard, verify all buffer channels and VCO.
 **Layout:** `schematics/breakout_layout.svg` (generated from `tools/generate_layouts.py`)
@@ -180,7 +188,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 
 ---
 
-## Phase 1B: Touch Test Board Build (parallel with Phase 1)
+## Phase 1B: Touch Test Board Build (parallel with Phase 1) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Test all 8 circuit bends non-destructively before permanent installation.
 **Layout:** `schematics/touch_test_board.svg` (generated from `tools/generate_layouts.py`)
@@ -225,7 +233,7 @@ saw and square. Trivial mod (one resistor swap), full details in
 
 ---
 
-## Phase 2: Internal Wiring (Week 3-5)
+## Phase 2: Internal Wiring (Week 3-5) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Wire all test points to breakout board, verify signals.
 **Risk: HIGH** — soldering to MicroBrute PCB. Use 350°C iron, <2s per joint.
@@ -264,7 +272,7 @@ LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C drive
 
 ---
 
-## Phase 3: Panel Modifications — irreversible (Week 5-7)
+## Phase 3: Panel Modifications — irreversible (Week 5-7) [[UNTESTED]] [[DESTRUCTIVE]]
 
 **Goal:** Drill MicroBrute panel, mount OLED/encoder/RGB LED/touch bolts/DB-9.
 **Template:** `panel/microbrute_panel_template.svg`
@@ -312,7 +320,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 4: Expander Build (Week 6-10, parallel with Phase 3)
+## Phase 4: Expander Build (Week 6-10, parallel with Phase 3) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Build all utility circuits, mount in 42HP panel, integrate via DB-9.
 **Schematics:** `schematics/expander_circuits.md`, `kicad/expander/`
@@ -344,7 +352,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 5: System Integration (Week 10-12)
+## Phase 5: System Integration (Week 10-12) [[UNTESTED]] [[REVERSIBLE]]
 
 **Goal:** Full system test — MicroBrute + breakout + Pico + expander, all connected.
 
@@ -381,7 +389,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 6A: LPC2361 ISP Setup (Week 12+)
+## Phase 6A: LPC2361 ISP Setup (Week 12+) [[DRAFT]] [[REVERSIBLE]]
 
 **Goal:** Physical connection to LPC2361 for firmware development.
 **Status:** Firmware RE ~98% complete via .mbf decryption path. ISP is for verification + future custom firmware.
@@ -403,7 +411,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 6B: Ghidra Deep Analysis (parallel)
+## Phase 6B: Ghidra Deep Analysis (parallel) [[DRAFT]] [[REVERSIBLE]]
 
 **Goal:** Complete remaining ~2% of firmware RE.
 
@@ -417,7 +425,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 6C: Pico ↔ LPC2361 UART Bridge
+## Phase 6C: Pico ↔ LPC2361 UART Bridge [[DRAFT]] [[REVERSIBLE]]
 
 **Goal:** Bidirectional communication between Pico and MicroBrute CPU.
 
@@ -431,7 +439,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ---
 
-## Phase 7: Advanced / Optional
+## Phase 7: Advanced / Optional [[DRAFT]]
 
 ### 7A: EFFIGY DSP module pair-up
 Daisy Seed peer module on the rear 5-pin I²C header (target 0x42, 100 kHz on
