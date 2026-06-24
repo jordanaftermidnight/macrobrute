@@ -51,3 +51,8 @@ firmware/ghidra_decompiled.h
 
 # Claude Code local state (council logs, etc.)
 .claude/
+
+# Node / Python
+node_modules/
+.venv/
+dist/
