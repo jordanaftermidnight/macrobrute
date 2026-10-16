@@ -2,32 +2,36 @@
 
 ## Context
 
-The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial/techno instrument. ~130 files produced across multiple sessions: Pico MicroPython firmware (14 modules, complete), LPC2361 ARM7 C firmware skeleton (48 files), ASCII + KiCad schematics (4 sub-projects), stripboard SVG layouts (6 boards), panel SVGs, 4 mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
+The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular instrument paired with a Eurorack expander. About 260 tracked files (263 on 2026-10-17): Pico MicroPython firmware (15 `.py` files: 14 modules plus the generated `_effigy_constants.py`), LPC2361 ARM7 C firmware skeleton (48 files), schematic docs (9 `.md`) and KiCad projects (breakout, expander), stripboard and diagram SVGs (83 SVGs repo-wide), panel SVGs, mod/bending guides, .mbf encryption cracked + firmware decrypted, and research docs.
 
-**Current status (2026-04-26):** Design phase complete after Phase D refresh. MicroBrute torn down + photographed. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware: 14 modules, including new effigy_bridge / clock_divider / aux_outputs / strip_display / usbmidi modules. BOM acquired (CD4024 dropped — clock division is firmware now). Stripboard layouts generated. Touch test board designed (8 circuit bends, pending bench-test selection). **Phase 0 bench validation is the next step — no physical build started yet.**
+**Current status (2026-10-17):** Design stage. This plan was reconciled against the project audit (`docs/superpowers/reviews/2026-10-16-project-audit.md`), the back-feed and hum design note (`docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md`, cited as "BF") and the connection map (`docs/MACROBRUTE_CONNECTION_MAP.md`, the authority for pins and wiring). The owner's own build plan comes after this redraft, so sections that still predate the decisions are marked **STALE** rather than redesigned. Firmware RE ~98% complete (43 SysEx commands, 107+ Ghidra labels). Pico firmware: `firmware/pico/config.py` is the canonical pin source. Stripboard layouts exist but several are stale (audit B16, S34). Touch test board designed (8 circuit bends, pending bench-test selection). **Phase 0 bench validation is the next step — no physical build started yet.**
 
-### Confirmed Decisions (April 2026, last reconciled 2026-04-26)
+### Confirmed Decisions (owner answers 2026-10-16 and 2026-10-17; reconciled 2026-10-17)
+
+Source: audit sections 1a and 1b, BF, and `docs/MACROBRUTE_CONNECTION_MAP.md` (the authority). Anything not proven stays UNVERIFIED.
 
 | Decision | Detail |
 |----------|--------|
-| Expander HP | **17HP** (87mm × 128.5mm panel — fits user's pre-cut blank) |
-| Connector | **2× shielded DB-9** (no aux cable; DB-9 B carries digital + power + 2 essential CVs) |
-| Pico location | Inside the 17HP expander (not the MicroBrute case) |
-| OLED (primary) | **0.96" SSD1306** I²C on GP4/GP5 @ 0x3C — on the expander panel. Driver: `OLED_I2C` in `firmware/pico/display.py`. Same chip family as strip OLED. |
-| OLED (strip) | **0.91" SSD1306 128×32** @ 0x3D on the MicroBrute panel — shared I²C0 bus via DB-9 B |
-| OLED (fallbacks) | 1.3" SH1106 (set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2` — reserved for EFFIGY); 16×2 1602 I²C LCD (separate driver) |
-| MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B @ 115200 baud, XOR-checksummed frame; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class) |
-| EFFIGY pair bus | 5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, target addr 0x42 — see `docs/MACROBRUTE_EFFIGY_BRIDGE.md` |
-| Hardware utilities | **Slew limiter only** (TL072 + 2 diodes + pot). All others dropped. |
-| Firmware utilities | Clock divider (3 outputs, GP16/17/18), 4 programmable aux outputs (GP19/20/6/7) — replaces planned CD4024 |
-| RGB LED | Common-cathode on GP8/9/10 — R=clock tick, G=gate, B=mode/pair |
+| Expander HP | **OPEN: 17 HP or about 20 HP.** The repo panel file `panel/expander_17hp.svg` is 87 mm wide with mounting holes 79 mm apart, both UNVERIFIED against the A-100 spec (audit S53, E-22). The owner measures the blank first; plan both layouts. Depth behind the panel UNVERIFIED (E-23). |
+| Connector | **2× shielded DB-9** (HD-15/VGA rejected: the cable shorts pins 6-8 to GND; no DB-25). Both mount on the **MicroBrute rear panel, left of the Pitch/Gate section** (owner decision a). Panel dimensions, free area and depth UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 A = outputs; DB-9 B = UART TX, UART RX, Filter CV, VCA CV and grounds only. Pin maps: CM sections 2 and 3 (from BF 2.2 and 2.3). |
+| Power | **Split.** The expander is powered only from the rack (CP1A); the MicroBrute-side breakout only from the synth (TP70 +12 V, TP71 -12 V, TP72 GND). **No supply rail crosses the DB-9 cable; only ground is shared.** |
+| Pico location | Inside the expander (not the MicroBrute case). Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm (BF Q21). |
+| OLED (primary) | **0.96" SSD1306** I²C on GP4/GP5 @ 0x3C — on the expander panel. Driver: `OLED_I2C` in `firmware/pico/display.py`. Size, controller and interface (I²C vs SPI) of the owned module UNVERIFIED, owner to confirm (BF Q22). |
+| OLED (strip) | **DROPPED** (owner decision c). I²C0 serves only the main OLED, on the expander. **No I²C crosses the DB-9 cable.** |
+| OLED (fallbacks) | 1.3" SH1106 (set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2`); 16×2 1602 I²C LCD (separate driver). |
+| MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B pins 1 and 6 @ 115200 baud, XOR-checksummed frame; LPC-side UART is **UART1 (P0.15/P0.16, pins 62/63), UNVERIFIED** until the Phase 0 continuity check; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class), not used while the DB-9 cables are connected (BF 4.3). |
+| EFFIGY pair bus | **SHELVED** (owner decision b): kept as an idea for another project; nothing is designed around it. GP2, GP3, GP11 are free, reserved. |
+| Hardware utilities | **Slew limiter, LFO, Sample & Hold** (standalone rack utilities, rack power only, no synth cabling). Noise, mult and attenuverter stay out. S&H uses an LF398 (not owned) and a film hold capacitor (not owned). |
+| Firmware utilities | Clock divider (3 outputs, GP16/17/18), 4 programmable aux outputs (GP19/20/6/7) — replaces the dropped CD4024. Clock I/O on the expander only. |
+| RGB LED | Common-cathode on GP8/9/10 — R=clock tick, G=gate, B=mode (the old "pair" meaning is shelved). On the expander. |
 | Touch mods | 8 body-contact bends designed; bench-test in Phase 0 → pick 6 |
 | JF-33 delay | **Moved to `spinoffs/jf33-eurorack/`** — DIY PT2399 delay; not part of the canonical MACROBRUTE build |
 | DSO138 scope | **Moved to `spinoffs/dso138-desktop/`** — desktop scope; not a Eurorack module |
-| EFFIGY DSP | **Separate Eurorack module (Phase 7A, optional)** — Daisy Seed peer, paired via 5-pin rear I²C header (target 0x42, 100 kHz on EFFIGY's I2C4). C header `EFFIGY/firmware/src/macrobrute_bridge.h` is the authoritative protocol source. |
-| Norns Shield | **Anticipated Phase 7B module** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually host an ii-compatible target on a separate front-of-rack I²C bus (suggested address 0x60) and translate ii commands to local state or proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`. |
-| PSU | **Behringer CP1A** Eurorack PSU (±12V + 5V on bus). Pico fed from +5V via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. |
+| EFFIGY DSP | **SHELVED** (see above). `docs/MACROBRUTE_EFFIGY_BRIDGE.md` and `firmware/pico/effigy_bridge.py` are archived as an idea. |
+| Norns Shield | **Anticipated only, not designed.** See `docs/MACROBRUTE_NORNS_BRIDGE.md`; its EFFIGY half is shelved and no I²C pins are reserved for it. |
+| PSU | **Behringer CP1A** Eurorack PSU: -12 V @ 1 A (pins 1-2), +12 V @ 1 A (pins 9-10), +5 V @ 0.5 A (pins 11-12), GND pins 3-8, pins 13-16 not used (CP1A QSG p15, p20). Whether the owner's bus slot carries +5 V: UNVERIFIED (BF BT-12). Pico VSYS takes rack +5 V through a Schottky OR diode + bulk + 100 nF; the 1N5817 is a 20 V part and is not owned (an owned BAT85 can stand in, BF 1.2). MicroBrute stock power untouched. |
 | Migrated to MB panel | Resonance CV (new jack); reuse MB's existing back-panel Sync In / Gate In / Audio In |
+| Owned parts | Every circuit uses parts marked Have in `docs/hardware/MACROBRUTE_BOM.md`; anything else is flagged with an owned alternative (BF section 1). |
 
 ---
 
@@ -77,7 +81,9 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 
 ---
 
-### Component Orders (reference — BOM acquired)
+### Component Orders (STALE reference — do not order from this section)
+
+**STALE (2026-10-17):** the tables below predate the decisions above and the owned-parts inventory. They still list CD4024, 2N3904, BC337-class parts, 1N5817 as a 40 V part, ferrite beads, 100 µF parts, a 42 HP panel and similar items that the audit marks as dropped, wrong or not owned. The current sources are the Have/Missing columns in `docs/hardware/MACROBRUTE_BOM.md` and the missing-parts list in `docs/hardware/MACROBRUTE_SHOPPING_LIST.md` (from BF section 1).
 
 **Batch 1 — ICs + Passives (TME/Mouser, ~€70-85, 3-5 days):**
 
@@ -86,11 +92,11 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 |-----------|-----|---------|---------|
 | TL074CN | 4 | DIP-14 | Breakout (1), Expander (3) |
 | TL072CP | 3 | DIP-8 | Breakout (1), Expander slew (1), spare (1) — JF-33/DSO moved to spinoffs |
-| CD4024BE | 1 | DIP-14 | Expander (clock divider) |
+| ~~CD4024BE~~ | — | DIP-14 | **Dropped** — clock division is firmware |
 | CD4051BE | 1 | DIP-16 | DSO mux (shared with touch plates) |
 | CD40106BE | 2 | DIP-14 | Breakout (1), Expander (1) |
 | LF398N | 1 | DIP-8 | Expander (S&H) |
-| 78L05 | 1 | TO-92 | Expander (+5V for CD4024) |
+| 78L05 | 1 | TO-92 | Breakout-local +5 V for the CD40106 only (Provisional, BF 3.4); owned x4. The expander takes rack +5 V, not a 78L05 |
 | ~~7809~~ | ~~2~~ | TO-220 | **Dropped** — moved to spinoffs (`jf33-eurorack`, `dso138-desktop`) |
 
 *Semiconductors:*
@@ -144,7 +150,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 | 100kΩ linear pot (9mm) | 4 | Expander attenuators (4) |
 | 1MΩ log pot (9mm) | 3 | LFO rate, S&H rate, slew rate |
 | Knobs (19mm, aluminum) | 12 | For all pots |
-| 42HP blank panel | 1 | Anodized aluminum |
+| Expander blank panel (width OPEN: 17 HP or about 20 HP) | 1 | Anodized aluminum |
 
 *AliExpress:*
 | Component | Qty | Notes |
@@ -163,26 +169,24 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 
 ## Phase 1: Breakout Board Build (Week 2-3) [[UNTESTED]] [[REVERSIBLE]]
 
-**Goal:** Build breakout PCB on stripboard, verify all buffer channels and VCO.
-**Layout:** `schematics/breakout_layout.svg` (generated from `tools/generate_layouts.py`)
+**Goal:** Build the buffer-only breakout board on stripboard and verify all buffer channels. The Pico, RGB LED and its drivers live on the expander, not on this board (CM section 9, audit S12).
+**Layout:** `schematics/breakout_layout.svg` (generated from `tools/generate_layouts.py`). **STALE:** this layout and `schematics/breakout_stripboard.md` still hold the old Pico/J_PICO/VSYS/Q1-Q3 design and have template defects (audit B16, S34); do not build from them until regenerated. The IC list and headers in CM section 9 are the reference.
 
 ### Tasks
 - [ ] Cut tracks, solder DIP sockets (U1 TL074, U2 TL072, U3 CD40106)
-- [ ] Power section: D1/D2/D3 (1N5817), FB1/FB2 (ferrite beads), bulk caps. Test rails under load.
+- [ ] Power section, fed only from TP70/TP71/TP72 (no Pico, no VSYS): rail protection per CM 5.3 (open choice, audit C12: an owned BAT85 per rail or a 4.7-10 Ω series resistor), bulk from 2-4× owned 10 µF/63 V in parallel per rail, no ferrite beads. If a diode is used on -12 V its **cathode goes to the TP71 / -12 V side and its anode to the breakout rail** (audit B15). Test rails under load.
 - [ ] Insert ICs, decoupling caps, feedback jumpers, bias resistors
 - [ ] Test each buffer channel with audio source (4× TL074 unity-gain followers)
-- [ ] RGB LED driver: Q1 NPN for common cathode, R/G/B on GP8/9/10 via 3× resistors
-- [ ] VCO circuit (CD40106 gate B): square + triangle outputs on DB-9 A pins 2 and 9
-- [ ] CD4049UBE level shifter: 1 gate for gate mirror signal (5V→3.3V to Pico)
-- [ ] Connector headers (J_PICO, J_OUT, J_IN)
-- [ ] Bench test with Pico connected via J_PICO header
+- [ ] Gate stage: CD40106, TP83 → 10 kΩ → pin 1 with 1 nF to GND, no pull-up, two gates in series so A:1 follows TP83 polarity, then 1 kΩ to DB-9 A:1; unused inputs tied to GND. Local +5 V from an owned 78L05 off +12V_BRK. Provisional (BF 3.4); TP83 level UNVERIFIED (E-09). The Square output is DB-9 A:8 from a TL074 follower; the triangle is not on the DB-9 (body jack, CM 12A).
+- [ ] No RGB LED driver, no VCO circuit and no CD4049 level shifter on this board. The gate reaches the Pico through a 22k/33k divider on the expander (BF 3.5).
+- [ ] Connector headers (J_PWR, J_IN, J_OUT, J_CV_IN per CM section 9)
+- [ ] Bench test the breakout alone with a signal generator and a scope; the Pico is not connected to this board
 
 ### Test Checkpoint
 - [ ] All 4 buffer channels pass signal (play audio → measure output)
-- [ ] VCO oscillates (square + triangle visible on scope)
-- [ ] RGB LED responds to Pico (red=clock, green=gate, blue=mode, mixed colors)
-- [ ] Gate mirror: CD40106 5V → CD4049UBE → 3.3V clean signal at Pico GPIO
-- **Gate:** All buffer channels pass signal, VCO oscillates, LEDs respond
+- [ ] Gate stage follows a test square wave with the correct polarity; with TP83 at 3.3 V the CD40106 at 5 V may not trigger (VT+ up to 3.6 V, UNVERIFIED level), see BF Q15
+- [ ] Rails measured with the board loaded (synth rail drop and current margin, audit E-04)
+- **Gate:** All buffer channels pass signal and the gate stage behaves
 
 **STOP if any buffer channel fails — debug before proceeding.**
 
@@ -245,60 +249,54 @@ saw and square. Trivial mod (one resistor swap), full details in
 | TP93 (Square) | 1kΩ | TL074B +in |
 | TP30_MIXER_OUT (VCO Mix) | 1kΩ | TL074C +in |
 | TP19 (VCF Out) | 1kΩ | TL074D +in |
-| TP124 (Triangle) | 1kΩ | TL072 D +in (2x gain) |
-| TP83 (Gate) | 10kΩ | CD40106 pin 1 |
+| TP124 (Triangle) | 1kΩ | TL072 +in (2x gain) → body jack, not the DB-9 (a TL072 has two sections: IC choice open, audit S17) |
+| TP83 (Gate) | 10kΩ, 1 nF to GND, no pull-up | CD40106 pin 1 |
 | Env (mod matrix) | 10kΩ | TL072 A +in |
 | LFO (mod matrix) | 10kΩ | TL072 B +in |
 
 ### 2.2 Wire Power Taps
-- [ ] Solder to TP70 (+12V), TP71 (-12V), TP72 (GND)
-- [ ] Mount breakout board on chassis wall (VHB tape or M2 standoffs)
-- [ ] Mount Pico WH on/adjacent to breakout board
+- [ ] Solder to TP70 (+12V), TP71 (-12V), TP72 (GND): the breakout takes power only from these. No synth 5 V or 3V3 is tapped (audit B09)
+- [ ] Check the synth's +/-12 V margin with the breakout connected before wiring the DB-9 (audit E-04): rails within about 100 mV of unloaded, no extra ripple on TP70/TP71
+- [ ] Mount breakout board on chassis wall (VHB tape or M2 standoffs). No Pico inside the MicroBrute
 - [ ] Route wires along chassis ribs, secure with nylon ties
 - [ ] Verify keyboard and wheels still move freely
 
 ### 2.3 Wire DB-9 A (outputs) — loose, not mounted yet
-Buffer outputs → 1kΩ → DB-9 A pins per `schematics/wiring_diagram.md`
+Buffer outputs → series R → DB-9 A pins per `docs/MACROBRUTE_CONNECTION_MAP.md` section 2 (`schematics/wiring_diagram.md` is STALE: it still routes ±12 V over DB-9 B pins 7/8, audit B03)
 
 ### 2.4 Build Vactrol
 LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C driver. LDR parallels RP13.
 
 ### Test Checkpoint
 - [ ] All buffer outputs measurable with multimeter (play a note, see voltage swing)
-- [ ] Gate output: 0V silent, 5V when key pressed
+- [ ] Gate output: low when silent, high when a key is pressed (high level UNVERIFIED, E-09)
 - [ ] DB-9 A pins show correct signals (continuity test)
-- [ ] No shorts, no hum, Pico still boots
+- [ ] No shorts, no hum
 - **Gate:** Signal flows from MicroBrute TPs through breakout to J_OUT headers
 
 ---
 
 ## Phase 3: Panel Modifications — irreversible (Week 5-7) [[UNTESTED]] [[DESTRUCTIVE]]
 
-**Goal:** Drill MicroBrute panel, mount OLED/encoder/RGB LED/touch bolts/DB-9.
-**Template:** `panel/microbrute_panel_template.svg`
+**Goal:** Drill the MicroBrute panels and mount the touch bolts, panel jacks/toggles and the 2× DB-9. The OLED, encoder, tap button and RGB LED are on the expander (Phase 4), not on the MicroBrute.
+**Template:** `panel/microbrute_panel_template.svg` covers the top panel only. No rear-panel template exists; draw one after the owner's caliper measurements (audit decision 6).
 **Risk: MEDIUM** — drilling is irreversible. Practice on scrap first.
 
 ### Tasks
 - [ ] Print 1:1 drilling template, tape to panel, verify clearances
-- [ ] **Practice** on scrap material: OLED cutout (33×17mm), 7mm encoder, 5mm LED
-- [ ] OLED: trim module PCB with Dremel (~32×25mm), cut 33×17mm panel window
-- [ ] Encoder: 7mm hole, 10mm right of OLED window
-- [ ] RGB LED: 1× 5mm hole (replaces 3 separate LEDs, saves 2 panel holes)
+- [ ] **Practice** on scrap material: jack holes, toggle holes, touch-bolt holes, and the DB-9 cut-outs
 - [ ] Touch bolts: 6× 6mm holes for brass M3 bolts (selected from Phase 1B testing)
   - Spacing: 18-20mm horizontal between bolts to avoid accidental multi-touch
   - Labels: PITCH, CRUNCH, WAH, DISTORT, HARMONIC, GATE
 - [ ] Wire touch bolts with safety resistors to PCB points (permanent solder)
-- [ ] DB-9: 2× cutouts on rear panel flanks, solder-cup connectors
-- [ ] Wire DB-9 A (9 outputs) and DB-9 B (9 inputs+power) to breakout headers
+- [ ] DB-9: 2× cutouts on the **rear panel, left of the Pitch/Gate section** (where the Arturia "A" logo is), solder-cup connectors. All dimensions UNVERIFIED until measured (audit E-20, E-21); mounting-hole spacing 24.99 mm per the Spectrum Control drawing, owner's part unconfirmed. Shells to TP72 with a short lead at this end only; braid bonded here (CM section 11)
+- [ ] Wire DB-9 A (8 signals + GND) and DB-9 B (UART TX/RX, Filter CV, VCA CV, grounds; no supply, no I²C) to the breakout headers per CM sections 2 and 3. The UART wires are installed here but unused until Phase 6C (audit N17)
 - [ ] Interior cable routing, strain relief
 
 ### Test Checkpoint
-- [ ] OLED visible through cutout, displays correctly
-- [ ] Encoder functional after panel installation
-- [ ] RGB LED visible, color mixing works
 - [ ] Touch bolts modify sound when touched (verify against Phase 1B results)
 - [ ] DB-9 connectors secure, no pin shorts
-- **Gate:** OLED displays through panel, encoder works, touch bolts modify sound, DB-9 signals measure correct
+- **Gate:** touch bolts modify sound, DB-9 signals measure correct
 
 ### 3.X: Phase 2 mod additions
 
@@ -322,32 +320,30 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ## Phase 4: Expander Build (Week 6-10, parallel with Phase 3) [[UNTESTED]] [[REVERSIBLE]]
 
-**Goal:** Build all utility circuits, mount in 42HP panel, integrate via DB-9.
-**Schematics:** `schematics/expander_circuits.md`, `kicad/expander/`
+**Goal:** Build the expander: Pico, display and controls, clock I/O, firmware dividers and aux outputs, and the analog utilities (slew limiter, LFO, Sample & Hold); mount in the Eurorack panel and link to the MicroBrute through the 2× DB-9. Width OPEN: 17 HP or about 20 HP.
+**Schematics:** `schematics/expander_circuits.md`, `kicad/expander/`. **STALE:** both still describe the old scope (noise, attenuverter, mult, CD4024, 42 HP; audit S58, S59). The decided scope is in CM section 10.
 
 ### Build Order (easiest → hardest, get sound early)
 
 | Order | Circuit | ICs | Test Signal |
 |-------|---------|-----|-------------|
-| 1 | Buffered mult (1→3) | TL074 (or reuse Bastl passive mult) | Apply CV, verify 3 copies |
-| 2 | Noise generator | 2N3904 avalanche + TL072 | Listen for white noise |
-| 3 | LFO (tri + square) | TL072 | Scope: 0.04-40Hz waveforms |
-| 4 | Clock divider (/2/4/8) | CD4024 + 78L05 | Feed clock, verify divisions |
-| 5 | Sample & Hold | LF398 + CD4051 (1nF polystyrene cap) | Feed noise + clock, see staircase |
-| 6 | Slew limiter | TL072 + 1N4148 diodes | Step input → smooth ramp |
-| 7 | Attenuverter (2ch) | TL072 | Invert/scale CV |
-| 8 | Manual gate button | Pushbutton + CD40106 | Press → 5V gate |
+| 1 | Pico, display, encoder, tap button, RGB LED | Pico + SSD1306 (see Phase 0) | Firmware runs from the rack +5 V (VSYS via the Schottky OR diode, BF 1.2) |
+| 2 | Clock I/O buffers | CD4049UBE (owned x3) on Pico 3V3 | BF BT-11: GP21 stays within 0-3.3 V |
+| 3 | Firmware dividers and aux outputs | none (GP16/17/18, GP19/20/6/7) | Scope the 3 divider and 4 aux outputs |
+| 4 | Slew limiter | TL072 + 1N4148 diodes (1N4148 not owned, BF Q4) | Step input → smooth ramp |
+| 5 | LFO (tri + square) | TL072 + CD40106 | Scope. Range about 0.5-50 Hz with 1 MΩ / 1 µF (derived, UNVERIFIED, audit S60, E-27); 10 kΩ integrator series R is mandatory |
+| 6 | Sample & Hold | LF398 (not owned) + 10 nF film hold cap (not owned) + TL072 buffer | Pinout and droop: DATASHEETS (a). Trigger conditioning required (audit S65), design open |
 
 ### Panel & Assembly
-- [ ] Drill 42HP panel per `panel/expander_42hp.svg`
-- [ ] Mount ~30 jacks, 8 pots, LEDs
-- [ ] Wire Eurorack power (16-pin header → ±12V/GND)
-- [ ] Wire DB-9 interconnect cable (2× DB-9, 18 conductors, <1m shielded)
+- [ ] Drill the panel per `panel/expander_17hp.svg` (87 mm file, UNVERIFIED) or a 20 HP layout still to be drawn; no LFO or S&H controls are on the panel file yet (audit S54)
+- [ ] Mount at least 16 jacks and 2 pots, the OLED, encoder, tap button and RGB LED (audit S52)
+- [ ] Wire Eurorack power (16-pin keyed header: -12 V pins 1-2, GND 3-8, +12 V 9-10, +5 V 11-12; red stripe on pin 1). Powers the expander only
+- [ ] Wire the DB-9 interconnect: two shielded 9-conductor cables (not ribbon), 1 m working maximum (UNVERIFIED until BF BT-6, BT-1), braid bonded at the MicroBrute end only, expander-side shells isolated from the panel with insulating washers (BF 4.2)
 
 ### Test Checkpoint
 - [ ] Each circuit works standalone on bench supply
-- [ ] DB-9 cable passes all signals (continuity on 18 pins)
-- [ ] Expander utilities modulate MicroBrute when connected
+- [ ] DB-9 cables pass all conductors (continuity per CM sections 2 and 3: A = 8 signals + GND; B = UART x2, 2 CVs, 5 grounds)
+- [ ] An expander CV output modulates the MicroBrute when connected (CV source circuit not yet chosen, BF 3.3)
 - **Gate:** Each module outputs correct signal on bench
 
 ---
@@ -359,18 +355,19 @@ on every mod; no regressions to Phase 1/3 baseline.
 ### Integration Tests
 - [ ] Connect expander via DB-9 shielded cables
 - [ ] End-to-end signal flow: MB note → expander jack → oscilloscope
-- [ ] CV injection: expander LFO → DB-9 B → filter cutoff sweeps
-- [ ] Resonance CV: expander CV → vactrol → resonance sweeps
-- [ ] Clock: Pico clock output → expander clock divider → /2/4/8
+- [ ] CV injection: expander CV output → DB-9 B:5 → filter cutoff sweeps; B:3 → VCA. Check the depth (BF BT-4). The LFO and S&H are rack-only and are patched by jack, not over the cable
+- [ ] Resonance CV: patch a CV into the new MicroBrute-panel Resonance jack → vactrol → resonance sweeps (no cable pin)
+- [ ] Clock: Pico clock output → firmware dividers → /2 /4 /8 on the expander jacks
 - [ ] Touch bolts: verify all 6 panel bolts still function after permanent install
-- [ ] MIDI: Pico SysEx → MB parameter change (bend range, gate length)
+- [ ] MIDI: Pico SysEx → MB parameter change (bend range, gate length). Needs the Phase 6C bridge; USB-MIDI from the Pico is not used while the DB-9 cables are connected (BF 4.3)
 
 ### Ground Loop Audit
 - [ ] Measure DC offset between MB and expander GND
 - [ ] Listen for hum with headphones at max gain
-- [ ] If hum: add 100nF ceramic cap in series with DB-9 GND pin
-- [ ] Verify star ground at TP72
-- [ ] DB-9 GND must be the ONLY ground connection between systems
+- [ ] If hum: work the fallback ladder in CM section 11 / BF 4.5 (the old "100 nF in series with the DB-9 GND pin" fix is withdrawn: it removes the DC ground reference, audit S23)
+- [ ] Verify star ground at TP72 and at the expander
+- [ ] The DB-9 ground conductors (A:9; B:2, 4, 7, 8, 9) must be the ONLY ground connection between systems
+- [ ] No USB cable on the Pico while the DB-9 cables are connected; flash and debug with them unplugged (BF 4.3)
 - [ ] Do NOT connect Eurorack chassis ground to MicroBrute chassis
 - [ ] Salvaged isolation transformer available for critical paths if needed
 
@@ -384,7 +381,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 - [ ] Full signal chain verified with oscilloscope or multimeter
 - [ ] No ground loops, hum, or noise
 - [ ] Pico menu fully operational, values persist across reboot
-- [ ] All 18 DB-9 signals verified
+- [ ] All DB-9 conductors verified by continuity; the two UART lines stay unused until Phase 6C
 - **Gate:** Full system operational, clean audio, no ground hum
 
 ---
@@ -399,11 +396,11 @@ on every mod; no regressions to Phase 1/3 baseline.
 - [x] Extracted Intel HEX → 52.6KB ARM binary (v1.0.4.114)
 - [x] Ghidra project: 427 functions, 107+ labels, 43 SysEx commands mapped
 - [x] MIDI dispatcher, DAC pipeline, NRPN protocol, sequencer timing all documented
-- [x] UART0 (0xE000C000): only 1 reference — safe for Pico bridge
+- [x] UART0 (0xE000C000): one reference in the disassembly, inside the UART3 RX error path. The earlier "safe for the Pico bridge" claim is **withdrawn** (UNVERIFIED): stock MIDI uses UART3 (0xE007C000, init at 0x3D88), UART0 is the ISP port, UART1/UART2 had no literal references (not exhaustive) (audit B01, S06)
 - [x] 68.6KB free flash available for custom code
 
 ### Tasks
-- [ ] Solder PL2303HX wires to LPC2361 UART0 pads (P0.2 TX, P0.3 RX)
+- [ ] Solder PL2303HX wires to LPC2361 UART0 pads (P0.2 TX = pin 98, P0.3 RX = pin 99; the "separate pads near the QFP" claim in `MACROBRUTE_TEST_POINTS_VERIFIED.md` is UNVERIFIED, audit S09). Not pins 96/97: those are VDD(3V3) and VSS
 - [ ] Identify P2.10 (ISP enable) — jumper to GND for bootloader entry
 - [ ] Power cycle with P2.10 LOW, run: `lpc21isp -detectonly`
 - [ ] Check CRP level (likely CRP3 = locked → use .mbf decryption path instead)
@@ -417,7 +414,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ### Tasks
 - [ ] Map remaining functions: parameter storage, calibration table format
-- [ ] Trace UART0 initialization for Pico bridge compatibility
+- [ ] Trace the UART initialisation code (stock MIDI is UART3 per the disassembly) and confirm which UART is free for the Pico bridge (UART1 is the working assumption, UNVERIFIED)
 - [ ] Identify unused interrupt vectors for custom code injection
 - [ ] MIDI traffic capture to confirm inferred parameter names
 - [ ] Document findings in `docs/research/mbf_analysis.md`
@@ -430,9 +427,10 @@ on every mod; no regressions to Phase 1/3 baseline.
 **Goal:** Bidirectional communication between Pico and MicroBrute CPU.
 
 ### Tasks
-- [ ] Wire Pico GP0/GP1 to LPC2361 P0.2/P0.3
-- [ ] Level shift: CD4049UBE gate for LPC 5V → Pico 3.3V (or 1kΩ+2kΩ divider)
-- [ ] Custom LPC2361 code: init UART0 at 115200, accept queries from Pico
+- [ ] Gate: the Phase 0 continuity check (UART pins 62/63 and 98/99, 6N138 output to pin 85) has passed and is recorded. Only then may the docs say a bridge UART is confirmed
+- [ ] Wire Pico GP0/GP1 → DB-9 B:1 / B:6 with 1 kΩ at each end → LPC2361 UART1: P0.16/RXD1 (pin 63) and P0.15/TXD1 (pin 62), **UNVERIFIED** until the continuity check. Fall back to the ISP UART (pins 98/99) only if those pins are taken and the ISP conflict is handled
+- [ ] No level shifter and no divider: both ends are 3.3 V (audit S30). Firmware rule: GP0 stays an input until GP1 has read high (BF 3.1). Bench checks BF BT-1 and BT-2; PC817-isolated alternative in BF 3.9
+- [ ] Custom LPC2361 code: init the chosen UART at 115200, accept queries from Pico
 - [ ] Pico firmware: query internal state, display on OLED
 - [ ] Eventually: preset recall, live parameter control from OLED menu
 - **Gate:** Pico queries LPC2361, receives valid responses
@@ -441,15 +439,15 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ## Phase 7: Advanced / Optional [[DRAFT]]
 
-### 7A: EFFIGY DSP module pair-up
-Daisy Seed peer module on the rear 5-pin I²C header (target 0x42, 100 kHz on
-EFFIGY's I2C4). Pair-bus contract is frozen — see `docs/MACROBRUTE_EFFIGY_BRIDGE.md`.
-EFFIGY's C header is the authoritative source for register addresses; Pico-side
-constants are auto-generated by `tools/sync_effigy_constants.py`. Bench-test the
-link with `effigy.probe()` before adding any DSP-side logic.
+### 7A: EFFIGY DSP module pair-up — SHELVED
+Owner decision b (2026-10-17): the EFFIGY I²C pairing is shelved as an idea for
+another project. No rear JST-XH header is fitted, GP2/GP3/GP11 are free, and
+nothing is designed around it. `docs/MACROBRUTE_EFFIGY_BRIDGE.md`,
+`firmware/pico/effigy_bridge.py` and `tools/sync_effigy_constants.py` are
+archived as they are.
 
-### 7B: Norns Shield ii bridge (anticipated)
-Three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will host an
+### 7B: Norns Shield ii bridge (anticipated, not designed)
+Three-module chain Norns → MACROBRUTE → EFFIGY (the EFFIGY half is shelved, 7A). MACROBRUTE would host an
 ii-compatible target on a separate front-of-rack I²C bus (suggested address
 0x60). See `docs/MACROBRUTE_NORNS_BRIDGE.md` — covers translator command split,
 ii address allocation, pull-up topology, hardware conflict (RP2040 has only
@@ -510,7 +508,7 @@ Phase 0 (bench validation) ──► Phase 1 (breakout board)
 
 After each phase, run the test checkpoints listed. The critical gates are:
 - Phase 0: Pico + OLED + encoder all work on breadboard
-- Phase 1: All buffer channels pass signal, VCO oscillates
+- Phase 1: All buffer channels pass signal, gate stage behaves
 - Phase 1B: 6+ touch bends produce musically useful results
 - Phase 2: Buffer outputs measurable at DB-9 pins
 - Phase 5: Full analog path verified, no hum, no ground loops
@@ -524,12 +522,13 @@ For LPC2361 (future): `make && ./tools/flash.sh build/macrobrute.hex`
 
 | Category | Files |
 |----------|-------|
-| Firmware (Pico) | `firmware/pico/` — 8 MicroPython modules |
+| Firmware (Pico) | `firmware/pico/` — 15 `.py` files (14 modules + generated `_effigy_constants.py`); `config.py` is the canonical pin source |
 | Firmware (LPC) | `firmware/lpc2361/` — 48 C files, ARM7 skeleton |
-| Schematics | `schematics/` — 8 ASCII docs + 6 SVG stripboard layouts |
+| Schematics | `schematics/` — 9 markdown docs + SVGs (83 SVGs repo-wide, 74 under `schematics/`); several are STALE until regenerated |
 | KiCad | `kicad/` — 2 sub-projects (breakout, expander). JF-33 and DSO138 KiCad work moved to `spinoffs/`. |
-| Panel | `panel/` — 2 SVGs (MicroBrute panel + 42HP expander) |
+| Panel | `panel/` — 4 SVGs (MicroBrute top-panel template, two finished-panel mockups, 17 HP expander file) |
 | Touch mods | `docs/mods/touch_bend_specs.md` — 8 circuit bends with specs |
-| Circuit review | `schematics/CIRCUIT_REVIEW.md` — all circuits reviewed and verified |
+| Circuit review | `schematics/CIRCUIT_REVIEW.md` — STALE in places (audit S18, B15); the audit report supersedes it |
+| Audit and design notes | `docs/superpowers/reviews/2026-10-16-project-audit.md`, `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md`, `docs/DATASHEETS.md` |
 | RE analysis | `docs/research/mbf_analysis.md` — full firmware RE results |
-| Tools | `tools/` — decrypt, encrypt, test suite (52 tests), Ghidra scripts |
+| Tools | `tools/` — decrypt, encrypt, doc/firmware checker (`tools/check_docs.py`) with tests in `tools/tests/` (17 tests on 2026-10-17; the earlier "52 tests" figure is UNVERIFIED), Ghidra scripts |

@@ -65,7 +65,7 @@ Add new code in free flash space, patch jump targets to redirect execution.
 
 | Mod | What | Risk | Benefit |
 |-----|------|------|---------|
-| Pico UART bridge | Add UART0 handler for Pico ↔ LPC2361 communication | Medium | Real-time parameter control from Pico |
+| Pico UART bridge | Add a UART handler (UART1, P0.15/P0.16, UNVERIFIED) for Pico ↔ LPC2361 communication | Medium | Real-time parameter control from Pico |
 | Extended SysEx | Add custom SysEx commands beyond Arturia protocol | Medium | PC/DAW control of hidden parameters |
 | Debug output | Enable UART serial output of internal state | Medium | Live debugging during development |
 | Custom sequencer modes | Add Euclidean, probability, ratchet to built-in seq | Medium-High | Musical features |
@@ -89,20 +89,20 @@ Given the project goals (semi-modular expansion, Pico digital brain, industrial/
 ### 1. Pico ↔ LPC2361 UART Bridge (Tier 2, HIGHEST PRIORITY)
 
 **Why:** The Pico currently can only send SysEx to the MicroBrute via MIDI. A direct
-UART link between Pico (GP0/GP1, UART0) and LPC2361 (P0.2/P0.3, UART0) would enable:
+UART link between Pico (GP0/GP1, UART0) and LPC2361 (**UART1: P0.16/RXD1 = pin 63, P0.15/TXD1 = pin 62, UNVERIFIED** until the Phase 0 continuity check; the earlier UART0 choice is withdrawn because UART0 is the ISP port) would enable:
 - Real-time parameter reads (not just writes)
 - Low-latency bidirectional communication
 - Custom binary protocol (faster than SysEx)
 - State synchronization between Pico display and MicroBrute
 
 **Implementation:**
-1. In Ghidra: locate UART0 init code (we know it's around 0x3EA8)
-2. Find unused UART0 IRQ slot in VIC
+1. In Ghidra: locate the UART init code. The stock MIDI UART is UART3 (init at 0x3D88, base 0xE007C000); the earlier "UART0 init around 0x3EA8" was a literal-pool word, not code (audit S06). Confirm nothing writes UART1 registers via a computed base
+2. Find an unused IRQ slot in the VIC for the chosen UART
 3. Add ring buffer + simple command parser in free flash
 4. Connect to existing parameter structures
 5. Pico side: `firmware/pico/lpc_comm.py` already designed for this
 
-**Risk mitigation:** UART0 is the ISP programming port. Our code must NOT interfere
+**Risk mitigation:** UART0 is the ISP programming port and stays out of the bridge unless the UART1 pins turn out to be taken (they share pins with SSP0/SPI, which the stock firmware uses). Our code must NOT interfere
 with ISP mode (P2.10 LOW at reset). Only activate UART bridge after boot, when P2.10 is HIGH.
 
 ### 2. Debug Serial Output (Tier 2, HIGH PRIORITY)
@@ -142,7 +142,7 @@ Before any modifications, we need a thorough Ghidra analysis:
 5. Label all peripheral register accesses (use our peripheral map)
 
 ### Phase 2: Function Identification
-1. **UART0 init** — around 0x3EA8 (references UART0 base 0xE000C000)
+1. **UART init** — stock MIDI is UART3 (init at 0x3D88, base 0xE007C000); the old "UART0 init around 0x3EA8" entry is a literal-pool word (audit S06). Check UART1 (base 0xE0010000) for computed-base use
 2. **SPI handler** — around 0x4348 (MCP4728 DAC communication?)
 3. **Timer0 handler** — around 0x3F70 (tempo/sequencer timing?)
 4. **SysEx parser** — search for 0xF0 handling in UART/MIDI receive path
@@ -152,7 +152,7 @@ Before any modifications, we need a thorough Ghidra analysis:
 
 ### Phase 3: Modification Points
 1. Map the SysEx command dispatch table
-2. Find free VIC interrupt slots for UART0
+2. Find free VIC interrupt slots for the chosen bridge UART (UART1, UNVERIFIED)
 3. Identify safe hook points for code injection
 4. Document all discovered function signatures
 
@@ -164,7 +164,7 @@ Before any modifications, we need a thorough Ghidra analysis:
 |-------------|------------------------|
 | Phase 0 (Toolchain) | Install `arm-none-eabi-gcc`, Ghidra. Write `mbf_encrypt.py` |
 | Phase 1 (Pico bring-up) | Test Pico firmware on breadboard, ready for UART bridge |
-| Phase 2 (Internal wiring) | Wire UART0 (P0.2/P0.3) to breakout PCB → DB-9 → Pico GP0/GP1 |
+| Phase 2 (Internal wiring) | Wire the LPC UART pins (UART1 P0.16/P0.15, pins 63/62, UNVERIFIED until the Phase 0 continuity check) to the breakout PCB → DB-9 B:1/B:6 → Pico GP0/GP1 (installed, unused until Phase 6C) |
 | Phase 3 (Panel) | No firmware changes needed |
 | Phase 4 (Expander) | No firmware changes needed |
 | Phase 5 (Integration) | Flash custom firmware with UART bridge, test Pico ↔ LPC2361 comm |
