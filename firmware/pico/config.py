@@ -6,13 +6,14 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 
 # ---------------------------------------------------------------------------
 # Main OLED — 0.96" SSD1306 I²C, 128×64
-#   Same chip family as the strip OLED (both SSD1306) — keeps driver simple
-#   and matches what's commonly available. The expander panel uses a smaller
-#   cutout to suit the 0.96" module.
+#   SSD1306 keeps the driver simple and matches what's commonly available.
+#   The expander panel uses a smaller cutout to suit the 0.96" module.
+#   Size, controller and interface of the owned module: UNVERIFIED (owner to
+#   confirm 0.96" vs 1.3", SSD1306 vs SH1106, I²C vs SPI).
 #
 #   Fallbacks: 1.3" SH1106 (set OLED_CHIP="SH1106" + OLED_COL_OFFSET=2),
 #              16×2 1602 I²C LCD (different driver entirely)
-# Bus: I²C0 — shared with strip OLED below at addr 0x3D.
+# Bus: I²C0 — main OLED only (on the expander; no I²C crosses the DB-9 cable).
 # ---------------------------------------------------------------------------
 OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106"
 OLED_I2C_ID      = 0
@@ -20,13 +21,14 @@ OLED_WIDTH       = 128
 OLED_HEIGHT      = 64
 OLED_SDA         = 4       # GP4  — I²C0 SDA
 OLED_SCL         = 5       # GP5  — I²C0 SCL
-OLED_ADDR        = 0x3C    # SSD1306/SH1106 default (alt 0x3D = strip OLED)
+OLED_ADDR        = 0x3C    # SSD1306/SH1106 default (alt 0x3D)
 OLED_COL_OFFSET  = 0       # SSD1306 = 0; set to 2 if using SH1106
 
 # ---------------------------------------------------------------------------
-# Strip OLED — 0.91" SSD1306 128×32, mounted on the MicroBrute panel
-#   Shares I²C0 bus with the main OLED. Bus is carried over DB-9 B pins 3/4.
-#   Strip OLED uses alt I²C address 0x3D (jumper on module).
+# Strip OLED — DROPPED (owner decision, 2026-10-17). Nothing on the
+#   MicroBrute panel uses I²C and no I²C crosses the DB-9 cable. These values
+#   remain only because strip_display.py still reads them; a later firmware
+#   task removes both.
 # ---------------------------------------------------------------------------
 STRIP_OLED_I2C_ID = 0      # Same bus as main OLED
 STRIP_OLED_WIDTH  = 128
@@ -34,12 +36,15 @@ STRIP_OLED_HEIGHT = 32
 STRIP_OLED_ADDR   = 0x3D   # SSD1306 alt address (must be jumpered on module)
 
 # ---------------------------------------------------------------------------
-# LPC2361 ↔ Pico UART bridge — UART0 over DB-9 B pins 1/2
+# LPC2361 ↔ Pico UART bridge — Pico UART0 over DB-9 B pin 1 (TX) and pin 6 (RX)
+#   LPC side: UART1, P0.16/RXD1 (LQFP pin 63) and P0.15/TXD1 (pin 62).
+#   UNVERIFIED until the Phase 0 continuity check (connection map §5.4).
+#   1 kΩ series at each end of each line; no divider, no level shifter.
 #   Frame: 0xAA [msg_type] [counter] [len] [payload...] [xor_checksum]
 #   Pico is the controller; LPC firmware handles routing of stock MIDI events.
 # ---------------------------------------------------------------------------
-LPC_TX     = 0             # GP0  — UART0 TX → LPC2361 P0.16 (RXD1)
-LPC_RX     = 1             # GP1  — UART0 RX ← LPC2361 P0.15 (TXD1)
+LPC_TX     = 0             # GP0  — UART0 TX → DB-9 B:1 → LPC2361 P0.16 (RXD1)
+LPC_RX     = 1             # GP1  — UART0 RX ← DB-9 B:6 ← LPC2361 P0.15 (TXD1)
 LPC_BAUD   = 115200
 
 # ---------------------------------------------------------------------------
@@ -65,7 +70,7 @@ LED_MODE   = 10            # GP10 — RGB B channel (mode / pair status)
 # ---------------------------------------------------------------------------
 # Clock I/O (3.3 V logic on expander panel jacks)
 # ---------------------------------------------------------------------------
-CLOCK_OUT  = 22            # GP22 — Master clock out (PIO)
+CLOCK_OUT  = 22            # GP22 — Master clock out (plain GPIO, Timer-driven)
 CLOCK_IN   = 21            # GP21 — External clock in (IRQ rising edge)
 
 # ---------------------------------------------------------------------------
@@ -92,16 +97,18 @@ AUX_MODE_PASSTHRU  = 4   # mirror another signal (clock in, MIDI gate, etc.)
 AUX_MODE_PWM_CV    = 5   # PWM-filtered CV (needs RC on jack)
 
 # ---------------------------------------------------------------------------
-# ADC (spare — touch plate sensing future)
+# ADC — GP26-28 are free (touch plate sensing is a future option)
 # ---------------------------------------------------------------------------
 ADC_0      = 26            # GP26 — ADC0
 ADC_1      = 27            # GP27 — ADC1
 ADC_2      = 28            # GP28 — ADC2
 
 # ---------------------------------------------------------------------------
-# I²C1 — EFFIGY peer-pair bus (rear JST-XH header, hidden behind panel)
-#   Pico is the controller. EFFIGY (Daisy Seed) is the I²C target at 0x42.
-#   See docs/MACROBRUTE_EFFIGY_BRIDGE.md for the full register map.
+# I²C1 — EFFIGY peer-pair bus — SHELVED (owner decision, 2026-10-17)
+#   Kept as an idea for another project; not part of this build. No rear
+#   header is fitted, so GP2, GP3 and GP11 are free, reserved. The values
+#   below remain only because effigy_bridge.py still reads them.
+#   See docs/MACROBRUTE_EFFIGY_BRIDGE.md (archived) for the register map.
 # ---------------------------------------------------------------------------
 DAISY_I2C_ID = 1
 DAISY_SDA    = 2           # GP2  — I²C1 SDA
@@ -112,8 +119,10 @@ DAISY_FREQ   = 100_000     # 100 kHz over rear cable
 
 # ---------------------------------------------------------------------------
 # Free GPIO inventory
-#   No truly free pins remain after this allocation — all GPIO are assigned.
-#   GP23, GP24, GP25 are RP2040-internal (SMPS / VBUS / LED) — not exposed.
+#   6 free pins: GP2, GP3, GP11 (fault-tolerant digital; reserved, see the
+#   shelved EFFIGY block above) and GP26, GP27, GP28 (ADC-capable, not fault
+#   tolerant). GP26 PWM is slice 5A, the same channel as GP10 (LED_MODE).
+#   GP23, GP24, GP25, GP29 are RP2040-internal — not exposed.
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -137,7 +146,7 @@ LONG_PRESS_MS   = 600       # hold encoder button for "back"
 # Display
 # ---------------------------------------------------------------------------
 DISPLAY_FPS           = 20      # target refresh rate (main OLED)
-STRIP_DISPLAY_FPS     = 5       # strip OLED — slower, glanceable status only
+STRIP_DISPLAY_FPS     = 5       # strip OLED (dropped) — kept for strip_display.py
 MENU_VISIBLE_ITEMS    = 4       # lines visible on 64-px tall OLED
 FONT_HEIGHT           = 12      # pixels per text line (with spacing)
 SCREENSAVER_TIMEOUT_S = 120     # dim main OLED after 2 minutes idle

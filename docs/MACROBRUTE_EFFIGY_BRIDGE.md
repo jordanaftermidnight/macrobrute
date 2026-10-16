@@ -1,3 +1,5 @@
+> **SHELVED (2026-10-17): kept as an idea for another project; not part of this build.**
+
 # MACROBRUTE ↔ EFFIGY Bridge Protocol
 
 **Status:** frozen (2026-04-26).

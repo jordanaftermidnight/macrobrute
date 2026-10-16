@@ -1,7 +1,7 @@
 # MACROBRUTE — Pico WH GPIO Pinout (Final)
 
-Matches `firmware/pico/config.py`. All assignments verified against
-RP2040 datasheet for peripheral conflicts.
+Matches `firmware/pico/config.py` and `docs/MACROBRUTE_CONNECTION_MAP.md` section 1.
+Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm.
 
 ## Phase 0 Bench-Validation Wiring
 
@@ -10,7 +10,7 @@ The two diagrams above show the same Phase 0 circuit two ways:
 - **Schematic** — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
 - **Breadboard layout** — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
-Phase 0 covers: **two OLEDs sharing I²C0** (0.96″ SSD1306 at `0x3C`, 0.91″ SSD1306 strip at `0x3D`) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side. Set the strip OLED's address to `0x3D` (ADDR pin / solder jumper on the module) **before** powering it up beside the main OLED — both default to `0x3C` out of the box.
+Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; the 0.91″ strip OLED is dropped) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
 
 ## Pin Assignment Table
 
@@ -18,69 +18,68 @@ Phase 0 covers: **two OLEDs sharing I²C0** (0.96″ SSD1306 at `0x3C`, 0.91″ 
 |------|------|----------|-----------|-----------|-------|
 | GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16) |
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15) |
-| GP4 | 6 | OLED SDA | I2C0 | In/Out | 0.96″ SSD1306 main (0x3C) + 0.91″ SSD1306 strip (0x3D) — shared bus |
-| GP5 | 7 | OLED SCL | I2C0 | Out | 0.96″ SSD1306 main (0x3C) + 0.91″ SSD1306 strip (0x3D) — shared bus |
+| GP2 | 4 | Free, reserved | — | — | config.py still names it I²C1 SDA for the shelved EFFIGY code |
+| GP3 | 5 | Free, reserved | — | — | config.py still names it I²C1 SCL for the shelved EFFIGY code |
+| GP4 | 6 | OLED SDA | I2C0 | In/Out | 0.96″ SSD1306 main (0x3C), the only device on I2C0 |
+| GP5 | 7 | OLED SCL | I2C0 | Out | 0.96″ SSD1306 main (0x3C); code runs 400 kHz |
+| GP6 | 9 | Aux output 3 | GPIO/PWM3A | Out | Programmable aux jack |
+| GP7 | 10 | Aux output 4 | GPIO/PWM3B | Out | Programmable aux jack |
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
 | GP9 | 12 | LED Gate | PWM4B | Out | Gate activity indicator |
 | GP10 | 14 | LED Mode | PWM5A | Out | Mode indicator |
+| GP11 | 15 | Free, reserved | — | — | config.py still names it EFFIGY INT (shelved); candidate gate input |
 | GP12 | 16 | Tap Button | GPIO | In | Pull-up, active LOW |
 | GP13 | 17 | Encoder SW | GPIO | In | Pull-up, active LOW, IRQ |
 | GP14 | 19 | Encoder CLK | GPIO | In | Pull-up, IRQ on edges |
 | GP15 | 20 | Encoder DT | GPIO | In | Pull-up |
-| GP21 | 27 | Clock In | GPIO/PIO | In | External clock, IRQ rising |
-| GP22 | 29 | Clock Out | PIO | Out | Clock output to expander |
-| GP26 | 31 | ADC0 | ADC | In | Spare — CV reading |
-| GP27 | 32 | ADC1 | ADC | In | Spare |
-| GP28 | 34 | ADC2 | ADC | In | Spare |
+| GP16 | 21 | Clock divider out 1 | GPIO | Out | Default ÷2 |
+| GP17 | 22 | Clock divider out 2 | GPIO | Out | Default ÷4 |
+| GP18 | 24 | Clock divider out 3 | GPIO | Out | Default ÷8 |
+| GP19 | 25 | Aux output 1 | GPIO/PWM1B | Out | Programmable aux jack |
+| GP20 | 26 | Aux output 2 | GPIO/PWM2A | Out | Programmable aux jack |
+| GP21 | 27 | Clock In | GPIO | In | External clock, IRQ rising |
+| GP22 | 29 | Clock Out | GPIO | Out | Plain GPIO driven from a Timer (no PIO) |
+| GP26 | 31 | ADC0 | ADC | In | Free (PWM slice 5A shared with GP10) |
+| GP27 | 32 | ADC1 | ADC | In | Free |
+| GP28 | 34 | ADC2 | ADC | In | Free |
 
 ## Peripheral Allocation
 
 | Peripheral | Usage | Pins |
 |------------|-------|------|
 | UART0 | LPC2361 Pico Bridge (115200 baud) | GP0, GP1 |
-| I2C0 | OLED display (SSD1306, 0x3C main + 0x3D strip) | GP4, GP5 |
-| PIO SM0 | Clock output | GP22 |
-| ADC | CV reading (spare) | GP26-28 |
+| I2C0 | Main OLED display (SSD1306, 0x3C) | GP4, GP5 |
+| GPIO (Timer) | Clock output | GP22 |
+| GPIO | Clock input, clock divider outputs | GP21; GP16, GP17, GP18 |
+| GPIO/PWM | Aux outputs (PWM at 20 kHz in PWM_CV mode) | GP19, GP20, GP6, GP7 |
+| ADC | Free | GP26-28 |
 | PWM4 | LEDs (clock, gate) | GP8, GP9 |
 | PWM5 | LED (mode) | GP10 |
 
 ## Free GPIO
 
-| GPIO | Pin# | Available For |
-|------|------|---------------|
-| GP2 | 4 | **I2C1 SDA — Daisy Seed expansion (rear JST-XH header)** |
-| GP3 | 5 | **I2C1 SCL — Daisy Seed expansion (rear JST-XH header)** |
-| GP6 | 9 | General purpose — expansion |
-| GP7 | 10 | General purpose — expansion |
-| GP11 | 15 | General purpose — expansion |
-| GP16 | 21 | Free |
-| GP17 | 22 | Free |
-| GP18 | 24 | Free |
-| GP19 | 25 | Free |
-| GP20 | 26 | Free |
+6 free pins (owner decision, 2026-10-17):
 
-Potential uses for GP16–GP20: SD card (SPI), extra encoders, expansion header, SPI DAC.
+| GPIO | Pin# | Type | Note |
+|------|------|------|------|
+| GP2 | 4 | Digital, fault tolerant | Was EFFIGY I²C1 SDA (shelved) |
+| GP3 | 5 | Digital, fault tolerant | Was EFFIGY I²C1 SCL (shelved) |
+| GP11 | 15 | Digital, fault tolerant | Was EFFIGY INT (shelved); candidate gate input |
+| GP26 | 31 | ADC0, not fault tolerant | PWM slice 5A shared with GP10 |
+| GP27 | 32 | ADC1, not fault tolerant | — |
+| GP28 | 34 | ADC2, not fault tolerant | — |
 
-## I²C1 Daisy Seed Expansion (rear header)
+GP6, GP7, GP16, GP17, GP18, GP19 and GP20 are NOT free: they are the aux outputs and clock divider outputs above.
+GP23, GP24, GP25 and GP29 are RP2040-internal and not exposed on the header.
 
-The Pico exposes I²C1 on GP2/GP3 to a rear-mounted 4-pin JST-XH header on the
-expander (not panel-visible — accessed with the case open). This lets a Daisy
-Seed module attach as an I²C peripheral for DSP offload (granular, reverb,
-wavetable) while the Pico handles UI/clock.
+## I²C1 EFFIGY / Daisy Seed Expansion — SHELVED
 
-| JST pin | Signal | Pico side | Notes |
-|---------|--------|-----------|-------|
-| 1 | SDA   | GP2 (pin 4) | 4.7kΩ pull-up to 3.3V on Pico side |
-| 2 | SCL   | GP3 (pin 5) | 4.7kΩ pull-up to 3.3V on Pico side |
-| 3 | +3.3V | Pico 3V3 pin 36 | Only used for header pull-ups; Daisy has its own rail |
-| 4 | GND   | Star ground @ TP72 | Shared reference |
-
-Addresses: OLED @ 0x3C (I²C0) · Daisy @ 0x42 by convention (I²C1) · MPR121 (if
-fitted) @ 0x5A. Bus length < 30cm at 100kHz.
+SHELVED (2026-10-17): the EFFIGY pairing is kept as an idea for another project and is not part
+of this build. No rear JST-XH header is fitted; GP2, GP3 and GP11 are free (table above).
 
 ## USB-MIDI (micro-USB)
 
-Pico WH enumerates as a USB-MIDI class device over its micro-USB port via
+Pico enumerates as a USB-MIDI class device over its micro-USB port via
 TinyUSB. Orthogonal to the LPC2361 bridge — gives the DAW/computer a MIDI
 port named "Macrobrute Pico". Firmware hook: `firmware/pico/usbmidi.py` (to
 be implemented).
