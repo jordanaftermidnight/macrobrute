@@ -9,20 +9,44 @@ if __package__ in (None, ""):
 from tools.hwdata.pico import FIRMWARE_ROLES, PICO_USABLE_GP
 
 ROW = re.compile(r"^\|\s*GP(\d+)\s*\|[^|]*\|\s*([^|]+)\|", re.M)
-GP_LIST = re.compile(r"\bGP(\d+(?:\s*[,/]\s*\d+)*)")
+# "GP23", "GP 23", "GP23/24/25", "GP2, 3, 6", "GP23-25", "GP23–GP25"
+GP_LIST = re.compile(r"\bGP\s*(\d+)((?:\s*(?:[,/]|-|\u2013)\s*(?:GP\s*)?\d+)*)")
+_GP_TAIL = re.compile(r"([,/]|-|\u2013)\s*(?:GP\s*)?(\d+)")
 NOT_EXPOSED = (23, 24, 25, 29)
 SPARE_WORDS = re.compile(r"\b(spare|free|available|unused)\b|GPIOs", re.I)
 
 # Expected wording per GP, matching firmware roles in FIRMWARE_ROLES.
 ROLE_HINTS = {
     0: "UART0 TX", 1: "UART0 RX", 2: "I²C1 SDA", 3: "I²C1 SCL",
-    4: "I²C0 SDA", 5: "I²C0 SCL", 6: "Aux output", 7: "Aux output",
+    4: "I²C0 SDA", 5: "I²C0 SCL",
+    19: "Aux output 1", 20: "Aux output 2", 6: "Aux output 3", 7: "Aux output 4",
     8: "RGB LED R", 9: "RGB LED G", 10: "RGB LED B", 11: "EFFIGY INT",
     12: "Tap button", 13: "Encoder switch", 14: "Encoder CLK",
-    15: "Encoder DT", 16: "Clock divider", 17: "Clock divider",
-    18: "Clock divider", 19: "Aux output", 20: "Aux output",
+    15: "Encoder DT", 16: "Clock divider out 1", 17: "Clock divider out 2",
+    18: "Clock divider out 3",
     21: "Clock input", 22: "Clock output",
 }
+
+
+def gp_numbers(line):
+    """All GP numbers named in a line, expanding lists and ranges."""
+    found = set()
+    for m in GP_LIST.finditer(line):
+        prev = int(m.group(1))
+        found.add(prev)
+        for op, num in _GP_TAIL.findall(m.group(2)):
+            n = int(num)
+            if op in ("-", "\u2013") and prev <= n <= prev + 40:
+                found.update(range(prev, n + 1))
+            else:
+                found.add(n)
+            prev = n
+    return found
+
+
+def _hint_matches(hint, func):
+    # "Aux output 1" must not match "Aux output 10"; numbered hints are exact.
+    return re.search(re.escape(hint.lower()) + r"(?!\d)", func.lower()) is not None
 
 
 def _flat_firmware_gps():
@@ -37,9 +61,7 @@ def check_connection_map(text):
     for line in text.splitlines():
         if not SPARE_WORDS.search(line):
             continue
-        found = set()
-        for m in GP_LIST.finditer(line):
-            found.update(int(n) for n in re.findall(r"\d+", m.group(1)))
+        found = gp_numbers(line)
         for gp in NOT_EXPOSED:
             if gp in found:
                 problems.append(
@@ -51,7 +73,7 @@ def check_connection_map(text):
             problems.append(f"GP{gp} row exists but GP{gp} is not a usable Pico pin")
             continue
         hint = ROLE_HINTS.get(gp)
-        if hint and gp in fw and hint.lower() not in func.lower():
+        if hint and gp in fw and not _hint_matches(hint, func):
             problems.append(f"GP{gp} row says '{func}', firmware role is '{hint}'")
     return problems
 
