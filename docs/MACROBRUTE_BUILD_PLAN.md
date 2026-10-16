@@ -45,7 +45,7 @@ Source: audit sections 1a and 1b, BF, and `docs/MACROBRUTE_CONNECTION_MAP.md` (t
 
 ## Phase 0: Bench Validation — non-destructive (Week 1) [[UNTESTED]] [[REVERSIBLE]]
 
-**Goal:** Validate Pico firmware on breadboard, confirm OLED choice, locate test points.
+**Goal:** Validate Pico firmware on breadboard, confirm the OLED module (size, controller, interface: owner to confirm, BF Q22), locate test points, and pass the gate checks on the MicroBrute that later phases depend on (LPC UART pins, TP83 level, synth rail margin, DB-9 geometry). Full procedures: `docs/hardware/MACROBRUTE_PHASE0_BOM.md`.
 
 ### Wiring reference
 The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is rendered as two diagrams:
@@ -53,17 +53,25 @@ The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is re
 - **`phase0_wiring_schematic.svg`** — flat schematic, elbow-routed nets, useful for understanding what connects to what.
 - **`phase0_breadboard.svg`** — top-down breadboard view, jumper paths colour-coded by net (red=+3V3, dark=GND, blue=I²C0, green=GPIO, orange=RGB drive, purple=clock).
 
-Both match `firmware/pico/config.py` exactly. Pin map covered: **two OLEDs share I²C0** on GP4/GP5 — 0.96″ SSD1306 main at `0x3C` (later mounted on the expander panel) and 0.91″ SSD1306 strip at `0x3D` (later mounted over the "micro" in the MicroBrute logo). KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
+Both match `firmware/pico/config.py` exactly, except that the strip OLED may still be drawn in the diagrams: it is **dropped** (ignore it; the diagrams are redrawn later). Pin map covered: **one OLED on I²C0**, GP4/GP5 — the 0.96″ SSD1306 main display at `0x3C` (later mounted on the expander panel). KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
 
 ### Tasks
-- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics — should detect both OLEDs at `0x3C` and `0x3D`.
-- [ ] Set the strip OLED's I²C address to `0x3D` (ADDR pin or solder-jumper on the module) **before** powering it up alongside the main OLED — both default to `0x3C` out of the box.
-- [ ] Confirm both OLEDs draw their boot splash. Strip OLED is the same SSD1306 driver, just shorter framebuffer (128 × 32 vs 128 × 64). If a display is blank: check SDA/SCL not swapped, then VCC vs GND polarity. Splash for both OLEDs renders the MACRO logo (full size on main, compact on strip).
-- [ ] Breadboard integration per the diagrams above: both OLEDs + KY-040 encoder + tap button + RGB LED + clock IN/OUT
+- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics — should detect the main OLED at `0x3C`. (`test_hw.py` also accepts `0x3D`; ignore that, the strip OLED is dropped.)
+- [ ] Confirm the main OLED draws its boot splash. If a display is blank: check SDA/SCL not swapped, then VCC vs GND polarity. A 7-pin module is SPI, not I²C (BF Q22): stop and tell the owner, the driver and pins change.
+- [ ] Breadboard integration per the diagrams above: OLED + KY-040 encoder + tap button + RGB LED + clock IN/OUT
 - [ ] Self-loopback test: jumper GP22 → 1 kΩ → GP21 to confirm the firmware clock generator and IRQ-driven clock-in count match
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
-- [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB)
+- [ ] LPC2361 ISP pin survey (visual only — locate P0.2, P0.3, P2.10 on PCB). This feeds the UART continuity gate below
 - [ ] Verify PL2303HX USB-TTL with serial loopback
+
+### Phase 0 gate checks on the MicroBrute (probe only, no soldering)
+Full procedures, pass criteria and the owner's recording sheet: `docs/hardware/MACROBRUTE_PHASE0_BOM.md`. Each result is recorded before the phase that depends on it starts.
+- [ ] **LPC UART continuity probe** (gate before any Phase 6 bridge work): LPC2361 LQFP-100 pins 62/63 (P0.15/P0.16), pins 98/99 (the ISP UART), and 6N138 output to pin 85 (P4.29, expected). Rear board CU17002, power off, continuity mode. Procedure from audit decision 7. Never probe pins 96/97 (VDD(3V3) and VSS)
+- [ ] **TP83 logic level**: measure the high and low level of the gate test point (audit E-09). A 5 V CD40106 is only guaranteed to trigger above 3.6 V
+- [ ] **Synth rail margin**: adapter label, TP70/TP71 against TP72, baseline for the Phase 2 loaded check (audit E-04)
+- [ ] **D-sub neighbour geometry** (BF BT-7): caliper the owner's DB-9 insert and confirm the row offset and neighbour table
+- [ ] Optional: CP1A +5 V on bus pins 11-12 (BF BT-12); PC817 isolated-UART alternative noted, not required (BF 3.9)
+- [ ] Bench tests BT-1 to BT-13 are listed in the Phase 0 BOM file (names only; definitions and pass criteria in BF section 6.2). They run when the matching hardware exists, not all in Phase 0
 
 ### Toolchain Setup (macOS)
 ```
@@ -77,7 +85,8 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 - [ ] Pico boots, OLED displays, encoder rotates, RGB LED cycles colors
 - [ ] Serial port functional, toolchains installed
 - [ ] TP locations mapped on MicroBrute PCB photos
-- **Gate:** All firmware modules run on breadboard, TP locations mapped
+- [ ] LPC UART continuity result, TP83 level, synth rail baseline and D-sub geometry recorded
+- **Gate:** All firmware modules run on breadboard, TP locations mapped, and the four MicroBrute gate checks recorded. Only after the UART continuity check passes may any doc say a bridge UART is confirmed
 
 ---
 
