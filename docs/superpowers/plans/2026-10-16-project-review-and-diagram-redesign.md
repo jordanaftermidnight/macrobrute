@@ -13,7 +13,10 @@
 ## Global Constraints
 
 - Canonical pin source is `firmware/pico/config.py`; `docs/MACROBRUTE_CONNECTION_MAP.md` must agree with it (its own header says so).
-- Connector is 2x DB-9 today (HD-15/VGA rejected: cable shorts pins 6-8 to GND). Task 3 may change this by user decision.
+- DECIDED (2026-10-16): connector stays 2x DB-9 (HD-15/VGA rejected: cable shorts pins 6-8 to GND; no DB-25 on hand). Both mount on the MicroBrute rear panel where the Arturia "A" logo is, between the MicroBrute name and the Kensington slot, above the Pitch/Gate section. Dimensions UNVERIFIED until the user measures the panel.
+- DECIDED: power is split. The expander is powered only from the Eurorack rack. The MicroBrute-side breakout (onboard mods) is powered only from the synth. No supply rail crosses the DB-9 cable, so DB-9 B pins 7/8 are freed; only a shared ground (pin 9) joins the two systems.
+- DECIDED: the expander gains an LFO and a Sample & Hold. They are standalone rack utilities (no synth cabling), powered from the rack.
+- The LPC bridge UART and the "spare GPIO" claim must be settled with evidence, not assumption (Task 3).
 - Never add `Co-Authored-By` lines to commits or any file (user's global rule).
 - Do not mention music genre in any new or edited document. Task 5 removes existing mentions.
 - Diagram cards are self-contained light cards (own palette), fixed-width font, minimum 9px text, no clipped canvas, labels in knock-out boxes.
@@ -26,8 +29,8 @@
 - Two GPIO claims for one pin (e.g. a pin listed both as spare and allocated) must be caught by the checker.
 - A diagram or doc naming a pin that does not exist on the Pico (GP23-25, GP29) must fail validation.
 - A 5 V net reaching a Pico GPIO without a level shifter or divider must fail validation (RP2040 is not 5 V tolerant).
-- Two different sources for the same rail (e.g. breakout +/-12 V from MicroBrute TP70/71 vs from the expander over DB-9 B) must be flagged as a conflict, not drawn twice.
-- Manual build must not silently skip a missing SVG listed in `SVG_MAP`; it must report it.
+- Any doc or diagram still routing +/-12 V (or any supply) across DB-9 B must be flagged as contradicting the split-power decision.
+- Manual build must not silently skip a missing SVG listed in `SVG_MAP`; it must report it (all 75 currently exist).
 
 ---
 
@@ -261,16 +264,15 @@ Run five independent read-only reviews in parallel (one subagent each, each told
 2. **Power:** every statement about where +/-12 V, +5 V, 3V3 come from (`docs/MACROBRUTE_BUILD_PLAN.md`, connection map section 5.3, `schematics/power_regulation_diagram.svg`, `schematics/pico_power_protection.svg`, `docs/hardware/MACROBRUTE_BOM.md`); current budgets; ground-loop risk.
 3. **Analog/protection circuits:** output buffers, CD40106 gate path, CD4049 level shifting, CV input clamps (`schematics/CIRCUIT_REVIEW.md`, `breakout_pcb.md`, `cv_input_protection_diagram.svg`); confirm no 5 V net reaches a Pico GPIO.
 4. **Scope and structure:** which expander modules are in or out (`docs/MACROBRUTE_CONNECTION_MAP.md` section 10 vs `schematics/expander_*.svg`/`expander_stripboard.md`/README/manual TOC); stale legacy docs; `SVG_MAP` entries pointing at missing files in `tools/build_manual.py`.
-5. **Cable/connector options:** signal count across DB-9 A + B, and feasibility of a single connector (DB-25, DB-37 per `docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md`, or multiplexing). Include that analog audio and CV signals should not share a CD4051 mux, and that two CD4051 are already earmarked in the BOM.
+5. **DB-9 pin budget and rear-panel fit:** with +/-12 V off the cable, recount DB-9 A and B (signals, shielding, freed pins 7/8), verify each pin against the breakout and expander docs, and sanity-check the two-DB-9 rear-panel location (flange size, depth behind the panel, clearance to the Kensington slot and Pitch/Gate jacks) from the teardown photos; list what the user must measure.
 
 Known findings to include and verify (already seen during planning):
-- Power source conflict: connection map 5.3 and Phase 0 power diagram tap MicroBrute TP70/TP71/+5 V for the breakout, while the build plan, DB-9 B pins 7/8 and the power-chain diagram say +/-12 V comes from the Eurorack supply over the cable.
+- Power: decision is split power (synth powers breakout from TP70/TP71, rack powers expander). Docs that still say +/-12 V crosses DB-9 B pins 7/8 (connection map section 3, power-chain diagram, breakout notes) must be corrected; confirm the TP70/TP71 current budget can feed the breakout op-amps and that the synth +5 V/3V3 can feed the CD40106 and strip OLED.
 - Strip OLED 0.91" is described as powered from MicroBrute 5 V "with onboard level shifter" while sharing the Pico's 3.3 V I2C bus; most SSD1306 modules have no level shifter, so 5 V pull-ups could reach RP2040 GPIOs.
-- LPC bridge UART: firmware config and connection map 5.4 say UART1 (P0.15/P0.16); connection map 12D says UART0 (P0.2/P0.3); `mbf_analysis.md` says UART0 is free and flags UART1 as possibly MIDI.
-- Connection map 12G still claims 8 spare GPIOs; section 1 says none are spare and GP23-25 are not exposed.
+- LPC bridge UART (must be proven): firmware config and connection map 5.4 say UART1 (P0.15/P0.16); connection map 12D says UART0 (P0.2/P0.3); `mbf_analysis.md` says UART0 is free and flags UART1 as possibly MIDI. Evidence to gather: (a) Ghidra/disassembly: which UART base addresses the stock firmware initialises and uses (UART0 0xE000C000, UART1 0xE0010000, UART2 0xE0078000, UART3 0xE007C000) and what the MIDI path uses; (b) PCB photos (36 DNG) and the LPC2361 datasheet: whether P0.15/P0.16 or P0.2/P0.3 are routed to anything on the board and reachable at a pad; (c) a bench continuity/probe step added to the Phase 0 checklist. Until (c) passes, the answer stays UNVERIFIED.
+- Connection map 12G claims 8 spare GPIOs; section 1 says none are spare and GP23-25 are not exposed. Prove it by grepping every `Pin(`/`PWM(`/`I2C(`/`UART(` use under `firmware/pico/` and tabulating GPIO to module, then compare with `FIRMWARE_ROLES` and the Raspberry Pi Pico datasheet (GP23/24/25/29 are internal). Adding the LFO/S&H does not change this: they are analog and use no Pico GPIO unless the user later wants a firmware-clocked S&H trigger.
 - Breakout U4 CD4049UBE is listed on the MicroBrute-side breakout but "powered from 3.3 V"; the 3.3 V rail lives on the Pico (expander) side. Confirm which side the level shifter belongs on.
-- Expander scope: section 10 says the expander is minimal (slew limiter only; LFO, S&H, noise, mult, attenuverter dropped because the user's rack already has equivalents), but `schematics/expander_lfo.svg`, `expander_sah.svg`, `expander_noise.svg`, `expander_attenuverter.svg`, `expander_clockdiv.svg`, `expander_stripboard.md` and the README still describe them.
-- `SVG_MAP` references files that do not exist (e.g. `wiring_overview.svg`, `system_architecture_block.svg`, `testpoints_map.svg`).
+- Expander scope (DECIDED): add LFO and S&H to the 17 HP expander's slew limiter, clock I/O, firmware dividers and aux outs. Noise, mult, attenuverter stay out. Check the 17 HP panel has room (jack count, pots, depth); the user may need a wider panel. Reuse `schematics/expander_lfo.svg`, `expander_sah.svg` and `expander_stripboard.md` as starting points but audit them (S&H part choice, rail needs, whether `expander_noise`/`expander_attenuverter`/`expander_clockdiv` should move to `docs/legacy/`).
 - Several legacy docs (42 HP, DB-37) still appear in the manual's main flow.
 
 - [ ] **Step 1:** Dispatch the five reviewers in parallel (single message, five Agent calls), each with the file list above and the instruction to report, not fix.
@@ -283,18 +285,18 @@ git add docs/superpowers/reviews
 git commit -m "docs: add project audit report"
 ```
 
-### Task 4: User decision gate (no code)
+### Task 4: Remaining decisions gate (no code)
 
-Present the report and get explicit answers before any doc is edited:
+Already decided (recorded in Global Constraints): cable (2x DB-9, rear-panel position), split power, LFO + S&H on the expander. Still needs the user, after the Task 3 evidence is in:
 
-1. **Cable:** keep 2x DB-9, or one connector. Planning-time recommendation: one shielded DB-25 (parallel-port style) cable; 8 outputs + 2 CV inputs + UART + I2C + +/-12 V is 16 signals, leaving 9 pins for interleaved grounds. Multiplexing is not recommended for audio/CV (crosstalk, level loss, needs simultaneous signals); a CD4051 stays reserved for touch/slow control.
-2. **Breakout power source:** MicroBrute TP70/TP71 (self-contained) versus Eurorack over the cable. Recommendation pending Task 3 review of current budget and ground-loop risk.
-3. **Strip OLED supply:** run from a 3.3 V source (MicroBrute +3V3ARM on P4 pin 5, or via cable) rather than 5 V, unless the module is verified to have a level shifter.
-4. **LPC bridge UART:** confirm UART1 (P0.15/16) after reading the Ghidra evidence, or choose UART0.
-5. **Expander scope:** confirm the minimal expander (slew, clock I/O, firmware dividers and aux outs) with LFO/S&H/noise/mult/attenuverter as separate modules from the user's rack, or add any of them back to the expander. Dropped-module files go to `spinoffs/` or `docs/legacy/`.
+1. **DB-9 B pins 7/8 (freed):** leave unused, wire as extra grounds (shield the CV lines), or carry 3V3 for the strip OLED.
+2. **Strip OLED supply:** with split power, take 3.3 V from the synth (+3V3ARM, P4 pin 5) or from the cable, unless the module is verified to have a level shifter.
+3. **Expander size:** keep 17 HP only if LFO + S&H fit; otherwise choose a wider panel. Present a jack/pot count and a side-by-side layout.
+4. **Rear panel placement:** user measures the MicroBrute rear panel (Arturia logo area, free width/height, depth behind it, distance to Kensington slot and Pitch/Gate section); two DB-9 flanges are about 30.8 mm wide x 12.5 mm tall each (mounting-hole spacing about 25 mm), so side by side needs about 62 mm.
+5. **LPC UART result:** confirm UART choice once the Task 3 evidence and bench probe exist.
 
-- [ ] **Step 1:** Ask the five questions (AskUserQuestion, one call, with the report's recommendation first).
-- [ ] **Step 2:** Record the answers at the top of the audit report under "Decisions" and commit.
+- [ ] **Step 1:** Ask these questions (AskUserQuestion), first option = recommendation.
+- [ ] **Step 2:** Record answers at the top of the audit report under "Decisions" and commit.
 
 ```bash
 git add docs/superpowers/reviews
@@ -319,7 +321,7 @@ git commit -m "docs: apply audit corrections and neutral wording"
 ### Task 6: Re-order and prune the manual
 
 **Files:**
-- Modify: `tools/build_manual.py` (`SVG_MAP`, section/TOC grouping, missing-file reporting)
+- Modify: `tools/build_manual.py` (`SVG_MAP`, section/TOC grouping, missing-file guard)
 - Move: dropped expander module docs/SVGs per decision 5 to `spinoffs/` or `docs/legacy/`
 - Create: `tools/tests/test_build_manual.py`
 
@@ -348,7 +350,7 @@ def missing_svgs(svg_map, root):
     return sorted({s for svgs in svg_map.values() for s in svgs if not (root / s).exists()})
 ```
 
-Add to `main()` in `tools/build_manual.py`: call `missing_svgs(SVG_MAP, PROJECT)`, print each, and `sys.exit(1)` if any. Then fix `SVG_MAP` entries (remove or repoint) until it is empty.
+Add to `main()` in `tools/build_manual.py`: call `missing_svgs(SVG_MAP, PROJECT)`, print each, and `sys.exit(1)` if any. Today all 75 `SVG_MAP` entries exist, so the guard is a regression check; update `SVG_MAP` for any file moved or regenerated in this plan.
 
 - [ ] **Step 4:** Re-order manual sections: Start Here, Architecture/Connection map, Power, Breakout, Expander (reduced scope), Control and firmware, Reference, Legacy collapsed last. Change only titles/groups/order in `build_manual.py`, not document text.
 - [ ] **Step 5:** `python3 -m pytest tools/tests -v && python3 tools/build_manual.py`, open the manual, confirm the TOC order and no console errors.
@@ -549,13 +551,13 @@ git commit -m "docs: rebuild manual with regenerated Phase 0 diagrams"
 
 ### Task 15: Next-batch plans
 
-- [ ] **Step 1:** Write follow-up plans: breakout + interconnect (single cable or DB-9 pair, per decision 1), expander modules (per decision 5), and mods m01-m14, each as its own plan reusing the kit and validator.
+- [ ] **Step 1:** Write follow-up plans, each reusing the kit and validator: (a) breakout + interconnect for the 2x DB-9 link and split power; (b) expander modules: LFO, S&H, slew, panel layout and stripboards; (c) MicroBrute rear panel drill/layout SVG (`panel/microbrute_rear_panel.svg`) for the two DB-9 connectors, from the user's measurements; (d) mods m01-m14.
 
 ---
 
 ## Self-review
 
 - **Spec coverage:** kit (Task 7), pin table (Task 1), validator (Task 8), Phase 0 batch (Tasks 10-13), visual sign-off (Task 9), manual integration and render check (Tasks 6 and 14), doc conflicts reported not guessed (Tasks 3-4). Later batches deliberately deferred to Task 15.
-- **Added beyond spec at user request:** full project audit and corrections (Tasks 2-6), single-cable evaluation, expander scope check, genre scrub.
+- **Added beyond spec at user request:** full project audit and corrections (Tasks 2-6), expander gains LFO + S&H, split power, DB-9 rear-panel placement, genre scrub.
 - **Type consistency:** `FIRMWARE_ROLES`, `PICO_USABLE_GP`, `PICO_PHYSICAL_PIN` defined in Task 1 and used with the same names in Tasks 2, 8, 10, 12.
 - **Known soft spots:** Tasks 3, 5, 10-13 depend on user decisions in Task 4 and on the audit's findings, so their edit lists are driven by the report rather than fixed here.
