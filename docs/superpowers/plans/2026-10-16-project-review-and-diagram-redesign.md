@@ -17,6 +17,9 @@
 - DECIDED: power is split. The expander is powered only from the Eurorack rack. The MicroBrute-side breakout (onboard mods) is powered only from the synth. No supply rail crosses the DB-9 cable, so DB-9 B pins 7/8 are freed; only a shared ground (pin 9) joins the two systems.
 - DECIDED: the expander gains an LFO and a Sample & Hold. They are standalone rack utilities (no synth cabling), powered from the rack.
 - The LPC bridge UART and the "spare GPIO" claim must be settled with evidence, not assumption (Task 3).
+- DESIGN RULE, owned parts only: every circuit uses parts the user already owns (status "Have" in `docs/hardware/MACROBRUTE_BOM.md` and the shopping list). Anything not owned is flagged with an owned-part alternative proposed; no design may require a new purchase without the user's approval.
+- DESIGN RULE, back-feed: the expander (rack-powered) and the synth breakout/LPC (synth-powered) can be on at different times. Every digital line crossing the DB-9 cable (UART TX/RX, I2C SDA/SCL, any clock/gate) gets a series resistor, and the design must ensure no current can flow into an unpowered IC's input protection diodes or power it parasitically, whichever side is powered first or alone. Values chosen from owned resistors and justified (drive current, I2C rise time, UART edge rate).
+- DESIGN RULE, hum: no audible mains hum or ground-loop noise. Single-point ground (shared only through DB-9 pin 9, star at TP72), shield drain tied at one end, audio/CV lines interleaved with ground, digital lines kept away from analog pins, and an owned-parts fallback ladder for if hum still appears (100 nF in series with ground, small series resistor, the owned isolation transformer on audio).
 - Never add `Co-Authored-By` lines to commits or any file (user's global rule).
 - Do not mention music genre in any new or edited document. Task 5 removes existing mentions.
 - Diagram cards are self-contained light cards (own palette), fixed-width font, minimum 9px text, no clipped canvas, labels in knock-out boxes.
@@ -29,6 +32,9 @@
 - Two GPIO claims for one pin (e.g. a pin listed both as spare and allocated) must be caught by the checker.
 - A diagram or doc naming a pin that does not exist on the Pico (GP23-25, GP29) must fail validation.
 - A 5 V net reaching a Pico GPIO without a level shifter or divider must fail validation (RP2040 is not 5 V tolerant).
+- A digital cable line with no series resistor, or a design where powering only one side can feed an unpowered chip through a signal line, must fail validation and review.
+- A part in any design or BOM not marked "Have" (owned) must be flagged with an owned-part alternative.
+- Any ground path that creates a second ground connection between synth and rack (chassis, shield at both ends, USB ground through the Pico) must be flagged as a hum risk.
 - Any doc or diagram still routing +/-12 V (or any supply) across DB-9 B must be flagged as contradicting the split-power decision.
 - Manual build must not silently skip a missing SVG listed in `SVG_MAP`; it must report it (all 75 currently exist).
 
@@ -303,12 +309,29 @@ git add docs/superpowers/reviews
 git commit -m "docs: record audit decisions"
 ```
 
+### Task 4b: Owned-parts inventory, back-feed and hum design note
+
+**Files:**
+- Create: `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md`
+
+Controller dispatches the read-only analysis (an agent may not spawn subagents); an implementer writes the note.
+
+The note contains:
+1. **Owned-parts inventory:** every active/passive part referenced by the designs (ICs, transistors, diodes, resistor values, caps, pots, jacks, connectors) with status Have / Missing from `docs/hardware/MACROBRUTE_BOM.md` and `MACROBRUTE_SHOPPING_LIST.md`, and for each Missing part an owned-part alternative or a flagged question for the user.
+2. **Back-feed analysis per cable line:** for UART TX/RX, I2C SDA/SCL, clock/gate and the 5 V-domain gate path: what happens with expander on / synth off, synth on / expander off, and both on in either order; the series resistor value to use (from owned values) and any clamp or isolation arrangement (owned diodes only, e.g. BAT54S/1N5817/1N4148 if owned); I2C pull-up location so a pull-up never ties an unpowered side high; confirm no 5 V net reaches a Pico GPIO.
+3. **Hum design:** ground topology, shield termination, pin interleaving on both DB-9s, USB-MIDI ground-loop warning (Pico USB ground vs rack ground), and the fallback ladder in order of cost.
+4. **Per-line table** (line, source, destination, series R, protection, powered-side assumptions) that Task 5 copies into the connection map and Task 8's validator rule reads.
+
+- [ ] **Step 1:** Controller runs the analysis reviewers in parallel (power/back-feed; owned-parts inventory; hum/grounding), each writing a file under `.superpowers/` workspace `audit/`.
+- [ ] **Step 2:** One implementer merges them into the design note; any value not provable from datasheets or owned parts is marked UNVERIFIED with the bench test that settles it.
+- [ ] **Step 3: Commit** (`docs: add back-feed and hum design note`).
+
 ### Task 5: Apply documentation corrections
 
 **Files (modify):** `docs/MACROBRUTE_CONNECTION_MAP.md`, `schematics/pico_pinout.md`, `docs/MACROBRUTE_BUILD_PLAN.md`, `docs/MACROBRUTE_README.md`, `README.md`, `docs/hardware/MACROBRUTE_BOM.md`, `docs/MACROBRUTE_VISION.md`, others named by the audit report; plus the 12 files that mention genre: `README.md`, `docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md`, `docs/MACROBRUTE_MOD_SELECTION.md`, `docs/MACROBRUTE_BUILD_PLAN.md`, `docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md`, `docs/legacy/MACROBRUTE_MASTER_PLAN.md`, `docs/hardware/MACROBRUTE_BOM.md`, `docs/mods/microbrute_mods_guide.md`, `docs/mods/microbrute_circuit_bending_guide.md`, `docs/mods/touch_bend_specs.md`, `docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md`, `schematics/touch_plates.md`, and `spinoffs/jf33-eurorack/docs/pt2399_deep_bending.md`.
 
 - [ ] **Step 1:** Re-run `python3 tools/check_docs.py` and keep the list.
-- [ ] **Step 2:** For each Blocker/Should-fix row in the audit report, edit the affected doc to match the decision from Task 4 (pin tables first, then prose). Update the connection map and `firmware/pico/config.py` comments together when a pin role changes.
+- [ ] **Step 2:** Copy the back-feed/hum per-line table from `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md` into the connection map and breakout/expander docs, and swap any not-owned part for its owned alternative. For each Blocker/Should-fix row in the audit report, edit the affected doc to match the decision from Task 4 (pin tables first, then prose). Update the connection map and `firmware/pico/config.py` comments together when a pin role changes.
 - [ ] **Step 3:** Remove genre wording from the 13 files above (rewrite the sentence neutrally, e.g. "high-impact sound-shaping mods"); verify with a case-insensitive `grep -rIl` for the two genre words (kept out of this plan on purpose; the user knows them) over the project, excluding `.git`, `firmware`, and the generated manual, returning nothing.
 - [ ] **Step 4:** Run `python3 tools/check_docs.py && python3 -m pytest tools/tests -v`. Expected: exit 0, all tests pass.
 - [ ] **Step 5: Commit** (one commit per logical doc group)
@@ -421,7 +444,7 @@ git commit -m "feat: add shared diagram kit in stripboard-template style"
 - Consumes: `PICO_USABLE_GP` (Task 1).
 - Produces: `validate_nets(nets: dict[str, list[tuple[str, str]]], rails: dict[str, float]) -> list[str]`. A net is a name mapped to endpoints `(part, pin)`; rails maps net names to volts.
 
-Rules: (1) any `("PICO", "GPn")` endpoint with n not in `PICO_USABLE_GP` fails; (2) a GP used on two nets fails; (3) a net with rail voltage > 3.3 that touches a Pico GP endpoint fails unless it also contains a `("SHIFT", ...)` or `("DIV", ...)` endpoint; (4) a net with a single endpoint (floating) fails.
+Rules: (0) a net crossing the cable (`name` starts with `CABLE_`) must contain a `("R", ...)` series-resistor endpoint on the digital side (names `CABLE_UART_*`, `CABLE_I2C_*`, `CABLE_CLK_*`); (1) any `("PICO", "GPn")` endpoint with n not in `PICO_USABLE_GP` fails; (2) a GP used on two nets fails; (3) a net with rail voltage > 3.3 that touches a Pico GP endpoint fails unless it also contains a `("SHIFT", ...)` or `("DIV", ...)` endpoint; (4) a net with a single endpoint (floating) fails.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -445,6 +468,12 @@ def test_gpio_on_two_nets_rejected():
     nets = {"a": [("PICO", "GP4"), ("X", "1")], "b": [("PICO", "GP4"), ("Y", "1")]}
     assert any("GP4" in p for p in validate_nets(nets, {}))
 
+def test_cable_digital_line_needs_series_resistor():
+    bad = {"CABLE_UART_TX": [("PICO", "GP0"), ("DB9B", "1")]}
+    assert any("series" in p for p in validate_nets(bad, {}))
+    good = {"CABLE_UART_TX": [("PICO", "GP0"), ("R", "R1"), ("DB9B", "1")]}
+    assert validate_nets(good, {}) == []
+
 def test_floating_net_rejected():
     assert validate_nets({"a": [("X", "1")]}, {})
 ```
@@ -462,6 +491,9 @@ def validate_nets(nets, rails):
     for name, ends in nets.items():
         if len(ends) < 2:
             problems.append(f"net {name} is floating")
+        if name.startswith(("CABLE_UART", "CABLE_I2C", "CABLE_CLK")):
+            if not any(part == "R" for part, _ in ends):
+                problems.append(f"net {name} crosses the cable with no series resistor")
         gps = [p for part, p in ends if part == "PICO" and p.startswith("GP")]
         for gp in gps:
             n = int(gp[2:])
