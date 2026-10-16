@@ -236,7 +236,7 @@ All taps use 24AWG wire, soldered to test point pad.
 |------------|--------|-------|----------|-------------|
 | TP19 | VCF Output | Steiner-Parker out | 1kΩ | TL074 D +in → DB-9 A:6 |
 | TP30 | VCO Mix (pre-filter, TP30_MIXER_OUT) | AudioOut | 1kΩ | TL074 C +in → DB-9 A:5 |
-| TP10/TP11 | VCA CV inject | CV1/CV2, 100kΩ internal | 100kΩ + clamp (section 3) | From DB-9 B:3 |
+| TP10/TP11 | VCA CV inject | CV1/CV2, 100kΩ internal per TPV (R25); whether that 100kΩ is in series at TP10 is UNVERIFIED (E-18) | 100kΩ + clamp (section 3) | From DB-9 B:3 |
 | TP26 | Filter CV inject | via R67 (220kΩ) per TPV; position of that resistor UNVERIFIED (E-18) | 100kΩ + clamp (section 3) | From DB-9 B:5 |
 | TP5 | Envelope 2 Out | | 10kΩ | TL072 A +in → DB-9 A:3 |
 | Mod matrix | LFO | Normalled switching jack | 10kΩ | TL072 B +in → DB-9 A:4 |
@@ -311,7 +311,7 @@ around it. GP2, GP3 and GP11 are free, reserved (section 1). The protocol docume
 |----|-----|------|----------|--------|
 | B1 | VCF Insert | 3.5mm switched | **Remove R23** (100kΩ) | Tip=VCA side, Ring=VCF side, Sleeve=GND. Normal: path closed. Inserted: breaks VCF→VCA |
 | B2 | Metalizer Insert | 3.5mm switched | **Remove R216** (120kΩ) | Tip=wavefolder input, Ring=triangle output. Normal: triangle feeds wavefolder |
-| B3 | VCA CV Input | 3.5mm mono | None | Direct wire to TP10 (100kΩ already in circuit). External VCA control |
+| B3 | VCA CV Input | 3.5mm mono | None | Direct wire to TP10 (a 100kΩ is in the circuit per TPV, UNVERIFIED, E-18). External VCA control |
 
 ---
 
@@ -533,8 +533,9 @@ a buffer + jack, no round-trip to expander.
 **PWM slice note (audit S02):** RP2040 PWM slice = (GP >> 1) & 7, channel = GP & 1. GP26 is slice 5
 channel A, the same channel as GP10 (LED_MODE, 1 kHz): **GP26 cannot be used as a PWM DAC** while
 GP10 drives the mode LED. GP27 is slice 5 channel B and would be tied to GP10's 1 kHz slice
-frequency. GP28 is slice 6 channel A; its other slice pin, GP12, is a plain input (tap button). A pin
-used as PWM cannot also be read as ADC. A Pico PWM output reaching the MicroBrute would also need a
+frequency. GP28 is slice 6 channel A, **the same channel as GP12** (channel = GP & 1, slice = (GP >> 1) & 7),
+so the two share one duty value if both are ever PWM; GP12 is a plain input (tap button), so GP28 is
+usable as PWM while it stays that way. A pin used as PWM cannot also be read as ADC. A Pico PWM output reaching the MicroBrute would also need a
 cable pin, and DB-9 B has none free for signals (section 3).
 
 ### 12D. LPC2361 Firmware Bridge (Phase 6)

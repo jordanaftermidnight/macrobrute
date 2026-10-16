@@ -5,10 +5,10 @@ Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm.
 
 ## Phase 0 Bench-Validation Wiring
 
-The two diagrams above show the same Phase 0 circuit two ways:
+The two Phase 0 diagrams, `schematics/phase0_wiring_schematic.svg` and `schematics/phase0_breadboard.svg` (not embedded in this file), show the same Phase 0 circuit two ways:
 
-- **Schematic** — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
-- **Breadboard layout** — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
+- **Schematic** (`phase0_wiring_schematic.svg`) — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
+- **Breadboard layout** (`phase0_breadboard.svg`) — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
 Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; the 0.91″ strip OLED is dropped) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
 
@@ -16,8 +16,8 @@ Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; t
 
 | GPIO | Pin# | Function | Interface | Direction | Notes |
 |------|------|----------|-----------|-----------|-------|
-| GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16) |
-| GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15) |
+| GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16, pin 63; UNVERIFIED until the Phase 0 continuity check) |
+| GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15, pin 62; UNVERIFIED) |
 | GP2 | 4 | Free, reserved | — | — | config.py still names it I²C1 SDA for the shelved EFFIGY code |
 | GP3 | 5 | Free, reserved | — | — | config.py still names it I²C1 SCL for the shelved EFFIGY code |
 | GP4 | 6 | OLED SDA | I2C0 | In/Out | 0.96″ SSD1306 main (0x3C), the only device on I2C0 |

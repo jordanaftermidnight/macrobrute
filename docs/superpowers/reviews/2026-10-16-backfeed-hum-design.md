@@ -118,7 +118,7 @@ Status: Have (owner resistor kit, 2026-10-17). Series and power rating are not y
 | 1M pots | LFO rate, slew rise/fall | Missing (3) | A 100k pot changes the ranges by 10x; Q6 together with the LFO cap. |
 | 100k trimmers | Aux-out trims (BOM) | Missing (assortment kit has trim pots, values UNVERIFIED) | Q7, or fixed resistors. |
 | 3.5 mm jacks | Expander panel (16+ jacks after LFO + S&H, audit S52), MB panel jacks | Have (25), type unknown | Q8: are these PJ398SM / PJ301M style panel jacks (E-25)? |
-| DB-9 connectors | 2 on the MB rear panel, 2 on the expander | Have ("several" per owner 2026-10-17; count UNVERIFIED, earlier list says 2), gender and flange UNVERIFIED | Needs 4 panel connectors plus 2 cables (or 4 cable ends): Missing 2 + cables. Q9 (E-32). |
+| DB-9 connectors | 2 on the MB rear panel, 2 on the expander | Have ("several" per owner 2026-10-17; count UNVERIFIED, earlier list says 2), gender and flange UNVERIFIED | Needs 4 panel connectors plus 2 cables (or 4 cable ends): how many are Missing depends on the real count (UNVERIFIED), plus the cables. Q9 (E-32). |
 | HD-15 connectors | Rejected | Have (2), spare | Not usable (cable shorts pins 6-8 to GND, plan). |
 | Shielded 9-core cable (x2) and hoods | DB-9 A and B links | Missing | Q9. A ribbon cable is not acceptable (N19). |
 | Insulating shoulder washers | Expander-side DB-9 shells (section 4.2) | Missing | Q10. |
@@ -411,7 +411,7 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q6 | LFO timing: buy a film capacitor and 1M pots, or accept a different range with owned parts? |
 | Q7 | Aux-out trimmers: buy or use fixed resistors? |
 | Q8 | Type of the 25 owned 3.5 mm jacks (panel mount, Thonkiconn-compatible?). |
-| Q9 | DB-9 count: 4 panel connectors plus 2 shielded cables needed; 2 connectors owned (gender and flange unknown). |
+| Q9 | DB-9 count: 4 panel connectors plus 2 shielded cables needed; the owner has "several" connectors (count UNVERIFIED; the earlier list said 2; gender and flange unknown). |
 | Q10 | Insulating shoulder washers for the expander-side DB-9 shells, or accept the alternative shield rule? |
 | Q11 | Keyed Eurorack 16-pin header and ribbon. |
 | Q12 | RGB LED and tactile button for the expander UI. |

@@ -30,7 +30,7 @@ OLED_COL_OFFSET  = 0       # SSD1306 = 0; set to 2 if using SH1106
 #   remain only because strip_display.py still reads them; a later firmware
 #   task removes both.
 # ---------------------------------------------------------------------------
-STRIP_OLED_I2C_ID = 0      # Same bus as main OLED
+STRIP_OLED_I2C_ID = 0      # DROPPED (strip OLED); would be the main OLED's I²C0, which stays on the expander
 STRIP_OLED_WIDTH  = 128
 STRIP_OLED_HEIGHT = 32
 STRIP_OLED_ADDR   = 0x3D   # SSD1306 alt address (must be jumpered on module)
@@ -65,7 +65,7 @@ BTN_TAP    = 12            # GP12 — Tap tempo (short) · Manual gate (long)
 # ---------------------------------------------------------------------------
 LED_CLOCK  = 8             # GP8  — RGB R channel (clock pulse)
 LED_GATE   = 9             # GP9  — RGB G channel (gate activity)
-LED_MODE   = 10            # GP10 — RGB B channel (mode / pair status)
+LED_MODE   = 10            # GP10 — RGB B channel (mode indicator; the old "pair status" meaning is shelved)
 
 # ---------------------------------------------------------------------------
 # Clock I/O (3.3 V logic on expander panel jacks)
@@ -115,7 +115,7 @@ DAISY_SDA    = 2           # GP2  — I²C1 SDA
 DAISY_SCL    = 3           # GP3  — I²C1 SCL
 DAISY_INT    = 11          # GP11 — INT input from EFFIGY (active-low, pull-up)
 DAISY_ADDR   = 0x42        # Shared contract — see bridge spec
-DAISY_FREQ   = 100_000     # 100 kHz over rear cable
+DAISY_FREQ   = 100_000     # SHELVED, n/a: no rear cable is fitted (EFFIGY pairing shelved)
 
 # ---------------------------------------------------------------------------
 # Free GPIO inventory
