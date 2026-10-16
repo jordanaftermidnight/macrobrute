@@ -22,6 +22,44 @@ Conventions: CM = docs/MACROBRUTE_CONNECTION_MAP.md, BP = docs/MACROBRUTE_BUILD_
 
 Counts: 17 Blockers (2.1), 76 Should fix (2.2), 24 Nice (2.3), 16 conflicts (section 3), 9 owner decisions (section 4). Raw checker output is in Appendix A.
 
+## 1a. Decisions (owner, 2026-10-17)
+
+Recorded from the plan's "DECIDED (owner answers, 2026-10-17)" line and the owner's follow-up messages. These override the recommendations in section 4 where they differ.
+
+| # | Decision | Effect on this audit |
+|---|---|---|
+| a | DB-9 location confirmed: MicroBrute rear panel, left of the Pitch/Gate section. | Conflict C5 is partly settled: the face is the rear panel (owner statement). All dimensions stay UNVERIFIED until the caliper list in section 4 item 6 is done (E-20, E-21). |
+| b | The EFFIGY I2C pairing is SHELVED: rear JST-XH header, GP2/GP3/GP11, `docs/MACROBRUTE_EFFIGY_BRIDGE.md` and `firmware/pico/effigy_bridge.py` are archived as an idea for another project. Nothing is designed around it. | GP2, GP3, GP11 become free. Findings about the EFFIGY header and its pull-ups (r2 budget row, S01 wording) no longer drive any design. |
+| c | The 0.91" strip OLED is DROPPED. I2C0 serves only the 0.96" main OLED on the expander. NO I2C crosses the DB-9 cable. | Decision 4 (strip OLED supply) is withdrawn. Conflict C4 is moot. S14, S47 and the cable part of S38 and S05 are moot (I2C0 is now a short on-board bus; the 100 vs 400 kHz doc/code mismatch in S05 remains a local doc fix only). |
+| d | DB-9 B carries UART TX, UART RX, Filter CV, VCA CV and grounds only. The final map is derived in `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md` with the rule "grounds between CV and digital". | Decision 1 changes status: the owner did NOT choose any of the offered maps (r5, r3 H-3, r2 MB_ALIVE). The recommended r5 map (I2C on 7/8) is void because I2C is off the cable. Conflict C1 is superseded by the design note's map. Whether freed pins carry any signal: no, they are grounds (design note section 2). |
+| e | Expander width stays open until the owner measures the blank; plan both 17 HP and 20 HP layouts. | Decision 5 stays open (E-22, E-23). |
+| f | The idea of reusing an OLED and Arduino from the TD3 project is SCRAPPED (owner, 2026-10-17). Baseline stays Pico WH + 0.96" SSD1306 main OLED on the expander. | Not an open item. |
+| g | Freed GPIOs GP2, GP3, GP11 plus GP26-28 give 6 spare Pico pins. | Conflict C9 is resolved: 6 spare pins (GP2, GP3, GP11 fault-tolerant digital; GP26-28 ADC-capable). r2's SoftI2C and I2C_PU_EN proposals are moot (no strip OLED); MB_ALIVE is not needed (design note section 3). |
+| h | Power is split; no supply rail crosses the cable (already decided 2026-10-16). | Unchanged. |
+| i | Owned parts added by the owner (2026-10-17): the KY-040 (HW-040) encoder module and "some vactrols" are Have. The vactrol part number and type are unknown. | Affects S37 / R3-12: the op-amp voltage-to-current driver needs the vactrol LED's forward-current rating, which is UNVERIFIED until the owner reads the marking. |
+
+Status of the other decisions in section 4: decision 2 (series R table) is answered by the design note, with values still subject to its bench tests; decision 3 (breakout 5 V from an owned 78L05) is Provisional (audit recommendation, owner has not confirmed) and only needed if the breakout keeps a 5 V CD40106 gate stage; decision 7 (LPC bridge UART) stays open until the continuity check; decisions 8 and 9 are unchanged apart from the EFFIGY archive in (b).
+
+## 1b. Datasheet findings (docs/DATASHEETS.md)
+
+The datasheets collected in `docs/DATASHEETS.md` settle or narrow these items. Page numbers are PDF page numbers as given in DATASHEETS.md. Anything the datasheets did not prove stays UNVERIFIED.
+
+| Item | Datasheet fact (source, page) | Audit items affected | Status |
+|---|---|---|---|
+| LPC2361 UART pin numbers | P0.2/TXD0 = pin 98, P0.3/RXD0 = pin 99, alternates TXD0/RXD0 only; P0.15/TXD1/SCK0/SCK = pin 62, P0.16/RXD1/SSEL0/SSEL = pin 63 (LPC2361/62 data sheet Rev. 03, Table 3, p5-p6). The docs' "97/96" are power pins: pin 97 = VSS, pin 96 = VDD(3V3) (p12). | S07, E-30, U3; C6 (pin numbers only); B01 and E-01 continuity step | S07, U3 and E-30 settled: use 62/63 and 98/99; any probe placed on 96/97 per the old docs would land on supply or ground. C6 partly settled: the pins to probe are confirmed; which UART the stock MIDI uses (UART3 per r1) and which pins are free on the board remain UNVERIFIED until the continuity check (E-01, E-02). Caveat from DATASHEETS.md: Rev. 03 (2008); re-check against Rev. 5.1 if obtained. |
+| LPC2361 input limits | 5 V tolerant pads; input abs max -0.5 to +6.0 V only when VDD(3V3) is present, otherwise VDD(3V3) + 0.5 V (Table 4, p33); VDD(3V3) 3.0-3.6 V (p33). | E-11, S45, C2 | Partly settled: an unpowered LPC pin is rated only to 0.5 V, so nothing may drive it high while the synth is off. Actual current into an unpowered pad is not specified: bench check stays. |
+| 1N5817 rating | VRRM 20 V, not 40 V; IO 1 A; VF 0.450 V max at 1 A (Vishay 88525 p1; Diodes DS23001 p2). A 40 V / 1 A part is the 1N5819. | BOM line 9 ("40V 1A"), S21, E-07 | Rating settled: BOM text is wrong. 1N5817 is adequate for a 5 V rail. The drop at 35-60 mA (E-07) is a curve reading (Vishay Fig. 3, p2) not yet taken: E-07 stays open. |
+| LF398 pinout and leakage | PDIP-8: 1 V+, 2 OFFSET ADJUST, 3 INPUT, 4 V-, 5 OUTPUT, 6 Ch, 7 LOGIC REFERENCE, 8 LOGIC (TI SNOSBI3C p3). Supply +/-5 to +/-18 V (p1, p4). Leakage into the hold cap 30 pA typ, 200 pA max for LF398-N at 25 C (p7); derived droop 30 mV/s typ, 200 mV/s max with 1 nF (DATASHEETS.md derivation, not a TI figure). Low-DA dielectrics: polystyrene, polypropylene, Teflon (p15). | B13, S63, E-26, S18 (LF398 figure) | B13 and E-26 settled: all three repo pinouts are replaced by the list above; r4's "tens of pA" was right and the docs' "3 mV/s" with 1 nF is wrong. The 1 nF ceramic is confirmed unsuitable. LF398 supply current still not quoted in DATASHEETS.md. |
+| RP2040 not 5 V tolerant | IOVDD abs max 3.63 V; voltage at an IO pin -0.5 V to IOVDD + 0.5 V (RP2040 datasheet Table 622, p615); no 5 V tolerance stated. ADC GPIO26-29 have a reverse diode to IOVDD and must not exceed 3.3 V (Pico datasheet p20). Total GPIO source and sink 50 mA each (p617). | S13, S46, R3-10, E-11 | Settled: no 5 V net may reach any Pico GPIO; Clock IN (S46) needs protection. Behaviour with IOVDD off: see the design note (RP2040 Table 614 "fault tolerant" pins), bench check stays. |
+| CD4049UB inputs above VCC | TI SCHS046L p1: VIH can exceed VCC when used for logic-level conversion; max input current 1 uA at 18 V. Abs max lists only +/-10 mA DC input clamp current, no separate input-voltage limit (p5). Caution, read for this update and not yet in DATASHEETS.md: the same sheet, section 8.2.2 (PDF p17), says "Inputs are not overvoltage tolerant and must be below VCC level because of the presence of input clamp diodes to VCC." | C16, E-10, S13 | Partly settled. The TI sheet contradicts itself (p1 vs p17). r5's warning (input diode to VCC) is supported by p17; r3's "diode to VSS only" is not supported. Treat the 4049 input as clamped to VCC until a bench test shows otherwise (E-10 stays open as a bench test). |
+| CD40106B inputs | Inputs abs max -0.5 V to VDD + 0.5 V, +/-10 mA (TI SCHS097F p4). Pinout p3. | S31, S33, C11 | Settled for the limit: inputs above VDD are not allowed. Additional fact read for this update (not yet in DATASHEETS.md): positive trigger threshold at VDD = 5 V is 2.2 V min, 2.9 V typ, 3.6 V max at 25 C (p5-p6), so a 3.3 V TP83 high is not guaranteed to trigger. TP83's level (E-09) stays UNVERIFIED. |
+| CP1A and 16-pin bus | +12 V @ 1 A (pins 9, 10); -12 V @ 1 A (pins 1, 2); +5 V @ 0.5 A (pins 11, 12); GND pins 3-8; pins 13-16 not used (CP1A QSG p15, p20). Pin 1 is -12 V and goes to the red stripe (p15). Doepfer A-100 bus order from the bottom: -12 V, GND, GND, GND, +12 V, +5 V, CV, Gate (a100t_e page text and a100b_e.gif). | S26, S27, E-08, N04, P-C4 | S26 settled (CP1A +5 V is 0.5 A, the diagrams' "1 A" is wrong). S27 and E-08 settled: both the repo drawing (1-4 -12 V ...) and r2's recollection (11-12 +12 V) are wrong; correct is 1-2 -12 V, 3-8 GND, 9-10 +12 V, 11-12 +5 V, 13-14 CV, 15-16 Gate. Whether the owner's bus slot actually carries +5 V (E-14, N07) still needs a meter. |
+| DB-9 hole spacing | Shell size 9 panel cut-out: mounting-hole spacing 0.984 in (24.99 mm), cut-out 19.74 x 11.18 mm, holes 3.18 mm (Spectrum Control p1); Winford cut-out 0.81 x 0.45 in, max panel 0.062 in (p1). Flange outer size NOT FOUND. | E-21, decision 6 | Partly settled: 24.99 mm hole spacing; the owner's "24.5 x 11 mm" cut-out does not match either drawing. Flange size, body depth, gender and the pin-row neighbour geometry stay UNVERIFIED for the exact connector. |
+| Pico power | VSYS 1.8-5.5 V; 3V3 output load below 300 mA (Pico datasheet p9); VBUS reaches VSYS through on-board Schottky D1, and an external supply into VSYS should be ORed through another Schottky (p21-p22). | E-31, N05, P-C5 | Settled: 1N5817 from rack +5 V into VSYS is a valid arrangement; USB and rack 5 V can both be present without back-feeding VBUS. The ground loop through USB (S25) is a separate issue. |
+| LPC2361 VIH | Read for this update (not yet in DATASHEETS.md): standard port pins VIH 2.0 V min, VIL 0.8 V max (Table 5, p34). | S30, R3-13 | Settled: r2/r3's "0.7 x VDD = 2.31 V" was a memory value; the datasheet says 2.0 V. The conclusion of S30 (no divider, no shifter on a 3.3 V to 3.3 V UART) stands. |
+
+Items the datasheets did NOT settle and that stay UNVERIFIED: E-01 to E-05, E-09 (TP83 level), E-12 (moot after decision c), E-13 (cable capacitance), E-15 to E-20, E-22 to E-25, E-27 to E-29, E-32; TL07x and LF398 supply currents (E-06); D-sub neighbour geometry (C1 assumption).
+
 ## 2. Findings, ranked by severity
 
 ### 2.1 Blockers
@@ -166,6 +204,7 @@ C1. DB-9 B pin map (r5 vs r2 vs r3).
 - r3 (H-3): B:1 TX, B:2 RX, B:3 SDA, B:4 SCL, B:5 GND, B:6 GND, B:7 Filter CV, B:8 VCA CV, B:9 GND (CVs on freed pins, flanked by guard grounds).
 - All three keep the D-sub half-pitch neighbour geometry as an UNVERIFIED assumption.
 - Settles it: (i) the datasheet or a caliper check of the exact connector confirming neighbour geometry; (ii) a decision whether any freed pin carries a signal (MB_ALIVE) or only ground; (iii) a scope or bench crosstalk measurement of Filter CV/VCA CV next to the chosen digital neighbour; (iv) the firmware GPIO budget (C9), since MB_ALIVE needs a Pico input that does not exist today.
+- Status (2026-10-17): superseded. With I2C and supplies off the cable (section 1a c, d) none of the three maps applies; the final map is in the back-feed and hum design note, section 2. Neighbour geometry still UNVERIFIED.
 
 C2. Series resistor values.
 - r5 (7.2): UART 1k at both ends of each line; I2C 100-220 ohm at both ends; CV 10k at the expander output plus existing 1k and BAT85 at the MB; DB-9 A inputs on the expander at least 10k.
@@ -173,6 +212,7 @@ C2. Series resistor values.
 - r3 (C.1): UART 1k-2.2k at the Pico end of both lines (plus 1k at the LPC end if accessible); I2C 220-470 ohm both ends; gate 1k at the CD40106 output; pitch 100-220 ohm; CV in keep 100k+ ("do not use 1k"); clock IN 100k; clock OUT 1k. r3 gives ranges; it is not silent on values.
 - Also: r3 R3-14 wants 2.2-3.3k I2C pull-ups for long cable; r5 says 4.7k is fine for 1 m and up to about 2 m; r5 notes I2C series R above a few hundred ohms breaks the low level (3 mA x 1k = 3 V).
 - Settles it: bench test with each side off in turn (parasitic voltage on the other side's rail under about 0.3 V per r5); LPC2361 and RP2040 datasheet clamp and Ioff behaviour (UNVERIFIED by all three); a measured cable capacitance with an LCR meter; the 115200-baud edge check with the chosen R and about 150 pF.
+- Status (2026-10-17): one table chosen in the design note section 3 (UART 1k at both ends per r5; CV 10k at the expander plus 100k on the MB side per r2/r3); I2C rows are moot. Values stay subject to the bench tests named there.
 
 C3. Source of 5 V and place of the level shifter (r2 vs r3, r5 on the strip OLED).
 - r2: synth has no verified 5 V; generate a breakout-local 5 V with the owned 78L05 from +12V_BRK; move the CD4049 to the expander on Pico 3V3.
@@ -182,6 +222,7 @@ C3. Source of 5 V and place of the level shifter (r2 vs r3, r5 on the strip OLED
 - Settles it: scope/meter the MB at TP56 (+5VNUM), P4 pin 5 and TP141 for voltage and ripple (TPV marks TP56 as "per original doc" only); read the synth schematic for the +3V3ARM current margin; confirm the 78L05 dropout and dissipation at the actual +12V_BRK (r2: about 0.17 W at 25 mA); decide what the breakout actually needs 5 V for (CD40106 only, OLED, vactrol).
 
 C4. Strip OLED supply and bus. r2: OLED from the local 5 V with module pull-ups removed, own SoftI2C bus and gated pull-ups. r5: OLED from MB 3V3, one 4.7k pair at the Pico end, shared bus. r3: 220-470 ohm series on both ends, convert via a 4049 if the module pulls up to 5 V. Settles it: measure the module's SDA-to-VCC resistance and its idle SDA voltage; measure VDD on the module with the synth off and the Pico running (r2: accept under about 0.5 V).
+   Status (2026-10-17): moot. The strip OLED is dropped (section 1a c).
 
 C5. Is "rear panel" the correct face (r5 vs the decided facts). r5 found the "MICROBRUTE" name and the Arturia "A" logo on the top panel in every repo photo (IMG_6964, IMG_6972), lower-left of the Pitch/Mod wheels, while the Kensington slot is on the rear. The decided facts and BP:291-292 use "rear panel". r5 could not open the 4 DNG files. Settles it: an owner photo of the rear face, square-on, with a scale, and a statement of which face is meant; the caliper list in decision 6.
 
@@ -189,12 +230,15 @@ C6. Stock MIDI UART (r1 vs r5/mbf_analysis).
 - r5 (F-10) and docs/research/mbf_analysis.md:210 treat the stock MIDI UART as 0xE0010000 (UART1?).
 - r1's disassembly: MIDI is UART3 at 0xE007C000; UART1 and UART2 have no literal references (not exhaustive: a run-time-built base would not show). r1 also notes mbf_analysis.md:445 itself says "0xE007C000, NOT UART0" and that CM 12D and CM 5.4 conflict.
 - Settles it: Ghidra check that nothing writes UART1/UART2 registers via a computed base; continuity probing on pins 62/63, 98/99, 85 (section 5, E-01).
+- Status (2026-10-17): partly settled by the LPC2361 datasheet (pin numbers 62/63, 98/99 confirmed, section 1b). Which UART the stock firmware uses and which pins are free stay UNVERIFIED.
 
 C7. Ownership source. r2 cites a BOM "Component Inventory (Purchased)" section with status "Have"; r3 and r5 state docs/hardware/MACROBRUTE_BOM.md has no Have/Need column and that the owned list is in CM:485-511 (r5: CM:482-512). Settles it: check which file holds the list and add a single inventory table.
 
 C8. Which end the shield ties to and the pin-9 policy. r2 (ladder step 2): braid to ground at the expander end only, A:9 audio return and B:9 digital return meeting at TP72 on the MB and at the rack 0 V on the expander, with a B:8 ground-sense difference-amp. r5 (F-05,F-06): braid and shell to the MB end only, cut the bond at the expander hood, A:9 and B:9 both to TP72 and to one expander star. r3 (H-2): MB-side per the docs, with insulating washers at the expander end. Settles it: continuity of the shell to the panel on both ends, a measured hum with each option, and the owner's decision on cable construction.
+   Status (2026-10-17): one rule chosen in the design note section 4 (braid and shell bonded at the MicroBrute end only, to TP72). Shell-to-panel continuity (E-15) stays UNVERIFIED.
 
 C9. GPIO budget for r2's proposals. r1 proves all of GP0-22 are used and only GP26-28 are free. r2 proposes SoftI2C on GP26/GP27 for the strip OLED, an I2C_PU_EN GPIO, an MB_ALIVE input, and (P-F4) a gate-mirror input: five or more GPIOs against three. r1 F2 also notes GP26 PWM shares a slice with GP10. Settles it: a pin allocation in config.py that fits (for example drop the dedicated strip bus, or drop MB_ALIVE).
+   Status (2026-10-17): resolved by the owner (section 1a g): 6 spare pins; r2's SoftI2C, I2C_PU_EN and MB_ALIVE are not needed.
 
 C10. U2 part. r2 recommends 2x TL074 (owned x4); r3 recommends 2x TL072 (owned x6) with sections allocated U2A env, U2B LFO, U2C triangle, V-to-I. Settles it: a single section count and the owned stock after the decision on whether the vactrol driver stays on the breakout (r3 R3-12).
 
@@ -207,8 +251,10 @@ C13. Locus of the -12 V diode error. r3 (R3-07) locates the backwards diode in S
 C14. PCB/stripboard source of truth. r3 treats LAY as the correct geometry and SB as wrong (B16); SB and PCB differ on U2 (S17), board size and U1 position. Settles it: regenerate SB from LAY after the fixes in S34, then re-parse.
 
 C15. I2C frequency and cable length. r1 F5 says code runs I2C0 at 400 kHz; docs say 100 kHz; r5 calculates 100 kHz with 4.7k is fine to about 2 m (UM10204 limits, from memory, UNVERIFIED); r3 says use 2.2-3.3k pull-ups and keep 30 cm-1 m. Settles it: measured cable capacitance and a scope of rise time at the chosen pull-up.
+   Status (2026-10-17): moot for the cable (no I2C on the DB-9). The doc/code frequency mismatch (S05) stays as a local doc fix.
 
 C16. 4049 input behaviour. r2 and r3 both say CD4049UB inputs may exceed VDD but that is UNVERIFIED; r5 warns the 4049 must not be used as a buffer because its input diode to VDD clamps a driven signal when its own rail is down; r3 says a 4049 input has a diode to VSS only. These are three unverified claims about one part. Settles it: the CD4049UB datasheet absolute maximum ratings and input structure (E-10).
+   Status (2026-10-17): partly settled. TI SCHS046L p1 says VIH may exceed VCC; section 8.2.2 (PDF p17) says inputs have clamp diodes to VCC and must stay below VCC. The sheet contradicts itself; design treats the input as clamped (design note). Bench test E-10 stays.
 
 ## 4. Decisions needed from the owner
 
