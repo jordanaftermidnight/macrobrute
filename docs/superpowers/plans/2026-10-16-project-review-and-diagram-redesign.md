@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Canonical pin source is `firmware/pico/config.py`; `docs/MACROBRUTE_CONNECTION_MAP.md` must agree with it (its own header says so).
-- DECIDED (2026-10-16): connector stays 2x DB-9 (HD-15/VGA rejected: cable shorts pins 6-8 to GND; no DB-25 on hand). Both mount on the MicroBrute rear panel where the Arturia "A" logo is, between the MicroBrute name and the Kensington slot, above the Pitch/Gate section. Dimensions UNVERIFIED until the user measures the panel.
+- DECIDED (2026-10-16): connector stays 2x DB-9 (HD-15/VGA rejected: cable shorts pins 6-8 to GND; no DB-25 on hand). Both mount on the MicroBrute rear panel where the Arturia "A" logo is, between the MicroBrute name and the Kensington slot, to the left of the Pitch/Gate section. Dimensions UNVERIFIED until the user measures the panel.
 - DECIDED: power is split. The expander is powered only from the Eurorack rack. The MicroBrute-side breakout (onboard mods) is powered only from the synth. No supply rail crosses the DB-9 cable, so DB-9 B pins 7/8 are freed; only a shared ground (pin 9) joins the two systems.
 - DECIDED: the expander gains an LFO and a Sample & Hold. They are standalone rack utilities (no synth cabling), powered from the rack.
 - The LPC bridge UART and the "spare GPIO" claim must be settled with evidence, not assumption (Task 3).
