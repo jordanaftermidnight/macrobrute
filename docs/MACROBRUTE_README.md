@@ -10,13 +10,16 @@ where you're standing right now.
 The **MACROBRUTE** turns a stock Arturia MicroBrute into a deeply modified,
 expander-paired hybrid synth:
 
-- **Inside the MicroBrute:** a small breakout PCB that taps the existing
-  test points, adds buffered jacks, touch bends, and a Raspberry Pi Pico WH
-  for clock / display / extra UI. Optionally, a custom firmware on the
-  stock LPC2361 to add a sequencer + arpeggiator over the existing engine.
-- **Outside the MicroBrute:** a 17 HP Eurorack expander module that pairs
-  to it over a 2× DB-9 cable, exposing waveform outs, CV ins, and utility
-  modules (LFO, noise, S&H, slew, attenuverter, clock divider).
+- **Inside the MicroBrute:** a small buffer-only breakout board that taps the
+  existing test points and adds jacks and touch bends. It is powered only from
+  the synth (TP70/TP71/TP72). The Pico is not inside the MicroBrute.
+  Optionally, a custom firmware on the stock LPC2361 to add a sequencer +
+  arpeggiator over the existing engine.
+- **Outside the MicroBrute:** a Eurorack expander module (17 HP or about 20 HP,
+  width open) that hosts the Raspberry Pi Pico, display and controls, and pairs
+  to the synth over 2× DB-9 on the MicroBrute rear panel (left of Pitch/Gate),
+  exposing waveform outs, CV ins and utilities: slew limiter, LFO, S&H,
+  firmware clock dividers and aux outs. Noise, mult and attenuverter stay out.
 
 The endgame is **two boxes that talk to each other** — the synth keeps
 working stock if the expander is unplugged.
@@ -47,9 +50,10 @@ That's it for the orientation pass. Don't try to read top-to-bottom.
 Skip the planning docs and do **Phase 0 bench validation** first. It's
 non-destructive, takes a weekend, and uses ~$30 of parts.
 
-1. **Section 2 → Phase 0 starter BOM** — the minimal kit (Pico WH, dual
-   OLEDs, KY-040 encoder, breadboard, jumpers, RGB LED, a handful of
-   resistors and 3.5 mm jacks). Order these and nothing else yet.
+1. **Section 2 → Phase 0 starter BOM** — the minimal kit (Pico, one
+   OLED, KY-040 encoder, breadboard, jumpers, RGB LED, a handful of
+   resistors and 3.5 mm jacks). Check the Have column first; order only
+   what is missing.
 2. **Section 1 → "Phase 0 Bench Validation" section of the build plan** —
    the wiring + flash + test procedure.
 3. **Section 4 → Phase 0 Breadboard Layout SVG** — what the wired-up
@@ -128,14 +132,22 @@ Locked (don't propose changes here without strong reason):
 
 - **2× DB-9 connector** as the MB ↔ expander interface (HD-15 was rejected;
   see Key Decisions in the Master Index for why).
-- **Pico WH GPIO assignments** — every pin has been verified for
-  peripheral conflicts; see `schematics/pico_pinout.md`.
-- **Power scheme** — separate supplies, signal ground only via DB-9.
-- **Expander size** — 17 HP fits the user's pre-cut panel.
+- **Pico GPIO assignments** — `firmware/pico/config.py` is canonical; see
+  `schematics/pico_pinout.md` and the connection map. 6 pins are free
+  (GP2, GP3, GP11, GP26-28).
+- **Power scheme** — split: the expander runs from the rack only, the
+  breakout from the synth only; only ground is shared over the DB-9.
+  No supply rail and no I²C cross the cable.
 
 Still in flux (your input welcome):
 
-- Resonance vactrol — model + LDR resistance not yet picked.
+- **Expander size** — 17 HP or about 20 HP, open until the owner measures
+  the blank.
+- Pico variant, main OLED size/interface and the DB-9 count are for the
+  owner to confirm (BF Q21, Q22, Q9).
+- LPC bridge UART (UART1 is the working assumption, UNVERIFIED until the
+  Phase 0 continuity check).
+- Resonance vactrol — owned, but the part number and LED rating are unread.
 - Whether the 9th touch bolt (envelope retrigger, M11) makes the cut.
 - Final mix of 6 panel touch bolts from the 8 documented bends.
 - Whether the optional LPC2361 custom firmware ships with v1.

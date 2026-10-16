@@ -12,15 +12,15 @@ they go deeper on the analog circuits.
 
 ## Phase 0 — Bench validation (Pico + breadboard)
 
-### Both OLEDs report dead, or only one shows up
+### The OLED shows nothing
 
-Both 0.96″ and 0.91″ SSD1306 modules ship with I²C address `0x3C` by default.
-On a shared bus that's a hard collision — only one device responds and the
-other looks dead.
+The strip OLED is dropped, so I²C0 carries one device: the main 0.96″ SSD1306
+at `0x3C` (a few modules use `0x3D`). Confirm with an I²C scan from the Pico:
+`for addr in I2C.scan(): print(hex(addr))` should print `0x3c`.
 
-**Fix:** before applying power, move the strip OLED's ADDR jumper (or solder
-pad) to put it on `0x3D`. Confirm with an I²C scan from the Pico:
-`for addr in I2C.scan(): print(hex(addr))` should print both `0x3c` and `0x3d`.
+**Fix:** if the scan is empty, check SDA/SCL are not swapped (GP4 = SDA,
+GP5 = SCL), then VCC and GND. If the owned module has a 7-pin header it is an
+SPI module, not I²C, and the display driver and pins change (BF Q22).
 
 ### KY-040 encoder reports two ticks per detent
 
@@ -65,14 +65,17 @@ on the FAT partition.
 
 ### -12V rail measures +12V (or vice versa)
 
-The protection diode (1N5817) on the -12V rail must be installed with the
-**cathode towards the rail** — the schematic shows the band on the rail
-side. Reversed, the diode forward-biases the wrong way and clamps -12V to
-~+0.3V or worse.
+The protection diode on the -12V rail (an owned BAT85, or a 1N5817 if one is
+bought) must be installed with the **cathode toward the TP71 / -12 V header
+side and the anode toward the breakout rail** (audit B15). The old text here
+said the opposite. Installed the wrong way round, the diode blocks the normal
+-12 V current and the V- pins float near 0 V.
 
-**Fix:** check the band orientation on each 1N5817 before powering up.
-Multimeter diode-test mode: probe red on the band-side, black on the
-plain-side, you should read ~0.25 V (Schottky forward drop).
+**Fix:** check the band orientation on each diode before powering up. The band
+marks the cathode: it goes to the -12 V (TP71) side. Multimeter diode-test
+mode: probe red on the plain (anode) side and black on the band (cathode)
+side, you should read the Schottky forward drop (BAT85 about 0.24 V at 0.1 mA,
+0.4 V at 10 mA).
 
 ### TL074 outputs sit at +12V (or -12V) when no signal applied
 
@@ -85,9 +88,11 @@ test point. See CIRCUIT_REVIEW.md §2.
 
 ### Ferrite beads (FB1/FB2) burning hot
 
-You used 100 mΩ DC resistance ferrites at full op-amp current. Fine on
-paper but the cheap eBay ones run hot. Switch to specified 100 Ω @ 100 MHz
-beads (Murata BLM31 series or equivalent), DC resistance ≈ 30 mΩ.
+Ferrite beads are not part of the decided breakout power chain (they are not
+owned; audit S20 and decision 8). If you did fit them, a bead's rating is an
+impedance at 100 MHz, not a DC resistance, and cheap ones run hot at full
+op-amp current. Omit the beads, or use 10 Ω in series with 2-4× 10 µF in
+parallel where filtering is wanted (CM 5.3).
 
 ### TL074 audio sounds clipped or distorted at line-level
 
@@ -115,13 +120,13 @@ are *deliberately* exposed — those will pop too, by design.
 
 ### Audio bleeding from one buffered output into another
 
-Ground loop. The breakout taps TP72 as a star ground. Make sure each test
-point's *signal* tap and the *return* go to TP72 via the breakout, not via
-the MicroBrute's own ground rail.
+Ground loop. TP72 is the MicroBrute-side star ground. Every DB-9 ground pin
+and the breakout ground go to TP72 by their own short wires, not through the
+breakout's ground strip and not via the MicroBrute's own ground rail.
 
-**Fix:** verify your wiring against `MACROBRUTE_CONNECTION_MAP.md`. The
-"signal goes via DB-9, ground returns via DB-9 pin 9 only" rule is
-load-bearing.
+**Fix:** verify your wiring against `MACROBRUTE_CONNECTION_MAP.md` section 11.
+The rule is load-bearing: the DB-9 ground conductors (A:9; B:2, 4, 7, 8, 9) are the
+ONLY ground connection between the synth and the rack.
 
 ### Test-point voltage on a multimeter is "noisy" / unstable
 
@@ -170,14 +175,20 @@ If you see open circuit, the wire's broken or the track's cut.
 
 ### Audio sounds different through the expander vs. direct from synth
 
-Expected — the expander uses TL072 unity-gain followers at the receive
-side. Sound *should* be ~indistinguishable. If you hear hum: the cable
-is acting as an antenna because the shield isn't connected at the
-expander side.
+Expected: the A outputs are buffered on the MicroBrute side, and the expander
+jacks are passive. Sound *should* be ~indistinguishable. If you hear hum, work
+through the fallback ladder in `MACROBRUTE_CONNECTION_MAP.md` section 11 (BF 4.5),
+in order, and measure after each step.
 
-**Fix:** terminate DB-9 pin 9 (GND) at the expander, not just at the
-synth side. The cable shield should connect to one side only; pick the
-expander.
+**Fix:** the shield rule is one end only: the braid is bonded to its connector
+shell at the **MicroBrute end**, that shell is wired with a short lead to TP72,
+and at the expander end the braid is cut back and insulated and the panel shell
+is isolated from the aluminium panel (insulating shoulder washers, BF 4.2). A
+molded off-the-shelf cable bonds the braid at both hoods and must be modified.
+The ground conductors are terminated at both ends. The older advice here to
+pick the expander end is replaced; swapping the bond to the expander end is
+ladder step 3, to be tried only if hum persists. Never connect USB to the Pico
+while the DB-9 cables are connected.
 
 ### Eurorack modules see noise / tick on +12V rail
 
@@ -223,10 +234,15 @@ file) is your reference.
 
 Three things to check, in order:
 
-1. **TX/RX crossed?** Pico GP0 (TX) → LPC P0.16 (RX); Pico GP1 (RX) ←
-   LPC P0.15 (TX). It's a *cross* — tx-to-rx, not tx-to-tx.
+1. **TX/RX crossed?** Pico GP0 (TX) → DB-9 B:1 → LPC P0.16 (RXD1, pin 63);
+   Pico GP1 (RX) ← DB-9 B:6 ← LPC P0.15 (TXD1, pin 62). It's a *cross* —
+   tx-to-rx, not tx-to-tx. The LPC UART is UART1, **UNVERIFIED** until the
+   Phase 0 continuity check passes; if the check found those pins taken, the
+   bridge may use the ISP UART (pins 98/99) instead.
 2. **Common ground?** Both processors must share GND. Verify TP72 (LPC
-   side) reads continuous to GND on the Pico side.
+   side) reads continuous to GND on the Pico side through the cable ground pins.
+   Check the 1 kΩ series resistors at both ends and that the Pico keeps GP0
+   as an input until GP1 reads high (BF 3.1).
 3. **Baud rate?** Both ends configured for 115 200 8-N-1. Mismatch shows
    up as repeating but garbled bytes (right framing, wrong content).
 

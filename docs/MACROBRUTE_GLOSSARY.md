@@ -12,8 +12,8 @@ the rest of the manual leans on these without re-defining them.
 |---|---|
 | **MACROBRUTE** | This whole project — modified MicroBrute *plus* its 17 HP expander, treated as one instrument. |
 | **MicroBrute (MB)** | The stock Arturia MicroBrute analog mono synth this project starts from. |
-| **Breakout (board)** | The small stripboard mounted *inside* the MB that taps test points, buffers signals, and exposes them via 2× DB-9 connectors on the rear. |
-| **Expander** | The 17 HP Eurorack module that pairs to the MB through the DB-9 cable. Self-contained — has its own ±12 V Eurorack supply. |
+| **Breakout (board)** | The small buffer-only stripboard mounted *inside* the MB that taps test points, buffers signals, and exposes them via 2× DB-9 connectors on the rear panel. Powered only from the synth (TP70/TP71/TP72). |
+| **Expander** | The 17 HP Eurorack module that pairs to the MB through the DB-9 cable. Self-contained — runs only from the rack's ±12 V / +5 V supply; nothing is powered over the DB-9. |
 | **Touch bolt** | An exposed brass bolt on the panel that, when touched, completes a circuit-bend (changes pitch / timbre / gating). The 6 selected ones are documented in `touch_bend_specs.md`. |
 | **Test point (TP)** | A pre-existing solder pad on the MB rear PCB. Numbered TP1–TP124 in Arturia's reference; this manual uses ~18 of them. See `MACROBRUTE_TEST_POINTS_VERIFIED.md`. |
 | **Mod ID (M01…M14)** | The 14 curated panel/electronic mods, indexed in `macrobrute_mod_catalog.md`. |
@@ -40,8 +40,8 @@ the rest of the manual leans on these without re-defining them.
 
 | Term | What it means |
 |---|---|
-| **DB-9** | The 9-pin D-sub connector used between the MB and the expander. Two of them: DB-9 A carries audio outputs + signal GND, DB-9 B carries CV inputs + power + reference GND. |
-| **HP** | "Horizontal pitch", the Eurorack panel-width unit. 1 HP = 5.08 mm. The expander is 17 HP wide ≈ 86 mm. |
+| **DB-9** | The 9-pin D-sub connector used between the MB and the expander. Two of them: DB-9 A carries the 8 outputs + GND; DB-9 B carries UART TX/RX, Filter CV, VCA CV and grounds. No supply and no I²C cross the cable. |
+| **HP** | "Horizontal pitch", the Eurorack panel-width unit. 1 HP = 5.08 mm. The expander is 17 HP (≈ 86 mm) or about 20 HP (≈ 101 mm); width is open. |
 | **GP / GPIO** | General-purpose I/O pin on the Pico. GP4 = GPIO 4. |
 | **TP / TP-N** | See "Test point" above. Always followed by a number (TP70 = +12 V, TP72 = GND, etc.). |
 | **JF-33 / DSO138** | Spinoff parts no longer in the canonical build. Search "spinoffs" if you care. |
@@ -54,18 +54,18 @@ the rest of the manual leans on these without re-defining them.
 |---|---|
 | **TL072 / TL074** | JFET-input op-amps (dual / quad). Used for buffering MB test-point taps and Eurorack-side reception. |
 | **CD40106** | Hex Schmitt-trigger inverter. Used for clean gate squaring and as the LFO core in the expander. |
-| **CD4051** | 8-channel analog multiplexer. Available locally; replaces CD4066 in some places. |
-| **CD4024** | 7-stage binary counter. Used for clock divider /2, /4, /8 outputs. |
-| **CD4049UBE** | Hex inverting buffer used as 5 V → 3.3 V level shifter (CD40106 output → Pico input). |
+| **CD4051** | 8-channel analog multiplexer. Owned x2, but it has no role in the decided design. |
+| **CD4024** | 7-stage binary counter. Dropped: the clock dividers /2, /4, /8 are firmware. |
+| **CD4049UBE** | Hex inverting buffer used for the expander's clock IN/OUT buffers on Pico 3V3. Its inputs clamp to VCC (TI SCHS046L p17), so it is not used as the gate level shifter. |
 | **74HC74** | Dual D flip-flop. Used in the M08 sub-harmonic divider. |
 | **LM358 / LM393** | Op-amp / comparator pair. LM393 (open-collector comparator) is used for M02 active soft sync and M12 audio-rate gate. |
 | **LM13700** | Dual operational transconductance amplifier (OTA). Used in M04 Metalizer VCA. |
-| **LF398** | Sample-and-hold IC, used in the expander S&H module. |
+| **LF398** | Sample-and-hold IC for the expander S&H module (not owned; needs a film hold capacitor). |
 | **78L05 / 78L09** | Three-terminal +5 V / +9 V linear regulators in TO-92 packages. |
-| **2N3904** | NPN small-signal transistor. Used as LED driver, vactrol driver, and the noise generator's reverse-biased junction. |
+| **2N3904** | NPN small-signal transistor. Not owned and no longer needed (LED drivers deleted, vactrol driven by a TL072 stage, noise dropped). |
 | **1N4148** | Small-signal silicon switching diode (~0.7 V drop, fast). Used as clamp / mixer diode. |
-| **1N5817** | Schottky diode (~0.3 V drop, low Vf). Used for power-rail reverse-polarity protection. |
-| **BAT54S** | Dual Schottky in SOT-23, "common cathode + common anode" configuration. Standard CV-input clamp to ±supply rails. |
+| **1N5817** | Schottky diode, 20 V / 1 A (not 40 V), not owned. Intended for the Pico VSYS path; an owned BAT85 can stand in. |
+| **BAT54S** | Dual Schottky in SOT-23. Not owned; two owned BAT85 take its place as the CV-input clamp to ±supply rails. |
 | **Vactrol** | Optocoupler made from an LED + LDR (light-dependent resistor) pair sealed in a black package. Used for smooth, click-free resonance modulation. |
 | **MPR121** | Capacitive touch sensor IC (12 channels, I²C). Optional alternative to direct touch bolts on GPIO. |
 
@@ -75,12 +75,12 @@ the rest of the manual leans on these without re-defining them.
 
 | Term | What it means |
 |---|---|
-| **Pico WH** | Raspberry Pi Pico W with pre-soldered Headers. RP2040, 133 MHz, 264 KB SRAM, 2 MB Flash, 802.11 Wi-Fi. Runs MicroPython in this project. |
+| **Pico WH** | Raspberry Pi Pico W with pre-soldered headers: the variant the docs assume. The owned variant is UNVERIFIED (BF Q21); nothing here uses wireless. RP2040, 133 MHz, 264 KB SRAM, 2 MB Flash. Runs MicroPython in this project. |
 | **LPC2361** | The MicroBrute's stock CPU. ARM7TDMI core, 72 MHz, 128 KB Flash, 34 KB SRAM. Custom firmware build is optional. |
 | **RP2040** | The chip on the Pico (used interchangeably with "Pico" when context is clear). |
 | **MicroPython** | Subset of Python that runs on microcontrollers. Used for all Pico firmware in this project. |
 | **UART** | Asynchronous serial protocol. Used for Pico ↔ LPC2361 bridge (115 200 baud) and for MIDI (31 250 baud). |
-| **I²C** | Two-wire synchronous serial bus (SDA + SCL). Used for both OLEDs (shared bus, 0x3C and 0x3D addresses) and the optional rear Daisy Seed expansion. |
+| **I²C** | Two-wire synchronous serial bus (SDA + SCL). Used for the main OLED only (0x3C, short on-board bus on the expander). No I²C crosses the DB-9. The rear Daisy Seed (EFFIGY) expansion is shelved. |
 | **PIO** | RP2040's Programmable I/O — small state machines that handle precise timing-critical I/O without the CPU. Used for the clock-out generator. |
 | **PWM** | Pulse-width modulation. Used for LED brightness and for low-resolution analog CV output (filtered to DC). |
 | **ADC** | Analog-to-digital converter. Pico has 4 channels @ 12-bit. |

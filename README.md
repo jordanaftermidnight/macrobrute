@@ -2,30 +2,31 @@
 
 **Arturia MicroBrute Deep Modification Project**
 
-Transform an Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through internal circuit mods, a Raspberry Pi Pico WH digital brain, a 17HP Eurorack expander, firmware reverse engineering, and an optional EFFIGY Daisy DSP companion module on an I²C peer-pair bus. Two earlier-design companion modules (JF-33 delay, DSO138 scope) live as spinoffs under `spinoffs/` — out of the canonical build.
+Transform an Arturia MicroBrute into a fully semi-modular instrument through internal circuit mods, a Raspberry Pi Pico digital brain on a Eurorack expander (17 HP or about 20 HP, width open), and firmware reverse engineering. The EFFIGY Daisy DSP I²C pairing is shelved (kept as an idea for another project). Two earlier-design companion modules (JF-33 delay, DSO138 scope) live as spinoffs under `spinoffs/` — out of the canonical build.
+
+> **Status (2026-10-17):** design stage, nothing built. The docs were reconciled against `docs/superpowers/reviews/2026-10-16-project-audit.md`; `docs/MACROBRUTE_CONNECTION_MAP.md` is the authority for pins and wiring. Anything not proven is marked UNVERIFIED.
 
 ## Documentation — start here
 
 - 🛠 **[Build Plan](./docs/MACROBRUTE_BUILD_PLAN.md)** — canonical 7-phase roadmap from bench validation to full integration
 - 🔌 **[Connection Map](./docs/MACROBRUTE_CONNECTION_MAP.md)** — every signal, pin, GPIO, and wire in the system
-- 🤝 **[EFFIGY Bridge Protocol](./docs/MACROBRUTE_EFFIGY_BRIDGE.md)** — I²C peer-pair register map (shared contract with the EFFIGY DSP module)
+- 🤝 **[EFFIGY Bridge Protocol](./docs/MACROBRUTE_EFFIGY_BRIDGE.md)** — SHELVED: I²C peer-pair register map, archived as an idea for another project
 - 🎛 **[Mod Selection](./docs/MACROBRUTE_MOD_SELECTION.md)** — the 12 panel mods + 6 touch bolts curated from 130+ audited
 - 📇 **[Master Index](./docs/MACROBRUTE_INDEX.md)** — directory of all docs, firmware, schematics, and research
 - 📖 **[Macrobrute Manual.html](./Macrobrute%20Manual.html)** — offline single-file build manual (~1.7MB, regenerated from all docs above via `tools/build_manual.py`)
 
 ## Project Scope
 
-- **17HP Eurorack expander** — hosts the Pico WH, main 0.96" SSD1306 OLED, HW-040 encoder, tap button, RGB LED, clock I/O, slew limiter, firmware clock divider, 4 programmable aux outputs
-- **Strip OLED on MB panel** — 0.91" 128×32 SSD1306 in the silkscreen area, glanceable status (tempo, clock source, MIDI ch, pair status)
-- **Panel modifications on MB** — strip OLED (0.91" SSD1306 in the silkscreen area), 1 new Resonance CV jack, 3 toggles (Brute Factor bypass, drone, starve), 3 insert jacks (VCF, Metalizer, VCA CV), 6 brass touch bolts on body sides (selected from 8 designed candidates after Phase 0 bench testing)
+- **Eurorack expander (17 HP or about 20 HP, width open until the blank is measured)** — hosts the Pico, main 0.96" SSD1306 OLED (size and interface to be confirmed), HW-040 encoder, tap button, RGB LED, clock I/O, firmware clock dividers, 4 programmable aux outputs, and three analog utilities: slew limiter, LFO and Sample & Hold (standalone, rack power only). Noise, mult and attenuverter stay out.
+- **Panel modifications on MB** — 1 new Resonance CV jack, 3 toggles (Brute Factor bypass, drone, starve), 3 insert jacks (VCF, Metalizer, VCA CV), 6 brass touch bolts on body sides (selected from 8 designed candidates after Phase 0 bench testing), and the 2× DB-9 on the rear panel left of Pitch/Gate. The 0.91" strip OLED is dropped.
 - **Signal taps** — 10+ buffered waveform/CV outputs from internal test points
 - **CV injection** — Filter and VCA via DB-9 B; Resonance via new MB panel jack
-- **DB-9 interconnect** — 2× DB-9 carries audio outputs (DB-9 A) and digital + power + 2 essential CVs (DB-9 B: UART bridge + I²C0 bus + Filter CV + VCA CV + ±12V + GND)
-- **Pico WH firmware** — main + strip OLED, encoder, clock gen/detect/divide, programmable aux outputs, tap tempo + manual gate, RGB LED, LPC2361 UART bridge, USB-MIDI, EFFIGY peer-pair bus
-- **EFFIGY peer pair** — separate 24HP Daisy DSP module on a hidden 5-pin rear I²C header. When paired, MACROBRUTE owns clock, EFFIGY owns main menu, encoders share focus. Audio/CV stay on Eurorack patches; I²C carries control + telemetry only. EFFIGY's C header (`EFFIGY/firmware/src/macrobrute_bridge.h`) is the authoritative source for the register map; Pico-side Python constants are generated.
-- **Norns Shield (anticipated, Phase 7D)** — three-module chain Norns → MACROBRUTE → EFFIGY. MACROBRUTE will eventually present an ii-compatible target on a separate front-of-rack I²C bus and translate ii commands into local state OR proxied EFFIGY register writes. See `docs/MACROBRUTE_NORNS_BRIDGE.md`.
+- **DB-9 interconnect** — 2× shielded DB-9 on the MB rear panel (left of Pitch/Gate; dimensions UNVERIFIED). DB-9 A carries 8 audio/CV/gate outputs + GND. DB-9 B carries UART TX, UART RX, Filter CV, VCA CV and grounds only. **No supply rail and no I²C cross the cable.**
+- **Pico firmware** — main OLED, encoder, clock gen/detect/divide, programmable aux outputs, tap tempo + manual gate, RGB LED, LPC2361 UART bridge, USB-MIDI (not used while the DB-9 cables are connected)
+- **EFFIGY peer pair — SHELVED.** Kept as an idea for another project; nothing is designed around it. GP2, GP3 and GP11 are free, reserved.
+- **Norns Shield (anticipated, not designed)** — see `docs/MACROBRUTE_NORNS_BRIDGE.md`; its EFFIGY half is shelved.
 - **LPC2361 firmware RE** — ~98% complete via .mbf decryption. 43 SysEx commands mapped. Pico↔LPC UART bridge framed as `0xAA · type · counter · len · payload · xor_checksum`.
-- **Power** — Behringer CP1A Eurorack PSU. Pico fed from +5V bus via 3-part filter (1N5817 + 100µF + 100nF). MicroBrute stock power untouched. ±12V passes through DB-9 B for MB-side op-amp buffers.
+- **Power** — split. The expander runs only from the Behringer CP1A rack supply (Pico VSYS from rack +5 V through a Schottky OR diode + bulk + 100 nF; CP1A +5 V is 0.5 A shared). The MB-side breakout runs only from the synth (TP70 +12 V, TP71 -12 V, TP72 GND). Only ground is shared across the cable. MicroBrute stock power untouched.
 - **Circuit bending** — 6 touch bolts + 3 toggle mods + 3 panel jacks (curated from 130+ mods)
 
 ## Repository Structure
@@ -40,7 +41,7 @@ macrobrute/
 │   ├── research/            # Firmware RE findings, .mbf analysis
 │   └── legacy/              # Earlier spec revisions
 ├── firmware/
-│   ├── pico/                # Pico WH MicroPython firmware (14 modules + 1 generated)
+│   ├── pico/                # Pico MicroPython firmware (15 .py files: 14 modules + 1 generated)
 │   ├── lpc2361/             # LPC2361 ARM7 C firmware skeleton (48 files)
 │   │   ├── src/             #   core, drivers, synth, midi, ui, utils
 │   │   ├── include/         #   LPC2361 register definitions
@@ -48,11 +49,11 @@ macrobrute/
 │   │   ├── linker/          #   Memory layout (128KB flash, 34KB SRAM)
 │   │   └── tools/           #   flash.sh, monitor.sh
 │   └── *.mbf                # Arturia firmware files (encrypted, under analysis)
-├── schematics/              # 8 ASCII circuit docs + ~60 SVGs (stripboards, pinouts, wiring)
+├── schematics/              # 9 markdown circuit docs + 74 SVGs (stripboards, pinouts, wiring); several are STALE until regenerated
 ├── kicad/                   # KiCad 8 schematic projects
 │   ├── breakout/            #   Internal breakout PCB
-│   └── expander/            #   17HP Eurorack expander module
-├── panel/                   # Panel templates (SVG): MicroBrute + 17HP expander
+│   └── expander/            #   Eurorack expander module (STALE: old 42 HP scope, audit S58)
+├── panel/                   # Panel files (SVG): MicroBrute template, finished-panel mockups, 17 HP expander
 ├── spinoffs/                # Companion projects out of canonical scope
 │   ├── jf33-eurorack/       #   DIY PT2399 delay (speculative)
 │   └── dso138-desktop/      #   DSO138 desktop scope (speculative)
@@ -63,33 +64,33 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Pico WH, Arduino Nano (parked), PL2303HX USB-TTL, 0.96" SSD1306 I²C OLED (primary main), 0.91" 128×32 SSD1306 (strip on MB panel), 1.3" SH1106 (fallback / reserved for EFFIGY), 16×2 1602 I²C LCD (alt fallback), HW040 encoder, 2× shielded DB-9, LED/LDR kit, IC kit, 6U 84HP Eurorack case, Behringer CP1A PSU. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
+MicroBrute, Raspberry Pi Pico (variant UNVERIFIED: docs say WH, package says no W, owner to confirm), Arduino Nano (parked, no role), PL2303HX USB-TTL, 0.96" SSD1306 OLED (main; size/interface to be confirmed), 0.91" 128×32 SSD1306 (spare, strip OLED dropped), 1.3" SH1106 (spare), 16×2 1602 I²C LCD (fallback), HW040 encoder, DB-9 connectors ("several", count and gender UNVERIFIED), some vactrols, LED/LDR kit, IC kit and IC assortment, resistor kit, 6U 84HP Eurorack case, Behringer CP1A PSU. The full Have/Missing list is in `docs/hardware/MACROBRUTE_BOM.md`. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
 
 ### Key Decisions
 | Decision | Choice |
 |----------|--------|
-| Expander HP | **17HP** (87×128.5mm panel — fits user's pre-cut blank) |
-| Connector | 2× DB-9 shielded (no aux cable — DB-9 B carries digital + power + 2 CVs) |
+| Expander HP | **OPEN: 17 HP or about 20 HP** — the repo panel file is 87×128.5 mm, UNVERIFIED against the A-100 spec; owner measures the blank, both layouts are planned |
+| Connector | 2× DB-9 shielded on the MB rear panel, left of Pitch/Gate (HD-15/VGA rejected). DB-9 B = UART TX/RX, Filter CV, VCA CV, grounds |
 | Pico location | Inside the expander (not the MicroBrute case) |
-| Main OLED | **0.96" SSD1306** I²C @ 0x3C on expander panel — same chip family as strip OLED → simpler driver. (1.3" SH1106 left for EFFIGY; set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2` if you swap.) |
-| Strip OLED | 0.91" SSD1306 128×32 @ 0x3D on MB panel — shared I²C0 bus via DB-9 B |
-| MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (XOR checksum) + USB-MIDI on Pico micro-USB |
-| EFFIGY pair | 5-pin JST-XH rear header (SDA/SCL/INT/3V3/GND), I²C @ 100 kHz, addr 0x42 |
-| Utilities (HW) | Slew limiter only — noise/S&H/mult/LFO/attenuverter dropped (user already has these) |
+| Main OLED | **0.96" SSD1306** I²C @ 0x3C on the expander panel; size/controller/interface UNVERIFIED, owner to confirm. (1.3" SH1106 fallback: set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2`.) |
+| Strip OLED | **Dropped.** No I²C crosses the DB-9 cable |
+| MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (XOR checksum), LPC UART1 P0.15/P0.16 UNVERIFIED pending the continuity check; USB-MIDI on the Pico micro-USB, not used while the DB-9 cables are connected |
+| EFFIGY pair | **Shelved** |
+| Utilities (HW) | Slew limiter, LFO and Sample & Hold (standalone, rack power only). Noise, mult and attenuverter stay out |
 | Utilities (FW) | Clock divider + 4 programmable aux outputs (PWM-capable, Euclidean/random/passthrough) |
-| Power | CP1A Eurorack +5V via 3-part filter → Pico VSYS · ±12V via DB-9 B → MB breakout · MB stock untouched |
-| Nano | Parked — Pico handles everything |
+| Power | Split: expander from the CP1A only (Pico VSYS via a Schottky OR diode); MB breakout from TP70/TP71/TP72 only; no supply on the cable; MB stock untouched |
+| Nano | Parked — no role |
 
 ## Current Status
 
 | Area | Status | Files |
 |------|--------|-------|
-| Pico firmware | Complete — 14 MicroPython modules + `_effigy_constants.py` (generated from EFFIGY's C header). Untested on hardware — Phase 0 bench validation next. | `firmware/pico/` |
+| Pico firmware | 15 `.py` files (14 modules + the generated `_effigy_constants.py`, which serves the shelved EFFIGY code). Untested on hardware — Phase 0 bench validation next. | `firmware/pico/` |
 | LPC2361 firmware | Skeleton — 48 C files, XOR checksum framing aligned with Pico side | `firmware/lpc2361/` |
-| Schematics | Complete — 8 ASCII docs + ~60 SVGs + 4 KiCad projects | `schematics/`, `kicad/` |
-| Panel templates | 17HP expander + revised MB panel (strip OLED + Res CV) | `panel/` |
-| EFFIGY bridge | **Frozen.** Register map authoritative in EFFIGY's C header. Pico-side constants generated by `tools/sync_effigy_constants.py`. Cross-checker `tools/check_effigy_bridge_sync.py` verifies 60 symbols agree. EFFIGY-side firmware skeleton compiles; ISR plumbing + DSP-side parameter application TODO. | `docs/MACROBRUTE_EFFIGY_BRIDGE.md`, `firmware/pico/effigy_bridge.py` |
-| Circuit review | Complete — 13 sections reviewed, 5 corrections applied | `schematics/CIRCUIT_REVIEW.md` |
+| Schematics | Drawn at the old scope in places: 9 markdown docs + 74 SVGs + 2 KiCad projects, several STALE (audit section 2); redraw follows the audit | `schematics/`, `kicad/` |
+| Panel files | 17 HP expander file (width open) + MB top-panel template; the strip OLED is dropped and no rear-panel template exists yet | `panel/` |
+| EFFIGY bridge | **Shelved** (owner decision, 2026-10-17); archived as an idea for another project. | `docs/MACROBRUTE_EFFIGY_BRIDGE.md`, `firmware/pico/effigy_bridge.py` |
+| Circuit review | Superseded in places by the 2026-10-16 audit (power budget, diode orientation) | `schematics/CIRCUIT_REVIEW.md`, `docs/superpowers/reviews/` |
 | Firmware RE | ~98% complete — .mbf cracked, 43 SysEx cmds + 427 fns mapped in Ghidra | `docs/research/mbf_analysis.md` |
 | Mods & bending | Complete — 4 guides covering all techniques | `docs/mods/` |
 | Touch plates | 8 bends designed, 6 to be selected after Phase 0 bench testing — selection has not happened yet | `docs/mods/touch_bend_specs.md` |
