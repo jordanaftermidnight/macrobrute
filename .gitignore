@@ -56,3 +56,6 @@ firmware/ghidra_decompiled.h
 node_modules/
 .venv/
 dist/
+
+# Manufacturer datasheets (not ours to redistribute; see docs/DATASHEETS.md)
+datasheets/
