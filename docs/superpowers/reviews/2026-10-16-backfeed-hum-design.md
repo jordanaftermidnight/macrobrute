@@ -21,14 +21,14 @@ Power states used throughout:
 
 ## 1. Owned-parts inventory
 
-Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) is the only list with a Have status. `docs/hardware/MACROBRUTE_BOM.md` and `MACROBRUTE_SHOPPING_LIST.md` are purchase lists with no Have column (this settles audit conflict C7 in favour of r3/r5). Owner additions of 2026-10-17: the KY-040 (HW-040) encoder and some vactrols are Have. Anything not on these lists is Missing, even where it is very likely in a drawer; those are flagged as owner questions (Q-numbers, section 6).
+Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) is the only list with a Have status. `docs/hardware/MACROBRUTE_BOM.md` and `MACROBRUTE_SHOPPING_LIST.md` are purchase lists with no Have column (this settles audit conflict C7 in favour of r3/r5). Owner additions of 2026-10-17: the KY-040 (HW-040) encoder, some vactrols, a through-hole resistor kit (values to be confirmed, section 1.3) and an IC assortment (photo, section 1.1a) are Have. The owner has further components not yet listed (Q18). Anything not on these lists is Missing, even where it is very likely in a drawer; those are flagged as owner questions (Q-numbers, section 6).
 
 ### 1.1 Active parts and modules
 
 | Part | Used for | Status (qty) | Owned alternative or owner question |
 |---|---|---|---|
-| Raspberry Pi Pico WH | Expander controller | Have (1) | - |
-| 0.96" SSD1306 OLED | Expander main display, I2C0 GP4/GP5 | Have (1) | - |
+| Raspberry Pi Pico (variant UNVERIFIED) | Expander controller | Have (1) | The docs say Pico WH; the package says "Raspberry Pi Pico" (no W); another owner description says "Pico H". Nothing in this design uses wireless, so any variant works electrically; docs may need renaming (Q21). |
+| 0.96" SSD1306 OLED | Expander main display, I2C0 GP4/GP5 | Have (1) | Size (0.96 vs 1.3 inch), controller (SSD1306 vs SH1106) and header (4-pin I2C vs 7-pin SPI) of the main OLED UNVERIFIED (Q22). |
 | 0.91" SSD1306 128x32 | Was the strip OLED | Have (1), no longer used | Dropped (decision c); spare. |
 | 1.3" SH1106 OLED | Was the EFFIGY / fallback display | Have (1), no longer used | EFFIGY shelved; spare. |
 | KY-040 / HW-040 encoder | Expander encoder | Have (1) (owner, 2026-10-17) | - |
@@ -40,7 +40,7 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 | 78L05 | Breakout-local 5 V for the CD40106 (Provisional) | Have (4) | - |
 | LF398 | Expander S&H | Missing | No owned equivalent. Alternative CD4051 + TL072 + film hold cap (r3) has unverified charge injection and still needs a film cap. Q1: buy LF398N? |
 | BF245C JFET | No role in the decided design | Have (5) | - |
-| 2N3904 | Old LED drivers and vactrol driver | Missing | Delete the LED drivers (S12); vactrol via TL072 V-to-I stage (S37). No transistor needed. |
+| 2N3904 | Old LED drivers and vactrol driver | Missing (may be in the assortment kit, UNVERIFIED) | Delete the LED drivers (S12); vactrol via TL072 V-to-I stage (S37). No transistor needed. |
 | BC547 / BC557 / 2N3906 | Listed in BOM rows | Missing (purchase list only) | Not needed. |
 | BSS138 | Old level shifter | Missing | Not needed (UART is 3.3 V to 3.3 V; gate uses a divider, section 3.5). |
 | LM13700, CD4024, CD4066 | Dropped circuits | Missing | Not needed. |
@@ -49,20 +49,42 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 | Vactrol | Resonance CV (breakout) | Have ("some", owner 2026-10-17) | Part number and type unknown. Q2: read the marking; the TL072 V-to-I driver's sense resistor depends on the vactrol LED's forward-current rating. |
 | LDR04 | Home-made vactrol | Have (4) | Only needed if the owned vactrols do not suit. |
 | Isolation transformer | Hum ladder last step, one audio line | Have (1, salvaged, 46.9/82.4 ohm DCR) | Turns ratio, inductance, bandwidth UNVERIFIED (E-29). |
+| Arduino Nano | No role (parked) | Have (1) (owner, 2026-10-17) | - |
+| Assortment kit (resistors, capacitors, transistors, diodes, LEDs, trim pots) | Possible source for the Missing transistor, diode and trimmer rows | Have (owner, 2026-10-17); exact types and values UNVERIFIED | Owner to send close-ups of the insert card (Q18). Until then the rows below stay Missing. |
+
+### 1.1a IC assortment (owner photo, 2026-10-17)
+
+All Have. None of these is an LF398 equivalent (no part here is a sample-and-hold with a low-leakage hold switch), so Q1 stands.
+
+| Part | Qty | Possible use in this project |
+|---|---|---|
+| PC817 optocoupler | 20 | Isolated UART alternative (section 3.9). |
+| NE5532 | 5 | Audio op-amp sections (for example ladder step 5 difference receivers). Supply: recommended +/-5 V to +/-15 V, abs max +/-18 V (TI SLOS075K p3), so +/-12 V is in range. Back-to-back input diodes conduct above about 0.6 V differential (p3 note 4), so not for comparators or Schmitt stages; bipolar inputs (bias current not read for this note, UNVERIFIED) make it a poor choice for high-impedance nodes (S&H buffer, 1M bias). |
+| JRC4558 | 10 | Audio op-amp sections, same role as NE5532. No datasheet in `datasheets/`: supply range and input limits UNVERIFIED. |
+| LM358 | 10 | Single-supply op-amp; datasheet in `datasheets/LM358/` (not read for this note). |
+| LM324 | 10 | Quad version of LM358; no datasheet in `datasheets/` (UNVERIFIED). |
+| LM393 | 10 | Comparator; datasheet in `datasheets/LM393/` (not read for this note). |
+| LM339 | 10 | Quad comparator; no datasheet in `datasheets/` (UNVERIFIED). |
+| NE555 | 20 | Not needed by the decided design. |
+| PT2399 | 3 | Delay IC (spinoff only, DATASHEETS row). |
+| ICL7660S | 2 | Charge-pump inverter; not needed (no negative rail is missing). |
+| UC3842AN, UC3843AN | 5 each | PWM controllers; not needed. |
+| ULN2003AN (listed as "UL2003AN"), ULN2803APG | 5 each | Darlington arrays; not needed. |
+| LM386, TDA2030A, TDA2822D | 5, 2, 5 | Power audio amplifiers; not needed. |
 
 ### 1.2 Diodes
 
 | Part | Used for | Status | Owned alternative or owner question |
 |---|---|---|---|
-| BAT85 | CV clamps, rail protection | Have (10) | Budget: 4 for the two CV clamps (section 3.3), 1 for Pico VSYS, 3 for expander +12/-12/+5 V, 2 for breakout rails = 10. Exactly the stock. If audit conflict C12 goes to r2's series resistor on the breakout rails, 2 are freed. Q3: confirm before more BAT85 uses are added. |
+| BAT85 | CV clamps, rail protection | Have (10) | Budget: 4 for the two CV clamps (section 3.3), 1 for Pico VSYS, 3 for expander +12/-12/+5 V, 2 for breakout rails = 10. Exactly the stock, so none is left for hum-ladder step 4. If audit conflict C12 goes to r2's series resistor on the breakout rails, 2 are freed and step 4 becomes buildable. Q3: confirm before more BAT85 uses are added. |
 | BAT54S | CV clamps (old docs) | Missing | BAT85, two per clamp (DATASHEETS (e)). |
 | 1N5817 | Pico VSYS OR diode, expander rail reverse protection | Missing | BAT85 can stand in: IF 200 mA continuous, VF 800 mV at 100 mA (BAT85 p2-p3). On VSYS that gives about 4.2 V at 100 mA, inside the Pico's 1.8-5.5 V VSYS range (Pico datasheet p9). Note 1N5817 is a 20 V part, not 40 V (DATASHEETS (e)). |
-| 1N4148 | Slew-limiter steering, old clamps | Missing | BAT85 stock is used up (row above). Q4: confirm 1N4148 stock or buy. |
+| 1N4148 | Slew-limiter steering, old clamps | Missing (may be in the assortment kit, UNVERIFIED) | BAT85 stock is used up (row above). Q4: confirm 1N4148 stock or buy. |
 | BZX84C3V3, SMBJ12CA, BAT46 | Old protection drawings | Missing | Not needed (audit B17, r2). |
 
 ### 1.3 Resistors
 
-No resistor of any value is on the owned list (r2, r3, r5 all note this). The design needs the values below. Q5: confirm the owner's resistor stock for each value; if a value is missing, the nearest owned value is acceptable where the row says so.
+Status: Have (owner resistor kit, 2026-10-17). Series and power rating are not yet confirmed; this note assumes a standard E12/E24 through-hole 1/4 W kit. Q5: owner to confirm 220R, 1k, 2k, 4.7k, 10k, 22k, 33k, 100k are present, plus the other values this note uses (10 ohm, 560 ohm, 680 ohm, 1M); if a value is missing, the nearest kit value is acceptable where the row says so. 1 % parts for ladder step 5 are not assumed.
 
 | Value | Where | Tolerance of substitution |
 |---|---|---|
@@ -73,6 +95,7 @@ No resistor of any value is on the owned list (r2, r3, r5 all note this). The de
 | 100k | CV series on the MB side (2), Clock IN series, Clock IN pull-down, inputs normalled from A lines | 82k-150k acceptable. |
 | 1M | TL074 input bias (replaces 10M, audit N11) | - |
 | 10 ohm | Optional hum-ladder ground resistor, optional rail series R (C12) | 4.7-22 ohm. |
+| 560 ohm, 4.7k | PC817 UART alternative only (section 3.9): LED series (2x 560 ohm) and emitter load (2x 4.7k) | 560 ohm: 470-680 ohm; 4.7k: 3.9k-6.8k (see 3.9). |
 
 ### 1.4 Capacitors
 
@@ -93,9 +116,9 @@ No resistor of any value is on the owned list (r2, r3, r5 all note this). The de
 |---|---|---|---|
 | 100k pots | Expander controls | Have (4) | - |
 | 1M pots | LFO rate, slew rise/fall | Missing (3) | A 100k pot changes the ranges by 10x; Q6 together with the LFO cap. |
-| 100k trimmers | Aux-out trims (BOM) | Missing | Q7, or fixed resistors. |
+| 100k trimmers | Aux-out trims (BOM) | Missing (assortment kit has trim pots, values UNVERIFIED) | Q7, or fixed resistors. |
 | 3.5 mm jacks | Expander panel (16+ jacks after LFO + S&H, audit S52), MB panel jacks | Have (25), type unknown | Q8: are these PJ398SM / PJ301M style panel jacks (E-25)? |
-| DB-9 connectors | 2 on the MB rear panel, 2 on the expander | Have (2), gender and flange UNVERIFIED | Needs 4 panel connectors plus 2 cables (or 4 cable ends): Missing 2 + cables. Q9 (E-32). |
+| DB-9 connectors | 2 on the MB rear panel, 2 on the expander | Have ("several" per owner 2026-10-17; count UNVERIFIED, earlier list says 2), gender and flange UNVERIFIED | Needs 4 panel connectors plus 2 cables (or 4 cable ends): Missing 2 + cables. Q9 (E-32). |
 | HD-15 connectors | Rejected | Have (2), spare | Not usable (cable shorts pins 6-8 to GND, plan). |
 | Shielded 9-core cable (x2) and hoods | DB-9 A and B links | Missing | Q9. A ribbon cable is not acceptable (N19). |
 | Insulating shoulder washers | Expander-side DB-9 shells (section 4.2) | Missing | Q10. |
@@ -181,8 +204,8 @@ Pitch series value (audit conflict C2: r5 1k vs r3 100-220 ohm): 220 ohm is chos
 ## 3. Back-feed analysis per cable line
 
 Datasheet limits used:
-- LPC2361 (Rev. 03): standard pins 62, 63, 98, 99 are 5 V tolerant pads (footnote [1], p5-p6, p12). Input abs max -0.5 to +6.0 V only when VDD(3V3) is present, otherwise VDD(3V3) + 0.5 V (Table 4, p33). Unpowered, a pin is therefore rated only to 0.5 V. VIH 2.0 V min, VOH VDD - 0.4 V at 4 mA, pull-up current 15-85 uA (Table 5, p34; read for this note). The datasheet gives no injection-current figure for an unpowered pad: the actual current is UNVERIFIED.
-- RP2040: VPIN abs max IOVDD + 0.5 V (Table 622, p615); VIH 2.0 V at IOVDD 3.3 V, pull-up and pull-down 50-80 kohm, input leakage 1 uA (Table 625, p615-p617; read for this note). GPIO0-22 are "Digital IO (FT)": "very little current flows into the pin whilst it is below 3.63 V and IOVDD is 0 V" (Table 614, p613; read for this note); their reset state is pull-down (Table 615, p612-p613). GPIO26-29 are not FT and have a diode to IOVDD (Pico datasheet p20). The two RP2040 statements (FT current vs abs max IOVDD + 0.5 V) are not reconciled in the sheet; this note treats FT as the expected behaviour and the series R as the backstop, and BT-2 measures it.
+- LPC2361 (Rev. 03): standard pins 62, 63, 98, 99 are 5 V tolerant pads (footnote [1], p5-p6, p12). Table 4 (p33) gives -0.5 to +6.0 V for 5 V tolerant pins "only valid when the VDD(3V3) supply voltage is present", and VDD(3V3) + 0.5 V for "other I/O pins". The limit for a 5 V tolerant pin with VDD absent is therefore not specified; this note treats it as at most 0.5 V (the "other I/O pins" figure at VDD = 0). VIH 2.0 V min, VOH VDD - 0.4 V at 4 mA, pull-up current 15-85 uA (Table 5, p34; read for this note). The datasheet gives no injection-current figure for an unpowered pad: the actual current is UNVERIFIED.
+- RP2040: VPIN abs max IOVDD + 0.5 V, and Table 622's scope names both Standard and Fault Tolerant IO (Table 622, p615); VIH 2.0 V at IOVDD 3.3 V, pull-up and pull-down 50-80 kohm, input leakage 1 uA (Table 625, p616-p617; read for this note). GPIO0-22 are "Digital IO (FT)": "very little current flows into the pin whilst it is below 3.63 V and IOVDD is 0 V" (Table 614, p613; read for this note); their reset state is pull-down (Table 615, p613-p614). GPIO26-29 are not FT and have a diode to IOVDD (Pico datasheet p20). The two statements conflict for an unpowered chip: any voltage above 0.5 V on a pin of an unpowered RP2040 exceeds the Table 622 absolute maximum, and only the Table 614 FT sentence says it is tolerated. Every S2 case below where a pin of the unpowered RP2040 sits above 0.5 V is therefore labelled "exceeds Table 622 abs max, relies on Table 614 FT, provisional", and BT-2 / BT-5 measure the pin current, not only the rail.
 - CD4049UB: TI SCHS046L contradicts itself: p1 says VIH can exceed VCC; section 8.2.2 (p17) says inputs have clamp diodes to VCC and must stay below VCC (read for this note). This note treats the input as clamped to VCC.
 - CD40106B: inputs -0.5 to VDD + 0.5 V, +/-10 mA (p4); VT+ at VDD 5 V 2.2 / 2.9 / 3.6 V min / typ / max (p5-p6; read for this note).
 - BAT85: VF 240 mV at 0.1 mA, 400 mV at 10 mA (p2-p3).
@@ -195,14 +218,14 @@ Decision on audit conflict C2 (one table): UART 1k at both ends (r5) rather than
 | State | UART TX (Pico drives) | UART RX (LPC drives) |
 |---|---|---|
 | S0 | No source. | No source. |
-| S1 (expander on, synth off) | Risk: Pico TX idles high (3.3 V) into an LPC pin rated to 0.5 V when unpowered (p33). Fix: firmware rule, GP0 stays an input (high-impedance, reset pull-down) until GP1 has read high; with the LPC off, GP1 is pulled low by its own pull-down, so GP0 never drives. Backstop if firmware fails: 2k total limits any current to below (3.3 - 0.6) / 2k = 1.35 mA, assuming a clamp to VDD exists (UNVERIFIED; the datasheet does not say). | LPC unpowered: no source. GP1 reads low (pull-down). |
-| S2 (synth on, expander off) | No source (Pico off). | LPC TX (bridge firmware, Phase 6) idles high, or the LPC pin pull-up (15-85 uA, p34) under stock firmware, into unpowered GP1. GP1 is FT: very little current below 3.63 V with IOVDD = 0 (p613); LPC VOH cannot exceed VDD 3.3 V. Backstop: 2k limits a worst-case clamp current to below 1.35 mA. |
+| S1 (expander on, synth off) | Risk: Pico TX idles high (3.3 V) into an LPC pin treated as rated to 0.5 V when unpowered (p33, see above). Fix: firmware rule, GP0 stays an input (high-impedance, reset pull-down) until GP1 has read high; with the LPC off, GP1 is pulled low by its own pull-down, so GP0 never drives. Backstop if firmware fails: 2k total limits any current to below (3.3 - 0.6) / 2k = 1.35 mA, assuming a clamp to VDD exists (UNVERIFIED; the datasheet does not say). | LPC unpowered: no source. GP1 reads low (pull-down). |
+| S2 (synth on, expander off) | Pico off, so no Pico source. The LPC's P0.16 (RXD1) pin, if left with its reset pull-up under stock firmware (15-85 uA, p34; reset default UNVERIFIED), pulls the line toward 3.3 V into the unpowered GP0 through 2k. The current is bounded by the pull-up (at most 85 uA) and GP0 is FT; the pin voltage can still exceed 0.5 V: exceeds Table 622 abs max, relies on Table 614 FT, provisional. | LPC TX (bridge firmware, Phase 6) idles high, or the LPC pin pull-up (15-85 uA, p34) under stock firmware, into unpowered GP1. Exceeds Table 622 abs max (pin up to 3.3 V vs 0.5 V), relies on Table 614 FT ("very little current" below 3.63 V with IOVDD = 0, p613), provisional. LPC VOH cannot exceed VDD 3.3 V. Backstop: 2k limits a worst-case clamp current to below 1.35 mA. BT-2 measures the pin current. |
 | S3 | Normal. If the LPC starts second, GP1 goes high, and only then does the Pico enable GP0 as UART TX. | Normal. GP1's pull-down to the LPC's 4 mA push-pull high gives a clean high through 2k. |
 
-Firmware rule (to add in a later firmware task; no firmware change here): `GP0` stays an input until the bridge is enabled and `GP1` has read high continuously for a debounce time (value is a firmware choice); it returns to input when `GP1` stays low (LPC powered off). Until the Phase 6 bridge firmware exists, the UART lines are wired but unused (audit N17), so GP0 never drives.
+Firmware rule (to add in a later firmware task; no firmware change here): `GP0` stays an input until the bridge is enabled and `GP1` has read high continuously for a debounce time (value is a firmware choice); it returns to input when `GP1` stays low (LPC powered off). Caution: a UART break sent by the LPC (line held low for longer than a character) looks the same as "LPC off" and would trip this rule. The "stays low" timeout must be longer than any break the bridge protocol uses, or the bridge protocol must not use breaks. Until the Phase 6 bridge firmware exists, the UART lines are wired but unused (audit N17), so GP0 never drives.
 
 Value justification (1k + 1k = 2k per line):
-- Edge rate: bit time at 115200 baud is 8.68 us. Cable capacitance is UNVERIFIED (E-13); the audit's working figure is about 150 pF for 1 m plus pins. RC = 2k x 150 pF = 0.30 us; 10-90 % rise = 2.2 RC = 0.66 us, 7.6 % of a bit. At 300 pF (about 3 m at 100 pF/m) it is 1.32 us, 15 % of a bit; the receivers sample near mid-bit, so both are acceptable. r2's 4.7k at one end gives 1.55 us at 150 pF and 3.1 us (36 % of a bit) at 300 pF, which leaves little margin on a longer cable.
+- Edge rate: bit time at 115200 baud is 8.68 us. Cable capacitance is UNVERIFIED (E-13); the audit's working figure is about 150 pF for 1 m plus pins. RC = 2k x 150 pF = 0.30 us; 10-90 % rise = 2.2 RC = 0.66 us, 7.6 % of a bit, inside the BT-1 pass criterion of 0.9 us (about 10 % of a bit). At 300 pF (about 3 m at 100 pF/m) it is 1.32 us, which fails BT-1; for such a cable either shorten it or lower the resistors to 680 ohm at each end (1.36k x 300 pF x 2.2 = 0.90 us) and repeat BT-2, since a lower R raises any back-feed current. r2's 4.7k at one end gives 1.55 us at 150 pF, already outside BT-1.
 - Drive current: peak charging current at most 3.3 V / 2k = 1.65 mA, inside the 4 mA rating of both drivers (LPC p34, RP2040 default 4 mA drive). DC load is only receiver leakage (3 uA LPC, 1 uA RP2040), so the high level at the receiver stays at the driver's VOH, above both VIH = 2.0 V figures.
 - Fault: a cable conductor shorted to ground limits each driver to 3.3 V / 1k = 3.3 mA.
 - Back-feed: with the firmware rule and the FT receiver, the series R is a backstop, not the primary protection. BT-2 sets the acceptance: the unpowered side's 3V3 rail below about 0.3 V.
@@ -222,6 +245,8 @@ Circuit per line: expander driver (op-amp output, up to about 10 V; source circu
 | S1 | Expander CV (up to 10 V) through 110k into the upper BAT85 and the unpowered +12V_BRK rail: at most (10 - 0.24) / 110k = 89 uA (BAT85 VF at 0.1 mA, p2-p3). Negative CV mirrors into -12V_BRK. The same 110k bounds any current into the synth's own injection path. |
 | S2 | The MB node (TP26 / TP10 voltage UNVERIFIED) through 110k into the unpowered expander op-amp output: under 0.11 mA for any node voltage within +/-12 V. |
 | S3 | Normal. Clamps conduct only for a fault above the breakout rails. |
+
+Deviation from the plan's back-feed rule: for the CV lines the rule ("no current can flow into an unpowered IC's input protection diodes") is reduced, not met. In S1 up to 89 uA still flows into the unpowered +12V_BRK (or -12V_BRK) rail, and the same 110k path feeds the synth's own injection path (TP26 through the stock 220k, and TP10) while the synth is off. CV back-feed is bounded, not zero: the design limits the current; it does not remove it. Acceptance is BT-3 (unpowered rails below about 0.3 V). Owner option (Q19): a firmware mute that holds both CV outputs at 0 V until the Pico sees the synth powered (GP1 high, section 3.1) would make the S1 current zero in normal use; it needs a firmware change and the CV source circuit to support a defined 0 V output.
 
 Why these values: with r5's 1k on the MB side, the S1 current is about (10 - 0.24) / 11k = 0.89 mA, which r2 and r3 warn can partly power the breakout op-amps. 100k cuts it by ten. The 10k at the expander isolates the op-amp output from the cable capacitance and limits a cable short to about 1 mA. Cost: the extra 100k reduces the CV depth if the synth's own 220k / 100k is in series after the injection point (to about 0.69 for Filter and 0.5 for VCA in that case; UNVERIFIED until E-18 and BT-4). If the depth is too small, reduce the MB-side resistor to 47k (S1 current about 0.17 mA) and repeat BT-3. The 1 nF with 100k gives a 0.1 ms time constant (about 1.6 kHz corner), which removes edge pickup without slowing control-rate CV; r3's 10 nF is not owned and would cut the corner to about 160 Hz.
 
@@ -247,7 +272,7 @@ A:1 -> (gate panel jack tapped here) -> 22k -> node -> 33k to GND; node -> Pico 
 |---|---|
 | S0 | None. |
 | S1 | Cable side is the unpowered CD40106 output; the 33k pulls the node low; no expander-side pull-up exists (r2: keep every gate pull-up on the MB side), so nothing flows toward the synth. GPIO reads gate off. |
-| S2 | CD40106 high into an unpowered FT pin: Thevenin source 2.95 V through 13.6k. FT behaviour: very little current (p613). Worst case if it behaved like a clamp: (2.95 - 0.6) / 13.6k = 0.17 mA. |
+| S2 | CD40106 high into an unpowered FT pin: Thevenin source 2.95 V through 13.6k. Exceeds Table 622 abs max (2.95 V vs 0.5 V on an unpowered RP2040), relies on Table 614 FT ("very little current", p613), provisional. Worst case if it behaved like a clamp: (2.95 - 0.6) / 13.6k = 0.17 mA. BT-5 measures the pin current. |
 | S3 | Normal. Edge: 13.6k into the pin capacitance (a few pF) is far faster than any gate. |
 
 ### 3.6 A outputs (A:2 to A:8)
@@ -272,7 +297,7 @@ Both clock jacks and the Pico are in the rack domain; no clock wire crosses to t
 | Line | Source | Destination | Series R | Protection | Powered-side assumption |
 |---|---|---|---|---|---|
 | B:1 UART TX | Pico GP0 | LPC P0.16 RXD1 (pin 63) | 1k expander + 1k MB | Firmware: GP0 high-Z until GP1 high | Pico never drives into an unpowered LPC |
-| B:6 UART RX | LPC P0.15 TXD1 (pin 62) | Pico GP1 | 1k MB + 1k expander | GP1 fault tolerant; pull-down | LPC may drive while Pico is off |
+| B:6 UART RX | LPC P0.15 TXD1 (pin 62) | Pico GP1 | 1k MB + 1k expander | GP1 fault tolerant; pull-down | LPC may drive while Pico is off: exceeds Table 622 abs max, relies on Table 614 FT, provisional (BT-2) |
 | B:5 Filter CV | Expander op-amp | TP26 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
 | B:3 VCA CV | Expander op-amp | TP10 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
 | A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
@@ -281,11 +306,51 @@ Both clock jacks and the Pico are in the rack domain; no clock wire crosses to t
 | Clock IN | Rack jack | GP21 | 100k | 2x CD4049UB on 3V3, 100k pull-down | Rack domain only |
 | Clock OUT | GP22 | Rack jack | 1k | 2x CD4049UB on 3V3 | Rack domain only |
 
+### 3.9 Alternative: PC817-isolated UART (documented option, not the decided design)
+
+The decided UART (3.1) stays as written; it is provisional because it relies on the RP2040 FT sentence and on an unpowered LPC pad. This section evaluates the owned PC817 (20 owned) as a replacement for both UART directions. Datasheet: Sharp PC817X Series, sheet D2-A03101EN (`datasheets/PC817/73758.pdf`, read for this note); a second Sharp sheet (OP18002EN, PC817XxNSZ1B) gives the same IC, fc, tr and tf rows (its cover page states CTR 50-400 % instead of 50-600 %). The owned parts come from an assortment: maker, CTR rank mark and whether they meet the Sharp figures are UNVERIFIED.
+
+Datasheet figures used (Ta = 25 C):
+- LED: IF abs max 50 mA, VR abs max 6 V (p4); VF 1.2 V typ, 1.4 V max at IF 20 mA (p4); about 1.1 V at 3-5 mA (Fig. 7, p7, typical curve, reference only).
+- CTR: IC 2.5-30 mA at IF 5 mA, VCE 5 V, i.e. CTR 50-600 % (p4); ranks A-D from 4-8 mA up to 15-30 mA (p5). No minimum is given at any other IF; "while operating at IF < 1.0 mA, CTR variation may increase" and IRED output degrades by about 50 % over 5 years (p9).
+- Speed: fc 80 kHz typ at VCE 5 V, IC 2 mA, RL 100 ohm (p4); tr 4 us typ / 18 us max, tf 3 us typ / 18 us max at VCE 2 V, IC 2 mA, RL 100 ohm (p4). Fig. 13 (p8, "for reference and not for guarantee") shows tr and tf rising with load resistance: about 20 us each at RL 1k and about 50-75 us at 10k; read at RL 4.7k by log interpolation, about 40-50 us. Fig. 15 (p8) puts the -3 dB point near 20-30 kHz at RL 1k and a few kHz at 10k (reference only).
+- Dark current ICEO at most 100 nA at VCE 50 V (p4).
+- Drivers: LPC2361 IOH / IOL 4 mA at VOH = VDD - 0.4 V / VOL = 0.4 V, VIL 0.8 V (Table 5, p34). RP2040 VOL at most 0.5 V and VOH at least 2.62 V at the selected 2 / 4 / 8 / 12 mA drive, VIL 0.8 V, total IOVDD current 50 mA (Table 625, p616-p617).
+
+Topology (chosen so that polarity is kept, no supply crosses the cable and the B map does not change):
+- One PC817 per direction, at the receiver end. The driver GPIO drives the LED directly: driver TX pin -> 560 ohm on the driver board -> cable -> PC817 LED anode on the receiver board; LED cathode to the receiver board's ground star, returning over the shared cable grounds.
+- Output as an emitter follower: collector to the receiver's own supply, emitter to the receiver's RX pin with 4.7k to the receiver's ground. LED on (TX high, the idle state) gives RX high, so the UART is not inverted.
+- B:1 carries the Pico-to-LPC LED drive, B:6 the LPC-to-Pico LED drive. The ground pins stay as in 2.2. The 1k series resistors of 3.1 are not used (the 560 ohm takes their place); a cable short to ground draws at most about 3.9 mA from the driver.
+
+LED current (the driver sources it, TX high = LED on): IF = (VOH - 1.1) / 560. LPC: VOH at least 2.9 V (p34) gives at least 3.2 mA. RP2040: VOH at least 2.62 V at the 4 mA setting (p617) gives at least 2.7 mA. Either way at most (3.3 - 1.1) / 560 = 3.9 mA, within the 4 mA figure of both drivers. Because UART idle is high, each LED is lit whenever its driver is idle, so each side spends about 3-4 mA continuously while the bridge runs, and the LEDs age faster than with a short duty cycle (p9).
+
+Output level: high needs IC x 4.7k above VIH 2.0 V, i.e. IC at least 0.43 mA; the follower then saturates near the receiver supply. Assuming CTR at least 50 % at IF 2.7 mA (UNVERIFIED: the minimum is only specified at 5 mA, though the typical CTR curve, Fig. 6 p6, is higher at 3 mA than at 5 mA), IC is at least 1.35 mA new and 0.68 mA after the 50 % degradation (p9): margin about 1.6x. Low is dark current only (100 nA x 4.7k = 0.5 mV). A 1k load would need IC 2 mA for VIH, i.e. CTR about 75 % new and 150 % after degradation at IF 2.7 mA, which only rank B or higher would cover (rank figures are at 5 mA, p5; owned rank UNVERIFIED). 4.7k is therefore the load that works on the guaranteed figures.
+
+Maximum baud: working criterion (this note, not a datasheet rule): each edge at most about 25 % of a bit, so the receiver's mid-bit sample sees a settled level.
+- 115200 (bit 8.68 us): does not work. Even at RL 100 ohm, which this circuit cannot use, tr and tf are up to 18 us (p4), longer than two bits.
+- 38400 (bit 26 us): does not work. Edges of about 20 us at 1k and 40-50 us at 4.7k (Fig. 13) are as long as or longer than a bit.
+- 19200 (bit 52 us): not expected with the 4.7k load (edges near a whole bit); possibly with a 1k load and a rank B-D part (edges about 40 % of a bit): UNVERIFIED.
+- 9600 (bit 104 us): marginal with 4.7k (edges about 40-50 % of a bit): UNVERIFIED, bench check BT-13.
+- 4800 (bit 208 us): expected to work with 4.7k (edges about 25 % of a bit), on reference curves only: UNVERIFIED until BT-13.
+The Fig. 13 curves are for VCE 2 V and IC 2 mA in the linear region; in this circuit the transistor saturates at about 0.7 mA, where turn-off can be slower. All baud figures above are UNVERIFIED until BT-13 is done on the owned parts.
+
+Back-feed, per power state: S1 (synth off): GP0 drives the Pico-to-LPC LED, which sits on the MB board and returns to ground; no IC pin is on that path. The unpowered LPC RX pin sees the phototransistor emitter with the collector on the unpowered MB supply, so there is no source on the LPC side. The LPC-driven line (B:6) connects only to the unpowered LPC pin through 560 ohm and the LED, which the Pico side does not drive. S2 (Pico off): the mirror image. No GPIO of an unpowered chip is driven above 0 V by the other system in any state, so the Table 622 / Table 614 conflict (3.1) and the unpowered LPC pad limit (Table 4, p33) no longer apply to the UART. The firmware rule of 3.1 is no longer needed for protection, but GP1 still reads low when the LPC is off, so it can stay as the "LPC alive" sense (with the same UART-break caution).
+
+What each side's supply must provide:
+- Pico side: 3-4 mA from GP0 for the TX LED (sourced through IOVDD, inside the 50 mA total), and at most 3.3 V / 4.7k = 0.7 mA through the RX phototransistor from Pico 3V3.
+- MB side: 3-4 mA from the LPC TXD1 pin for the RX LED (from the LPC's own supply through its pin), and a collector supply for the TX phototransistor, at most 0.7 mA. The MB board has no 3.3 V rail of its own. Options: (a) a resistor tap on the synth's +3V3ARM, which audit B09 rejects for the gate stage and the owner would have to accept here; (b) the Provisional 78L05 (5 V): RXD1 (pin 63) is a 5 V tolerant pad, but -0.5 to +6.0 V is "only valid when VDD(3V3) is present" (Table 4, p33), so it depends on the 78L05 not coming up before the LPC's 3.3 V (sequencing UNVERIFIED); (c) common-emitter output with the LPC's internal pull-up (15-85 uA, p34) and no rail, which inverts the signal and is far too slow (about 40-220k equivalent). None is free of a new owner decision (Q20).
+
+Ground: in this topology the LED currents return over the shared cable grounds, so the UART does not break any ground path. Full galvanic isolation of the UART would need each LED's return on its own conductor (2 more pins). On DB-9 B that leaves 3 ground pins for 2 CVs; by the neighbour table (2.1) pin 5 is the only CV position with only-ground neighbours, so the second CV would have to sit next to a UART return. And the synth and rack grounds stay joined by A:9 and the remaining B grounds, which the CV, gate and audio lines need, so isolating the UART alone gives no hum benefit (4.1). Not recommended.
+
+Consequences for the DB-9 B map: none in the recommended topology (B:1 and B:6 change from logic lines to LED drive lines, about 3-4 mA DC while idle instead of near zero). Parts: 2x PC817, 2x 560 ohm, 2x 4.7k, all owned (resistor values Q5).
+
+Verdict: the PC817 UART removes UART back-feed in every power state and needs only owned parts, but it does not work at 115200 or 38400; 9600 is marginal and 4800 is the realistic rate, both UNVERIFIED until BT-13. It costs an MB-side collector supply (Q20). It is worth taking only if BT-2 fails or the bridge can live with 4800-9600 baud.
+
 ## 4. Hum design
 
 ### 4.1 Ground topology
 
-- Exactly one ground connection between the synth and the rack: the cable ground conductors (A:9; B:2, B:4, B:7, B:8, B:9), which run in parallel between the same two star points. Parallel returns between the same two nodes, bundled in the cables, are not a loop of their own (r5 F-05).
+- Exactly one ground connection between the synth and the rack: the cable ground conductors (A:9; B:2, B:4, B:7, B:8, B:9), six conductors in two cables, all running between the same two star points. Strictly they form small loops (between the conductors inside each cable, and between the two cables); keeping both cables bundled and short keeps that loop area small, so they are not expected to pick up mains hum the way a second, separately routed ground would (r5 F-05). Measured by BT-9.
 - MicroBrute side: every cable ground pin and the breakout ground go by their own short wires to the TP72 star (TPV:27), not through the breakout's ground strip (audit N13). The breakout takes power only from TP70 / TP71 / TP72.
 - Expander side: every cable ground pin, the Pico GND and all expander circuit grounds meet at one star point where the rack 0 V enters at the 16-pin header.
 - No other synth-to-rack path: no separate clock cable (audit N08), no chassis or panel bond between the two cases, and the USB rule below.
@@ -312,8 +377,8 @@ Do each step only if hum or noise is still measured after the previous one (BT-9
 
 1. No parts: confirm the baseline. USB unplugged (4.3); no clock cable; cables bundled and short; both adapters on the same mains strip; measure with each cable unplugged in turn to locate the loop.
 2. No parts: re-wire any ground that does not go to its star by its own lead (4.1); confirm no case-to-case contact.
-3. No parts: swap the shield bond to the expander end (r2's rule) and compare; keep whichever measures lower.
-4. Owned plus one resistor (resistors Q5): on the expander, break the ground bundle from the expander star with 10 ohm, bypassed by 100 nF (owned) in parallel and two anti-parallel BAT85 (owned, see the BAT85 budget, Q3) so fault current has a path. This keeps the DC reference (r2 step 4, r3 H-1). Recheck BT-2, BT-3 and BT-5 afterwards: the gate, CV and UART references now ride on up to the BAT85 forward voltage.
+3. No parts: swap the shield bond to the expander end (r2's rule) and compare; keep whichever measures lower. In the swapped arrangement the braid is bonded at the expander hood; because the expander panel shell is isolated by the washers (4.2), wire that expander shell with a short lead to the expander star (rack 0 V); cut the braid back and insulate it inside the MB-end hood, and leave the MB shell's lead to TP72 in place or remove it (compare both).
+4. Owned resistor kit plus two BAT85 (conditional): on the expander, break the ground bundle from the expander star with 10 ohm, bypassed by 100 nF (owned) in parallel and two anti-parallel BAT85 so fault current has a path. This keeps the DC reference (r2 step 4, r3 H-1). Condition: all 10 owned BAT85 are already allocated (section 1.2), so this step can only be built from owned stock if two are freed by taking the series-resistor option on the breakout rails (audit C12, Q3). Without the diodes, 10 ohm in parallel with 100 nF still keeps the DC reference, but a fault current between the systems then has only the 10 ohm path (it would burn the resistor): flagged, not recommended. Recheck BT-2, BT-3 and BT-5 afterwards: the gate, CV and UART references now ride on up to the BAT85 forward voltage.
 5. Owned op-amps (TL072) and resistors: dedicate one B ground pin (for example B:8) as a no-current ground-sense wire from TP72 and use it as the reference of difference-amplifier receivers on the expander's audio inputs (r2 step 3). Needs matched resistors (1 % parts are not owned, Q5).
 6. Owned isolation transformer on the single worst audio line only, after its characterisation (E-29). It passes no DC, so never on CV, gate or UART (r2, r3).
 
@@ -342,7 +407,7 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q2 | Vactrol marking (part number, LED forward-current rating). Needed for the TL072 V-to-I driver's sense resistor. |
 | Q3 | BAT85 stock is exactly used up (10); approve, or free two by using a series resistor on the breakout rails (C12)? |
 | Q4 | 1N4148 stock for the slew limiter? |
-| Q5 | Resistor stock for 10 ohm, 220 ohm, 1k, 10k, 22k, 33k, 100k, 1M (and 1 % parts for ladder step 5). |
+| Q5 | The resistor kit is Have: confirm 220R, 1k, 2k, 4.7k, 10k, 22k, 33k, 100k are present, plus 10 ohm, 560 ohm, 680 ohm and 1M; its series (E12 / E24) and power rating; any 1 % parts for ladder step 5? |
 | Q6 | LFO timing: buy a film capacitor and 1M pots, or accept a different range with owned parts? |
 | Q7 | Aux-out trimmers: buy or use fixed resistors? |
 | Q8 | Type of the 25 owned 3.5 mm jacks (panel mount, Thonkiconn-compatible?). |
@@ -355,6 +420,13 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q15 | If TP83 is 3.3 V logic, how should the gate stage change (no synth 3V3 tap allowed)? |
 | Q16 | Is mis-patch protection on Clock OUT worth more than the 4049 buffer plus 1k? |
 | Q17 | Is runtime USB-MIDI from the Pico needed while the synth is connected? If yes, an isolator must be bought. |
+| Q18 | List the further components not in the 2026-10-17 photo, and send close-ups of the assortment kit's insert card (transistor, diode, LED and trim-pot types; resistor values). |
+| Q19 | Firmware mute of the CV outputs until the synth is seen powered (section 3.3): wanted? |
+| Q20 | PC817-isolated UART (section 3.9): accept a bridge baud of 4800-9600 (115200 and 38400 do not work) in exchange for zero UART back-feed? If yes, which MB-side collector supply: a +3V3ARM tap (against audit B09) or the Provisional 78L05 (power-up sequencing UNVERIFIED)? |
+| Q21 | Pico variant: the package says "Raspberry Pi Pico" (no W), the docs say Pico WH, another description says "Pico H". Which is it? Nothing here uses wireless; docs may need renaming once confirmed. |
+| Q22 | Main OLED: 0.96 or 1.3 inch, SSD1306 or SH1106, 4-pin (I2C) or 7-pin (SPI) header? If SPI only, the display driver and GPIO plan change (free pins GP2, GP3, GP11, GP26-28; SPI0 SCK = GP2, MOSI = GP3, plus DC, RST and CS). |
+| Q23 | Connector: a pasted description said "switching to VGA". Decided facts stand (2x DB-9; HD-15 / VGA rejected because the cable shorts pins 6-8 to ground). Owner to confirm no change. |
+| Q24 | The owner's earlier IC list could not be found in local history and a shared chat link was not readable. Re-send it if it differs from the 2026-10-17 photo. |
 
 Other open items carried from the audit: LPC bridge UART choice (B01, E-01); CV depth and injection resistors (E-18); TP83 level (E-09); rear-panel and connector dimensions (E-20, E-21); expander width (decision e).
 
@@ -363,10 +435,10 @@ Other open items carried from the audit: LPC bridge UART choice (B01, E-01); CV 
 | ID | Check | Pass criterion | Settles |
 |---|---|---|---|
 | BT-1 | Scope the UART edge at each receiver pin with the real cable and 1k + 1k. | 10-90 % rise at most 0.9 us (about 10 % of a bit at 115200). | UART series R, cable length |
-| BT-2 | UART back-feed: S1 with the Pico running, measure LPC +3V3ARM (P4 pin 5) and the B:1 pin; S2 with the LPC bridge firmware idling, measure Pico 3V3 (pin 36) and GP1. | Unpowered rail and pin below about 0.3 V. If not, raise the receiver-end resistor to 2.2k and repeat BT-1. | RP2040 FT behaviour, LPC unpowered pad (E-11) |
+| BT-2 | UART back-feed: S1 with the Pico running, measure LPC +3V3ARM (P4 pin 5) and the B:1 pin; S2 with the LPC bridge firmware idling (and again with stock firmware), measure Pico 3V3 (pin 36), the GP1 and GP0 pin voltages, and the pin current: the voltage across the receiver-end 1k (1 mV = 1 uA), or a uA meter in series with the pin. | Unpowered rail below about 0.3 V and pin current in the "very little" range (record it; propose under 10 uA as the working limit, UNVERIFIED since the datasheet gives no number). If not, raise the receiver-end resistor to 2.2k and repeat BT-1, or take the PC817 alternative (3.9). | RP2040 FT behaviour, LPC unpowered pad (E-11) |
 | BT-3 | CV back-feed: S1 with both expander CV outputs at their maximum, measure +12V_BRK, -12V_BRK, TP70, TP71. | Below about 0.3 V. | CV series values, rail-diode choice (C12) |
 | BT-4 | CV depth: S3, sweep each CV and compare filter and VCA response with and without the 100k. | Owner judges the depth acceptable; else 47k and repeat BT-3. | E-18 |
-| BT-5 | Gate: scope TP83 high and low; scope the CD40106 output and the Pico GPIO node; then S2 measure Pico 3V3. | TP83 high above 3.6 V for a 5 V CD40106; node 2.6-3.2 V high, below 0.3 V low; Pico 3V3 below 0.3 V in S2. | E-09, divider margin, 78L05 need |
+| BT-5 | Gate: scope TP83 high and low; scope the CD40106 output and the Pico GPIO node; then in S2 measure Pico 3V3 and the current into the GPIO pin (uA meter between the divider node and the pin, or compute it from the 22k / 33k node voltage with and without the pin connected). | TP83 high above 3.6 V for a 5 V CD40106; node 2.6-3.2 V high, below 0.3 V low; in S2 Pico 3V3 below 0.3 V and pin current in the "very little" range (working limit under 10 uA, UNVERIFIED). | E-09, divider margin, 78L05 need, FT behaviour |
 | BT-6 | LCR meter on each cable: one conductor to all others plus shield. | Record pF/m; recompute BT-1 margins. | E-13 |
 | BT-7 | Caliper the owner's DB-9 insert (or obtain its drawing) for row offset and pin numbering. | Neighbour table in 2.1 confirmed. | Pin-map geometry |
 | BT-8 | Continuity: MB shell to TP72; expander shell to panel and to rack 0 V. | Under 1 ohm at the MB end; open at the expander end. | E-15, shield rule |
@@ -374,3 +446,4 @@ Other open items carried from the audit: LPC bridge UART choice (B01, E-01); CV 
 | BT-10 | CD4049UB input: with VCC = 3.3 V, apply 5 V through 100k and measure input current and VCC rise; repeat with VCC unpowered. | Confirms whether the input clamps to VCC (TI p1 vs p17). | C16, E-10 |
 | BT-11 | Clock IN: feed +/-10 V through the 100k into the 4049 stage. | GP21 stays within 0-3.3 V; 3V3 rail unchanged. | Clock IN protection |
 | BT-12 | Meter the CP1A bus slot pins 11-12 for +5 V. | Present. | E-14 |
+| BT-13 | Only if the PC817 alternative (3.9) is considered: build one direction with an owned PC817, 560 ohm and 4.7k on the real cable; send a repeating 0x55 pattern at 4800, 9600 and 19200 baud; scope the receiver pin and run a loop-back byte-error count. Also read the part's rank mark. | Edges at most about 25 % of a bit and no byte errors over a long run at the chosen baud. | PC817 baud, CTR rank |
