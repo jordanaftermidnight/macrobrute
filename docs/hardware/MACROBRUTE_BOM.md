@@ -2,23 +2,85 @@
 
 **Project:** MicroBrute Deep Modification + Pi Pico Expansion Controller
 **Author:** jordanaftermidnight
-**Version:** 1.1 — April 2026 (Phase D refresh)
+**Version:** 1.2 — 2026-10-17 (reconciled with the project audit)
 
-> **Phase D revisions:** Expander shrunk to 17HP. Behringer **CP1A** is the
-> reference Eurorack PSU (±12V + 5V on bus). Pico powered from CP1A +5V via
-> 3-part filter (1N5817 + 100µF + 100nF) — no LM7805 needed. **CD4024 dropped**
-> — clock division is firmware (3 GPIO outputs). Noise gen, S&H, buffered
-> mult, LFO, attenuverter all dropped from the expander BOM (covered by
-> existing rack modules — NOISE / RND CV / '07 MULT / Tryfelo / MMI Matrix).
-> Slew limiter is the only hardware utility on the expander.
->
-> **New connector spec:** 5-pin JST-XH rear header for the EFFIGY pair bus
-> (was 4-pin — INT line added). 0.91" SSD1306 strip OLED on MB panel. 2× DB-9
-> shielded cables (no aux cable — DB-9 B carries digital + power + 2 CVs).
+> **2026-10-17 revisions** (sources: audit `docs/superpowers/reviews/2026-10-16-project-audit.md`,
+> back-feed and hum design note `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md` = "BF",
+> `docs/DATASHEETS.md`, `docs/MACROBRUTE_CONNECTION_MAP.md`):
+> - **Power is split.** The expander runs only from the rack (Behringer **CP1A**: -12 V @ 1 A,
+>   +12 V @ 1 A, +5 V @ 0.5 A). The MB-side breakout runs only from the synth (TP70/TP71/TP72).
+>   No supply rail crosses the DB-9 cable. Pico VSYS takes rack +5 V through a Schottky OR diode
+>   + bulk + 100 nF; no LM7805 is needed.
+> - **Expander scope:** slew limiter, LFO and Sample & Hold (LF398) as hardware utilities, plus
+>   firmware dividers, clock I/O and 4 aux outs. **CD4024 dropped** (clock division is firmware).
+>   Noise, buffered mult and attenuverter stay out (covered by existing rack modules).
+> - **Width OPEN:** 17 HP or about 20 HP, until the owner measures the blank.
+> - **Connector:** 2× shielded 9-conductor DB-9 cables (not ribbon); DB-9 B carries UART TX/RX,
+>   Filter CV, VCA CV and grounds only. **No I²C on the cable.** The 0.91" strip OLED is dropped and
+>   the EFFIGY 5-pin JST-XH header is shelved.
+> - **Owned parts only:** the Have/Missing table below (from BF section 1) is the ownership record.
+>   Rows in Parts 1 and 2 that are not named there are Missing. Items marked "owner to confirm" are
+>   open owner questions (Pico variant, main OLED size and interface, DB-9 count); they are not decided here.
+
+---
+
+## OWNED vs MISSING (Have / Missing)
+
+Source: BF section 1 and `docs/MACROBRUTE_CONNECTION_MAP.md` section 14 (the only list with a Have
+status before this table). The owner has further parts not yet listed (BF Q18). A part not in this
+table is Missing, even where it is likely in a drawer.
+
+| Part | Qty | Status | Used for / note |
+|------|-----|--------|-----------------|
+| Raspberry Pi Pico | 1 | Have, **variant owner to confirm** (docs say WH; package says no W; another description says H) | Expander controller. Nothing here uses wireless (BF Q21) |
+| 0.96" SSD1306 OLED | 1 | Have, **size / controller / interface owner to confirm** (0.96 vs 1.3 in, SSD1306 vs SH1106, 4-pin I²C vs 7-pin SPI) | Expander main display (BF Q22) |
+| 0.91" SSD1306 128×32 | 1 | Have, no longer used | Strip OLED dropped; spare |
+| 1.3" SH1106 OLED | 1 | Have, no longer used | Spare / fallback |
+| KY-040 / HW-040 encoder | 1 | Have | Expander encoder |
+| TL074C | 4 | Have | Breakout U1; expander outputs |
+| TL072IP | 6 | Have | Breakout U2, V-to-I, slew, LFO, S&H buffer |
+| CD40106 | 3 | Have | Breakout gate stage; LFO Schmitt |
+| CD4049UBE | 3 | Have | Expander clock IN/OUT buffers |
+| CD4051 | 2 | Have | No role in the decided design (only the unproven S&H alternative) |
+| 78L05 | 4 | Have | Breakout-local +5 V for the CD40106 (Provisional) |
+| BF245C JFET | 5 | Have | No role |
+| Vactrol(s) | "some" | Have (type and LED rating unknown, BF Q2) | Resonance CV |
+| LDR04 | 4 | Have | Home-made vactrol only if needed |
+| Isolation transformer | 1 | Have (salvaged, 46.9/82.4 Ω) | Hum ladder last step |
+| Arduino Nano | 1 | Have | No role |
+| IC assortment: PT2399 ×3, LM393 ×10, ICL7660S ×2, PC817 ×20, UC3842AN ×5, LM339 ×10, NE555 ×20, UC3843AN ×5, NE5532 ×5, LM358 ×10, ULN2003AN ×5, LM386 ×5, LM324 ×10, ULN2803APG ×5, TDA2030A ×2, TDA2822D ×5, JRC4558 ×10 | as listed | Have | None is an LF398 equivalent. PC817 is the optional isolated-UART part (BF 3.9) |
+| BAT85 | 10 | Have | CV clamps (4), Pico VSYS (1), expander rails (3), breakout rails (2): all 10 allocated (BF Q3) |
+| 100 nF ceramic | 20 | Have | Decoupling |
+| 1 µF ceramic | 5 | Have (dielectric unknown) | Not for timing or hold |
+| 1 nF ceramic | 5 | Have | CV and gate filters; NOT for S&H |
+| 10 µF / 63 V electrolytic | 10 | Have | 2-4 in parallel per rail in place of 100 µF |
+| Resistors, through-hole kit | — | **Have, values to confirm** (series, power rating, and the values 220R, 1k, 2k, 4.7k, 10k, 22k, 33k, 100k, 10R, 560R, 680R, 1M; BF Q5) | All resistor rows below |
+| Assortment kit (capacitors, transistors, diodes, LEDs, trim pots) | — | Have, exact types UNVERIFIED (BF Q18) | Rows below stay Missing until the card is read |
+| 100 kΩ pots | 4 | Have | Expander controls |
+| 3.5 mm jacks | 25 | Have, type unknown (BF Q8) | Expander and MB panel jacks |
+| DB-9 connectors | "several" per owner 2026-10-17 (earlier list: 2) | Have, **count / gender / flange owner to confirm** (BF Q9, E-32) | 4 panel connectors are needed in total |
+| VGA HD-15 connectors | 2 | Have, rejected | Spare |
+| **LF398 (LF398N, DIP-8)** | 1 | **Missing — genuine purchase** | Expander S&H (BF Q1) |
+| **10 nF film (polystyrene / polypropylene) hold capacitor** | 1 | **Missing — genuine purchase** | LF398 hold cap; ceramic is unsuitable (LF398 sheet p15) |
+| Film capacitor for LFO timing (1 µF, or 4.7-10 µF) | 1 | Missing, owner decision (BF Q6) | LFO |
+| 1 MΩ pots | 3 | Missing, owner decision (BF Q6) | LFO rate, slew rise/fall |
+| 1N4148 | 2+ | Missing (may be in the assortment kit, UNVERIFIED; BF Q4) | Slew-limiter steering |
+| 1N5817 | 1 | Missing; **20 V part, not 40 V** (DATASHEETS (e)) | Only the Pico VSYS path needs a real one; an owned BAT85 can stand in (BF 1.2) |
+| 100k trimmers | — | Missing (BF Q7) | Aux-out trims, or fixed resistors |
+| Eurorack 16-pin keyed header + ribbon | 1 | Missing (BF Q11) | Expander power |
+| DB-9 connectors (to reach 4 panel + cable ends), 2 shielded 9-core cables with hoods | — | Missing (BF Q9) | A and B links; ribbon is not acceptable |
+| Insulating shoulder washers | — | Missing (BF Q10) | Expander-side DB-9 shells |
+| RGB LED (common cathode), 6 mm tactile button | 1 each | Missing (BF Q12) | Expander UI |
+| Stripboard, IC sockets, hook-up wire | — | Not on the owned list (BF Q13) | All boards |
+| 100 µF / 25 V, 100 µF / 10 V, 47 µF electrolytics | — | Missing | Use 2-4× 10 µF / 63 V in parallel instead |
+| Ferrite beads | — | Missing | Omit, or 10 Ω + 10 µF |
+| 2N3904, BC547, BC557, 2N3906, BSS138, BAT54S, BZX84C3V3, SMBJ12CA, BAT46, LM7805, MCP4725, LM13700, CD4066, CD4024 | — | Missing, **not needed** | Dropped or replaced (BF 1.1, 1.2) |
 
 ---
 
 ## QUICK COST SUMMARY
+
+The euro figures below predate the Have/Missing table and the scope change; they are not recomputed. Most Part 1 and Part 2 lines are owned or no longer needed (see the table above).
 
 | Category | Cost |
 |----------|------|
@@ -38,8 +100,8 @@
 
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
-| 1 | Raspberry Pi Pico (standard, NOT W) | 1 | €4.00 | €4.00 | Mouser/Pimoroni |
-| 2 | 0.96" 128x64 OLED SSD1306 I²C (main, on hand) + 0.91" 128×32 SSD1306 (strip on MB, on hand) — fallback: 1.3" SH1106 (reserved for EFFIGY), 16×2 1602 I²C LCD (all on hand) | 2 | €0 | €0 | — |
+| 1 | Raspberry Pi Pico — **Have** (variant owner to confirm; see the table above, no purchase) | 1 | €0 | €0 | — |
+| 2 | 0.96" 128x64 OLED SSD1306 (main, on hand; size/interface owner to confirm) — spares on hand: 0.91" 128×32 SSD1306 (strip OLED dropped), 1.3" SH1106, 16×2 1602 I²C LCD | 1 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -56,12 +118,12 @@
 
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
-| 9 | 1N5817 Schottky diode (40V 1A) | 2 | €0.10 | €0.20 | Mouser/TME |
-| 10 | Ferrite bead 600Ω@100MHz (0805) | 4 | €0.15 | €0.60 | Mouser/TME |
+| 9 | 1N5817 Schottky diode (**20 V** 1 A, not 40 V; **Missing**, owned BAT85 can stand in) | 1 | €0.10 | €0.10 | Mouser/TME |
+| 10 | ~~Ferrite bead 600Ω@100MHz (0805)~~ — **not needed** (omit, or 10 Ω + 10 µF) | — | — | — | — |
 | 11 | 100nF MLCC capacitor 0805 | 10 | €0.05 | €0.50 | Mouser/TME |
 | 12 | 10µF MLCC capacitor 0805 | 4 | €0.15 | €0.60 | Mouser/TME |
-| 13 | BAT54S dual Schottky (SOT-23) | 2 | €0.20 | €0.40 | Mouser/TME |
-| 14 | 3.3V Zener diode (BZX84C3V3) | 2 | €0.10 | €0.20 | Mouser/TME |
+| 13 | ~~BAT54S dual Schottky (SOT-23)~~ — **Have BAT85 ×10** instead (two per clamp) | — | — | — | — |
+| 14 | ~~3.3V Zener diode (BZX84C3V3)~~ — **not needed** (audit B17) | — | — | — | — |
 
 ### CV Output Circuit (x4 channels)
 
@@ -78,7 +140,7 @@
 
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
-| 21 | BSS138 N-MOSFET (SOT-23) | 4 | €0.15 | €0.60 | Mouser/TME |
+| 21 | ~~BSS138 N-MOSFET (SOT-23)~~ — **not needed** (UART is 3.3 V to 3.3 V, no level shifter) | — | — | — | — |
 | 22 | 10kΩ resistor 0805 (pull-ups) | 8 | €0.02 | €0.16 | Mouser/TME |
 | 23 | 1kΩ resistor 0805 (series protection) | 10 | €0.02 | €0.20 | Mouser/TME |
 | 24 | 100Ω resistor 0805 (MIDI current limit) | 2 | €0.02 | €0.04 | Mouser/TME |
@@ -133,7 +195,9 @@
 | 9 | SPST momentary pushbutton (PBS-110) | 2 | €0.30 | €0.60 | Tayda |
 | 10 | DPDT ON-ON mini toggle (MTS-202) | 1 | €0.80 | €0.80 | Tayda |
 
-### Resistors (1/4W Metal Film 1%)
+### Resistors (1/4W Metal Film 1%) — Have (owner kit); values to confirm (BF Q5)
+
+The owned through-hole kit covers these rows; 1 % parts are not assumed. Older docs used 10 MΩ for the TL074 input bias; 1 MΩ replaces it (audit N11).
 
 | # | Value | Qty | Unit € | Total € | Purpose |
 |---|-------|-----|--------|---------|---------|
@@ -155,9 +219,10 @@
 | 21 | 470nF | Film | 2 | €0.25 | €0.50 | Portamento speed mod (C38) |
 | 22 | 100nF | Ceramic/MLCC | 20 | €0.03 | €0.60 | Decoupling |
 | 23 | 10nF | Film | 10 | €0.10 | €1.00 | Various |
-| 24 | 1µF | Film | 4 | €0.30 | €1.20 | Sample & hold |
+| 24 | 1µF | Film | 4 | €0.30 | €1.20 | LFO timing (1 µF or 4.7-10 µF film; owner decision, BF Q6). The S&H hold capacitor is a 10 nF film part (row 24a) |
+| 24a | 10nF | Film (polystyrene / polypropylene) | 1 | €0.30 | €0.30 | LF398 hold cap — **Missing, genuine purchase** |
 | 25 | 10µF | Electrolytic 25V | 10 | €0.08 | €0.80 | Power filtering |
-| 26 | 100µF | Electrolytic 25V | 4 | €0.12 | €0.48 | Power filtering |
+| 26 | 100µF | Electrolytic 25V | — | — | — | **Missing; use 2-4× owned 10 µF/63 V in parallel instead** |
 | 27 | 4.7µF | Film | 1 | €0.40 | €0.40 | Portamento original (spare) |
 
 ### Semiconductors
@@ -166,13 +231,14 @@
 |---|-----------|-----|--------|---------|---------|
 | 28 | TL072 dual op-amp (DIP-8) | 4 | €0.45 | €1.80 | Buffers, mixers |
 | 29 | TL074 quad op-amp (DIP-14) | 2 | €0.60 | €1.20 | Multi-channel processing |
-| 30 | LM13700 dual OTA (DIP-16) | 2 | €1.50 | €3.00 | VCA, VC-LFO rate |
-| 31 | CD4066 quad bilateral switch (DIP-14) | 2 | €0.40 | €0.80 | Sample & hold |
+| 30 | ~~LM13700 dual OTA (DIP-16)~~ — **dropped** | — | — | — | — |
+| 31 | ~~CD4066 quad bilateral switch (DIP-14)~~ — replaced by the owned CD4051 where a switch is wanted; the decided S&H uses an **LF398** (row 31a), so neither is needed | — | — | — | — |
+| 31a | **LF398N sample-and-hold (DIP-8) — Missing, genuine purchase** (pinout: DATASHEETS (a)) | 1 | €— | €— | TME |
 | 32 | CD4017 decade counter (DIP-16) | — | — | — | **Dropped** — clock division now in Pico firmware (3 GPIO outputs, configurable ratios) |
 | 33 | CD4024 7-stage counter (DIP-14) | — | — | — | **Dropped** — clock division now in Pico firmware |
-| 34 | BC547 NPN transistor (TO-92) | 5 | €0.08 | €0.40 | Noise source, comparators |
-| 35 | BC557 PNP transistor (TO-92) | 5 | €0.08 | €0.40 | Various |
-| 36 | 2N3906 PNP transistor | 2 | €0.10 | €0.20 | Sequencer decoupling |
+| 34 | ~~BC547 NPN transistor~~ — **not needed** (noise dropped) | — | — | — | — |
+| 35 | ~~BC557 PNP transistor~~ — **not needed** | — | — | — | — |
+| 36 | ~~2N3906 PNP transistor~~ — **not needed** | — | — | — | — |
 | 37 | 1N4148 signal diode | 20 | €0.03 | €0.60 | Protection, clipping |
 
 ### IC Sockets
@@ -341,23 +407,10 @@
 
 ### Pi Pico GPIO Assignment
 
-| Function | GPIO | Physical Pin | Notes |
-|----------|------|--------------|-------|
-| UART TX → LPC2361 | GP0 | Pin 1 | UART0 TX |
-| UART RX ← LPC2361 | GP1 | Pin 2 | UART0 RX |
-| OLED SDA (I2C) | GP4 | Pin 6 | I2C0 SDA |
-| OLED SCL (I2C) | GP5 | Pin 7 | I2C0 SCL |
-| OLED SCK (SPI) | GP18 | Pin 24 | SPI0 SCK |
-| OLED MOSI (SPI) | GP19 | Pin 25 | SPI0 TX |
-| OLED CS | GP17 | Pin 22 | SPI0 CSn |
-| OLED DC | GP16 | Pin 21 | GPIO |
-| OLED RST | GP20 | Pin 26 | GPIO |
-| CV Output 1 | GP10 | Pin 14 | PWM5 A |
-| CV Output 2 | GP11 | Pin 15 | PWM5 B |
-| CV Output 3 | GP12 | Pin 16 | PWM6 A |
-| CV Output 4 | GP13 | Pin 17 | PWM6 B |
-| ADC Input 1 | GP26 | Pin 31 | ADC0 |
-| ADC Input 2 | GP27 | Pin 32 | ADC1 |
+**Superseded.** The earlier table here (SPI OLED on GP16-20, CV outputs on GP10-13) predates the
+firmware and is removed (audit S04). The canonical source is `firmware/pico/config.py`; the table is
+mirrored in `docs/MACROBRUTE_CONNECTION_MAP.md` section 1 and `schematics/pico_pinout.md`. Free pins:
+GP2, GP3, GP11 (fault-tolerant) and GP26-GP28 (ADC-capable).
 
 ### MicroBrute Test Points (Key Signals)
 
@@ -370,23 +423,25 @@
 | TP109 | Metalizer out | Rear | Wavefolder output |
 | TP10/TP11 | VCA CV in | Front | External VCA CV injection |
 | TP55 | Pitch CV | Front | Post-portamento CV |
-| TP56 | Internal gate | Front | Gate signal |
+| TP56 | Internal gate (the test-points file lists it as Gate In; another doc calls it +5VNUM: UNVERIFIED, never use it as a +5 V tap, audit B09) | Front | Gate signal |
 | TP70 | +12V | Rear | Analog positive rail |
 | TP71 | -12V | Rear | Analog negative rail |
 | TP72 | GND | Rear | Ground reference |
 
 ### Power Distribution
 
+Two independent chains; no supply crosses the DB-9 cable (only ground is shared).
+
 ```
-MicroBrute +5V Rail (PSU-DIGITAL section)
-    │
-    └──► 1N5817 Schottky (0.3V drop)
-          │
-          └──► Pi Pico VSYS (Pin 39)
-                │
-                ├──► Pico 3V3 OUT ──► OLED VCC
-                │
-                └──► Pico internal 3.3V regulator
+EXPANDER (rack only)                          BREAKOUT (synth only)
+CP1A 16-pin bus                               MicroBrute TP70 (+12 V), TP71 (-12 V), TP72 (GND)
+  ├─ +5 V (pins 11-12, 0.5 A shared)            │
+  │    └─► Schottky OR diode (1N5817 not        └─► rail protection (BAT85 or 4.7-10 Ω)
+  │         owned; BAT85 stand-in) + bulk            └─► 2-4× 10 µF/63 V ─► +12V_BRK / -12V_BRK
+  │         + 100 nF ─► Pico VSYS (pin 39)           └─► owned 78L05 ─► +5 V for the CD40106 only
+  │            └─► Pico 3V3 ─► OLED, encoder,            (Provisional, BF 3.4)
+  │                CD4049UB clock buffers
+  └─ ±12 V ─► slew, LFO, S&H, TL07x
 ```
 
 ### CV Output Circuit (per channel)
@@ -396,7 +451,7 @@ Pico GPIO (PWM)
     │
     └──► 10kΩ ──┬──► 10kΩ ──┬──► TL072 (+) ──► CV OUT (0-10V)
                 │           │
-               1µF        100nF   TL072 powered from MicroBrute ±12V
+               1µF        100nF   TL072 powered from the rack ±12V (expander aux-out circuit, audit S11)
                 │           │     Gain set by feedback resistors
                GND         GND    100kΩ trimmer for calibration
 ```
@@ -406,11 +461,9 @@ Pico GPIO (PWM)
 ## PART 6: PURCHASING STRATEGY
 
 ### Order 1: TME (EU, fast shipping)
-- All resistors, capacitors, diodes (including the 3-part Pico filter: 1N5817 + 100µF/10V + 100nF)
-- TL072 (slew limiter), TL074 (MB-side buffers), CD40106 (gate Schmitt), CD4049UBE (level shifter)
-- BC547, BC557, 2N3906, 2N3904 (vactrol driver, gate buffer)
-- IC sockets, ferrite beads, MLCCs
-- ~~LM13700, CD4066, CD4017, CD4024~~ — **dropped** (utilities moved to firmware or covered by rack modules)
+- Only what the Have/Missing table marks as a genuine purchase or owner decision: **LF398N**, the 10 nF film hold capacitor, and (owner decision) the LFO film capacitor and 1N4148 if the assortment kit lacks them. See `MACROBRUTE_SHOPPING_LIST.md`.
+- Everything else in this order (TL072/TL074/CD40106/CD4049UBE, resistors, 100 nF, BAT85, transistors) is owned or no longer needed.
+- ~~LM13700, CD4066, CD4017, CD4024, BC547, BC557, 2N3906, 2N3904, ferrite beads~~ — **dropped or not needed**
 
 ### Order 2: Thonk (UK)
 - Thonkiconn jacks (all)
@@ -418,13 +471,13 @@ Pico GPIO (PWM)
 - Knobs
 
 ### Order 3: AliExpress (China, budget)
-- Raspberry Pi Pico (if Pico WH not already on hand)
+- Raspberry Pi Pico — not needed (Have; variant owner to confirm)
 - JST-PH connectors
 - Wire assortment
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
-- (OLED already on hand — 0.96" SSD1306 main, 0.91" SSD1306 strip, 1.3" SH1106 fallback/EFFIGY, 16x2 1602 LCD)
+- (OLED already on hand — 0.96" SSD1306 main, spares 0.91" SSD1306, 1.3" SH1106, 16x2 1602 LCD)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)
@@ -450,6 +503,6 @@ Pico GPIO (PWM)
 
 ---
 
-*Document Version: 1.0*  
-*Last Updated: March 2026*  
+*Document Version: 1.2*  
+*Last Updated: 2026-10-17*  
 *Project: MACROBRUTE*

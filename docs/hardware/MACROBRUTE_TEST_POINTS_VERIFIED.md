@@ -26,7 +26,7 @@ rear board. L1 (10uH) + C44 (47nF) filter +3V3ARM into +3V3ANA.
 | **TP71** | **-12V (A-12)** | Front board, near P4 | Confirmed from schematic + photo |
 | **TP72** | **GND** | Front board, near P4 | Confirmed from schematic + photo |
 | **TP73** | Power area | Front board, near P4 | **UNVERIFIED — Use Caution** Likely second GND or +5V |
-| TP56 | +5VNUM | Rear board | Digital rail (per original doc) |
+| TP56 | +5VNUM | Rear board | Digital rail "per original doc" only. **UNVERIFIED**, and the Gate In table below lists TP56 as the gate signal: the two entries conflict. Do not tap it as a +5 V source (audit B09) |
 
 ### P4 Connector (6-pin JST, white — inter-board power)
 
@@ -150,7 +150,7 @@ All outputs ~10Vpp. **Buffering required** — direct wiring causes oscillator l
 | TP22 | External gate input |
 | TP27 | Gate to microcontroller |
 | TP82 | Internal gate bus |
-| **TP83** | **Gate from microcontroller** (100k source Z — needs buffer) |
+| **TP83** | **Gate from microcontroller** (100k source Z — needs buffer). Logic level (3.3 V or 5 V) **UNVERIFIED**: measure it before relying on a 5 V CD40106 stage (Phase 0 check, audit E-09) |
 | TP84 | External gate output |
 
 ---
@@ -345,8 +345,16 @@ Standard 20-pin ARM JTAG pinout:
 - Odd pins: VTref, nTRST, TDI, TMS, TCK, RTCK, TDO, RESET, DBGRQ, DBGACK
 - Even pins: All GND (except pin 2 = nSRST)
 
-Note: UART0 pins (P0.2/TXD0, P0.3/RXD0) are NOT on the JTAG header —
-they are separate pads near the QFP.
+Note: UART0 pins (P0.2/TXD0 = LQFP pin 98, P0.3/RXD0 = LQFP pin 99) are NOT on the
+JTAG header. The earlier claim that they are "separate pads near the QFP" has no photo
+or citation and is **UNVERIFIED** (audit S09, E-03); the Phase 0 continuity check settles it.
+
+LPC2361 pin numbers from the data sheet (`docs/DATASHEETS.md` (b), Rev. 03, Table 3):
+P0.2/TXD0 = pin 98, P0.3/RXD0 = pin 99, P0.15/TXD1 = pin 62, P0.16/RXD1 = pin 63. Pins 97 and 96
+are VSS and VDD(3V3), **never** UART pins: a probe or wire placed there lands on ground or the
+3.3 V supply. The stock MIDI UART is UART3 per the firmware disassembly (6N138 output to pin 85,
+P4.29, UNVERIFIED). Which UART pins are free on the board is UNVERIFIED until the continuity
+check.
 
 ---
 
