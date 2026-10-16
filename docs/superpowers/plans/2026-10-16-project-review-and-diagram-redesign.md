@@ -307,7 +307,7 @@ git commit -m "docs: record audit decisions"
 
 - [ ] **Step 1:** Re-run `python3 tools/check_docs.py` and keep the list.
 - [ ] **Step 2:** For each Blocker/Should-fix row in the audit report, edit the affected doc to match the decision from Task 4 (pin tables first, then prose). Update the connection map and `firmware/pico/config.py` comments together when a pin role changes.
-- [ ] **Step 3:** Remove genre wording from the 13 files above (rewrite the sentence neutrally, e.g. "high-impact sound-shaping mods"); verify with `grep -rIil -E "techno|industrial" . --exclude-dir=.git --exclude-dir=firmware --exclude="Macrobrute Manual.html"` returning nothing.
+- [ ] **Step 3:** Remove genre wording from the 13 files above (rewrite the sentence neutrally, e.g. "high-impact sound-shaping mods"); verify with a case-insensitive `grep -rIl` for the two genre words (kept out of this plan on purpose; the user knows them) over the project, excluding `.git`, `firmware`, and the generated manual, returning nothing.
 - [ ] **Step 4:** Run `python3 tools/check_docs.py && python3 -m pytest tools/tests -v`. Expected: exit 0, all tests pass.
 - [ ] **Step 5: Commit** (one commit per logical doc group)
 
