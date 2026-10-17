@@ -10,7 +10,8 @@ the driver toggles it around each transfer.
 The controller chip is SH1106 (owner-stated, not bench-verified), so config.py
 sets OLED_CHIP = "SH1106" and OLED_COL_OFFSET = 2; SSD1306 stays supported as
 an option (OLED_CHIP = "SSD1306", OLED_COL_OFFSET = 0). Module current draw is
-UNVERIFIED, and so is the module working with CS tied low (bench check BT-14).
+UNVERIFIED, and so is the module working with CS tied low (bench check BT-14; procedure in
+docs/hardware/MACROBRUTE_PHASE0_BOM.md).
 """
 
 from machine import Pin, SPI

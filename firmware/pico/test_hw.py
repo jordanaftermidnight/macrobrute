@@ -120,7 +120,7 @@ def test_oled():
         print(f"  Sent init + frame for OLED_CHIP={config.OLED_CHIP}, COL_OFFSET={config.OLED_COL_OFFSET}")
         print("  Display should show: MACROBRUTE / HW TEST / SPI <chip>")
         print("  SPI is write-only, so only your eyes can confirm the OLED works.")
-        print("  Blank screen: check the wiring against the header order, RES, DC, then CS-to-GND (BT-14).")
+        print("  Blank screen: check the wiring against the header order, RES, DC, then CS-to-GND (BT-14, see docs/hardware/MACROBRUTE_PHASE0_BOM.md).")
         print("  Shifted 2 columns or garbage edge: try OLED_CHIP=\"SH1106\", OLED_COL_OFFSET=2.")
 
     except Exception as e:

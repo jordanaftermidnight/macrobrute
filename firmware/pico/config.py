@@ -14,8 +14,8 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 #   module works with CS tied low is UNVERIFIED, bench check BT-14). Fallback
 #   if it does not: CS back on a GPIO (set OLED_CS to it) and the gate input
 #   moves to GP27/GP28 with the BT-5 leakage check or a series diode / 3V3
-#   buffer. If the board has IIC/SPI selection pads or resistors they must be
-#   in the SPI position (UNVERIFIED: no manual found). SH1106 needs
+#   buffer. The board's IIC/SPI selection pads are in the SPI position (SMD
+#   resistor on the SPI pad; owner-confirmed). SH1106 needs
 #   OLED_COL_OFFSET=2; the driver still supports OLED_CHIP="SSD1306" with
 #   offset 0. Powered from the Pico 3V3 pin, 3V3 logic; current draw
 #   UNVERIFIED. A 1.3" module is larger than the old 0.96" panel cutout, which
