@@ -1,14 +1,15 @@
 """MACROBRUTE Pico — main OLED driver (128×64, SPI, write-only).
 
-Targets the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 module, used in SPI mode, on SPI0: SCK GP2, MOSI GP3,
+Targets the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 module (7-pin SPI header)
+on SPI0: SCK (header CLK) GP2, MOSI GP3,
 DC GP4, RES GP5 (pins from config.py). The module's CS pin is strapped to
 GND (one device on the bus), so config.OLED_CS is None and this driver never
 drives CS; if CS is moved back onto a GPIO, set config.OLED_CS to that GP and
 the driver toggles it around each transfer.
 
-The controller chip is UNVERIFIED (SSD1306 or SH1106: read the module
-marking). config.OLED_CHIP selects the init sequence; for SH1106 also set
-config.OLED_COL_OFFSET = 2. Module pin order and current draw are
+The controller chip is SH1106 (owner-stated, not bench-verified), so config.py
+sets OLED_CHIP = "SH1106" and OLED_COL_OFFSET = 2; SSD1306 stays supported as
+an option (OLED_CHIP = "SSD1306", OLED_COL_OFFSET = 0). Module current draw is
 UNVERIFIED, and so is the module working with CS tied low (bench check BT-14).
 """
 
@@ -18,8 +19,8 @@ import time
 import config
 
 # 4 MHz for both chips. Write-clock limits from datasheet memory, UNVERIFIED:
-# SSD1306 about 10 MHz, SH1106 about 4 MHz, so 4 MHz suits either chip and is
-# forgiving of breadboard leads. A full 1 KB frame at 4 MHz takes about 2 ms.
+# SSD1306 about 10 MHz, SH1106 about 4 MHz (the module's chip is owner-stated
+# SH1106), so 4 MHz suits either chip and is forgiving of breadboard leads. A full 1 KB frame at 4 MHz takes about 2 ms.
 SPI_BAUD = 4_000_000
 
 

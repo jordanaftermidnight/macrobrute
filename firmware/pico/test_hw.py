@@ -7,10 +7,11 @@ Only the OLED test needs other files (display.py, config.py) on the Pico;
 the rest diagnose wiring before the full firmware is copied.
 
 Breadboard Wiring Quick Reference:
-  Main OLED Keyestudio-clone IIC/SPI 1.3" V2.0 in SPI mode (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED):
-    VCC  → 3V3 (pin 36)        GND → GND
-    D0   → GP2 (pin 4, SCK)    D1  → GP3 (pin 5, MOSI)
-    DC   → GP4 (pin 6)         RES → GP5 (pin 7)        CS → GND (strapped, BT-14)
+  Main OLED Keyestudio-clone IIC/SPI 1.3" V2.0, 7-pin SPI header, chip SH1106
+  (pin order and chip owner-stated, not bench-verified), header order GND VCC CLK MOSI RES DC CS:
+    GND  → GND                 VCC  → 3V3 (pin 36)
+    CLK  → GP2 (pin 4, SCK)    MOSI → GP3 (pin 5)
+    RES  → GP5 (pin 7)         DC   → GP4 (pin 6)       CS → GND (strapped, BT-14)
   The OLED test drives the module through display.OLED_SPI.
 
   Encoder HW040:
@@ -119,7 +120,7 @@ def test_oled():
         print(f"  Sent init + frame for OLED_CHIP={config.OLED_CHIP}, COL_OFFSET={config.OLED_COL_OFFSET}")
         print("  Display should show: MACROBRUTE / HW TEST / SPI <chip>")
         print("  SPI is write-only, so only your eyes can confirm the OLED works.")
-        print("  Blank screen: check pin order (UNVERIFIED), RES, DC, then CS-to-GND (BT-14).")
+        print("  Blank screen: check the wiring against the header order, RES, DC, then CS-to-GND (BT-14).")
         print("  Shifted 2 columns or garbage edge: try OLED_CHIP=\"SH1106\", OLED_COL_OFFSET=2.")
 
     except Exception as e:

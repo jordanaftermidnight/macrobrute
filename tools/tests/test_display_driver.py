@@ -118,10 +118,17 @@ def test_display_py_parses():
     ast.parse(DISPLAY.read_text())
 
 
-def test_no_i2c_and_chip_marked_unverified():
+def test_no_i2c_and_chip_is_owner_stated_sh1106():
     src = DISPLAY.read_text()
     assert "I2C" not in src and "WARNING" not in src
-    assert "UNVERIFIED" in ast.get_docstring(ast.parse(src))
+    doc = ast.get_docstring(ast.parse(src))
+    assert "SH1106" in doc and "owner-stated" in doc
+    assert "UNVERIFIED" in doc  # current draw and CS tied low (BT-14) stay unverified
+
+
+def test_config_defaults_to_sh1106_with_column_offset():
+    cfg = _load_config()
+    assert cfg.OLED_CHIP == "SH1106" and cfg.OLED_COL_OFFSET == 2
 
 
 def test_spi_bus_and_reset_pulse(monkeypatch):

@@ -6,31 +6,32 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 
 # ---------------------------------------------------------------------------
 # Main OLED — baseline (owner ruling, 2026-10-17): the owner's Keyestudio-clone
-#   IIC/SPI 1.3" V2.0 module (used in SPI mode), 128×64, write-only on SPI0 (no MISO), driven by display.py
-#   (OLED_SPI). The module's CS pin is strapped to GND (single device on the
-#   bus; that the module works with CS tied low is UNVERIFIED, bench check
-#   BT-14). Fallback if it does not: CS back on a GPIO (set OLED_CS to it) and
-#   the gate input moves to GP27/GP28 with the BT-5 leakage check or a series
-#   diode / 3V3 buffer. Chip UNVERIFIED (SSD1306 or
-#   SH1106: read the marking; for SH1106 set OLED_CHIP="SH1106" and
-#   OLED_COL_OFFSET=2). Module pin order UNVERIFIED (common order GND, VCC,
-#   D0=SCK, D1=MOSI, RES, DC, CS: read the silkscreen). Powered from the Pico
-#   3V3 pin, 3V3 logic; current draw UNVERIFIED. A 1.3" module is larger than
-#   the old 0.96" panel cutout, which bears on the open expander width.
+#   IIC/SPI 1.3" V2.0 module, 128×64, 7-pin SPI header, write-only on SPI0 (no
+#   MISO), driven by display.py (OLED_SPI). Owner-stated, not bench-verified:
+#   chip SH1106 and header order GND, VCC, CLK, MOSI, RES, DC, CS. Pin
+#   mapping: GND→GND, VCC→3V3, CLK→GP2, MOSI→GP3, RES→GP5, DC→GP4, CS→GND.
+#   The module's CS pin is strapped to GND (single device on the bus; that the
+#   module works with CS tied low is UNVERIFIED, bench check BT-14). Fallback
+#   if it does not: CS back on a GPIO (set OLED_CS to it) and the gate input
+#   moves to GP27/GP28 with the BT-5 leakage check or a series diode / 3V3
+#   buffer. If the board has IIC/SPI selection pads or resistors they must be
+#   in the SPI position (UNVERIFIED: no manual found). SH1106 needs
+#   OLED_COL_OFFSET=2; the driver still supports OLED_CHIP="SSD1306" with
+#   offset 0. Powered from the Pico 3V3 pin, 3V3 logic; current draw
+#   UNVERIFIED. A 1.3" module is larger than the old 0.96" panel cutout, which
+#   bears on the open expander width.
 #
-#   The 4-pin I²C 1.3" module is in a TD-3 and is not available. Alternatives
-#   only: the owned GME12864-11 0.96" (arrived; interface and chip UNVERIFIED) or a 4-pin I²C
-#   module; an I²C alternative would need GP4/GP5, which are DC/RES here, so
-#   it requires re-pinning (not a drop-in). 16×2 1602 I²C LCD: different
-#   driver entirely. No I²C is used anywhere on the expander.
+#   The earlier 4-pin I²C 1.3" module is in a TD-3 and is not available. An
+#   I²C display would need GP4/GP5, which are DC/RES here, so it requires
+#   re-pinning (not a drop-in). No I²C is used anywhere on the expander.
 # ---------------------------------------------------------------------------
-OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106" (chip UNVERIFIED)
+OLED_CHIP        = "SH1106"   # "SSD1306" or "SH1106" (SH1106: owner-stated)
 OLED_WIDTH       = 128
 OLED_HEIGHT      = 64
-OLED_COL_OFFSET  = 0       # SSD1306 = 0; set to 2 if using SH1106
+OLED_COL_OFFSET  = 2       # SH1106 = 2; SSD1306 = 0
 OLED_SPI_ID      = 0       # SPI0, write-only (no MISO)
-OLED_SCK         = 2       # GP2  — SPI0 SCK  → module D0
-OLED_MOSI        = 3       # GP3  — SPI0 TX   → module D1
+OLED_SCK         = 2       # GP2  — SPI0 SCK  → module CLK
+OLED_MOSI        = 3       # GP3  — SPI0 TX   → module MOSI
 OLED_DC          = 4       # GP4  — data/command select
 OLED_RES         = 5       # GP5  — reset (active low)
 OLED_CS          = None    # CS strapped to GND, no GPIO (PROVISIONAL, BT-14)
