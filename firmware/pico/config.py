@@ -5,14 +5,15 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 """
 
 # ---------------------------------------------------------------------------
-# Main OLED — 0.96" SSD1306 I²C, 128×64
-#   SSD1306 keeps the driver simple and matches what's commonly available.
-#   The expander panel uses a smaller cutout to suit the 0.96" module.
-#   Size, controller and interface of the owned module: UNVERIFIED (owner to
-#   confirm 0.96" vs 1.3", SSD1306 vs SH1106, I²C vs SPI).
+# Main OLED — baseline (owner, 2026-10-17): the owner's 1.3" 4-pin I²C module,
+#   128×64, chip probably SH1106 (UNVERIFIED: read the marking). For SH1106 set
+#   OLED_CHIP="SH1106" and OLED_COL_OFFSET=2 (follow-up: the values below still
+#   ship the SSD1306 settings). A 1.3" module is larger than the old 0.96"
+#   panel cutout, which bears on the open expander width.
 #
-#   Fallbacks: 1.3" SH1106 (set OLED_CHIP="SH1106" + OLED_COL_OFFSET=2),
-#              16×2 1602 I²C LCD (different driver entirely)
+#   Spares: the owner's 1.3" 7-pin SPI module (would need a different driver
+#   and pins), the 0.96" SSD1306 (owner to confirm it has arrived: OLED_CHIP=
+#   "SSD1306", OLED_COL_OFFSET=0), 16×2 1602 I²C LCD (different driver entirely)
 # Bus: I²C0 — main OLED only (on the expander; no I²C crosses the DB-9 cable).
 # ---------------------------------------------------------------------------
 OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106"

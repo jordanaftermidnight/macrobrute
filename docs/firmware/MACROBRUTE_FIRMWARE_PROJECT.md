@@ -11,7 +11,7 @@ They communicate over UART0 at 115 200 baud through a small framed protocol
 firmware/pico/
 ├── main.py             # Entry point: init, run loop, message dispatch
 ├── config.py           # GPIO pin map (mirrors schematics/pico_pinout.md)
-├── display.py          # SSD1306 0x3C main OLED driver
+├── display.py          # SSD1306/SH1106 0x3C main OLED driver (baseline module: 1.3" I²C, SH1106 likely, UNVERIFIED)
 ├── strip_display.py    # SSD1306 0x3D strip OLED driver
 ├── encoder.py          # KY-040 rotary encoder + button debounce
 ├── leds.py             # RGB status LED PWM

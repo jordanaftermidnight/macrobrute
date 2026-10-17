@@ -17,7 +17,7 @@ Transform an Arturia MicroBrute into a fully semi-modular instrument through int
 
 ## Project Scope
 
-- **Eurorack expander (17 HP or about 20 HP, width open until the blank is measured)** — hosts the Pico, main 0.96" SSD1306 OLED (size and interface to be confirmed), HW-040 encoder, tap button, RGB LED, clock I/O, firmware clock dividers, 4 programmable aux outputs, and three analog utilities: slew limiter, LFO and Sample & Hold (standalone, rack power only). Noise, mult and attenuverter stay out.
+- **Eurorack expander (17 HP or about 20 HP, width open until the blank is measured)** — hosts the Pico, main 1.3" 4-pin I²C OLED (SH1106 likely, UNVERIFIED), HW-040 encoder, tap button, RGB LED, clock I/O, firmware clock dividers, 4 programmable aux outputs, and three analog utilities: slew limiter, LFO and Sample & Hold (standalone, rack power only). Noise, mult and attenuverter stay out.
 - **Panel modifications on MB** — 1 new Resonance CV jack, 3 toggles (Brute Factor bypass, drone, starve), 3 insert jacks (VCF, Metalizer, VCA CV), 6 brass touch bolts on body sides (selected from 8 designed candidates after Phase 0 bench testing), and the 2× DB-9 on the rear panel left of Pitch/Gate. The 0.91" strip OLED is dropped.
 - **Signal taps** — 10+ buffered waveform/CV outputs from internal test points
 - **CV injection** — Filter and VCA via DB-9 B; Resonance via new MB panel jack
@@ -64,15 +64,15 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Raspberry Pi Pico (variant UNVERIFIED: docs say WH, package says no W, owner to confirm), Arduino Nano (parked, no role), PL2303HX USB-TTL, 0.96" SSD1306 OLED (main; size/interface to be confirmed), 0.91" 128×32 SSD1306 (spare, strip OLED dropped), 1.3" SH1106 (spare), 16×2 1602 I²C LCD (fallback), HW040 encoder, DB-9 connectors ("several", count and gender UNVERIFIED), some vactrols, LED/LDR kit, IC kit and IC assortment, resistor kit, 6U 84HP Eurorack case, Behringer CP1A PSU. The full Have/Missing list is in `docs/hardware/MACROBRUTE_BOM.md`. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
+MicroBrute, Raspberry Pi Pico (variant: owner to confirm, Pico / Pico H / Pico WH; package says no W), Arduino Nano (parked, no role), PL2303HX USB-TTL, 1.3" 4-pin I²C OLED (main; SH1106 likely, UNVERIFIED), 1.3" 7-pin SPI OLED (spare/dev), 0.96" SSD1306 (owner to confirm it has arrived), 0.91" 128×32 SSD1306 (spare, strip OLED dropped), 16×2 1602 I²C LCD (fallback), HW040 encoder, DB-9 connectors ("several", count and gender UNVERIFIED), some vactrols, LED/LDR kit, IC kit and IC assortment, resistor kit, 6U 84HP Eurorack case, Behringer CP1A PSU. The full Have/Missing list is in `docs/hardware/MACROBRUTE_BOM.md`. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
 
 ### Key Decisions
 | Decision | Choice |
 |----------|--------|
 | Expander HP | **OPEN: 17 HP or about 20 HP** — the repo panel file is 87×128.5 mm, UNVERIFIED against the A-100 spec; owner measures the blank, both layouts are planned |
-| Connector | 2× DB-9 shielded on the MB rear panel, left of Pitch/Gate (HD-15/VGA rejected). DB-9 B = UART TX/RX, Filter CV, VCA CV, grounds |
+| Connector | 2× DB-9 shielded on the MB rear panel, left of Pitch/Gate (CONFIRMED by the owner; HD-15/VGA rejected). DB-9 B = UART TX/RX, Filter CV, VCA CV, grounds |
 | Pico location | Inside the expander (not the MicroBrute case) |
-| Main OLED | **0.96" SSD1306** I²C @ 0x3C on the expander panel; size/controller/interface UNVERIFIED, owner to confirm. (1.3" SH1106 fallback: set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2`.) |
+| Main OLED | **1.3" 4-pin I²C** @ 0x3C on the expander panel (owner baseline); chip SH1106 likely, UNVERIFIED (read the marking). Firmware: set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2` (follow-up). Larger than the 0.96" cutout, bears on the open expander width. |
 | Strip OLED | **Dropped.** No I²C crosses the DB-9 cable |
 | MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (XOR checksum), LPC UART1 P0.15/P0.16 UNVERIFIED pending the continuity check; USB-MIDI on the Pico micro-USB, not used while the DB-9 cables are connected |
 | EFFIGY pair | **Shelved** |

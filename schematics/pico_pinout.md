@@ -1,7 +1,7 @@
 # MACROBRUTE — Pico WH GPIO Pinout (Final)
 
 Matches `firmware/pico/config.py` and `docs/MACROBRUTE_CONNECTION_MAP.md` section 1.
-Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm.
+Pico variant: owner to confirm (Pico / Pico H / Pico WH); UNVERIFIED. Nothing here uses wireless.
 
 ## Phase 0 Bench-Validation Wiring
 

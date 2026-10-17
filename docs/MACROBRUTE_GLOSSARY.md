@@ -62,9 +62,10 @@ the rest of the manual leans on these without re-defining them.
 | **LM13700** | Dual operational transconductance amplifier (OTA). Used in M04 Metalizer VCA. |
 | **LF398** | Sample-and-hold IC for the expander S&H module (not owned; needs a film hold capacitor). |
 | **78L05 / 78L09** | Three-terminal +5 V / +9 V linear regulators in TO-92 packages. |
-| **2N3904** | NPN small-signal transistor. Not owned and no longer needed (LED drivers deleted, vactrol driven by a TL072 stage, noise dropped). |
-| **1N4148** | Small-signal silicon switching diode (~0.7 V drop, fast). Used as clamp / mixer diode. |
-| **1N5817** | Schottky diode, 20 V / 1 A (not 40 V), not owned. Intended for the Pico VSYS path; an owned BAT85 can stand in. |
+| **2N3904** | NPN small-signal transistor. Owned (kit, 10+, card contents UNVERIFIED) and not needed by the decided design (LED drivers deleted, vactrol driven by a TL072 stage, noise dropped). |
+| **1N4148** | Small-signal silicon switching diode (~0.7 V drop, fast). Used as clamp / mixer diode. Owned (kit, 25+, card contents UNVERIFIED). |
+| **1N5817** | Schottky diode, 20 V / 1 A (not 40 V), not owned. Intended for the Pico VSYS path; an owned 1N5819 or BAT85 can stand in. |
+| **1N5819** | Schottky diode, 40 V / 1 A. Owned (x10, kit; the part and its datasheet are UNVERIFIED). May serve where a 1N5817 was wanted (provisional). |
 | **BAT54S** | Dual Schottky in SOT-23. Not owned; two owned BAT85 take its place as the CV-input clamp to ±supply rails. |
 | **Vactrol** | Optocoupler made from an LED + LDR (light-dependent resistor) pair sealed in a black package. Used for smooth, click-free resonance modulation. |
 | **MPR121** | Capacitive touch sensor IC (12 channels, I²C). Optional alternative to direct touch bolts on GPIO. |
@@ -75,7 +76,7 @@ the rest of the manual leans on these without re-defining them.
 
 | Term | What it means |
 |---|---|
-| **Pico WH** | Raspberry Pi Pico W with pre-soldered headers: the variant the docs assume. The owned variant is UNVERIFIED (BF Q21); nothing here uses wireless. RP2040, 133 MHz, 264 KB SRAM, 2 MB Flash. Runs MicroPython in this project. |
+| **Pico WH** | Raspberry Pi Pico W with pre-soldered headers: the variant the docs assume. The owned variant is UNVERIFIED: owner to confirm (Pico / Pico H / Pico WH; BF Q21); nothing here uses wireless. RP2040, 133 MHz, 264 KB SRAM, 2 MB Flash. Runs MicroPython in this project. |
 | **LPC2361** | The MicroBrute's stock CPU. ARM7TDMI core, 72 MHz, 128 KB Flash, 34 KB SRAM. Custom firmware build is optional. |
 | **RP2040** | The chip on the Pico (used interchangeably with "Pico" when context is clear). |
 | **MicroPython** | Subset of Python that runs on microcontrollers. Used for all Pico firmware in this project. |

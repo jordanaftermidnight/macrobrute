@@ -15,10 +15,10 @@ Source: audit sections 1a and 1b, BF, and `docs/MACROBRUTE_CONNECTION_MAP.md` (t
 | Expander HP | **OPEN: 17 HP or about 20 HP.** The repo panel file `panel/expander_17hp.svg` is 87 mm wide with mounting holes 79 mm apart, both UNVERIFIED against the A-100 spec (audit S53, E-22). The owner measures the blank first; plan both layouts. Depth behind the panel UNVERIFIED (E-23). |
 | Connector | **2× shielded DB-9** (HD-15/VGA rejected: the cable shorts pins 6-8 to GND; no DB-25). Both mount on the **MicroBrute rear panel, left of the Pitch/Gate section** (owner decision a). Panel dimensions, free area and depth UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 A = outputs; DB-9 B = UART TX, UART RX, Filter CV, VCA CV and grounds only. Pin maps: CM sections 2 and 3 (from BF 2.2 and 2.3). |
 | Power | **Split.** The expander is powered only from the rack (CP1A); the MicroBrute-side breakout only from the synth (TP70 +12 V, TP71 -12 V, TP72 GND). **No supply rail crosses the DB-9 cable; only ground is shared.** |
-| Pico location | Inside the expander (not the MicroBrute case). Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm (BF Q21). |
-| OLED (primary) | **0.96" SSD1306** I²C on GP4/GP5 @ 0x3C — on the expander panel. Driver: `OLED_I2C` in `firmware/pico/display.py`. Size, controller and interface (I²C vs SPI) of the owned module UNVERIFIED, owner to confirm (BF Q22). |
+| Pico location | Inside the expander (not the MicroBrute case). Pico variant: owner to confirm (Pico / Pico H / Pico WH; the package says "Raspberry Pi Pico"), UNVERIFIED (BF Q21). Nothing here uses wireless. |
+| OLED (primary) | **1.3" 4-pin I²C** (owner baseline, 2026-10-17; SH1106 likely, UNVERIFIED: read the marking) on GP4/GP5 @ 0x3C — on the expander panel. Driver: `OLED_I2C` in `firmware/pico/display.py` (SH1106 supported: `OLED_CHIP`, `OLED_COL_OFFSET=2`; `config.py` still ships SSD1306, a firmware follow-up). A 1.3" module is larger than the 0.96" cutout, which bears on the open expander width. BF Q22. |
 | OLED (strip) | **DROPPED** (owner decision c). I²C0 serves only the main OLED, on the expander. **No I²C crosses the DB-9 cable.** |
-| OLED (fallbacks) | 1.3" SH1106 (set `OLED_CHIP="SH1106"` + `OLED_COL_OFFSET=2`); 16×2 1602 I²C LCD (separate driver). |
+| OLED (spares / fallbacks) | The owner's 1.3" 7-pin SPI module (spare/dev; SPI would change the driver and pins); the 0.96" SSD1306 (owner to confirm it has arrived; set `OLED_CHIP="SSD1306"`, `OLED_COL_OFFSET=0`); 16×2 1602 I²C LCD (separate driver). |
 | MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B pins 1 and 6 @ 115200 baud, XOR-checksummed frame; LPC-side UART is **UART1 (P0.15/P0.16, pins 62/63), UNVERIFIED** until the Phase 0 continuity check; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class), not used while the DB-9 cables are connected (BF 4.3). |
 | EFFIGY pair bus | **SHELVED** (owner decision b): kept as an idea for another project; nothing is designed around it. GP2, GP3, GP11 are free, reserved. |
 | Hardware utilities | **Slew limiter, LFO, Sample & Hold** (standalone rack utilities, rack power only, no synth cabling). Noise, mult and attenuverter stay out. S&H uses an LF398 (not owned) and a film hold capacitor (not owned). |
@@ -45,7 +45,7 @@ Source: audit sections 1a and 1b, BF, and `docs/MACROBRUTE_CONNECTION_MAP.md` (t
 
 ## Phase 0: Bench Validation — non-destructive (Week 1) [[UNTESTED]] [[REVERSIBLE]]
 
-**Goal:** Validate Pico firmware on breadboard, confirm the OLED module (size, controller, interface: owner to confirm, BF Q22), locate test points, and pass the gate checks on the MicroBrute that later phases depend on (LPC UART pins, TP83 level, synth rail margin, DB-9 geometry). Full procedures: `docs/hardware/MACROBRUTE_PHASE0_BOM.md`.
+**Goal:** Validate Pico firmware on breadboard, confirm the OLED module (1.3" 4-pin I²C baseline; read the chip marking, SH1106 likely, UNVERIFIED, BF Q22), locate test points, and pass the gate checks on the MicroBrute that later phases depend on (LPC UART pins, TP83 level, synth rail margin, DB-9 geometry). Full procedures: `docs/hardware/MACROBRUTE_PHASE0_BOM.md`.
 
 ### Wiring reference
 The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is rendered as two diagrams:
@@ -336,10 +336,10 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 | Order | Circuit | ICs | Test Signal |
 |-------|---------|-----|-------------|
-| 1 | Pico, display, encoder, tap button, RGB LED | Pico + SSD1306 (see Phase 0) | Firmware runs from the rack +5 V (VSYS via the Schottky OR diode, BF 1.2) |
+| 1 | Pico, display, encoder, tap button, RGB LED | Pico + 1.3" I²C OLED (SH1106 likely, UNVERIFIED; see Phase 0) | Firmware runs from the rack +5 V (VSYS via the Schottky OR diode, BF 1.2) |
 | 2 | Clock I/O buffers | CD4049UBE (owned x3) on Pico 3V3 | BF BT-11: GP21 stays within 0-3.3 V |
 | 3 | Firmware dividers and aux outputs | none (GP16/17/18, GP19/20/6/7) | Scope the 3 divider and 4 aux outputs |
-| 4 | Slew limiter | TL072 + 1N4148 diodes (1N4148 not owned, BF Q4) | Step input → smooth ramp |
+| 4 | Slew limiter | TL072 + 1N4148 diodes (1N4148 owned, 25+ per the owner's inventory, UNVERIFIED, BF Q4) | Step input → smooth ramp |
 | 5 | LFO (tri + square) | TL072 + CD40106 | Scope. Range about 0.5-50 Hz with 1 MΩ / 1 µF (derived, UNVERIFIED, audit S60, E-27); 10 kΩ integrator series R is mandatory |
 | 6 | Sample & Hold | LF398 (not owned) + 10 nF film hold cap (not owned) + TL072 buffer | Pinout and droop: DATASHEETS (a). Trigger conditioning required (audit S65), design open |
 

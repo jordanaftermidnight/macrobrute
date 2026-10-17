@@ -14,7 +14,7 @@ they go deeper on the analog circuits.
 
 ### The OLED shows nothing
 
-The strip OLED is dropped, so I²C0 carries one device: the main 0.96″ SSD1306
+The strip OLED is dropped, so I²C0 carries one device: the main 1.3″ OLED (SH1106 likely, UNVERIFIED; a 0.96″ SSD1306 behaves the same here)
 at `0x3C` (a few modules use `0x3D`). Confirm with an I²C scan from the Pico:
 `for addr in I2C.scan(): print(hex(addr))` should print `0x3c`.
 
@@ -65,7 +65,7 @@ on the FAT partition.
 
 ### -12V rail measures +12V (or vice versa)
 
-The protection diode on the -12V rail (an owned BAT85, or a 1N5817 if one is
+The protection diode on the -12V rail (an owned BAT85 or 1N5819, or a 1N5817 if one is
 bought) must be installed with the **cathode toward the TP71 / -12 V header
 side and the anode toward the breakout rail** (audit B15). The old text here
 said the opposite. Installed the wrong way round, the diode blocks the normal
