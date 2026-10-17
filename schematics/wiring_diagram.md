@@ -7,76 +7,100 @@ DB-9 connectors, interconnect cable, and into the expander.
 
 ## Signal Flow Overview
 
-```
-  MicroBrute PCB                Breakout PCB              DB-9 (Rear)           Cable           Expander
-  ═══════════                   ════════════              ══════════            ═════           ════════
-  TP94 (Saw) ─────[1kΩ]──── TL074 A follower ──[1kΩ]── DB-9 A pin 7 ◄══════► DB-9 A pin 7 ── buffer ── SAW jack
-  TP93 (Sqr) ─────[1kΩ]──── TL074 B follower ──[1kΩ]── DB-9 A pin 8 ◄══════► DB-9 A pin 8 ── buffer ── SQR jack
-  TP30 (Mix) ─────[1kΩ]──── TL074 C follower ──[1kΩ]── DB-9 A pin 5 ◄══════► DB-9 A pin 5 ── buffer ── MIX jack
-  TP19 (VCF) ─────[1kΩ]──── TL074 D follower ──[1kΩ]── DB-9 A pin 6 ◄══════► DB-9 A pin 6 ── buffer ── VCF jack
-  TP83 (Gate) ────[10kΩ]──── CD40106 Schmitt ────────── DB-9 A pin 1 ◄══════► DB-9 A pin 1 ── direct ── GATE jack
-  Pitch CV (rear) ────────── direct ─────────────────── DB-9 A pin 2 ◄══════► DB-9 A pin 2 ── buffer ── PITCH jack
-  Envelope (mod) ──[10kΩ]─── TL074 #2 follower ─────── DB-9 A pin 3 ◄══════► DB-9 A pin 3 ── buffer ── ENV jack
-  LFO (mod) ──────[10kΩ]─── TL074 #2 follower ─────── DB-9 A pin 4 ◄══════► DB-9 A pin 4 ── buffer ── LFO jack
-  GND ─────────────────────────────────────────────── DB-9 A pin 9 ◄══════► DB-9 A pin 9 ── GND
+Decided design (connection map sections 2-5, 11; back-feed and hum design note "BF"): two DB-9
+connectors (confirmed by the owner), split power, **no supply and no I²C on either cable**, only
+shared ground. EFFIGY is shelved and the strip OLED is dropped.
 
-  Expander jack ── [attenuator pot] ── [BAT54S clamp] ── DB-9 B pin 1 ◄══════► DB-9 B pin 1 ── [1kΩ] ── Filter summing node
-  Expander jack ── [attenuator pot] ── [BAT54S clamp] ── DB-9 B pin 2 ◄══════► DB-9 B pin 2 ── direct ── TP10/11 (VCA CV)
-  Expander jack ── [attenuator pot] ── LED driver ────── DB-9 B pin 3 ◄══════► DB-9 B pin 3 ── [1kΩ] ── Vactrol LED ── RP13
-  Expander jack ──────────────────────────────────────── DB-9 B pin 4 ◄══════► DB-9 B pin 4 ── direct ── VCO sync point
-  Expander jack ── [diode protect] ─── ──────────────── DB-9 B pin 5 ◄══════► DB-9 B pin 5 ── direct ── Gate circuit
-  Expander jack ───────────────────────────────────────── DB-9 B pin 6 ◄══════► DB-9 B pin 6 ── direct ── Mixer ext input
-  +12V (Eurorack bus) ── [fuse] ── [1N5817] ────────── DB-9 B pin 7 ◄══════► DB-9 B pin 7 ── breakout +12V
-  -12V (Eurorack bus) ── [fuse] ── [1N5817] ────────── DB-9 B pin 8 ◄══════► DB-9 B pin 8 ── breakout -12V
-  GND ─────────────────────────────────────────────── DB-9 B pin 9 ◄══════► DB-9 B pin 9 ── GND
 ```
+  MicroBrute PCB                Breakout PCB                          DB-9 (Rear)     Cable    Expander
+  ═══════════                   ════════════                          ══════════      ═════    ════════
+  TP94 (Saw) ─────[1kΩ]──── TL074 A follower ──[1kΩ]──────────────── A pin 7 ◄══════► A pin 7 ── SAW jack
+  TP93 (Sqr) ─────[1kΩ]──── TL074 B follower ──[1kΩ]──────────────── A pin 8 ◄══════► A pin 8 ── SQR jack
+  TP30 (Mix) ─────[1kΩ]──── TL074 C follower ──[1kΩ]──────────────── A pin 5 ◄══════► A pin 5 ── MIX jack
+  TP19 (VCF) ─────[1kΩ]──── TL074 D follower ──[1kΩ]──────────────── A pin 6 ◄══════► A pin 6 ── VCF jack
+  TP83 (Gate) ────[10kΩ]─── CD40106 ×2 (in series) ──[1kΩ]────────── A pin 1 ◄══════► A pin 1 ── GATE jack
+                                                                                               └─ 22k/33k ── Pico GPIO (FT)
+  Pitch CV (rear) ───────── stock buffer ──[220Ω]──────────────────── A pin 2 ◄══════► A pin 2 ── PITCH jack
+  Envelope (mod) ──[10kΩ]── TL072 follower ──[1kΩ]─────────────────── A pin 3 ◄══════► A pin 3 ── ENV jack
+  LFO (mod) ──────[10kΩ]── TL072 follower ──[1kΩ]─────────────────── A pin 4 ◄══════► A pin 4 ── LFO jack
+  GND (TP72 star) ──────────────────────────────────────────────────── A pin 9 ◄══════► A pin 9 ── GND (expander star)
+
+  LPC2361 RXD1 (pin 63) ──[1kΩ]────────────────────────────────────── B pin 1 ◄══════► B pin 1 ──[1kΩ]── Pico GP0 (UART0 TX)
+  GND ─────────────────────────────────────────────────────────────── B pin 2 ◄══════► B pin 2 ── GND
+  TP10 (VCA CV) ◄── clamp node ◄──[100kΩ]──────────────────────────── B pin 3 ◄══════► B pin 3 ──[10kΩ]── CV driver (TO DESIGN)
+  GND ─────────────────────────────────────────────────────────────── B pin 4 ◄══════► B pin 4 ── GND
+  TP26 (Filter CV) ◄── clamp node ◄──[100kΩ]───────────────────────── B pin 5 ◄══════► B pin 5 ──[10kΩ]── CV driver (TO DESIGN)
+  LPC2361 TXD1 (pin 62) ──[1kΩ]────────────────────────────────────── B pin 6 ◄══════► B pin 6 ──[1kΩ]── Pico GP1 (UART0 RX)
+  GND ─────────────────────────────────────────────────────────────── B pins 7, 8, 9 ◄═► B 7, 8, 9 ── GND
+```
+
+- A lines 2-8 go to expander panel jacks with no expander IC on them (BF 2.3). If one is later
+  normalled into an expander circuit, it enters through at least 100kΩ (BF 3.6).
+- Clamp node (B:3, B:5): BAT85 to +12V_BRK and from -12V_BRK, 1nF to GND (BF 3.3).
+- The LPC UART (UART1, LQFP pins 62 / 63) is UNVERIFIED until the Phase 0 continuity gate G1.
+- Gate stage, divider and the UART firmware rule are Provisional (BF 3.1, 3.4, 3.5).
 
 ---
 
 ## DB-9 Pin Assignment (Final)
 
+From BF section 2. Neighbour geometry of the D-sub insert is UNVERIFIED until BF BT-7.
+
 ### DB-9 A: OUTPUTS (MicroBrute → Expander)
 
-| Pin | Signal | Source | Buffer | Wire Color (suggested) |
-|-----|--------|--------|--------|----------------------|
-| 1 | Gate Out | TP83 | CD40106 Schmitt | White |
-| 2 | Pitch CV Out | Rear panel | Direct (stock) | Yellow |
-| 3 | Envelope Out | Mod matrix | TL074 follower | Orange |
-| 4 | LFO Out | Mod matrix | TL074 follower | Green |
-| 5 | VCO Mix Out | TP30 | TL074 follower | Blue |
-| 6 | VCF Out | TP19 | TL074 follower | Purple |
-| 7 | Saw Out | TP94 | TL074 follower | Red |
-| 8 | Square Out | TP93 | TL074 follower | Brown |
-| 9 | GND | TP72 | — | Black |
+```
+   top row     [1 GATE]-[2 PITCH]-[3 ENV]-[4 LFO]-[5 MIX]
+   bottom row        [6 VCF]-[7 SAW]-[8 SQUARE]-[9 GND]
+```
 
-### DB-9 B: INPUTS + POWER (Expander → MicroBrute)
+| Pin | Signal | Source | Buffer | Series R (MB board) | Wire Color (suggested) |
+|-----|--------|--------|--------|---------------------|----------------------|
+| 1 | Gate Out | TP83 | 2× CD40106 in series | 1kΩ | White |
+| 2 | Pitch CV Out | Rear panel | Stock pitch buffer (low impedance UNVERIFIED, E-16) | 220Ω | Yellow |
+| 3 | Envelope Out | Mod matrix / TP5 | TL072 follower | 1kΩ after the feedback tap | Orange |
+| 4 | LFO Out | Mod matrix | TL072 follower | 1kΩ after the feedback tap | Green |
+| 5 | VCO Mix Out | TP30 | TL074 follower | 1kΩ | Blue |
+| 6 | VCF Out | TP19 | TL074 follower | 1kΩ | Purple |
+| 7 | Saw Out | TP94 | TL074 follower | 1kΩ | Red |
+| 8 | Square Out | TP93 | TL074 follower | 1kΩ | Brown |
+| 9 | GND | TP72 | — | — | Black |
 
-| Pin | Signal | Destination | Protection | Wire Color (suggested) |
-|-----|--------|-------------|------------|----------------------|
-| 1 | Filter CV In | U8A summing node | 220kΩ series (on expander) | White |
-| 2 | VCA CV In | TP10/11 | Direct or 100kΩ | Yellow |
-| 3 | Resonance CV | Vactrol LED | 1kΩ current limit | Orange |
-| 4 | Sync In | VCO sync point | Direct | Green |
-| 5 | Gate In | Gate circuit | 1N4148 diode | Blue |
-| 6 | Ext Audio In | Mixer | Direct or switched | Purple |
-| 7 | +12V | Breakout PCB | 1N5817 + fuse | Red |
-| 8 | -12V | Breakout PCB | 1N5817 + fuse | Brown (or Red/Black stripe) |
-| 9 | GND | Star ground | — | Black |
+### DB-9 B: DIGITAL + CV (Expander ↔ MicroBrute)
+
+```
+   top row     [1 UART TX]-[2 GND]-[3 VCA CV]-[4 GND]-[5 FILTER CV]
+   bottom row        [6 UART RX]-[7 GND]-[8 GND]-[9 GND]
+```
+
+| Pin | Signal | Direction | Series R | Protection | Wire Color (suggested) |
+|-----|--------|-----------|----------|------------|----------------------|
+| 1 | UART TX (Pico GP0 → LPC RXD1, pin 63) | Expander → MB | 1kΩ expander + 1kΩ MB | GP0 high-impedance until GP1 reads high | White |
+| 2 | GND | — | — | Guard | Black |
+| 3 | VCA CV In (to TP10) | Expander → MB | 10kΩ expander + 100kΩ MB | 2× BAT85 to ±12V_BRK, 1nF | Purple |
+| 4 | GND | — | — | Guard | Black |
+| 5 | Filter CV In (to TP26) | Expander → MB | 10kΩ expander + 100kΩ MB | As pin 3 | Blue |
+| 6 | UART RX (LPC TXD1, pin 62 → Pico GP1) | MB → Expander | 1kΩ MB + 1kΩ expander | GP1 fault tolerant | Yellow |
+| 7 | GND | — | — | Guard | Black |
+| 8 | GND | — | — | Guard | Black |
+| 9 | GND | — | — | Star return | Black |
+
+The old B map (Filter, VCA, Resonance, Sync, Gate In, Ext Audio, +12V, -12V, GND) is withdrawn:
+supplies do not cross the cable (split power), resonance CV moved to a new MB panel jack, and Sync
+In, Gate In and Ext Audio In use the synth's existing rear jacks (connection map section 3).
 
 ---
 
-## Clock I/O (Separate from DB-9)
+## Clock I/O (internal to the expander)
 
-Clock signals bypass DB-9 via direct wiring from Pico H to expander.
+Both clock jacks and the Pico are on the expander, in the rack domain. **No clock cable runs
+between the MicroBrute and the expander** (it would be a second ground tie; audit N08).
 
 ```
-  Pico GP22 (Clock Out) ──[wire through case]── Expander CLK OUT jack
-  Pico GP21 (Clock In)  ──[wire through case]── Expander CLK IN jack
-  Pico GND              ──[wire through case]── Expander GND
-
-  3 wires total, routed through same rear panel hole as DB-9 cables.
-  Use 3-conductor shielded cable or individual 24AWG in sleeve.
+  Pico GP22 (Clock Out) ── CD4049UB ×2 (on Pico 3V3) ──[1kΩ]── Expander CLK OUT jack
+  Expander CLK IN jack ── 100kΩ pull-down + 100kΩ series ── CD4049UB ×2 ── Pico GP21 (Clock In)
 ```
+
+Details: `expander_circuits.md` section 4 (BF 3.7).
 
 ---
 
@@ -91,10 +115,10 @@ Clock signals bypass DB-9 via direct wiring from Pico H to expander.
   TP109 (Metal)  ── 24AWG ── [1kΩ] ── Body jack (if installed)
   TP119 (Ultra)  ── 24AWG ── [1kΩ] ── Body jack (if installed)
   TP122 (PWM)    ── 24AWG ── [1kΩ] ── Body jack (if installed)
-  TP124 (Tri)    ── 24AWG ── [1kΩ] ── Breakout PCB J1-5 (2x gain buffer)
+  TP124 (Tri)    ── 24AWG ── [1kΩ] ── Breakout PCB J1-5 (2x gain buffer → body jack)
   TP19  (VCF)    ── 24AWG ── [1kΩ] ── Breakout PCB J1-3
   TP30  (Mix)    ── 24AWG ── [1kΩ] ── Breakout PCB J1-4
-  TP83  (Gate)   ── 24AWG ── [10kΩ] ── Breakout PCB J2-1
+  TP83  (Gate)   ── 24AWG ── [10kΩ] ── Breakout PCB J2-1   (keep this lead short, audit N11)
 ```
 
 ### Front Board Taps
@@ -102,68 +126,69 @@ Clock signals bypass DB-9 via direct wiring from Pico H to expander.
 ```
   Envelope (mod matrix) ── 24AWG ── [10kΩ] ── Breakout PCB J3-1
   LFO (mod matrix)      ── 24AWG ── [10kΩ] ── Breakout PCB J3-2
-  TP10/11 (VCA CV)      ── 24AWG ── from DB-9 B pin 2
-  Filter summing node   ── 24AWG ── from DB-9 B pin 1 via 220kΩ
+  TP10 (VCA CV)         ── 24AWG ── from the B:3 clamp node (100kΩ + 2× BAT85 + 1nF)
+  TP26 (Filter CV)      ── 24AWG ── from the B:5 clamp node (100kΩ + 2× BAT85 + 1nF)
 ```
+
+Whether the synth's own 220kΩ (R67, TP26) and 100kΩ (R25, TP10) sit after these points is
+UNVERIFIED (E-18).
 
 ### Power Taps
 
 ```
-  TP70 (+12V) ── 22AWG Red   ── Breakout PCB power header
-  TP71 (-12V) ── 22AWG Blue  ── Breakout PCB power header
-  TP72 (GND)  ── 22AWG Black ── Breakout PCB power header + DB-9 pin 9
-  +5V rail    ── 22AWG Orange ── Breakout PCB (Pico VSYS via 1N5817)
+  TP70 (+12V) ── 22AWG Red   ── Breakout PCB power header (rail protection, C12 OPEN)
+  TP71 (-12V) ── 22AWG Blue  ── Breakout PCB power header (diode: cathode toward TP71)
+  TP72 (GND)  ── 22AWG Black ── Breakout PCB power header; each DB-9 ground pin by its own lead
 ```
 
-### Pico H Connections
+No synth +5V or 3V3 is tapped (audit B09). The breakout's only 5 V is a local 78L05 for the
+CD40106 (Provisional).
 
-```
-  Breakout PCB ── 7-pin ribbon ── OLED (SCK, MOSI, CS, DC, RST, VCC, GND)
-  Breakout PCB ── 5-pin ribbon ── Encoder (CLK, DT, SW, VCC, GND)
-  Breakout PCB ── 3-pin        ── Button (SIG, VCC, GND)
-  Breakout PCB ── 6-pin        ── LEDs (CLK, GATE, MODE × 2 wires each)
-  Breakout PCB ── 2-pin        ── Clock Out (GP22, GND)
-  Breakout PCB ── 2-pin        ── Clock In (GP21, GND)
-  Breakout PCB ── 2-pin        ── MIDI TX/RX (GP4, GP5) — future LPC2361
-```
+### Pico Connections
+
+None inside the MicroBrute: the Pico, OLED, encoder, button, LEDs and clock I/O are on the
+expander (connection map sections 1 and 10). The only MB-side digital wires are the two UART lines
+to the LPC (connection map section 5.4).
 
 ---
 
 ## Interconnect Cable Construction
 
-### Cable: 2× DB-9 Male-to-Female
+### Cables: 2× DB-9, shielded 9-conductor
 
 ```
-  MicroBrute rear ◄──── DB-9M ════════ DB-9F ────► Expander panel
-  (panel mount F)        (cable)  1m max  (cable)    (panel mount F)
+  MicroBrute rear ◄──── DB-9 ════════ DB-9 ────► Expander
+  (panel mount)          (cable, 1 m working figure)   (panel mount, shell isolated)
 ```
 
-- Use Amphenol double-shielded DB-9 cables (CS-DSPMDB09MF)
-- Or build custom: 9-conductor + shield, solder-cup DB-9 connectors
-- Keep cable under 3m for unbalanced audio
-- Gold-plated contacts recommended for frequent mating
+- Two shielded 9-conductor cables, one per connector (not ribbon; audit N19).
+- Braid bonded to the connector shell at the MicroBrute end only; that MB shell gets a short lead
+  to TP72. At the expander end the braid is cut back and insulated in the hood, and the panel
+  connector shell is isolated with insulating shoulder washers (not owned, BF Q10) (BF 4.2).
+- A molded off-the-shelf cable (for example the Amphenol CS-DSPMDB09MF named earlier) bonds the
+  braid at both hoods: it must be modified, or the cable built from 9-conductor + braid and
+  solder-cup connectors.
+- Length: 1 m working figure, UNVERIFIED until BF BT-6 (cable capacitance) and BT-1 (UART edges).
+- Connector count, gender and flange of the owned DB-9s: UNVERIFIED (BF Q9).
+- Series resistors sit on the board side of each connector, never in the cable.
 
 ### Additional Clock Cable
 
-```
-  3× 24AWG in shielded sleeve, ~1m
-  Pin 1: Clock Out (Pico GP22)
-  Pin 2: Clock In (Pico GP21)
-  Shield: GND
-```
-
-Route through same rear panel grommet as DB-9 cables.
+None (see Clock I/O above).
 
 ---
 
 ## Grounding Strategy
 
-**Star ground at DB-9 connectors:**
-- All signal grounds converge at DB-9 pin 9 (both A and B)
-- Single point connection between MicroBrute GND and Expander GND
-- Power ground returns separately through DB-9 B pin 9
-- Chassis/shield ground via DB-9 shell (both connectors)
+From BF 4.1-4.3 and connection map section 11.
 
-**Never create ground loops:**
-- Do not connect MB chassis to expander chassis via separate path
-- Only ground connection is through DB-9 pin 9 (signal) and shell (shield)
+- **Exactly one ground connection between synth and rack: the cable ground conductors** (A:9;
+  B:2, B:4, B:7, B:8, B:9), all running between the same two star points.
+- **MicroBrute star: TP72.** Every cable ground pin and the breakout ground go to TP72 by their own
+  short wires, not through the breakout's ground strip.
+- **Expander star:** where rack 0 V enters at the 16-pin header.
+- Shield: MB end only (above); the shield never carries signal return.
+- No USB on the Pico while the cables are connected (USB ground loop, BF 4.3).
+- **Never create ground loops:** no chassis or panel bond between the two cases, no clock cable,
+  no capacitor in series with any ground pin (audit S23).
+- Hum fallback ladder (owned parts only): connection map section 11, BF 4.5.

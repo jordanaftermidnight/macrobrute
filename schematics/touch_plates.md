@@ -2,6 +2,12 @@
 
 ## Overview
 
+> **Status (2026-10-17): idea notes, not part of the current build.** Several pin choices below
+> predate `firmware/pico/config.py`: GP2 / GP3 are I²C1 (not I²C0) and are free since EFFIGY was
+> shelved; GP6 / GP7 are aux outputs 3 / 4 and are not available for a mux; GP26-28 are the only
+> ADC pins (not fault tolerant). The MCP4728 and MPR121 are not on the owned list. Pin choices for
+> any touch circuit: OPEN (owner).
+
 Touch plates add body-contact expression to the MicroBrute expander.
 Copper pads on the panel (or body bolts) create variable resistance
 paths through the player's body, generating CV signals for modulation.
@@ -134,8 +140,8 @@ capacitive touch controller (I2C, up to 12 touch channels).
 ### Wiring
 
 ```
-  Pico GP2 (I2C0 SDA) ─── MPR121 SDA
-  Pico GP3 (I2C0 SCL) ─── MPR121 SCL
+  Pico GP2 (I2C1 SDA) ─── MPR121 SDA
+  Pico GP3 (I2C1 SCL) ─── MPR121 SCL
   3.3V ────────────────── MPR121 VCC
   GND ─────────────────── MPR121 GND
   MPR121 ADDR ─────────── GND (address 0x5A)

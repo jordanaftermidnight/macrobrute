@@ -10,7 +10,7 @@ The two Phase 0 diagrams, `schematics/phase0_wiring_schematic.svg` and `schemati
 - **Schematic** (`phase0_wiring_schematic.svg`) — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
 - **Breadboard layout** (`phase0_breadboard.svg`) — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
-Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; the 0.91″ strip OLED is dropped) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
+Phase 0 covers: **one OLED on I²C0** (main display at `0x3C`; the 0.91″ strip OLED is dropped). Main OLED baseline (owner, 2026-10-17): the owner's 1.3″ 4-pin I²C module, controller likely SH1106 (UNVERIFIED); a 1.3″ 7-pin SPI module is a spare. `config.py` and the display driver still describe a 0.96″ SSD1306; that change is a firmware task · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
 
 ## Pin Assignment Table
 
@@ -20,8 +20,8 @@ Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; t
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15, pin 62; UNVERIFIED) |
 | GP2 | 4 | Free, reserved | — | — | config.py still names it I²C1 SDA for the shelved EFFIGY code |
 | GP3 | 5 | Free, reserved | — | — | config.py still names it I²C1 SCL for the shelved EFFIGY code |
-| GP4 | 6 | OLED SDA | I2C0 | In/Out | 0.96″ SSD1306 main (0x3C), the only device on I2C0 |
-| GP5 | 7 | OLED SCL | I2C0 | Out | 0.96″ SSD1306 main (0x3C); code runs 400 kHz |
+| GP4 | 6 | OLED SDA | I2C0 | In/Out | Main OLED (0x3C; 1.3″ I²C module, controller UNVERIFIED), the only device on I2C0 |
+| GP5 | 7 | OLED SCL | I2C0 | Out | Main OLED (0x3C); code runs 400 kHz |
 | GP6 | 9 | Aux output 3 | GPIO/PWM3A | Out | Programmable aux jack |
 | GP7 | 10 | Aux output 4 | GPIO/PWM3B | Out | Programmable aux jack |
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
@@ -37,8 +37,8 @@ Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; t
 | GP18 | 24 | Clock divider out 3 | GPIO | Out | Default ÷8 |
 | GP19 | 25 | Aux output 1 | GPIO/PWM1B | Out | Programmable aux jack |
 | GP20 | 26 | Aux output 2 | GPIO/PWM2A | Out | Programmable aux jack |
-| GP21 | 27 | Clock In | GPIO | In | External clock, IRQ rising |
-| GP22 | 29 | Clock Out | GPIO | Out | Plain GPIO driven from a Timer (no PIO) |
+| GP21 | 27 | Clock In | GPIO | In | External clock, IRQ rising; jack reaches it only through 100kΩ + CD4049UB (connection map section 4) |
+| GP22 | 29 | Clock Out | GPIO | Out | Plain GPIO driven from a Timer (no PIO); to the jack through CD4049UB + 1kΩ |
 | GP26 | 31 | ADC0 | ADC | In | Free (PWM slice 5A shared with GP10) |
 | GP27 | 32 | ADC1 | ADC | In | Free |
 | GP28 | 34 | ADC2 | ADC | In | Free |
@@ -48,7 +48,7 @@ Phase 0 covers: **one OLED on I²C0** (0.96″ SSD1306 main display at `0x3C`; t
 | Peripheral | Usage | Pins |
 |------------|-------|------|
 | UART0 | LPC2361 Pico Bridge (115200 baud) | GP0, GP1 |
-| I2C0 | Main OLED display (SSD1306, 0x3C) | GP4, GP5 |
+| I2C0 | Main OLED display (0x3C; config.py says SSD1306, owner module likely SH1106, UNVERIFIED) | GP4, GP5 |
 | GPIO (Timer) | Clock output | GP22 |
 | GPIO | Clock input, clock divider outputs | GP21; GP16, GP17, GP18 |
 | GPIO/PWM | Aux outputs (PWM at 20 kHz in PWM_CV mode) | GP19, GP20, GP6, GP7 |
