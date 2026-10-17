@@ -223,3 +223,29 @@ def test_jack_captions_are_far_apart():
 
 def test_committed_svg_matches_generator():
     assert SVG.read_text() == bb.render()
+
+
+def _drawn():
+    ns = "{http://www.w3.org/2000/svg}"
+    root = ET.fromstring(bb.render())
+    dots = {(float(c.get("cx")), float(c.get("cy"))) for c in root.iter(ns + "circle")}
+    lines = {frozenset([(float(l.get("x1")), float(l.get("y1"))),
+                        (float(l.get("x2")), float(l.get("y2")))])
+             for l in root.iter(ns + "line")}
+    return dots, lines
+
+
+def test_every_lead_is_drawn_at_its_hole():
+    dots, _ = _drawn()
+    for part, pin, hole in bb.LEADS:
+        assert bb.hxy(hole) in dots, (part, pin, hole)
+
+
+def test_each_resistor_is_drawn_between_its_own_two_leads():
+    _, lines = _drawn()
+    holes = {(p, q): h for p, q, h in bb.LEADS}
+    names = {q.split(".")[0] for p, q, _ in bb.LEADS if p == "R"}
+    assert len(names) == 5
+    for n in names:
+        ends = frozenset([bb.hxy(holes[("R", n + ".a")]), bb.hxy(holes[("R", n + ".b")])])
+        assert ends in lines, n

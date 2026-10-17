@@ -132,7 +132,6 @@ OLED_PIN_Y = OLED_BOX[1] + OLED_BOX[3]
 JACK_Y = 805
 JACK_OUT_X = colx(6) + 2
 JACK_IN_X = colx(21) - 24
-JACK_SLEEVE_DY = 0
 
 
 def _module_xy(end):
@@ -249,7 +248,7 @@ def _pico_svg():
             out.append(f'<text x="{_n(px + 3.5)}" y="{_n(py - 20)}" font-size="9" '
                        f'transform="rotate(-90 {_n(px + 3.5)} {_n(py - 20)})" fill="#fff" '
                        f'font-weight="bold">{name}</text>')
-    # pin-1 marker and column numbers repeated over the body
+    # pin-1 marker; the Pico body hides the kit's column numbers, so 11-30 are redrawn on it
     p1x, p1y = hxy("c30")
     out.append(f'<rect x="{_n(p1x - 9)}" y="{_n(p1y - 9)}" width="18" height="18" rx="2" '
                f'fill="none" stroke="#fff" stroke-width="1.8"/>')
@@ -261,6 +260,10 @@ def _pico_svg():
     out.append(label_box(x2 + 28, p1y - 7, "pin 1 corner"))
     out.append(label_box(x2 + 28, ym - 7 + 34, "Pico, top view"))
     return "".join(out)
+
+
+def _lead(pin, part="R"):
+    return [h for p, q, h in LEADS if (p, q) == (part, pin)][0]
 
 
 def _resistor_v(col, label):
@@ -351,27 +354,31 @@ def build():
                 "Half-size breadboard, top view, 3V3 logic only. Hole = column number + row letter.")
     # reading notes
     notes = [
-        "Rows a-e of a column are one strip, rows f-j of a column another; each rail runs the full length.",
+        "Rows a-e of a column are one strip, rows f-j another; rails run the full length.",
         "Pico straddles the channel: pins 1-20 on row c (pin 1 at column 30), pins 21-40 on row h.",
         "Rails: outer bar is 3V3, inner bar is GND, top and bottom 3V3 rails joined by one bridge.",
     ]
-    card.add(f'<rect x="30" y="56" width="530" height="80" rx="4" fill="#fff" '
+    card.add(f'<rect x="30" y="56" width="530" height="102" rx="4" fill="#fff" '
              f'stroke="{PALETTE["stroke"]}" stroke-width="1"/>')
     for i, line in enumerate(notes):
         card.add(_t(40, 73 + i * 14, line, 9, "start", PALETTE["text"]))
     card.add(_tag(40, 113, "UNVERIFIED: hole grid assumes a standard 0.1 in half-size board"))
+    card.add(_tag(40, 132, "UNVERIFIED: continuous rails assumed (some boards split them)"))
 
     card.add(breadboard(X0, Y0))
     card.add(_rail_labels())
     card.add(_pico_svg())
 
     # parts on the board
-    card.add(_resistor_v(1, "220") + _resistor_v(3, "220") + _resistor_v(4, "220"))
+    for name in ("220_R", "220_G", "220_B"):
+        card.add(_resistor_v(int(_lead(name + ".a")[1:]), "220"))
     card.add(_led_svg())
     card.add(_button_svg())
     card.add(_enc_svg())
-    card.add(_resistor_h("g", 6, 10, "1k"))
-    card.add(_resistor_h("i", 8, 12, "1k"))
+    for name in ("1K_OUT", "1K_IN"):
+        ha, hb = _lead(name + ".a"), _lead(name + ".b")
+        assert ha[0] == hb[0]
+        card.add(_resistor_h(ha[0], *sorted((int(ha[1:]), int(hb[1:]))), "1k"))
     card.add(label_box(colx(1) - 8, hxy("c1")[1] - 7, "RGB LED + 3 x 220R"))
     card.add(label_box(colx(1) - 8, hxy("d1")[1] - 7, "Tap button"))
 
@@ -396,10 +403,6 @@ def build():
     card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 8, 70, "UNVERIFIED: OLED chip"))
     card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 8, 88, "UNVERIFIED: OLED pin order"))
     card.add(_tag(colx(6) - 10, hxy("b6")[1] - 7, "UNVERIFIED: KY-040 header order, read silkscreen"))
-    for c in range(1, 11):
-        x, y = colx(c), (hxy("e1")[1] + hxy("f1")[1]) / 2 + 3.5
-        card.add(f'<text x="{_n(x)}" y="{_n(y)}" font-size="10" text-anchor="middle" fill="none" '
-                 f'stroke="#d6cfb8" stroke-width="3">{c}</text>' + _t(x, y, c, 10, "middle", PALETTE["muted"], True))
 
     _tables(card)
     card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_I2C, "I2C0 (SDA, SCL)"),
