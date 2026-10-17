@@ -202,3 +202,11 @@ def test_breadboard_strips_connect_like_a_real_board():
     assert bb_strip("a7") != bb_strip("a8")
     assert bb_strip("+T1") == bb_strip("+T30") != bb_strip("-T1")
     assert bb_strip("+T1") != bb_strip("+B1")
+
+
+def test_text_below_min_font_is_rejected():
+    import pytest
+    from tools.diagram_kit import MIN_FONT, _t
+    with pytest.raises(AssertionError):
+        _t(0, 0, "x", MIN_FONT - 1)
+    assert "font-size" in _t(0, 0, "x", MIN_FONT)

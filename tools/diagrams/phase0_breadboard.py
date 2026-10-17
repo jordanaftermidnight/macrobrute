@@ -27,9 +27,6 @@ C_I2C, C_LED = PALETTE["audio"], PALETTE["p12"]
 C_GPIO, C_CLK = PALETTE["cv"], PALETTE["clock"]
 COLOUR_NAME = {C_3V3: "amber", C_GND: "green", C_I2C: "blue", C_LED: "red",
                C_GPIO: "orange", C_CLK: "violet"}
-COLOUR_OF = {"3V3": C_3V3, "GND": C_GND, "I2C0_SDA": C_I2C, "I2C0_SCL": C_I2C,
-             "LED_R": C_LED, "LED_G": C_LED, "LED_B": C_LED, "BTN_TAP": C_GPIO,
-             "ENC_SW": C_GPIO, "ENC_CLK": C_GPIO, "ENC_DT": C_GPIO}
 
 W, H = 990, 1150
 X0, Y0 = 70, 330            # hole a1

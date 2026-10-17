@@ -48,6 +48,7 @@ def _n(v):
 
 
 def _t(x, y, text, size=10, anchor="start", fill=None, bold=False):
+    assert size >= MIN_FONT, f"font size {size} is below MIN_FONT {MIN_FONT}: {text!r}"
     fill = fill or PALETTE["text"]
     w = ' font-weight="bold"' if bold else ""
     return (f'<text x="{_n(x)}" y="{_n(y)}" font-size="{size}" '

@@ -17,6 +17,7 @@ from tools.diagram_kit import (PALETTE, Card, _dot, _line, _n, _t, jack, jack_pi
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
 from tools.diagrams.phase0_nets import NETS, RAILS, gp  # noqa: F401
+from tools.diagrams.power_common import box
 
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_wiring_schematic.svg"
 
@@ -31,25 +32,6 @@ XL = 170            # left edge of boxed parts (power pins)
 BUS_3V3, BUS_GND = 55, 95
 RAIL_TOP, RAIL_BOT = 70, 640
 OX, OY = 460, 140   # Pico header origin (pin 1)
-
-
-def _box(x, y, w, h, title, lines=(), left=(), right=()):
-    """Module body with title above, pin names inside the edges."""
-    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="4" fill="#e4e4dc" '
-           f'stroke="#555" stroke-width="1.2"/>']
-    for i, tl in enumerate(title):
-        out.append(_t(x, y - 6 - 12 * (len(title) - 1 - i), tl, 11 if i == 0 else 10,
-                      "start", PALETTE["title"] if i == 0 else PALETTE["muted"], bold=(i == 0)))
-    for i, tl in enumerate(lines):
-        out.append(_t(x + w / 2, y + h / 2 + 3 + (i - (len(lines) - 1) / 2) * 13, tl, 9,
-                      "middle", PALETTE["muted"]))
-    for name, py in left:
-        out.append(_t(x + 6, py + 3, name, 9, "start", PALETTE["title"], bold=True))
-        out.append(_dot(x, py, 3.5))
-    for name, py in right:
-        out.append(_t(x + w - 6, py + 3, name, 9, "end", PALETTE["title"], bold=True))
-        out.append(_dot(x + w, py, 3.5))
-    return "".join(out)
 
 
 def _led_left(ox, oy, color):
@@ -118,7 +100,7 @@ def build():
         wires.append(wire([(px, py), (jog[role], py), (jog[role], ty), (XR, ty)], col))
 
     # ---- OLED
-    card.add(_box(XL, 160, XR - XL, 80,
+    card.add(box(XL, 160, XR - XL, 80,
                   ["1.3in OLED I2C 0x3C,", "chip per marking"], ["I2C0"],
                   left=[("VCC", 180), ("GND", 230)], right=[("SDA", sda_y), ("SCL", scl_y)]))
     wires.append(wire([(XL, 180), (BUS_3V3, 180)], C_3V3))
@@ -148,7 +130,7 @@ def build():
     gnd_junc.append((BUS_GND, btn_y))
 
     # ---- KY-040 encoder
-    card.add(_box(XL, 500, XR - XL, 115, ["KY-040 rotary encoder"], ["PULL_UP on", "SW CLK DT"],
+    card.add(box(XL, 500, XR - XL, 115, ["KY-040 rotary encoder"], ["PULL_UP on", "SW CLK DT"],
                   left=[("+", 525), ("GND", 585)], right=[(n, y) for n, y in
                   (("SW", enc_y["ENC_SW"]), ("CLK", enc_y["ENC_CLK"]), ("DT", enc_y["ENC_DT"]))]))
     wires.append(wire([(XL, 525), (BUS_3V3, 525)], C_3V3))
