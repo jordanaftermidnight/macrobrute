@@ -17,8 +17,8 @@ this is mounted inside the synth.
 
 | Qty | Part | Have? | Notes | ≈ USD |
 |---|---|---|---|---|
-| 1 | Raspberry Pi Pico (WH assumed) | Have; **variant owner to confirm** (BF Q21) | "WH" = wireless + headers pre-soldered; nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
-| 1 | 0.96″ SSD1306 OLED, I²C, 4-pin | Have; **size / controller / interface owner to confirm** (BF Q22) | Default address `0x3C`. The "main" display. A 7-pin module is SPI and changes the driver and pins. | $4 |
+| 1 | Raspberry Pi Pico (Pico / Pico H / Pico WH) | Have; **variant owner to confirm** (BF Q21) | "WH" = wireless + headers pre-soldered; nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
+| 1 | 1.3″ OLED, I²C, 4-pin (SH1106 likely, UNVERIFIED: read the marking) | Have (owner, 2026-10-17); 0.96″ SSD1306 owner to confirm (BF Q22) | Default address `0x3C`. The "main" display. Set `OLED_CHIP="SH1106"` and `OLED_COL_OFFSET=2` in `config.py` if the chip is SH1106 (firmware follow-up). The owner's 7-pin 1.3″ module is SPI (spare/dev) and would change the driver and pins. | $4 |
 | 1 | KY-040 rotary encoder module | Have | 5 pins (CLK, DT, SW, +, GND). On-board 10 kΩ pull-ups. | $2 |
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
@@ -148,7 +148,7 @@ and VSS, not UART pins (the older docs were wrong).
 
 ### Optional alternative: PC817 isolated UART (BF 3.9)
 
-Not part of the decided design and not required in Phase 0. If BT-2 (UART back-feed) fails or the bridge can live at low baud, the 20 owned PC817 can isolate each UART direction. It does **not** work at 115200 or 38400; 9600 is marginal and 4800 the realistic rate, all UNVERIFIED until BT-13. It also needs an MB-side collector supply (BF Q20). Read the rank mark on the owned part if you try it.
+Not part of the decided design and not required in Phase 0. If BT-2 (UART back-feed) fails or the bridge can live at low baud, the owned PC817 (10-20, owner to confirm; photo label x20) can isolate each UART direction. It does **not** work at 115200 or 38400; 9600 is marginal and 4800 the realistic rate, all UNVERIFIED until BT-13. It also needs an MB-side collector supply (BF Q20). Read the rank mark on the owned part if you try it.
 
 ### Bench tests BT-1 to BT-13 (names only)
 

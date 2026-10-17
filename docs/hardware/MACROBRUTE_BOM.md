@@ -15,12 +15,13 @@
 >   firmware dividers, clock I/O and 4 aux outs. **CD4024 dropped** (clock division is firmware).
 >   Noise, buffered mult and attenuverter stay out (covered by existing rack modules).
 > - **Width OPEN:** 17 HP or about 20 HP, until the owner measures the blank.
-> - **Connector:** 2× shielded 9-conductor DB-9 cables (not ribbon); DB-9 B carries UART TX/RX,
+> - **Connector:** 2× DB-9, CONFIRMED by the owner (2026-10-17); 2× shielded 9-conductor DB-9 cables (not ribbon); DB-9 B carries UART TX/RX,
 >   Filter CV, VCA CV and grounds only. **No I²C on the cable.** The 0.91" strip OLED is dropped and
 >   the EFFIGY 5-pin JST-XH header is shelved.
 > - **Owned parts only:** the Have/Missing table below (from BF section 1) is the ownership record.
 >   Rows in Parts 1 and 2 that are not named there are Missing. Items marked "owner to confirm" are
->   open owner questions (Pico variant, main OLED size and interface, DB-9 count); they are not decided here.
+>   open owner questions (Pico variant, whether the 0.96" SSD1306 has arrived, DB-9 count); they are not decided here.
+> - **Later owner decisions (2026-10-17):** the main OLED baseline is the owner's 1.3" 4-pin I²C module (SH1106 likely, UNVERIFIED: read the marking); kit transistors and diodes from the owner's pasted inventory are Have (card contents UNVERIFIED), including 2N3904 and 1N5819 (a possible stand-in for the 1N5817, UNVERIFIED part); LF398 stays the S&H default.
 
 ---
 
@@ -33,39 +34,44 @@ table is Missing, even where it is likely in a drawer.
 | Part | Qty | Status | Used for / note |
 |------|-----|--------|-----------------|
 | Raspberry Pi Pico | 1 | Have, **variant owner to confirm** (docs say WH; package says no W; another description says H) | Expander controller. Nothing here uses wireless (BF Q21) |
-| 0.96" SSD1306 OLED | 1 | Have, **size / controller / interface owner to confirm** (0.96 vs 1.3 in, SSD1306 vs SH1106, 4-pin I²C vs 7-pin SPI) | Expander main display (BF Q22) |
+| 1.3" 4-pin I²C OLED (SH1106 likely, UNVERIFIED: read the marking) | 1 | Have (owner, 2026-10-17) | Expander main display, baseline (BF Q22). Larger than the 0.96" panel cutout; bears on the open expander width |
+| 1.3" 7-pin SPI OLED | 1 | Have | Spare / dev |
+| 0.96" SSD1306 OLED | 1 | **Owner to confirm** (may not have arrived) | No longer the baseline |
 | 0.91" SSD1306 128×32 | 1 | Have, no longer used | Strip OLED dropped; spare |
-| 1.3" SH1106 OLED | 1 | Have, no longer used | Spare / fallback |
 | KY-040 / HW-040 encoder | 1 | Have | Expander encoder |
 | TL074C | 4 | Have | Breakout U1; expander outputs |
 | TL072IP | 6 | Have | Breakout U2, V-to-I, slew, LFO, S&H buffer |
 | CD40106 | 3 | Have | Breakout gate stage; LFO Schmitt |
 | CD4049UBE | 3 | Have | Expander clock IN/OUT buffers |
-| CD4051 | 2 | Have | No role in the decided design (only the unproven S&H alternative) |
+| CD4051 | 2 | Have | No role in the decided design (only the owned-parts S&H alternative: charge injection UNVERIFIED, supply TO DESIGN, abs max 20 V) |
 | 78L05 | 4 | Have | Breakout-local +5 V for the CD40106 (Provisional) |
 | BF245C JFET | 5 | Have | No role |
 | Vactrol(s) | "some" | Have (type and LED rating unknown, BF Q2) | Resonance CV |
 | LDR04 | 4 | Have | Home-made vactrol only if needed |
 | Isolation transformer | 1 | Have (salvaged, 46.9/82.4 Ω) | Hum ladder last step |
 | Arduino Nano | 1 | Have | No role |
-| IC assortment: PT2399 ×3, LM393 ×10, ICL7660S ×2, PC817 ×20, UC3842AN ×5, LM339 ×10, NE555 ×20, UC3843AN ×5, NE5532 ×5, LM358 ×10, ULN2003AN ×5, LM386 ×5, LM324 ×10, ULN2803APG ×5, TDA2030A ×2, TDA2822D ×5, JRC4558 ×10 | as listed | Have | None is an LF398 equivalent. PC817 is the optional isolated-UART part (BF 3.9) |
+| IC assortment: PT2399 ×3, LM393 ×10, ICL7660S ×2, PC817 10-20 (photo label ×20, about 10 in the owner's later list; owner to confirm), UC3842AN ×5, LM339 ×10, NE555 ×20, UC3843AN ×5, NE5532 ×5, LM358 ×10, ULN2003AN ×5, LM386 ×5, LM324 ×10, ULN2803APG ×5, TDA2030A ×2, TDA2822D ×5, JRC4558 ×10 | as listed | Have | None is an LF398 equivalent. PC817 is the optional isolated-UART part (BF 3.9) |
 | BAT85 | 10 | Have | CV clamps (4), Pico VSYS (1), expander rails (3), breakout rails (2): all 10 allocated (BF Q3) |
 | 100 nF ceramic | 20 | Have | Decoupling |
 | 1 µF ceramic | 5 | Have (dielectric unknown) | Not for timing or hold |
 | 1 nF ceramic | 5 | Have | CV and gate filters; NOT for S&H |
 | 10 µF / 63 V electrolytic | 10 | Have | 2-4 in parallel per rail in place of 100 µF |
 | Resistors, through-hole kit | — | **Have, values to confirm** (series, power rating, and the values 220R, 1k, 2k, 4.7k, 10k, 22k, 33k, 100k, 10R, 560R, 680R, 1M; BF Q5) | All resistor rows below |
-| Assortment kit (capacitors, transistors, diodes, LEDs, trim pots) | — | Have, exact types UNVERIFIED (BF Q18) | Rows below stay Missing until the card is read |
+| Assortment kit (capacitors, transistors, diodes, LEDs, trim pots) | — | Have, exact types UNVERIFIED (BF Q18) | Rows not named in the next rows stay Missing until the card is read |
+| 2N3904, 2N3906, S8050, S8550, 2N5401, 2N5551 | 10+ each | Have (owner's pasted inventory; card contents UNVERIFIED) | 2N3904 is OWNED. No role in the decided design |
+| 1N4148 | 25+ | Have (same inventory, UNVERIFIED; BF Q4) | Slew-limiter steering; may replace BAT85 in hum-ladder step 4 (provisional) |
+| 1N5819 (40 V Schottky) | 10 | Have (same inventory); datasheet not in `datasheets/`, UNVERIFIED | May serve where a 1N5817 was wanted (Pico VSYS OR diode, rail protection); provisional, frees BAT85 (BF 1.2) |
+| 1N5822 | 5 | Have (same inventory, UNVERIFIED) | No role |
+| 1N270 germanium | 2 | Have (same inventory, UNVERIFIED) | No role |
 | 100 kΩ pots | 4 | Have | Expander controls |
 | 3.5 mm jacks | 25 | Have, type unknown (BF Q8) | Expander and MB panel jacks |
 | DB-9 connectors | "several" per owner 2026-10-17 (earlier list: 2) | Have, **count / gender / flange owner to confirm** (BF Q9, E-32) | 4 panel connectors are needed in total |
-| VGA HD-15 connectors | 2 | Have, rejected | Spare |
-| **LF398 (LF398N, DIP-8)** | 1 | **Missing — genuine purchase** | Expander S&H (BF Q1) |
+| VGA HD-15 connectors | 2 | Have, rejected | Spare (the VGA line in a pasted inventory was an error; DB-9 are confirmed) |
+| **LF398 (LF398N, DIP-8)** | 1 | **Missing — genuine purchase** | Expander S&H, the default (BF Q1). Owned-parts alternative: CD4051 + TL072 + film hold cap (charge injection UNVERIFIED, supply TO DESIGN) |
 | **10 nF film (polystyrene / polypropylene) hold capacitor** | 1 | **Missing — genuine purchase** | LF398 hold cap; ceramic is unsuitable (LF398 sheet p15) |
 | Film capacitor for LFO timing (1 µF, or 4.7-10 µF) | 1 | Missing, owner decision (BF Q6) | LFO |
 | 1 MΩ pots | 3 | Missing, owner decision (BF Q6) | LFO rate, slew rise/fall |
-| 1N4148 | 2+ | Missing (may be in the assortment kit, UNVERIFIED; BF Q4) | Slew-limiter steering |
-| 1N5817 | 1 | Missing; **20 V part, not 40 V** (DATASHEETS (e)) | Only the Pico VSYS path needs a real one; an owned BAT85 can stand in (BF 1.2) |
+| 1N5817 | 1 | Missing; **20 V part, not 40 V** (DATASHEETS (e)) | Only the Pico VSYS path needs a real one; an owned 1N5819 (UNVERIFIED part) or BAT85 can stand in (BF 1.2) |
 | 100k trimmers | — | Missing (BF Q7) | Aux-out trims, or fixed resistors |
 | Eurorack 16-pin keyed header + ribbon | 1 | Missing (BF Q11) | Expander power |
 | DB-9 connectors (to reach 4 panel + cable ends), 2 shielded 9-core cables with hoods | — | Missing (BF Q9) | A and B links; ribbon is not acceptable |
@@ -74,7 +80,7 @@ table is Missing, even where it is likely in a drawer.
 | Stripboard, IC sockets, hook-up wire | — | Not on the owned list (BF Q13) | All boards |
 | 100 µF / 25 V, 100 µF / 10 V, 47 µF electrolytics | — | Missing | Use 2-4× 10 µF / 63 V in parallel instead |
 | Ferrite beads | — | Missing | Omit, or 10 Ω + 10 µF |
-| 2N3904, BC547, BC557, 2N3906, BSS138, BAT54S, BZX84C3V3, SMBJ12CA, BAT46, LM7805, MCP4725, LM13700, CD4066, CD4024 | — | Missing, **not needed** | Dropped or replaced (BF 1.1, 1.2) |
+| BC547, BC557, BSS138, BAT54S, BZX84C3V3, SMBJ12CA, BAT46, LM7805, MCP4725, LM13700, CD4066, CD4024 | — | Missing, **not needed** | Dropped or replaced (BF 1.1, 1.2) |
 
 ---
 
@@ -101,7 +107,7 @@ The euro figures below predate the Have/Missing table and the scope change; they
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
 | 1 | Raspberry Pi Pico — **Have** (variant owner to confirm; see the table above, no purchase) | 1 | €0 | €0 | — |
-| 2 | 0.96" 128x64 OLED SSD1306 (main, on hand; size/interface owner to confirm) — spares on hand: 0.91" 128×32 SSD1306 (strip OLED dropped), 1.3" SH1106, 16×2 1602 I²C LCD | 1 | €0 | €0 | — |
+| 2 | 1.3" 128x64 4-pin I²C OLED (main baseline, on hand; SH1106 likely, UNVERIFIED) — on hand: 1.3" 7-pin SPI (spare/dev), 0.91" 128×32 SSD1306 (strip OLED dropped), 16×2 1602 I²C LCD; 0.96" SSD1306 owner to confirm | 1 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -118,7 +124,7 @@ The euro figures below predate the Have/Missing table and the scope change; they
 
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
-| 9 | 1N5817 Schottky diode (**20 V** 1 A, not 40 V; **Missing**, owned BAT85 can stand in) | 1 | €0.10 | €0.10 | Mouser/TME |
+| 9 | 1N5817 Schottky diode (**20 V** 1 A, not 40 V; **Missing**, owned 1N5819 (UNVERIFIED part) or BAT85 can stand in) | 1 | €0.10 | €0.10 | Mouser/TME |
 | 10 | ~~Ferrite bead 600Ω@100MHz (0805)~~ — **not needed** (omit, or 10 Ω + 10 µF) | — | — | — | — |
 | 11 | 100nF MLCC capacitor 0805 | 10 | €0.05 | €0.50 | Mouser/TME |
 | 12 | 10µF MLCC capacitor 0805 | 4 | €0.15 | €0.60 | Mouser/TME |
@@ -239,7 +245,7 @@ The owned through-hole kit covers these rows; 1 % parts are not assumed. Older d
 | 34 | ~~BC547 NPN transistor~~ — **not needed** (noise dropped) | — | — | — | — |
 | 35 | ~~BC557 PNP transistor~~ — **not needed** | — | — | — | — |
 | 36 | ~~2N3906 PNP transistor~~ — **not needed** | — | — | — | — |
-| 37 | 1N4148 signal diode | 20 | €0.03 | €0.60 | Protection, clipping |
+| 37 | 1N4148 signal diode (**Have, 25+**, owner's inventory, UNVERIFIED) | 20 | €0.03 | €0.60 | Protection, clipping |
 
 ### IC Sockets
 
@@ -437,7 +443,7 @@ EXPANDER (rack only)                          BREAKOUT (synth only)
 CP1A 16-pin bus                               MicroBrute TP70 (+12 V), TP71 (-12 V), TP72 (GND)
   ├─ +5 V (pins 11-12, 0.5 A shared)            │
   │    └─► Schottky OR diode (1N5817 not        └─► rail protection (BAT85 or 4.7-10 Ω)
-  │         owned; BAT85 stand-in) + bulk            └─► 2-4× 10 µF/63 V ─► +12V_BRK / -12V_BRK
+  │         owned; 1N5819/BAT85 stand-in) + bulk            └─► 2-4× 10 µF/63 V ─► +12V_BRK / -12V_BRK
   │         + 100 nF ─► Pico VSYS (pin 39)           └─► owned 78L05 ─► +5 V for the CD40106 only
   │            └─► Pico 3V3 ─► OLED, encoder,            (Provisional, BF 3.4)
   │                CD4049UB clock buffers
@@ -461,9 +467,9 @@ Pico GPIO (PWM)
 ## PART 6: PURCHASING STRATEGY
 
 ### Order 1: TME (EU, fast shipping)
-- Only what the Have/Missing table marks as a genuine purchase or owner decision: **LF398N**, the 10 nF film hold capacitor, and (owner decision) the LFO film capacitor and 1N4148 if the assortment kit lacks them. See `MACROBRUTE_SHOPPING_LIST.md`.
+- Only what the Have/Missing table marks as a genuine purchase or owner decision: **LF398N**, the 10 nF film hold capacitor, and (owner decision) the LFO film capacitor. See `MACROBRUTE_SHOPPING_LIST.md`.
 - Everything else in this order (TL072/TL074/CD40106/CD4049UBE, resistors, 100 nF, BAT85, transistors) is owned or no longer needed.
-- ~~LM13700, CD4066, CD4017, CD4024, BC547, BC557, 2N3906, 2N3904, ferrite beads~~ — **dropped or not needed**
+- ~~LM13700, CD4066, CD4017, CD4024, BC547, BC557, ferrite beads~~ (2N3904 and 2N3906 are owned, not needed) — **dropped or not needed**
 
 ### Order 2: Thonk (UK)
 - Thonkiconn jacks (all)
@@ -477,7 +483,7 @@ Pico GPIO (PWM)
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
-- (OLED already on hand — 0.96" SSD1306 main, spares 0.91" SSD1306, 1.3" SH1106, 16x2 1602 LCD)
+- (OLED already on hand — 1.3" 4-pin I²C main (SH1106 likely, UNVERIFIED), spares 1.3" 7-pin SPI, 0.91" SSD1306, 16x2 1602 LCD; 0.96" SSD1306 owner to confirm)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)
