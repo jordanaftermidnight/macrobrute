@@ -8,9 +8,9 @@ datasheet facts in `docs/DATASHEETS.md`, and the back-feed and hum design note
 `docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md` (cited below as "BF"). Nothing is built yet:
 every value here is a design value, and anything marked UNVERIFIED waits for a bench check or an owner answer.
 
-**Connector:** 2× DB-9 (VGA HD-15 rejected — shorts pins 6-8 to GND). Both mount on the MicroBrute **rear panel, left of Pitch/Gate** (owner decision a). Panel dimensions, free area and depth: UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 mounting-hole spacing 24.99 mm (Spectrum Control cut-out, DATASHEETS (g)); flange size of the owner's part UNVERIFIED.
+**Connector:** 2× DB-9, CONFIRMED by the owner (2026-10-17; the VGA HD-15 line in a pasted inventory was an error; HD-15 rejected — shorts pins 6-8 to GND). Both mount on the MicroBrute **rear panel, left of Pitch/Gate** (owner decision a). Panel dimensions, free area and depth: UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 mounting-hole spacing 24.99 mm (Spectrum Control cut-out, DATASHEETS (g)); flange size of the owner's part UNVERIFIED.
 **Power:** split. The expander is powered only from the Eurorack rack; the MicroBrute-side breakout is powered only from the synth (TP70/TP71/TP72). **No supply rail crosses either DB-9 cable**; only ground is shared.
-**OLED:** one **0.96" SSD1306 I²C 128×64** main display on the expander (driver `OLED_I2C` in `firmware/pico/display.py`, `OLED_CHIP="SSD1306"`). Size (0.96" vs 1.3"), controller and interface (4-pin I²C vs 7-pin SPI) of the owner's module: UNVERIFIED, owner to confirm (BF Q22). The 0.91" strip OLED is dropped (decision c). **No I²C crosses the DB-9 cable.**
+**OLED:** one **1.3" 4-pin I²C 128×64** main display on the expander (owner baseline, 2026-10-17; chip SH1106 likely, UNVERIFIED: owner to read the marking, BF Q22). Driver `OLED_I2C` in `firmware/pico/display.py` already supports SH1106 (`OLED_CHIP`, `OLED_COL_OFFSET=2` in `config.py`; `config.py` still ships `OLED_CHIP="SSD1306"`, a firmware follow-up). A 1.3" module is larger than the 0.96" panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). The owner's 7-pin SPI 1.3" module is spare/dev. The 0.96" SSD1306 may not have arrived (owner to confirm). The 0.91" strip OLED is dropped (decision c). **No I²C crosses the DB-9 cable.**
 **MIDI path:** Pico UART0 ↔ LPC2361 UART bridge @ 115200 baud (LPC side: see section 5.4). LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
 **Firmware:** Pico MicroPython (14 modules + `_effigy_constants.py` generated from EFFIGY's C header; the EFFIGY pairing is SHELVED, section 5.6), LPC2361 ARM7 (stock + planned bridge extension). Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm (BF Q21).
 
@@ -255,7 +255,7 @@ precision reference, P4 pin 5 is the LPC's own +3V3ARM; audit B09).
 | TP72 (GND) | 22AWG Black | Breakout star ground; every DB-9 ground pin by its own short lead (BF 4.1) |
 | Local +5V | — | Owned 78L05 from +12V_BRK, for the CD40106 only. Provisional (BF 3.4, audit decision 3, owner has not confirmed) |
 
-Rail protection is open (audit conflict C12): an owned BAT85 per rail, or a 4.7-10Ω series
+Rail protection is open (audit conflict C12): an owned BAT85 per rail, an owned 1N5819 (40 V, x10; UNVERIFIED part), or a 4.7-10Ω series
 resistor. The 1N5817 used in older drawings is a 20 V / 1 A part (not 40 V; DATASHEETS (e)) and is
 not owned. If a diode is used on -12 V, its **cathode goes to the TP71 / -12 V side and its anode to
 the breakout rail** (audit B15). The 100µF parts in older drawings are not owned: use 2-4× owned
@@ -394,15 +394,15 @@ pins 3-8, +12 V @ 1 A on pins 9-10, **+5 V @ 0.5 A on pins 11-12**, pins 13-16 n
 p15, p20; DATASHEETS (f)). The +5 V budget is 0.5 A shared with every other +5 V module in the
 rack. Whether the owner's bus slot carries +5 V: UNVERIFIED (BF BT-12). Pico VSYS takes rack +5 V
 through a Schottky OR diode (valid per Pico datasheet p21-p22): 1N5817 is a 20 V / 1 A part and is
-not owned; an owned BAT85 can stand in (about 4.2 V at 100 mA, inside VSYS 1.8-5.5 V; BF 1.2).
+not owned; an owned 1N5819 (40 V, x10, UNVERIFIED part) or an owned BAT85 can stand in (BAT85: about 4.2 V at 100 mA, inside VSYS 1.8-5.5 V; BF 1.2). Provisional; using 1N5819 here would free a BAT85.
 
 ### Hardware utilities on the expander
 
 | # | Module | Footprint | ICs | Jacks | Pots |
 |---|--------|-----------|-----|-------|------|
-| 1 | Slew limiter | 30×15 mm | TL072 (1 section) + 2× 1N4148 (rise/fall steering; 1N4148 not owned, BF Q4) | 2 (in, out) | 1× 1MΩ rate (1MΩ pots not owned, BF Q6) |
+| 1 | Slew limiter | 30×15 mm | TL072 (1 section) + 2× 1N4148 (rise/fall steering; 1N4148 owned, 25+ per the owner's inventory, UNVERIFIED, BF Q4) | 2 (in, out) | 1× 1MΩ rate (1MΩ pots not owned, BF Q6) |
 | 2 | LFO | UNVERIFIED | TL072 integrator + CD40106 Schmitt (BF 1.1) | see total below | 1× rate |
-| 3 | Sample & Hold | UNVERIFIED | LF398 (not owned, BF Q1) + 10 nF film hold cap (not owned; ceramic unsuitable, LF398 sheet p15) + TL072 buffer | see total below | — |
+| 3 | Sample & Hold | UNVERIFIED | LF398 (default; not owned, BF Q1) + 10 nF film hold cap (not owned: a genuine purchase; ceramic unsuitable, LF398 sheet p15) + TL072 buffer. Owned-parts alternative: CD4051 channel + TL072 + film hold cap, charge injection UNVERIFIED, supply TO DESIGN (CD4051 abs max 20 V) | see total below | — |
 
 LF398 PDIP-8 pinout (TI SNOSBI3C p3; DATASHEETS (a)): 1 V+, 2 OFFSET ADJUST, 3 INPUT, 4 V-, 5 OUTPUT,
 6 Ch (hold capacitor), 7 LOGIC REFERENCE, 8 LOGIC. Supply ±5 V to ±18 V. Hold-cap leakage 30 pA typ,
@@ -433,7 +433,7 @@ series resistor in the integrator is mandatory (audit S61). S&H trigger conditio
 | Row | Element | Notes |
 |-----|---------|-------|
 | Title strip | "MACROBRUTE" silkscreen | — |
-| 1 | Main OLED — 0.96" SSD1306 (size/interface UNVERIFIED, BF Q22) | I²C0 @ 0x3C, the only device on I²C0 |
+| 1 | Main OLED — 1.3" 4-pin I²C (SH1106 likely, UNVERIFIED, BF Q22) | I²C0 @ 0x3C, the only device on I²C0 |
 | 2 | HW-040 encoder + tap button + RGB LED | Encoder = menu nav · Tap = tempo/gate · RGB = status |
 | 3 | Clock IN, Clock OUT jacks | 3.5 mm panel jacks (type UNVERIFIED, BF Q8) |
 | 4 | Clock divider outputs ÷2, ÷4, ÷8 | Firmware-driven (GP16/17/18) |
@@ -625,7 +625,7 @@ are purchase lists. The owner has further parts not yet listed (BF Q18).
 |------|-----|--------|
 | TL074C | 4 | ✓ Have |
 | TL072IP | 6 | ✓ Have |
-| CD4051 | 2 | ✓ Have (no role in the decided design) |
+| CD4051 | 2 | ✓ Have (no role in the decided design; owned-parts S&H option only, charge injection UNVERIFIED, supply TO DESIGN) |
 | CD40106 | 3 | ✓ Have |
 | BF245C | 5 | ✓ Have |
 | LDR04 | 4 | ✓ Have (for a home-made vactrol, only if the owned vactrols do not suit) |
@@ -640,11 +640,12 @@ are purchase lists. The owner has further parts not yet listed (BF Q18).
 | 100kΩ pots | 4 | ✓ Have |
 | 3.5mm jacks | 25 | ✓ Have (type UNVERIFIED, BF Q8) |
 | Raspberry Pi Pico | 1 | ✓ Have; variant UNVERIFIED (docs say Pico WH; package says "Raspberry Pi Pico"; another description says "Pico H"), owner to confirm (BF Q21) |
-| 0.96" SSD1306 OLED (main) | 1 | ✓ Have; size, controller and interface (I²C vs SPI) UNVERIFIED, owner to confirm (BF Q22) |
+| 1.3" 4-pin I²C OLED (main) | 1 | ✓ Have (owner, 2026-10-17); chip likely SH1106, UNVERIFIED: read the marking (BF Q22) |
+| 1.3" 7-pin SPI OLED | 1 | ✓ Have (spare / dev) |
+| 0.96" SSD1306 OLED | 1 | Owner to confirm (may not have arrived); no longer the baseline |
 | 0.91" SSD1306 128×32 OLED | 1 | ✓ Have (spare; strip OLED dropped) |
-| 1.3" SH1106 OLED | 1 | ✓ Have (spare) |
 | KY-040 / HW-040 encoder | 1 | ✓ Have (owner 2026-10-17) |
-| VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare) |
+| VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare; the VGA line in a pasted inventory was an error, DB-9 are confirmed) |
 | DB-9 connectors | 2 (earlier list) / "several" (owner 2026-10-17) | ✓ Have; count, gender and flange UNVERIFIED (BF Q9) |
 | DSO138 oscilloscope | — | Moved to `spinoffs/dso138-desktop/` |
 | JF-33 PCB | — | Moved to `spinoffs/jf33-eurorack/` |
@@ -652,9 +653,14 @@ are purchase lists. The owner has further parts not yet listed (BF Q18).
 | Isolation transformer | 1 | ✓ Salvaged (46.9/82.4Ω); turns ratio and bandwidth UNVERIFIED (E-29) |
 | Arduino Nano | 1 | ✓ Have (no role) |
 | Assortment kit (resistors, capacitors, transistors, diodes, LEDs, trim pots) | — | ✓ Have; exact types and values UNVERIFIED (BF Q18) |
+| 2N3904, 2N3906, S8050, S8550, 2N5401, 2N5551 | 10+ each | ✓ Have (owner's pasted inventory of the kit; card contents UNVERIFIED) |
+| 1N4148 | 25+ | ✓ Have (same inventory, UNVERIFIED) |
+| 1N5819 (40 V Schottky) | 10 | ✓ Have (same inventory); datasheet not saved under `datasheets/`, owner's part UNVERIFIED |
+| 1N5822 | 5 | ✓ Have (same inventory, UNVERIFIED) |
+| 1N270 germanium diode | 2 | ✓ Have (same inventory, UNVERIFIED) |
 
 **IC assortment (owner photo, 2026-10-17), all Have:** PT2399 ×3, LM393 ×10, ICL7660S ×2,
-PC817 optocoupler ×20, UC3842AN ×5, LM339 ×10, NE555 ×20, UC3843AN ×5, NE5532 ×5, LM358 ×10,
+PC817 optocoupler ×20 on the photo label (about 10 in the owner's later list: 10-20, owner to confirm), UC3842AN ×5, LM339 ×10, NE555 ×20, UC3843AN ×5, NE5532 ×5, LM358 ×10,
 ULN2003AN ("UL2003AN") ×5, LM386 ×5, LM324 ×10, ULN2803APG ×5, TDA2030A ×2, TDA2822D ×5, JRC4558 ×10.
 None is an LF398 equivalent. Possible uses are in BF 1.1a (for example PC817 for the documented
 isolated-UART alternative, BF 3.9).
@@ -669,7 +675,6 @@ From BF section 1 (Missing parts). Nothing here is bought without the owner's ap
 | 10 nF film hold cap (polystyrene / polypropylene) | 1 | TME | S&H hold cap (BF Q1; ceramic unsuitable) |
 | Film cap for LFO timing (1 µF, or 4.7-10 µF) | 1 | — | LFO (BF Q6) |
 | 1MΩ pots | 3 | AliExpress | LFO rate, slew rise/fall (BF Q6) |
-| 1N4148 | 2 | — | Slew-limiter steering, unless in the assortment kit (BF Q4) |
 | 3.5 mm panel jacks (Thonkiconn-type) | as needed | Thonk | Only if the owned 25 do not suit (BF Q8) |
 | Eurorack 16-pin keyed header + ribbon | 1 | Thonk | Expander power (BF Q11) |
 | DB-9 panel connectors, 2 shielded 9-core cables with hoods | 4 connectors needed in total (owned count UNVERIFIED), 2 cables | — | DB-9 A and B links (BF Q9) |
@@ -680,5 +685,5 @@ From BF section 1 (Missing parts). Nothing here is bought without the owner's ap
 | Brass M3 bolts | 6 | Local | Touch bolt contacts (later phase) |
 | SPDT mini toggles | 3 | Local/AliExpress | Panel mods B4-B6 (later phase) |
 
-Not needed any more: LM7805 (78L05 owned), CD4024 (firmware dividers), 2N3904 (LED drivers deleted,
-vactrol via TL072), 1N5817 (an owned BAT85 stands in, BF 1.2), ferrite beads (omit, or 10Ω + 10µF), BAT54S, BSS138.
+Not needed any more: LM7805 (78L05 owned), CD4024 (firmware dividers), 1N4148 (owned, 25+), 2N3904 (owned; LED drivers deleted,
+vactrol via TL072), 1N5817 (an owned 1N5819 or BAT85 stands in, BF 1.2), ferrite beads (omit, or 10Ω + 10µF), BAT54S, BSS138.

@@ -21,27 +21,28 @@ Power states used throughout:
 
 ## 1. Owned-parts inventory
 
-Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) is the only list with a Have status. `docs/hardware/MACROBRUTE_BOM.md` and `MACROBRUTE_SHOPPING_LIST.md` are purchase lists with no Have column (this settles audit conflict C7 in favour of r3/r5). Owner additions of 2026-10-17: the KY-040 (HW-040) encoder, some vactrols, a through-hole resistor kit (values to be confirmed, section 1.3) and an IC assortment (photo, section 1.1a) are Have. The owner has further components not yet listed (Q18). Anything not on these lists is Missing, even where it is very likely in a drawer; those are flagged as owner questions (Q-numbers, section 6).
+Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) is the only list with a Have status. `docs/hardware/MACROBRUTE_BOM.md` and `MACROBRUTE_SHOPPING_LIST.md` are purchase lists with no Have column (this settles audit conflict C7 in favour of r3/r5). Owner additions of 2026-10-17: the KY-040 (HW-040) encoder, some vactrols, a through-hole resistor kit (values to be confirmed, section 1.3) and an IC assortment (photo, section 1.1a) are Have. Later owner decisions of 2026-10-17 (plan Global Constraints): the connector is CONFIRMED as 2x DB-9; the owner has two 1.3 inch OLEDs; and the kit parts listed in section 1.2 (from the owner's pasted inventory of the assortment kit; card contents UNVERIFIED) are owned. The owner has further components not yet listed (Q18). Anything not on these lists is Missing, even where it is very likely in a drawer; those are flagged as owner questions (Q-numbers, section 6).
 
 ### 1.1 Active parts and modules
 
 | Part | Used for | Status (qty) | Owned alternative or owner question |
 |---|---|---|---|
 | Raspberry Pi Pico (variant UNVERIFIED) | Expander controller | Have (1) | The docs say Pico WH; the package says "Raspberry Pi Pico" (no W); another owner description says "Pico H". Nothing in this design uses wireless, so any variant works electrically; docs may need renaming (Q21). |
-| 0.96" SSD1306 OLED | Expander main display, I2C0 GP4/GP5 | Have (1) | Size (0.96 vs 1.3 inch), controller (SSD1306 vs SH1106) and header (4-pin I2C vs 7-pin SPI) of the main OLED UNVERIFIED (Q22). |
+| Main OLED: 1.3 inch 4-pin I2C module (SH1106 likely, UNVERIFIED: read the marking) | Expander main display, I2C0 GP4/GP5 | Have (owner, 2026-10-17) | Baseline per the owner decision. The chip is probably SH1106 (UNVERIFIED); the firmware already has an SH1106 driver (`OLED_CHIP`, `OLED_COL_OFFSET=2`). The module is larger than the 0.96 inch panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). Q22. |
+| 1.3 inch 7-pin SPI OLED | Spare / dev | Have (owner, 2026-10-17) | Not the baseline. An SPI display would change the driver and GPIO plan (Q22). |
+| 0.96" SSD1306 OLED | Was the baseline main display | Owner to confirm (it may not have arrived) | Not the baseline any more. If it is on hand it is a spare. |
 | 0.91" SSD1306 128x32 | Was the strip OLED | Have (1), no longer used | Dropped (decision c); spare. |
-| 1.3" SH1106 OLED | Was the EFFIGY / fallback display | Have (1), no longer used | EFFIGY shelved; spare. |
 | KY-040 / HW-040 encoder | Expander encoder | Have (1) (owner, 2026-10-17) | - |
 | TL074C | MB breakout U1 buffers; expander aux outs | Have (4) | - |
 | TL072IP | Breakout U2 (env/LFO), vactrol V-to-I, slew, LFO, S&H buffer, clock conditioning | Have (6) | Section count for U2 is audit conflict C10; 6 owned cover r3's 2x TL072 plan. |
 | CD40106 | Breakout gate conditioner; expander LFO Schmitt | Have (3) | - |
 | CD4049UBE | Expander Clock IN and Clock OUT buffers (section 3) | Have (3) | Not used on the gate path (section 3.5). |
-| CD4051 | Not used by the decided design | Have (2) | Only as the unproven S&H alternative below. |
+| CD4051 | Not used by the decided design | Have (2) | Only as the unproven S&H alternative below (owned-parts option; charge injection UNVERIFIED; its supply is TO DESIGN, CD4051 abs max 20 V). |
 | 78L05 | Breakout-local 5 V for the CD40106 (Provisional) | Have (4) | - |
-| LF398 | Expander S&H | Missing | No owned equivalent. Alternative CD4051 + TL072 + film hold cap (r3) has unverified charge injection and still needs a film cap. Q1: buy LF398N? |
+| LF398 | Expander S&H | Missing | No owned equivalent. LF398 stays the default. Alternative CD4051 + TL072 + film hold cap (r3) is an owned-parts option with charge injection UNVERIFIED, a supply TO DESIGN (CD4051 abs max 20 V) and it still needs a film cap. Q1: buy LF398N? |
 | BF245C JFET | No role in the decided design | Have (5) | - |
-| 2N3904 | Old LED drivers and vactrol driver | Missing (may be in the assortment kit, UNVERIFIED) | Delete the LED drivers (S12); vactrol via TL072 V-to-I stage (S37). No transistor needed. |
-| BC547 / BC557 / 2N3906 | Listed in BOM rows | Missing (purchase list only) | Not needed. |
+| 2N3904, 2N3906, S8050, S8550, 2N5401, 2N5551 | Kit transistors (owner's pasted inventory) | Have (10+ each, card contents UNVERIFIED) | 2N3904 is OWNED (no longer Missing). Not needed by the decided design: LED drivers deleted (S12), vactrol via TL072 V-to-I stage (S37). |
+| BC547 / BC557 | Listed in BOM rows | Missing (purchase list only) | Not needed. |
 | BSS138 | Old level shifter | Missing | Not needed (UART is 3.3 V to 3.3 V; gate uses a divider, section 3.5). |
 | LM13700, CD4024, CD4066 | Dropped circuits | Missing | Not needed. |
 | LM7805 | "Spares" | Missing | Not needed (78L05 owned). |
@@ -50,7 +51,7 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 | LDR04 | Home-made vactrol | Have (4) | Only needed if the owned vactrols do not suit. |
 | Isolation transformer | Hum ladder last step, one audio line | Have (1, salvaged, 46.9/82.4 ohm DCR) | Turns ratio, inductance, bandwidth UNVERIFIED (E-29). |
 | Arduino Nano | No role (parked) | Have (1) (owner, 2026-10-17) | - |
-| Assortment kit (resistors, capacitors, transistors, diodes, LEDs, trim pots) | Possible source for the Missing transistor, diode and trimmer rows | Have (owner, 2026-10-17); exact types and values UNVERIFIED | Owner to send close-ups of the insert card (Q18). Until then the rows below stay Missing. |
+| Assortment kit (resistors, capacitors, transistors, diodes, LEDs, trim pots) | Possible source for the Missing transistor, diode and trimmer rows | Have (owner, 2026-10-17); exact types and values UNVERIFIED | Owner to send close-ups of the insert card (Q18). The parts the owner's pasted inventory names are listed as Have in this section (card contents UNVERIFIED); rows not named there stay Missing. |
 
 ### 1.1a IC assortment (owner photo, 2026-10-17)
 
@@ -58,7 +59,7 @@ All Have. None of these is an LF398 equivalent (no part here is a sample-and-hol
 
 | Part | Qty | Possible use in this project |
 |---|---|---|
-| PC817 optocoupler | 20 | Isolated UART alternative (section 3.9). |
+| PC817 optocoupler | 10-20, owner to confirm (photo label x20; about 10 in the owner's later list) | Isolated UART alternative (section 3.9). |
 | NE5532 | 5 | Audio op-amp sections (for example ladder step 5 difference receivers). Supply: recommended +/-5 V to +/-15 V, abs max +/-18 V (TI SLOS075K p3), so +/-12 V is in range. Back-to-back input diodes conduct above about 0.6 V differential (p3 note 4), so not for comparators or Schmitt stages; bipolar inputs (bias current not read for this note, UNVERIFIED) make it a poor choice for high-impedance nodes (S&H buffer, 1M bias). |
 | JRC4558 | 10 | Audio op-amp sections, same role as NE5532. No datasheet in `datasheets/`: supply range and input limits UNVERIFIED. |
 | LM358 | 10 | Single-supply op-amp; datasheet in `datasheets/LM358/` (not read for this note). |
@@ -76,10 +77,12 @@ All Have. None of these is an LF398 equivalent (no part here is a sample-and-hol
 
 | Part | Used for | Status | Owned alternative or owner question |
 |---|---|---|---|
-| BAT85 | CV clamps, rail protection | Have (10) | Budget: 4 for the two CV clamps (section 3.3), 1 for Pico VSYS, 3 for expander +12/-12/+5 V, 2 for breakout rails = 10. Exactly the stock, so none is left for hum-ladder step 4. If audit conflict C12 goes to r2's series resistor on the breakout rails, 2 are freed and step 4 becomes buildable. Q3: confirm before more BAT85 uses are added. |
+| BAT85 | CV clamps, rail protection | Have (10) | Budget: 4 for the two CV clamps (section 3.3), 1 for Pico VSYS, 3 for expander +12/-12/+5 V, 2 for breakout rails = 10. Exactly the stock, so none is left for hum-ladder step 4. If audit conflict C12 goes to r2's series resistor on the breakout rails, 2 are freed and step 4 becomes buildable. Owned 1N5819 (x10) and 1N4148 (25+) can now take over some of these roles (see the 1N5819 and 1N4148 rows), which would free BAT85; provisional, no decision changed. Q3: confirm before more BAT85 uses are added. |
 | BAT54S | CV clamps (old docs) | Missing | BAT85, two per clamp (DATASHEETS (e)). |
-| 1N5817 | Pico VSYS OR diode, expander rail reverse protection | Missing | BAT85 can stand in: IF 200 mA continuous, VF 800 mV at 100 mA (BAT85 p2-p3). On VSYS that gives about 4.2 V at 100 mA, inside the Pico's 1.8-5.5 V VSYS range (Pico datasheet p9). Note 1N5817 is a 20 V part, not 40 V (DATASHEETS (e)). |
-| 1N4148 | Slew-limiter steering, old clamps | Missing (may be in the assortment kit, UNVERIFIED) | BAT85 stock is used up (row above). Q4: confirm 1N4148 stock or buy. |
+| 1N5819 (40 V Schottky), 1N5822 | Kit diodes (owner's pasted inventory) | Have (1N5819 x10, 1N5822 x5; card contents UNVERIFIED) | 1N5819 is OWNED and may serve where this note wanted a 1N5817: the Pico VSYS OR diode and the expander rail reverse protection (provisional). `docs/DATASHEETS.md` (e) quotes 1N5819 as 40 V with VF 0.60 V at 1 A from the 1N5817-series sheet (Diodes DS23001); the owner's actual part and its datasheet are UNVERIFIED (not saved under `datasheets/`). If 1N5819 takes the three expander rail diodes and the VSYS diode, up to 4 BAT85 are freed (provisional). |
+| 1N5817 | Pico VSYS OR diode, expander rail reverse protection | Missing (not owned; the owned 1N5819 may replace it, row above) | BAT85 can also stand in: IF 200 mA continuous, VF 800 mV at 100 mA (BAT85 p2-p3). On VSYS that gives about 4.2 V at 100 mA, inside the Pico's 1.8-5.5 V VSYS range (Pico datasheet p9). Note 1N5817 is a 20 V part, not 40 V (DATASHEETS (e)). |
+| 1N4148 | Slew-limiter steering, old clamps | Have (25+, owner's pasted inventory; card contents UNVERIFIED) | Owned 1N4148 can serve the hum-ladder step 4 anti-parallel pair and the slew steering, instead of BAT85 (provisional; VF differs from BAT85, so recheck BT-2, BT-3 and BT-5). Q4: confirm the stock. |
+| 1N270 | Germanium diode | Have (x2, owner's pasted inventory; card contents UNVERIFIED) | No role in the decided design. |
 | BZX84C3V3, SMBJ12CA, BAT46 | Old protection drawings | Missing | Not needed (audit B17, r2). |
 
 ### 1.3 Resistors
@@ -119,7 +122,7 @@ Status: Have (owner resistor kit, 2026-10-17). Series and power rating are not y
 | 100k trimmers | Aux-out trims (BOM) | Missing (assortment kit has trim pots, values UNVERIFIED) | Q7, or fixed resistors. |
 | 3.5 mm jacks | Expander panel (16+ jacks after LFO + S&H, audit S52), MB panel jacks | Have (25), type unknown | Q8: are these PJ398SM / PJ301M style panel jacks (E-25)? |
 | DB-9 connectors | 2 on the MB rear panel, 2 on the expander | Have ("several" per owner 2026-10-17; count UNVERIFIED, earlier list says 2), gender and flange UNVERIFIED | Needs 4 panel connectors plus 2 cables (or 4 cable ends): how many are Missing depends on the real count (UNVERIFIED), plus the cables. Q9 (E-32). |
-| HD-15 connectors | Rejected | Have (2), spare | Not usable (cable shorts pins 6-8 to GND, plan). |
+| HD-15 connectors | Rejected | Have (2), spare (the VGA line in a pasted inventory was an error; DB-9 stay in this project) | Not usable (cable shorts pins 6-8 to GND, plan). |
 | Shielded 9-core cable (x2) and hoods | DB-9 A and B links | Missing | Q9. A ribbon cable is not acceptable (N19). |
 | Insulating shoulder washers | Expander-side DB-9 shells (section 4.2) | Missing | Q10. |
 | Eurorack 16-pin keyed header and ribbon | Expander power | Missing | No owned alternative. Q11. |
@@ -308,7 +311,7 @@ Both clock jacks and the Pico are in the rack domain; no clock wire crosses to t
 
 ### 3.9 Alternative: PC817-isolated UART (documented option, not the decided design)
 
-The decided UART (3.1) stays as written; it is provisional because it relies on the RP2040 FT sentence and on an unpowered LPC pad. This section evaluates the owned PC817 (20 owned) as a replacement for both UART directions. Datasheet: Sharp PC817X Series, sheet D2-A03101EN (`datasheets/PC817/73758.pdf`, read for this note); a second Sharp sheet (OP18002EN, PC817XxNSZ1B) gives the same IC, fc, tr and tf rows (its cover page states CTR 50-400 % instead of 50-600 %). The owned parts come from an assortment: maker, CTR rank mark and whether they meet the Sharp figures are UNVERIFIED.
+The decided UART (3.1) stays as written; it is provisional because it relies on the RP2040 FT sentence and on an unpowered LPC pad. This section evaluates the owned PC817 (10-20 owned, owner to confirm) as a replacement for both UART directions. Datasheet: Sharp PC817X Series, sheet D2-A03101EN (`datasheets/PC817/73758.pdf`, read for this note); a second Sharp sheet (OP18002EN, PC817XxNSZ1B) gives the same IC, fc, tr and tf rows (its cover page states CTR 50-400 % instead of 50-600 %). The owned parts come from an assortment: maker, CTR rank mark and whether they meet the Sharp figures are UNVERIFIED.
 
 Datasheet figures used (Ta = 25 C):
 - LED: IF abs max 50 mA, VR abs max 6 V (p4); VF 1.2 V typ, 1.4 V max at IF 20 mA (p4); about 1.1 V at 3-5 mA (Fig. 7, p7, typical curve, reference only).
@@ -378,7 +381,7 @@ Do each step only if hum or noise is still measured after the previous one (BT-9
 1. No parts: confirm the baseline. USB unplugged (4.3); no clock cable; cables bundled and short; both adapters on the same mains strip; measure with each cable unplugged in turn to locate the loop.
 2. No parts: re-wire any ground that does not go to its star by its own lead (4.1); confirm no case-to-case contact.
 3. No parts: swap the shield bond to the expander end (r2's rule) and compare; keep whichever measures lower. In the swapped arrangement the braid is bonded at the expander hood; because the expander panel shell is isolated by the washers (4.2), wire that expander shell with a short lead to the expander star (rack 0 V); cut the braid back and insulate it inside the MB-end hood, and leave the MB shell's lead to TP72 in place or remove it (compare both).
-4. Owned resistor kit plus two BAT85 (conditional): on the expander, break the ground bundle from the expander star with 10 ohm, bypassed by 100 nF (owned) in parallel and two anti-parallel BAT85 so fault current has a path. This keeps the DC reference (r2 step 4, r3 H-1). Condition: all 10 owned BAT85 are already allocated (section 1.2), so this step can only be built from owned stock if two are freed by taking the series-resistor option on the breakout rails (audit C12, Q3). Without the diodes, 10 ohm in parallel with 100 nF still keeps the DC reference, but a fault current between the systems then has only the 10 ohm path (it would burn the resistor): flagged, not recommended. Recheck BT-2, BT-3 and BT-5 afterwards: the gate, CV and UART references now ride on up to the BAT85 forward voltage.
+4. Owned resistor kit plus two BAT85 (conditional): on the expander, break the ground bundle from the expander star with 10 ohm, bypassed by 100 nF (owned) in parallel and two anti-parallel BAT85 so fault current has a path. This keeps the DC reference (r2 step 4, r3 H-1). Condition: all 10 owned BAT85 are already allocated (section 1.2), so this step can only be built from BAT85 if two are freed by taking the series-resistor option on the breakout rails (audit C12, Q3). Since the owner's kit has 1N4148 (25+) and 1N5819 (x10), the anti-parallel pair can instead be two owned 1N4148 or 1N5819 (provisional; the forward voltage differs from BAT85, so the checks below matter more). Without the diodes, 10 ohm in parallel with 100 nF still keeps the DC reference, but a fault current between the systems then has only the 10 ohm path (it would burn the resistor): flagged, not recommended. Recheck BT-2, BT-3 and BT-5 afterwards: the gate, CV and UART references now ride on up to the BAT85 forward voltage.
 5. Owned op-amps (TL072) and resistors: dedicate one B ground pin (for example B:8) as a no-current ground-sense wire from TP72 and use it as the reference of difference-amplifier receivers on the expander's audio inputs (r2 step 3). Needs matched resistors (1 % parts are not owned, Q5).
 6. Owned isolation transformer on the single worst audio line only, after its characterisation (E-29). It passes no DC, so never on CV, gate or UART (r2, r3).
 
@@ -406,7 +409,7 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q1 | Buy an LF398N and a 10 nF polystyrene or polypropylene hold capacitor? No owned equivalent. |
 | Q2 | Vactrol marking (part number, LED forward-current rating). Needed for the TL072 V-to-I driver's sense resistor. |
 | Q3 | BAT85 stock is exactly used up (10); approve, or free two by using a series resistor on the breakout rails (C12)? |
-| Q4 | 1N4148 stock for the slew limiter? |
+| Q4 | 1N4148 stock for the slew limiter: the owner's pasted inventory says 25+; confirm from the kit card. |
 | Q5 | The resistor kit is Have: confirm 220R, 1k, 2k, 4.7k, 10k, 22k, 33k, 100k are present, plus 10 ohm, 560 ohm, 680 ohm and 1M; its series (E12 / E24) and power rating; any 1 % parts for ladder step 5? |
 | Q6 | LFO timing: buy a film capacitor and 1M pots, or accept a different range with owned parts? |
 | Q7 | Aux-out trimmers: buy or use fixed resistors? |
@@ -424,8 +427,8 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q19 | Firmware mute of the CV outputs until the synth is seen powered (section 3.3): wanted? |
 | Q20 | PC817-isolated UART (section 3.9): accept a bridge baud of 4800-9600 (115200 and 38400 do not work) in exchange for zero UART back-feed? If yes, which MB-side collector supply: a +3V3ARM tap (against audit B09) or the Provisional 78L05 (power-up sequencing UNVERIFIED)? |
 | Q21 | Pico variant: the package says "Raspberry Pi Pico" (no W), the docs say Pico WH, another description says "Pico H". Which is it? Nothing here uses wireless; docs may need renaming once confirmed. |
-| Q22 | Main OLED: 0.96 or 1.3 inch, SSD1306 or SH1106, 4-pin (I2C) or 7-pin (SPI) header? If SPI only, the display driver and GPIO plan change (free pins GP2, GP3, GP11, GP26-28; SPI0 SCK = GP2, MOSI = GP3, plus DC, RST and CS). |
-| Q23 | Connector: a pasted description said "switching to VGA". Decided facts stand (2x DB-9; HD-15 / VGA rejected because the cable shorts pins 6-8 to ground). Owner to confirm no change. |
+| Q22 | Main OLED: the baseline is now the owner's 1.3 inch 4-pin I2C module. Owner to read its chip marking (SH1106 likely, UNVERIFIED) and to confirm whether the 0.96 inch SSD1306 has arrived. The 7-pin SPI module is spare/dev; if it were used instead, the display driver and GPIO plan change (free pins GP2, GP3, GP11, GP26-28; SPI0 SCK = GP2, MOSI = GP3, plus DC, RST and CS). |
+| Q23 | Connector: RESOLVED (owner, 2026-10-17): CONFIRMED as 2x DB-9. The VGA / HD-15 line in a pasted inventory was an error (HD-15 rejected because the cable shorts pins 6-8 to ground). |
 | Q24 | The owner's earlier IC list could not be found in local history and a shared chat link was not readable. Re-send it if it differs from the 2026-10-17 photo. |
 
 Other open items carried from the audit: LPC bridge UART choice (B01, E-01); CV depth and injection resistors (E-18); TP83 level (E-09); rear-panel and connector dimensions (E-20, E-21); expander width (decision e).

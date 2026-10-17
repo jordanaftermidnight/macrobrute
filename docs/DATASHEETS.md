@@ -154,7 +154,7 @@ vactrol/LDR04/BF245C/BC547, Thonkiconn, Yusynth).
 - **1N5817 is a 20 V part, not 40 V**: VRRM 20 V (1N5818 = 30 V, 1N5819 = 40 V), IO 1.0 A, IFSM 25 A (Vishay 88525 p1; Diodes
   DS23001 p2). Forward voltage at 1 A: 0.450 V max (1N5817), 0.55 V (1N5818), 0.60 V (1N5819) (Diodes p2). The BOM line
   "1N5817 Schottky diode (40V 1A)" is therefore wrong; a 40 V / 1 A part is the 1N5819. For a 5 V rail 1N5817 is adequate;
-  use 1N5819 only if you want a 40 V rating. The BOM's "0.3 V drop" applies at light load only; the Vishay forward-voltage curve (88525 Fig. 3, p2) gives the drop versus current.
+  use 1N5819 only if you want a 40 V rating. The owner's kit inventory (2026-10-17) lists 1N5819 x10; the actual part, its marking and a datasheet for it are UNVERIFIED (not saved under `datasheets/`; the series figures above come from the 1N5817-series sheet). The BOM's "0.3 V drop" applies at light load only; the Vishay forward-voltage curve (88525 Fig. 3, p2) gives the drop versus current.
 
 ### (f) Behringer CP1A and Eurorack 16-pin header
 
