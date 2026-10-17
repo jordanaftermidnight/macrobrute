@@ -28,29 +28,25 @@ COL = {
 DARK_TEXT = {"free", "3v3", "encoder", "other", "clock_out", "gnd"}
 
 
-def _g(*roles):
-    return [R[r] for r in roles]
-
-
 def _role(gp, cat, func, direction, dest, short, status="Used"):
     return {"pin": PICO_PHYSICAL_PIN[gp], "cat": cat, "func": func, "dir": direction,
             "dest": dest, "short": short, "status": status}
 
 
 ROLES = {}
-ROLES[R["LPC_TX"]] = _role(0, "uart0", "UART0 TX to LPC2361", "OUT",
+ROLES[R["LPC_TX"]] = _role(R["LPC_TX"], "uart0", "UART0 TX to LPC2361", "OUT",
                            "DB-9 B:1 to LPC RXD1 (UNVERIFIED)", "UART0 TX")
-ROLES[R["LPC_RX"]] = _role(1, "uart0", "UART0 RX from LPC2361", "IN",
+ROLES[R["LPC_RX"]] = _role(R["LPC_RX"], "uart0", "UART0 RX from LPC2361", "IN",
                            "DB-9 B:6 from LPC TXD1 (UNVERIFIED)", "UART0 RX")
-ROLES[R["OLED_SDA"]] = _role(4, "i2c0", "I2C0 SDA, main OLED", "I/O",
+ROLES[R["OLED_SDA"]] = _role(R["OLED_SDA"], "i2c0", "I2C0 SDA, main OLED", "I/O",
                              "Main OLED 0x3C (expander)", "I2C0 SDA")
-ROLES[R["OLED_SCL"]] = _role(5, "i2c0", "I2C0 SCL, main OLED", "OUT",
+ROLES[R["OLED_SCL"]] = _role(R["OLED_SCL"], "i2c0", "I2C0 SCL, main OLED", "OUT",
                              "Main OLED 0x3C (expander)", "I2C0 SCL")
-for _n_, _gp, _c in (("LED_CLOCK", 0, "R"), ("LED_GATE", 0, "G"), ("LED_MODE", 0, "B")):
+for _n_, _c in (("LED_CLOCK", "R"), ("LED_GATE", "G"), ("LED_MODE", "B")):
     g = R[_n_]
     ROLES[g] = _role(g, "led", f"RGB LED {_c}", "OUT", f"RGB LED {_c} (expander panel)",
                      f"RGB LED {_c}")
-ROLES[R["BTN_TAP"]] = _role(12, "button", "Tap button", "IN", "Tap button (expander panel)",
+ROLES[R["BTN_TAP"]] = _role(R["BTN_TAP"], "button", "Tap button", "IN", "Tap button (expander panel)",
                             "Tap button")
 for _k, _lab in (("ENC_SW", "switch"), ("ENC_CLK", "CLK (A)"), ("ENC_DT", "DT (B)")):
     g = R[_k]
@@ -62,9 +58,9 @@ for _i, g in enumerate(R["CLK_DIV_PINS"], 1):
 for _i, g in enumerate(R["AUX_OUT_PINS"], 1):
     ROLES[g] = _role(g, "aux", f"Aux output {_i}", "OUT", f"Panel jack, aux {_i}",
                      f"Aux out {_i}")
-ROLES[R["CLOCK_IN"]] = _role(21, "clock_in", "Clock input", "IN",
+ROLES[R["CLOCK_IN"]] = _role(R["CLOCK_IN"], "clock_in", "Clock input", "IN",
                              "CLK IN jack via CD4049UB", "Clock in")
-ROLES[R["CLOCK_OUT"]] = _role(22, "clock_out", "Clock output", "OUT",
+ROLES[R["CLOCK_OUT"]] = _role(R["CLOCK_OUT"], "clock_out", "Clock output", "OUT",
                               "CLK OUT jack via CD4049UB", "Clock out")
 for _g_, _w in ((R["DAISY_SDA"], "EFFIGY SDA"), (R["DAISY_SCL"], "EFFIGY SCL"),
                 (R["DAISY_INT"], "EFFIGY INT")):
@@ -91,8 +87,8 @@ POWER_ROWS = [
 # ------------------------------------------------------------------ nets
 NETS = {
     "3V3": [("PICO", "3V3"), ("OLED", "VCC"), ("ENC", "+")],
-    "CABLE_UART_TX": [("PICO", "GP0"), ("R", "1K_EXP"), ("DB9", "B:1")],
-    "CABLE_UART_RX": [("PICO", "GP1"), ("R", "1K_EXP"), ("DB9", "B:6")],
+    "CABLE_UART_TX": [("PICO", f"GP{R['LPC_TX']}"), ("R", "1K_EXP"), ("DB9", "B:1")],
+    "CABLE_UART_RX": [("PICO", f"GP{R['LPC_RX']}"), ("R", "1K_EXP"), ("DB9", "B:6")],
 }
 for _g_, _r in ROLES.items():
     if _r["status"] == "Used" and _r["cat"] != "uart0":
