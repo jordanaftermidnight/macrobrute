@@ -166,7 +166,7 @@ The euro figures below predate the Have/Missing table and the scope change; they
 
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
-| 31 | MCP4725 I2C DAC breakout (12-bit) | 2 | €3.00 | €6.00 | Adafruit/AliExpress |
+| 31 | MCP4725 I2C DAC breakout (12-bit); needs 2 free Pico pins, none free now (only GP26-28, and I²C would take 2 of them) | 2 | €3.00 | €6.00 | Adafruit/AliExpress |
 | 32 | PT8211 I2S DAC (16-bit audio) | 1 | €1.50 | €1.50 | AliExpress |
 | 33 | Copper tape adhesive (EMI shielding) | 1 | €4.00 | €4.00 | Amazon |
 

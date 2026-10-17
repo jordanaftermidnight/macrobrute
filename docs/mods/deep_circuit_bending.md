@@ -64,7 +64,7 @@ Combined modes possible with multi-pole switches.
     │
   [SPST switch] → bypass (normal operation)
     │
-  [pot 10Ω + 2× 1N5817 series] → sag path
+  [pot 10Ω + 2× 1N5817 series] → sag path   (1N5817 not owned: use the owned 1N5819)
     │
   When engaged: drops ~0.5-2V from rails
   Effect: All oscillators detune, filter response changes

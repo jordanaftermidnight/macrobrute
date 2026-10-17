@@ -567,7 +567,7 @@ Each expansion below must fit in those 3 pins; they do not all fit at once, and 
 | Touch plate scanning (4ch) | 3 ADC + 3 digital (mux control) | CD4051 multiplexer; needs 6 pins, more than are free |
 | DSO channel select | 3 digital | CD4051 address lines |
 | Additional LEDs | 1-2 digital | Expander status |
-| I2C peripherals | 2 (SDA/SCL) | Would take 2 of the 3 free pins. DAC, sensors, etc. |
+| I2C peripherals | 2 (SDA/SCL) | Needs 2 free pins: would take 2 of the 3 free pins (GP26-28); none of GP0-GP22 is free. DAC, sensors, etc. |
 | Second encoder | 3 digital | Expander-side control |
 
 **Gate input options (owner to choose; none is chosen here).** The rule above (BF 5) puts a jack-fed input on GP0-GP22, and none of those is free, so the gate mirror of A:1 has no legal pin today:
