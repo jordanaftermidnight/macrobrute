@@ -13,7 +13,8 @@ Transform an Arturia MicroBrute into a fully semi-modular instrument through int
 - 🤝 **[EFFIGY Bridge Protocol](./docs/MACROBRUTE_EFFIGY_BRIDGE.md)** — SHELVED: I²C peer-pair register map, archived as an idea for another project
 - 🎛 **[Mod Selection](./docs/MACROBRUTE_MOD_SELECTION.md)** — the 12 panel mods + 6 touch bolts curated from 130+ audited
 - 📇 **[Master Index](./docs/MACROBRUTE_INDEX.md)** — directory of all docs, firmware, schematics, and research
-- 📖 **[Macrobrute Manual.html](./Macrobrute%20Manual.html)** — offline single-file build manual (~1.7MB, regenerated from all docs above via `tools/build_manual.py`)
+- 📖 **Macrobrute Manual** — offline single-file build manual (~2.5 MB, regenerated from all docs above via `tools/build_manual.py`): [rendered view](https://htmlpreview.github.io/?https://github.com/jordanaftermidnight/macrobrute/blob/main/Macrobrute%20Manual.html) · [download / raw source](./Macrobrute%20Manual.html)
+  GitHub does not render .html files, it shows their source; htmlpreview.github.io is a third-party viewer that renders the file from this repo.
 
 ## Project Scope
 
