@@ -12,6 +12,7 @@ Usage:
 """
 
 import re
+import sys
 import html as _html
 from pathlib import Path
 from datetime import date
@@ -408,72 +409,81 @@ SECTIONS = [
     # Each tuple: (title, id, group, [files])
     # group ∈ {"PLAN", "BUILD", "REFERENCE"} drives the super-section
     # cluster headers in the sidebar.
-    ("0. Start Here", "readme", "PLAN", [
+    ("1. Start Here", "readme", "PLAN", [
         "docs/MACROBRUTE_README.md",
-        "docs/MACROBRUTE_VISION.md",
-    ]),
-    ("1. Getting Started", "start", "PLAN", [
         "docs/MACROBRUTE_INDEX.md",
     ]),
-    ("2. Planning & Preparation", "plan", "PLAN", [
-        "docs/hardware/MACROBRUTE_PHASE0_BOM.md",
-        "docs/hardware/MACROBRUTE_BOM.md",
-        "docs/hardware/MACROBRUTE_SHOPPING_LIST.md",
-        "docs/MACROBRUTE_MOD_SELECTION.md",
-        "docs/MACROBRUTE_BUILD_PLAN.md",
-    ]),
-    ("3. System Architecture", "arch", "PLAN", [
+    ("2. Architecture", "arch", "PLAN", [
         "docs/MACROBRUTE_CONNECTION_MAP.md",
-    ]),
-    ("4. Interconnect & Wiring", "wire", "BUILD", [
+        "docs/MACROBRUTE_VISION.md",
         "schematics/wiring_diagram.md",
     ]),
-    ("5. Breakout Board", "breakout", "BUILD", [
+    ("3. Power", "protection", "BUILD", [
+        "schematics/CIRCUIT_REVIEW.md",
+    ]),
+    ("4. Breakout Board", "breakout", "BUILD", [
         "schematics/breakout_pcb.md",
         "schematics/breakout_stripboard.md",
         "schematics/pico_pinout.md",
     ]),
-    ("6. Expander Modules", "expander", "BUILD", [
+    ("5. Expander (reduced scope: LFO and S&H)", "expander", "BUILD", [
         "schematics/expander_circuits.md",
         "schematics/expander_stripboard.md",
     ]),
-    ("7. Protection & Safety", "protection", "BUILD", [
-        "schematics/CIRCUIT_REVIEW.md",
-    ]),
-    ("8. Control & Interface", "control", "BUILD", [
+    ("6. Control and Firmware", "control", "BUILD", [
         "schematics/touch_plates.md",
         "docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md",
         "docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md",
     ]),
-    ("9. Hardware Reference", "hw", "REFERENCE", [
-        "docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md",
-        "schematics/ic_pinout_reference.md",
+    ("7. Build Plan and Parts", "plan", "BUILD", [
+        "docs/MACROBRUTE_BUILD_PLAN.md",
+        "docs/hardware/MACROBRUTE_BOM.md",
+        "docs/hardware/MACROBRUTE_SHOPPING_LIST.md",
+        "docs/hardware/MACROBRUTE_PHASE0_BOM.md",
+    ]),
+    ("8. Reference", "hw", "REFERENCE", [
+        "docs/DATASHEETS.md",
+        "docs/superpowers/reviews/2026-10-16-backfeed-hum-design.md",
+        "docs/superpowers/reviews/2026-10-16-project-audit.md",
         "docs/MACROBRUTE_GLOSSARY.md",
         "docs/MACROBRUTE_TROUBLESHOOTING.md",
+        "schematics/ic_pinout_reference.md",
+        "docs/hardware/MACROBRUTE_TEST_POINTS_VERIFIED.md",
     ]),
-    ("10. Mods & Extensions", "mods", "REFERENCE", [
+    ("9. Mods and Research", "mods", "REFERENCE", [
+        "docs/MACROBRUTE_MOD_SELECTION.md",
         "docs/mods/touch_bend_specs.md",
         "docs/mods/macrobrute_mod_catalog.md",
         "docs/mods/microbrute_mods_guide.md",
         "docs/mods/microbrute_circuit_bending_guide.md",
         "docs/mods/deep_circuit_bending.md",
-    ]),
-    ("11. Research", "research", "REFERENCE", [
         "docs/research/additional_mods_findings.md",
         "docs/research/mbf_analysis.md",
         "docs/research/firmware_re_findings.md",
         "docs/firmware/lpc2361_investigation_guide.md",
-        "docs/legacy/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
     ]),
-    ("12. Legacy & Archive", "legacy", "REFERENCE", [
+    ("10. Legacy and Archive", "legacy", "REFERENCE", [
+        "docs/legacy/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
+        "docs/legacy/MACROBRUTE_COMPREHENSIVE_RESEARCH.md",
+        "docs/legacy/MACROBRUTE_EXPANDER_DB37_PINOUT.md",
         "docs/legacy/MACROBRUTE_FINAL_ARCHITECTURE.md",
         "docs/legacy/MACROBRUTE_PROJECT_HANDOFF.md",
         "docs/legacy/MACROBRUTE_MASTER_PLAN.md",
         "docs/legacy/MACROBRUTE_REVISED_SPEC.md",
         "docs/legacy/MACROBRUTE_V2_SPEC.md",
         "docs/legacy/MACROBRUTE_V2_COMPLETE_SPEC.md",
+        "docs/legacy/ultimate_microbrute_project.md",
+        "docs/MACROBRUTE_EFFIGY_BRIDGE.md",
+        "docs/MACROBRUTE_NORNS_BRIDGE.md",
     ]),
 ]
+
+
+def missing_svgs(svg_map, root):
+    """Sorted unique SVG paths in svg_map that do not exist under root."""
+    root = Path(root)
+    return sorted({s for svgs in svg_map.values() for s in svgs
+                   if not (root / s).exists()})
 
 
 # ─── Markdown → HTML Converter ──────────────────────────────────────
@@ -1346,5 +1356,14 @@ def build():
     print(f"Built: {OUTPUT.name} ({size // 1024}KB, {ndocs} docs)")
 
 
-if __name__ == "__main__":
+def main():
+    missing = missing_svgs(SVG_MAP, PROJECT)
+    for m in missing:
+        print(f"MISSING SVG: {m}")
     build()
+    if missing:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
