@@ -1,14 +1,14 @@
 # MACROBRUTE Touch Bend Specifications
 
 8 body-contact circuit bends for the Arturia MicroBrute, optimized for
-industrial/techno performance. Touch brass bolts on the panel to modify
+high-impact live performance. Touch brass bolts on the panel to modify
 sound in real-time via body capacitance and resistance.
 
 ---
 
 ## Touch Mod Table
 
-| # | Name | PCB Point | Safety R | Effect | Intensity | Risk | Techno |
+| # | Name | PCB Point | Safety R | Effect | Intensity | Risk | Utility |
 |---|------|-----------|----------|--------|-----------|------|--------|
 | 1 | Pitch Shimmer | R309 area (near blue trimmers, rear board) | 10k | Analog pitch vibrato/detune via body capacitance | 4/5 | 1/5 | 5/5 |
 | 2 | Metalizer Crunch | C111 (wavefolder stage 3) | 4.7k | Sweeps harmonic folding intensity | 5/5 | 2/5 | 5/5 |
@@ -17,9 +17,9 @@ sound in real-time via body capacitance and resistance.
 | 5 | Envelope Decay | ADSR decay timing cap area | 33k | Pluck-to-swell morphing, changes decay time | 3/5 | 1/5 | 4/5 |
 | 6 | Dual Harmonic Morph | C107 + C106 (wavefolder stages 1 & 2, two bolts) | 10k each | Cross-coupled folding stages, touch both for complex harmonics | 5/5 | 2/5 | 5/5 |
 | 7 | LFO Speed Throb | LFO timing resistor network | 47k | Manual tremolo/vibrato speed control | 3/5 | 1/5 | 4/5 |
-| 8 | Metalizer Feedback Gate | Metalizer output to input (series connection) | 1k | Touch closes feedback loop: industrial harmonic chaos | 5/5 | 4/5 | 5/5 |
+| 8 | Metalizer Feedback Gate | Metalizer output to input (series connection) | 1k | Touch closes feedback loop: harsh harmonic chaos | 5/5 | 4/5 | 5/5 |
 
-**Recommended top 6 for panel:** 1, 2, 3, 4, 6, 8 (all rated 5/5 techno utility)
+**Recommended top 6 for panel:** 1, 2, 3, 4, 6, 8 (all rated 5/5 utility)
 
 ---
 

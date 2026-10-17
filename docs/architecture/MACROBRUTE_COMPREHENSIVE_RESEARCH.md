@@ -9,7 +9,7 @@
 
 ## Overview
 
-The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular industrial instrument through internal sound mods, a custom Eurorack expander, CV-controlled delay, integrated oscilloscope, Raspberry Pi Pico digital control, and a DB-9 interconnect system. This report consolidates every technical detail needed across all eight subsystems.
+The MACROBRUTE project transforms an Arturia MicroBrute into a semi-modular instrument through internal sound mods, a custom Eurorack expander, CV-controlled delay, integrated oscilloscope, Raspberry Pi Pico digital control, and a DB-9 interconnect system. This report consolidates every technical detail needed across all eight subsystems.
 
 ---
 

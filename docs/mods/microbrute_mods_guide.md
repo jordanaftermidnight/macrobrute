@@ -551,7 +551,7 @@ Full modification suite:
 
 ## MODIFICATION PRIORITY RECOMMENDATIONS
 
-### For Industrial/Techno (Your Genre):
+### For High-Impact Sound Shaping:
 
 **Tier 1 - Essential:**
 1. VCA CV Input (trivial install, huge expansion)
@@ -641,7 +641,7 @@ Given your current rig (Push 3, TD-3, RD-9):
 - Metalizer for mangling Push 3 audio
 - VCO as additional oscillator bank
 
-### Industrial Sound Design:
+### High-Impact Sound Design:
 - Metalizer boost/timbre for harsh textures
 - External filters through VCA insert
 - VCO mix output to external distortion
@@ -719,7 +719,7 @@ Based on your TD-3 and RD-9 modding experience:
 
 The MicroBrute is exceptionally mod-friendly thanks to Arturia publishing full schematics. Start with simple breakout mods to build confidence, then progress to circuit modifications.
 
-Given your experience modding the TD-3 and RD-9, you're well-equipped to tackle these mods. The metalizer enhancement and CV routing improvements will significantly expand the MicroBrute's capabilities in your industrial/techno setup.
+Given your experience modding the TD-3 and RD-9, you're well-equipped to tackle these mods. The metalizer enhancement and CV routing improvements will significantly expand the MicroBrute's capabilities in your setup.
 
 **Recommended Starting Point:**
 1. VCA CV input (5 minutes, huge impact)

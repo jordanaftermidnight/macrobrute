@@ -132,7 +132,7 @@ anti-latch-up protection with full range access.
   
   Creates: delay + distortion feedback loop
   Control: Brute Factor knob + delay time CV
-  Character: Self-oscillating chaos, industrial textures
+  Character: Self-oscillating chaos, harsh textures
 ```
 
 ### DSO138 as CV Visualizer + Trigger Source

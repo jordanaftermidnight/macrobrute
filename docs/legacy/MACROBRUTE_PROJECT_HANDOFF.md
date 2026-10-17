@@ -15,7 +15,7 @@
 
 ## PROJECT SCOPE SUMMARY
 
-Transform the Arturia MicroBrute into a fully semi-modular industrial/techno/IDM instrument through:
+Transform the Arturia MicroBrute into a fully semi-modular instrument through:
 
 1. **Panel modifications** — Jacks, switches, OLED, encoder on control panel
 2. **Circuit bending** — IC-level mods, waveform manglers, feedback paths

@@ -84,7 +84,7 @@ Replace significant sections of firmware.
 
 ## Priority Modifications for MACROBRUTE
 
-Given the project goals (semi-modular expansion, Pico digital brain, industrial/techno focus):
+Given the project goals (semi-modular expansion, Pico digital brain, high-impact sound-shaping focus):
 
 ### 1. Pico ↔ LPC2361 UART Bridge (Tier 2, HIGHEST PRIORITY)
 

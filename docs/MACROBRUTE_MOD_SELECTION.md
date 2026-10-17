@@ -1,7 +1,7 @@
 # MACROBRUTE — Curated Mod Selection
 
 130+ mods audited from Yusynth schematics, Maffez, ModWiggler, community
-research, and original schematic analysis. Curated for industrial/techno.
+research, and original schematic analysis. Curated for high-impact sound shaping.
 
 ---
 
@@ -20,8 +20,8 @@ research, and original schematic analysis. Curated for industrial/techno.
 | # | Mod | Type | Wiring | Why Build |
 |---|-----|------|--------|-----------|
 | B4 | **Envelope Bypass** | SPDT mini toggle | Bridge D4+D5 (TS4148RY) in EnvDest circuit. OFF=stock (clipped env). ON=full-range envelope to filter. | Removes limiter diodes — much deeper filter sweeps. One toggle, huge impact. |
-| B5 | **Metalizer Boost** | SPDT mini toggle | Switch R216 between stock 120K and 20K alternate. Drives wavefolder input harder. | More aggressive metalizer harmonics at lower knob positions. Industrial essential. |
-| B6 | **VCA Drone** | SPDT mini toggle | +12V → 100K → TP10 (VCA CV). Holds VCA open regardless of envelope/gate. | Drone mode — VCA stays open for continuous sound. Essential for ambient/industrial textures. |
+| B5 | **Metalizer Boost** | SPDT mini toggle | Switch R216 between stock 120K and 20K alternate. Drives wavefolder input harder. | More aggressive metalizer harmonics at lower knob positions. High-impact essential. |
+| B6 | **VCA Drone** | SPDT mini toggle | +12V → 100K → TP10 (VCA CV). Holds VCA open regardless of envelope/gate. | Drone mode — VCA stays open for continuous sound. Essential for sustained, textural sounds. |
 
 ### Touch Bolts (6 from 8 tested)
 
@@ -179,7 +179,7 @@ and `spinoffs/dso138-desktop/docs/dso138_deep_mods.md`.
 |-----|----------|-------------|
 | VCO master volume (R76 replace) | Nice but not critical | Mix knobs already control levels |
 | VCA envelope boost (R28) | Covered by VCA CV input (B3) | External CV does this better |
-| Sub osc waveform mod | Low techno utility | Sub output already available via DB-9 |
+| Sub osc waveform mod | Low performance utility | Sub output already available via DB-9 |
 | Portamento on ext CV | Complex trace surgery | Can do later if needed |
 | Reduced portamento (C38→470nF) | Easy to do later | 5-minute mod anytime |
 | VCA CV offset (BigCranberry) | VCA CV input is simpler | B3 covers this use case |

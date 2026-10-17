@@ -65,7 +65,7 @@ These are the classic "touch vibrato" points where body capacitance affects osci
 - Effect: Pitch variation/vibrato when touched
 - Body Contact Strength: STRONG
 - Implementation: Wire one side to bolt, other to ground
-- Character: Smooth pitch wobble, good for industrial detuning
+- Character: Smooth pitch wobble, good for harsh detuning
 
 **Around the Tempcos (CAREFUL!)**
 - Location: Near UB15 on rear board
@@ -118,7 +118,7 @@ Body contacts affecting the Steiner-Parker filter can create dynamic timbral cha
 - Effect: Variable feedback/distortion intensity
 - Body Contact Strength: STRONG
 - Character: From warm saturation to unstable chaos
-- Industrial Gold: Touch-sensitive distortion!
+- High-impact find: Touch-sensitive distortion!
 
 ---
 
@@ -263,7 +263,7 @@ These are traditional bending techniques - shorting points together via switches
 
 **Metalizer Output → Metalizer Input:**
 - Classic wavefolder feedback
-- Very unstable, very industrial
+- Very unstable, very aggressive
 - Character: Harmonic explosion
 
 ---
@@ -358,7 +358,7 @@ These are traditional bending techniques - shorting points together via switches
 
 ## SPECIFIC MICROBRUTE BEND RECOMMENDATIONS
 
-### For Industrial/Techno (Your Genre):
+### For High-Impact Sound Shaping:
 
 **Priority Touch Points:**
 
@@ -385,7 +385,7 @@ These are traditional bending techniques - shorting points together via switches
 5. **Dual-Point LFO Speed + Filter**
    - Coupled modulation madness
    - Creates complex, evolving textures
-   - Very "industrial"
+   - Very aggressive
 
 **Switches to Add:**
 
@@ -421,7 +421,7 @@ These are traditional bending techniques - shorting points together via switches
    - External processing through metalizer
    - Body contacts on metalizer stages
    - Feedback switch
-   - = Ultimate industrial mangler
+   - = Ultimate sound mangler
 
 3. **VCO Mix Out + Filter Touch:**
    - Use buffered VCO out as external signal
@@ -556,7 +556,7 @@ Panel Location: _______________
 
 Given your TD-3 and RD-9 modding experience, you understand analog circuits. The MicroBrute gives you a chance to explore **expressive, performance-oriented bending** rather than just making weird noises.
 
-**Your Industrial/Techno Context:**
+**High-Impact Sound-Shaping Context:**
 - Touch-sensitive distortion = performance tool
 - Feedback switches = rhythmic chaos
 - Coupled modulation = evolving textures
@@ -577,8 +577,8 @@ This isn't "let's make a toy sound weird" - it's "let's add human-body expressiv
 
 2. **Metalizer Stage (C111)**
    - Dramatic timbre change
-   - Very industrial
-   - Perfect for your genre
+   - Very aggressive
+   - Well suited to high-impact sound shaping
 
 3. **Filter Cutoff CV Area**
    - Expressive

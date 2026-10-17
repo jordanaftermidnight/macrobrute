@@ -196,7 +196,7 @@ Space between pads: minimum 5mm to prevent cross-talk.
   Player touches bolt with finger
   Ground: second bolt, or panel chassis (if metal)
   
-  Advantages: durable, easy to install, industrial aesthetic
+  Advantages: durable, easy to install, utilitarian aesthetic
   Disadvantage: point contact (less area than pad)
 ```
 
