@@ -16,38 +16,10 @@ from tools.diagram_kit import (PALETTE, Card, _dot, _line, _n, _t, jack, jack_pi
                                resistor_pins, wire)
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
+from tools.diagrams.phase0_nets import NETS, RAILS, gp  # noqa: F401
 
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_wiring_schematic.svg"
 
-
-def gp(role):
-    return f"GP{R[role]}"
-
-
-# ------------------------------------------------------------------ nets
-# Part names: PICO, OLED, LED, R (series resistors), BTN, ENC, JACK_*, JUMPER.
-NETS = {
-    "3V3": [("PICO", "3V3"), ("OLED", "VCC"), ("ENC", "+")],
-    "GND": [("PICO", "GND"), ("OLED", "GND"), ("LED", "K"), ("BTN", "2"),
-            ("ENC", "GND"), ("JACK_OUT", "S"), ("JACK_IN", "S")],
-    "I2C0_SDA": [("PICO", gp("OLED_SDA")), ("OLED", "SDA")],
-    "I2C0_SCL": [("PICO", gp("OLED_SCL")), ("OLED", "SCL")],
-    "LED_R": [("PICO", gp("LED_CLOCK")), ("R", "220_R.a")],
-    "LED_R_A": [("R", "220_R.b"), ("LED", "R_A")],
-    "LED_G": [("PICO", gp("LED_GATE")), ("R", "220_G.a")],
-    "LED_G_A": [("R", "220_G.b"), ("LED", "G_A")],
-    "LED_B": [("PICO", gp("LED_MODE")), ("R", "220_B.a")],
-    "LED_B_A": [("R", "220_B.b"), ("LED", "B_A")],
-    "BTN_TAP": [("PICO", gp("BTN_TAP")), ("BTN", "1")],
-    "ENC_SW": [("PICO", gp("ENC_SW")), ("ENC", "SW")],
-    "ENC_CLK": [("PICO", gp("ENC_CLK")), ("ENC", "CLK")],
-    "ENC_DT": [("PICO", gp("ENC_DT")), ("ENC", "DT")],
-    "CLOCK_OUT": [("PICO", gp("CLOCK_OUT")), ("R", "1K_OUT.a")],
-    "CLOCK_OUT_JACK": [("R", "1K_OUT.b"), ("JACK_OUT", "T"), ("JUMPER", "A")],
-    "CLOCK_IN": [("PICO", gp("CLOCK_IN")), ("R", "1K_IN.a"), ("JUMPER", "B")],
-    "CLOCK_IN_JACK": [("R", "1K_IN.b"), ("JACK_IN", "T")],
-}
-RAILS = {"3V3": 3.3}
 
 C_3V3, C_GND = PALETTE["p3v3"], PALETTE["gnd"]
 C_I2C, C_LED = PALETTE["audio"], PALETTE["p12"]
