@@ -250,7 +250,7 @@ the kit are still to confirm (BF Q5).
 | Component | Qty | Package | Status |
 |-----------|-----|---------|--------|
 | TL074CN | 1 | DIP-14 | Have |
-| TL072CP | 1-2 (count chosen at breakout layout, C10) | DIP-8 | Have (6) |
+| TL072 (owned: TL072IP) | 1-2 (count chosen at breakout layout, C10) | DIP-8 | Have (6) |
 | CD40106 | 1 | DIP-14 | Have |
 | 78L05 | 1 (Provisional) | TO-92 | Have |
 | BAT85 | 6 (2 rails, 4 CV clamps) | DO-34 axial | Have (10, budget BF 1.2) |

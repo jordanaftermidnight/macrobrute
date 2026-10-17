@@ -3095,7 +3095,7 @@ def generate_midi_interface_circuit() -> str:
     r.elements.append(f'<text x="245" y="472" class="anno" text-anchor="middle" font-size="9" fill="#E91E63">USB 2.0</text>')
 
     # Pico with micro-USB
-    box(280, 410, 220, 140, "Pico WH · micro-USB", "#E91E63", "#FFF0F5")
+    box(280, 410, 220, 140, "Pico · micro-USB", "#E91E63", "#FFF0F5")
     r.elements.append(f'<rect x="300" y="440" width="40" height="20" fill="#E91E63" stroke="#AD1457"/>')
     r.elements.append(f'<text x="320" y="454" class="value comp-label" text-anchor="middle" font-size="8" fill="#FFF">USB</text>')
     r.elements.append(f'<text x="390" y="452" class="value" font-size="9">VBUS +5V → VSYS</text>')

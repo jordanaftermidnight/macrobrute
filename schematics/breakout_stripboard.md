@@ -252,7 +252,7 @@ through the MB-side 1kΩ resistors to the LPC (connection map section 5.4).
 | DIP-14 socket | 2 | U1 TL074, U3 CD40106 (Q13) |
 | DIP-8 socket | 1-2 | U2 TL072 (×1 or ×2) (Q13) |
 | TL074CN | 1 | Waveform buffers (Have) |
-| TL072CP | 1-2 | Aux buffers, triangle, vactrol (Have; count chosen at breakout layout, C10) |
+| TL072 (owned: TL072IP) | 1-2 | Aux buffers, triangle, vactrol (Have; count chosen at breakout layout, C10) |
 | CD40106BE | 1 | Gate Schmitt trigger, two gates in series (Have) |
 | 78L05 | 1 | +5V_LOC for U3 (Have; Provisional) |
 | BAT85 | 6 | 2 rail protection (C12 OPEN), 4 CV clamps (Have) |
