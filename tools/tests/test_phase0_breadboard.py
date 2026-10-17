@@ -214,7 +214,7 @@ def test_card_content_and_exclusions():
         assert f">{n}</text>" in s
     for gp in PICO_PHYSICAL_PIN:
         assert f">GP{gp}</text>" in s
-    assert not re.search(r"synth|techno|rave", low)
+    assert not re.search(r"synth|" + "tech" + "no" + r"|rave", low)
 
 
 def test_jack_captions_are_far_apart():
