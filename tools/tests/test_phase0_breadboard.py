@@ -205,9 +205,10 @@ def test_svg_valid_and_text_sizes():
 def test_card_content_and_exclusions():
     s = _svg()
     low = s.lower()
-    for bad in ("strip oled", "0x3d", "effigy"):
+    for bad in ("strip oled", "0x3d", "0x3c", "effigy", "i2c", "sda", "scl"):
         assert bad not in low
-    assert "0x3c" in low
+    assert "spi" in low
+    assert "UNVERIFIED: OLED pin order" in s and "UNVERIFIED: OLED chip" in s
     for lab in ("USB", "pin 1", "UNVERIFIED", "test jumper", "Legend"):
         assert lab in s
     for n in range(1, 41):
@@ -249,3 +250,13 @@ def test_each_resistor_is_drawn_between_its_own_two_leads():
     for n in names:
         ends = frozenset([bb.hxy(holes[("R", n + ".a")]), bb.hxy(holes[("R", n + ".b")])])
         assert ends in lines, n
+
+
+def test_oled_module_has_seven_leads_in_one_order():
+    names = list(bb.OLED_X)
+    assert len(names) == 7 and set(names) == {"GND", "VCC", "D0", "D1", "RES", "DC", "CS"}
+    xs = [bb.OLED_X[n] for n in names]
+    assert xs == sorted(xs)
+    # module drawn header-toward-the-board: the assumed order GND VCC D0 D1 RES DC CS
+    # (UNVERIFIED) reads right to left
+    assert names == ["CS", "DC", "RES", "D1", "D0", "VCC", "GND"]

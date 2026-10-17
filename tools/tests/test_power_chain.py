@@ -93,7 +93,8 @@ def test_review_fixes_pinned():
     t = " ".join(_texts(_svg()))
     assert "(LF398 not owned, Q1;" in t and "CD4051 alternative)" in t
     assert "VSYS diode is the only +5 V diode" in t and "OWNER-CONFIRM" in t
-    assert "value to confirm, BF Q5" in t
+    # the main OLED is SPI (owner ruling 2026-10-17): no I2C0 pull-up row any more
+    assert "SPI: no pull-ups" in t and "4.7k" not in t and "I2C" not in t
     assert "each cable's braid" in t
     assert "200 mA continuous" in t
     # electrolytic polarity: + to GND on -12V_BRK, + to the rail on +12V_BRK

@@ -5,33 +5,46 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 """
 
 # ---------------------------------------------------------------------------
-# Main OLED — baseline (owner, 2026-10-17): the owner's 1.3" 4-pin I²C module,
-#   128×64, chip probably SH1106 (UNVERIFIED: read the marking). For SH1106 set
-#   OLED_CHIP="SH1106" and OLED_COL_OFFSET=2 (follow-up: the values below still
-#   ship the SSD1306 settings). A 1.3" module is larger than the old 0.96"
-#   panel cutout, which bears on the open expander width.
+# Main OLED — baseline (owner ruling, 2026-10-17): the owner's 1.3" 7-pin SPI
+#   module, 128×64, write-only on SPI0 (no MISO). Chip UNVERIFIED (SSD1306 or
+#   SH1106: read the marking; for SH1106 set OLED_CHIP="SH1106" and
+#   OLED_COL_OFFSET=2). Module pin order UNVERIFIED (common order GND, VCC,
+#   D0=SCK, D1=MOSI, RES, DC, CS: read the silkscreen). Powered from the Pico
+#   3V3 pin, 3V3 logic; current draw UNVERIFIED. A 1.3" module is larger than
+#   the old 0.96" panel cutout, which bears on the open expander width.
 #
-#   Spares: the owner's 1.3" 7-pin SPI module (would need a different driver
-#   and pins), the 0.96" SSD1306 (owner to confirm it has arrived: OLED_CHIP=
-#   "SSD1306", OLED_COL_OFFSET=0), 16×2 1602 I²C LCD (different driver entirely)
-# Bus: I²C0 — main OLED only (on the expander; no I²C crosses the DB-9 cable).
+#   The 4-pin I²C 1.3" module is in a TD-3 and is not available. Alternatives
+#   only: the 0.96" SSD1306 (owner to confirm it has arrived) or a 4-pin I²C
+#   module; an I²C alternative would need GP4/GP5, which are DC/RES here, so
+#   it requires re-pinning (not a drop-in). 16×2 1602 I²C LCD: different
+#   driver entirely. No I²C is used anywhere on the expander.
 # ---------------------------------------------------------------------------
-OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106"
-OLED_I2C_ID      = 0
+OLED_CHIP        = "SSD1306"  # "SSD1306" or "SH1106" (chip UNVERIFIED)
 OLED_WIDTH       = 128
 OLED_HEIGHT      = 64
-OLED_SDA         = 4       # GP4  — I²C0 SDA
-OLED_SCL         = 5       # GP5  — I²C0 SCL
-OLED_ADDR        = 0x3C    # SSD1306/SH1106 default (alt 0x3D)
 OLED_COL_OFFSET  = 0       # SSD1306 = 0; set to 2 if using SH1106
+OLED_SPI_ID      = 0       # SPI0, write-only (no MISO)
+OLED_SCK         = 2       # GP2  — SPI0 SCK  → module D0
+OLED_MOSI        = 3       # GP3  — SPI0 TX   → module D1
+OLED_DC          = 4       # GP4  — data/command select
+OLED_RES         = 5       # GP5  — reset (active low)
+OLED_CS          = 11      # GP11 — chip select (active low)
+
+# Legacy I²C driver values. display.py (OLED_I2C) and strip_display.py still
+#   read these; the SPI driver is a firmware follow-up that removes them. They
+#   are not pin roles: GP4/GP5 are OLED DC/RES above.
+OLED_I2C_ID      = 0       # legacy (I²C driver), not wired
+OLED_SDA         = 4       # legacy (I²C driver); GP4 is OLED_DC in this design
+OLED_SCL         = 5       # legacy (I²C driver); GP5 is OLED_RES in this design
+OLED_ADDR        = 0x3C    # legacy (I²C driver)
 
 # ---------------------------------------------------------------------------
 # Strip OLED — DROPPED (owner decision, 2026-10-17). Nothing on the
-#   MicroBrute panel uses I²C and no I²C crosses the DB-9 cable. These values
-#   remain only because strip_display.py still reads them; a later firmware
-#   task removes both.
+#   MicroBrute panel uses I²C, no I²C crosses the DB-9 cable and the expander
+#   has no I²C bus. These values remain only because strip_display.py still
+#   reads them; a later firmware task removes both.
 # ---------------------------------------------------------------------------
-STRIP_OLED_I2C_ID = 0      # DROPPED (strip OLED); would be the main OLED's I²C0, which stays on the expander
+STRIP_OLED_I2C_ID = 0      # DROPPED (strip OLED); no I²C bus exists on the expander
 STRIP_OLED_WIDTH  = 128
 STRIP_OLED_HEIGHT = 32
 STRIP_OLED_ADDR   = 0x3D   # SSD1306 alt address (must be jumpered on module)
@@ -98,7 +111,7 @@ AUX_MODE_PASSTHRU  = 4   # mirror another signal (clock in, MIDI gate, etc.)
 AUX_MODE_PWM_CV    = 5   # PWM-filtered CV (needs RC on jack)
 
 # ---------------------------------------------------------------------------
-# ADC — GP26-28 are free (touch plate sensing is a future option)
+# ADC — GP26-28 are the only free pins (touch plate sensing is a future option)
 # ---------------------------------------------------------------------------
 ADC_0      = 26            # GP26 — ADC0
 ADC_1      = 27            # GP27 — ADC1
@@ -107,22 +120,23 @@ ADC_2      = 28            # GP28 — ADC2
 # ---------------------------------------------------------------------------
 # I²C1 — EFFIGY peer-pair bus — SHELVED (owner decision, 2026-10-17)
 #   Kept as an idea for another project; not part of this build. No rear
-#   header is fitted, so GP2, GP3 and GP11 are free, reserved. The values
-#   below remain only because effigy_bridge.py still reads them.
+#   header is fitted. GP2, GP3 and GP11 are now the main OLED's SCK, MOSI and
+#   CS (above), so these values must not be used: they remain only because
+#   effigy_bridge.py still reads them (a firmware follow-up removes them).
 #   See docs/MACROBRUTE_EFFIGY_BRIDGE.md (archived) for the register map.
 # ---------------------------------------------------------------------------
 DAISY_I2C_ID = 1
-DAISY_SDA    = 2           # GP2  — I²C1 SDA
-DAISY_SCL    = 3           # GP3  — I²C1 SCL
-DAISY_INT    = 11          # GP11 — INT input from EFFIGY (active-low, pull-up)
+DAISY_SDA    = 2           # SHELVED; GP2 is OLED_SCK
+DAISY_SCL    = 3           # SHELVED; GP3 is OLED_MOSI
+DAISY_INT    = 11          # SHELVED; GP11 is OLED_CS
 DAISY_ADDR   = 0x42        # Shared contract — see bridge spec
 DAISY_FREQ   = 100_000     # SHELVED, n/a: no rear cable is fitted (EFFIGY pairing shelved)
 
 # ---------------------------------------------------------------------------
 # Free GPIO inventory
-#   6 free pins: GP2, GP3, GP11 (fault-tolerant digital; reserved, see the
-#   shelved EFFIGY block above) and GP26, GP27, GP28 (ADC-capable, not fault
-#   tolerant). GP26 PWM is slice 5A, the same channel as GP10 (LED_MODE).
+#   3 free pins: GP26, GP27, GP28 (ADC-capable, not fault tolerant). GP2, GP3
+#   and GP11 are the main OLED (SPI). GP26 PWM is slice 5A, the same channel
+#   as GP10 (LED_MODE).
 #   GP23, GP24, GP25, GP29 are RP2040-internal — not exposed.
 # ---------------------------------------------------------------------------
 

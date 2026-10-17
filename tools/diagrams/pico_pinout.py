@@ -19,7 +19,7 @@ from tools.hwdata.pico import PICO_PHYSICAL_PIN
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "pico_pinout_diagram.svg"
 
 COL = {
-    "uart0": PALETTE["audio"], "i2c0": "#12968f", "led": PALETTE["p12"],
+    "uart0": PALETTE["audio"], "oled": "#12968f", "led": PALETTE["p12"],
     "button": PALETTE["cv"], "encoder": "#e0a458", "clkdiv": PALETTE["gate"],
     "aux": PALETTE["n12"], "clock_in": PALETTE["clock"], "clock_out": "#b57edc",
     "free": "#d9d9cc", "3v3": PALETTE["p3v3"], "5v": "#7a4b1e",
@@ -38,10 +38,12 @@ ROLES[R["LPC_TX"]] = _role(R["LPC_TX"], "uart0", "UART0 TX to LPC2361", "OUT",
                            "DB-9 B:1 to LPC RXD1 (UNVERIFIED)", "UART0 TX")
 ROLES[R["LPC_RX"]] = _role(R["LPC_RX"], "uart0", "UART0 RX from LPC2361", "IN",
                            "DB-9 B:6 from LPC TXD1 (UNVERIFIED)", "UART0 RX")
-ROLES[R["OLED_SDA"]] = _role(R["OLED_SDA"], "i2c0", "I2C0 SDA, main OLED", "I/O",
-                             "Main OLED 0x3C (expander)", "I2C0 SDA")
-ROLES[R["OLED_SCL"]] = _role(R["OLED_SCL"], "i2c0", "I2C0 SCL, main OLED", "OUT",
-                             "Main OLED 0x3C (expander)", "I2C0 SCL")
+for _k, _f, _pin in (("OLED_SCK", "OLED SCK (SPI0 SCK)", "D0"),
+                     ("OLED_MOSI", "OLED MOSI (SPI0 TX)", "D1"),
+                     ("OLED_DC", "OLED DC", "DC"), ("OLED_RES", "OLED RES", "RES"),
+                     ("OLED_CS", "OLED CS", "CS")):
+    g = R[_k]
+    ROLES[g] = _role(g, "oled", _f, "OUT", f"Main OLED {_pin} (expander)", _f.split(" (")[0])
 for _n_, _c in (("LED_CLOCK", "R"), ("LED_GATE", "G"), ("LED_MODE", "B")):
     g = R[_n_]
     ROLES[g] = _role(g, "led", f"RGB LED {_c}", "OUT", f"RGB LED {_c} (expander panel)",
@@ -62,10 +64,6 @@ ROLES[R["CLOCK_IN"]] = _role(R["CLOCK_IN"], "clock_in", "Clock input", "IN",
                              "CLK IN jack via CD4049UB", "Clock in")
 ROLES[R["CLOCK_OUT"]] = _role(R["CLOCK_OUT"], "clock_out", "Clock output", "OUT",
                               "CLK OUT jack via CD4049UB", "Clock out")
-for _g_, _w in ((R["DAISY_SDA"], "EFFIGY SDA"), (R["DAISY_SCL"], "EFFIGY SCL"),
-                (R["DAISY_INT"], "EFFIGY INT")):
-    ROLES[_g_] = _role(_g_, "free", f"Free (was {_w}, shelved)", "-",
-                       "- (unassigned)", "Free", "Free")
 for _g_ in (26, 27, 28):
     ROLES[_g_] = _role(_g_, "free", f"ADC{_g_ - 26} (free)", "IN",
                        "- (unassigned, not FT)", "ADC free", "Free")
@@ -78,7 +76,7 @@ FIXED = {
     33: ("gnd", "AGND"),
 }
 POWER_ROWS = [
-    ("3V3", 36, "3V3 out: OLED, encoder, I2C0 pull-ups", "PWR"),
+    ("3V3", 36, "3V3 out: OLED, encoder", "PWR"),
     ("VSYS", 39, "+5 V in via Schottky OR from rack", "PWR"),
     ("VBUS", 40, "USB 5 V, feeds VSYS via on-board Schottky", "PWR"),
     ("GND", "3,8,13,18,23,28,33,38", "Ground to expander star point", "-"),
@@ -150,8 +148,6 @@ def build():
             fx = x1 + 6 + len(note) * 5.4 + 6
         if label in ("GP0", "GP1"):
             over.append(_flag(fx, py, "UNVERIFIED", "end" if side == "L" else "start"))
-        if label == "GP11":
-            over.append(_flag(fx, py, "PROVISIONAL gate in", "end" if side == "L" else "start"))
     card.add("".join(over))
 
     # ---- allocation table
@@ -197,17 +193,18 @@ def build():
             "GP26 shares PWM slice 5A with GP10 (RGB blue, 1 kHz):",
             "do not use GP26 as a PWM DAC while GP10 drives the LED.",
             "GP27 is slice 5B and follows GP10's 1 kHz slice frequency."]),
-        ("Bus speed", [
-            "I2C0 runs at 400 kHz in display.py; older docs said 100 kHz",
-            "for a cable run that no longer exists (audit S05)."]),
+        ("Main OLED, 7-pin SPI on SPI0", [
+            "Write-only (no MISO), 3V3 logic, powered from the 3V3 pin.",
+            "Chip (SSD1306 or SH1106) and module pin order: UNVERIFIED.",
+            "No I2C on the expander, so no pull-ups. SPI driver: follow-up."]),
         ("Not usable", [
             "GP23, GP24, GP25, GP29 are RP2040 internal: not on the header.",
-            "GP2, GP3, GP11: free, EFFIGY shelved. Inputs that see a jack",
-            "signal belong on GP0-GP22 (fault tolerant), not GP26-GP28."]),
+            "Free: GP26-GP28 only (not fault tolerant). An input that sees a",
+            "jack signal needs GP0-GP22; none of those is free now."]),
     ]
     y = ny0
     for title, lines in notes:
-        h = 18 + 12 * len(lines)
+        h = 22 + 12 * len(lines)
         card.add(f'<rect x="30" y="{y}" width="560" height="{h}" rx="4" fill="#fff" '
                  f'stroke="{PALETTE["stroke"]}" stroke-width="1"/>'
                  + _t(40, y + 14, title, 10, "start", PALETTE["title"], True))
@@ -215,7 +212,7 @@ def build():
             card.add(_t(40, y + 27 + 12 * j, ln, 9, "start", PALETTE["text"]))
         y += h + 8
 
-    card.legend([(COL["uart0"], "UART0 to LPC bridge"), (COL["i2c0"], "I2C0 main OLED"),
+    card.legend([(COL["uart0"], "UART0 to LPC bridge"), (COL["oled"], "SPI0 main OLED"),
                  (COL["led"], "RGB LED"), (COL["button"], "Tap button"),
                  (COL["encoder"], "Encoder"), (COL["clkdiv"], "Clock divider out"),
                  (COL["aux"], "Aux out"), (COL["clock_in"], "Clock in"),

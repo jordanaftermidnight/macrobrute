@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from tools.check_diagrams import validate_nets
-from tools.diagram_kit import (PALETTE, Card, _dot, _line, _n, _t, jack, jack_pins,
+from tools.diagram_kit import (CHAR_W, PALETTE, Card, _dot, _line, _n, _t, jack, jack_pins,
                                label_box, pico_header, pico_header_pins, resistor,
                                resistor_pins, wire)
 from tools.hwdata.pico import FIRMWARE_ROLES as R
@@ -23,7 +23,7 @@ OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_wiring_schema
 
 
 C_3V3, C_GND = PALETTE["p3v3"], PALETTE["gnd"]
-C_I2C, C_LED = PALETTE["audio"], PALETTE["p12"]
+C_SPI, C_LED = PALETTE["audio"], PALETTE["p12"]
 C_GPIO, C_CLK = PALETTE["cv"], PALETTE["clock"]
 
 W, H = 920, 810
@@ -64,6 +64,14 @@ def _gp_tag(px, py, text, side):
             + _t(tx, py + 3, text, 9, "end" if side == "L" else "start", PALETTE["title"], True))
 
 
+def _tag(x, y, text):
+    """Amber tag for anything not verified."""
+    w = len(text) * 5.6 + 10
+    return (f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="14" rx="3" fill="#fff3cd" '
+            f'stroke="#c96a00" stroke-width="1"/>'
+            + _t(x + 5, y + 10.5, text, 9, "start", "#7a4100", True))
+
+
 def build():
     card = Card(W, H, "Phase 0 - Pico Bench Validation (wiring)",
                 "Breadboard bench check, 3V3 logic only, one part group per peripheral")
@@ -84,27 +92,39 @@ def build():
     card.add(pico_header(OX, OY, "Raspberry Pi Pico (40-pin)"))
 
     # ---- target rows (left-hand parts)
-    sda_y, scl_y = 190, 230
+    # OLED box pins sit level with their header pins, so the SPI wires run straight
+    spi = ("OLED_SCK", "OLED_MOSI", "OLED_DC", "OLED_RES")
+    spi_y = {role: pp(role)[1] for role in spi}
+    cs_y = 236
     led_y = {"LED_CLOCK": 292, "LED_GATE": 344, "LED_MODE": 396}
     btn_y = 468
     enc_y = {"ENC_SW": 515, "ENC_CLK": 555, "ENC_DT": 595}
-    order = [("OLED_SDA", sda_y, C_I2C), ("OLED_SCL", scl_y, C_I2C)]
-    order += [(k, y, C_LED) for k, y in led_y.items()]
+    order = [(k, y, C_LED) for k, y in led_y.items()]
     order += [("BTN_TAP", btn_y, C_GPIO)] + [(k, y, C_GPIO) for k, y in enc_y.items()]
     # downward jogs: later (lower) pins use jog columns further right so wires never cross
-    jog = {"OLED_SCL": 336, "LED_CLOCK": 344, "LED_GATE": 352, "LED_MODE": 360,
-           "BTN_TAP": 368, "ENC_SW": 376, "ENC_CLK": 384, "ENC_DT": 392, "OLED_SDA": 400}
+    jog = {"LED_CLOCK": 344, "LED_GATE": 352, "LED_MODE": 360,
+           "BTN_TAP": 368, "ENC_SW": 376, "ENC_CLK": 384, "ENC_DT": 392}
     wires = []
+    for role in spi:
+        px, py = pp(role)
+        wires.append(wire([(px, py), (XR, py)], C_SPI))
     for role, ty, col in order:
         px, py = pp(role)
         wires.append(wire([(px, py), (jog[role], py), (jog[role], ty), (XR, ty)], col))
 
-    # ---- OLED
-    card.add(box(XL, 160, XR - XL, 80,
-                  ["1.3in OLED I2C 0x3C,", "chip per marking"], ["I2C0"],
-                  left=[("VCC", 180), ("GND", 230)], right=[("SDA", sda_y), ("SCL", scl_y)]))
-    wires.append(wire([(XL, 180), (BUS_3V3, 180)], C_3V3))
-    wires.append(wire([(XL, 230), (BUS_GND, 230)], C_GND))
+    # ---- OLED, 7-pin SPI module; CS is joined by net flags so it does not cross the LED wires
+    pin_name = {"OLED_SCK": "D0 SCK", "OLED_MOSI": "D1 MOSI", "OLED_DC": "DC", "OLED_RES": "RES"}
+    card.add(box(XL, 148, XR - XL, 96,
+                  ["1.3in OLED, 7-pin SPI,", "chip per marking"], ["SPI0"],
+                  left=[("VCC", 168), ("GND", 228)],
+                  right=[(pin_name[r], spi_y[r]) for r in spi] + [("CS", cs_y)]))
+    wires.append(wire([(XL, 168), (BUS_3V3, 168)], C_3V3))
+    wires.append(wire([(XL, 228), (BUS_GND, 228)], C_GND))
+    wires.append(wire([(XR, cs_y), (XR + 10, cs_y)], C_SPI))
+    cs_px, cs_py = pp("OLED_CS")
+    wires.append(wire([(cs_px, cs_py), (420, cs_py)], C_SPI))
+    card.add(_tag(XL, 96, "UNVERIFIED: OLED pin order")
+             + _tag(XL + 170, 96, "UNVERIFIED: OLED chip"))
 
     # ---- RGB LED, common cathode, 220 ohm per channel
     card.add(f'<rect x="205" y="262" width="127" height="166" rx="6" fill="none" '
@@ -112,7 +132,7 @@ def build():
              + _t(205, 258, "RGB LED, common cathode", 11, "start", PALETTE["title"], True))
     chan = {"LED_CLOCK": ("R", C_LED), "LED_GATE": ("G", PALETTE["gate"]),
             "LED_MODE": ("B", PALETTE["audio"])}
-    gnd_junc = [(BUS_GND, 230)]
+    gnd_junc = [(BUS_GND, 228)]
     for role, y in led_y.items():
         name, lc = chan[role]
         card.add(resistor(XR, y, "220Ω", anchor="b"))
@@ -139,8 +159,8 @@ def build():
 
     # ---- power buses
     wires.append(wire([(BUS_3V3, RAIL_TOP + 18), (BUS_3V3, 525)], C_3V3,
-                      junctions=[(BUS_3V3, 180), (BUS_3V3, 525)]))
-    wires.append(wire([(BUS_GND, 230), (BUS_GND, RAIL_BOT)], C_GND,
+                      junctions=[(BUS_3V3, 168), (BUS_3V3, 525)]))
+    wires.append(wire([(BUS_GND, 228), (BUS_GND, RAIL_BOT)], C_GND,
                       junctions=gnd_junc + [(BUS_GND, RAIL_BOT)]))
 
     # ---- right side: 3V3 and GND from the Pico, clock block
@@ -174,8 +194,10 @@ def build():
 
     # order: wires over header, then tags, then glyphs on top of wire ends
     card.add("".join(wires))
-    for role in ("OLED_SDA", "OLED_SCL", "LED_CLOCK", "LED_GATE", "LED_MODE",
-                 "BTN_TAP", "ENC_SW", "ENC_CLK", "ENC_DT"):
+    card.add(label_box(XR + 10, cs_y - 7, f"to GP{R['OLED_CS']}")
+             + label_box(420 - (len("OLED CS") * CHAR_W + 6), cs_py - 7, "OLED CS"))
+    for role in spi + ("OLED_CS", "LED_CLOCK", "LED_GATE", "LED_MODE",
+                       "BTN_TAP", "ENC_SW", "ENC_CLK", "ENC_DT"):
         x, y = pp(role)
         card.add(_gp_tag(x, y, f"GP{R[role]}", "L"))
     for role in ("CLOCK_OUT", "CLOCK_IN"):
@@ -195,10 +217,10 @@ def build():
              f'stroke="{PALETTE["stroke"]}" stroke-width="1"/>'
              + _t(40, 692, "Phase 0 bench validation, 3V3 logic only. Run firmware/pico/test_hw.py per-peripheral.",
                   10, "start", PALETTE["text"])
-             + _t(40, 706, "OLED chip is UNVERIFIED (SH1106 likely): read the marking first.",
+             + _t(40, 706, "OLED chip (SSD1306 or SH1106) and pin order are UNVERIFIED: read the module first.",
                   10, "start", PALETTE["muted"]))
 
-    card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_I2C, "I2C0 (SDA, SCL)"),
+    card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_SPI, "SPI0 main OLED"),
                  (C_LED, "RGB LED drive"), (C_GPIO, "Button and encoder"),
                  (C_CLK, "Clock in and out")])
     return card

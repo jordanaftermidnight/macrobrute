@@ -17,10 +17,10 @@ SPARE_WORDS = re.compile(r"\b(spare|free|available|unused)\b|GPIOs", re.I)
 
 # Expected wording per GP, matching firmware roles in FIRMWARE_ROLES.
 ROLE_HINTS = {
-    0: "UART0 TX", 1: "UART0 RX", 2: "I²C1 SDA", 3: "I²C1 SCL",
-    4: "I²C0 SDA", 5: "I²C0 SCL",
+    0: "UART0 TX", 1: "UART0 RX", 2: "OLED SCK", 3: "OLED MOSI",
+    4: "OLED DC", 5: "OLED RES",
     19: "Aux output 1", 20: "Aux output 2", 6: "Aux output 3", 7: "Aux output 4",
-    8: "RGB LED R", 9: "RGB LED G", 10: "RGB LED B", 11: "EFFIGY INT",
+    8: "RGB LED R", 9: "RGB LED G", 10: "RGB LED B", 11: "OLED CS",
     12: "Tap button", 13: "Encoder switch", 14: "Encoder CLK",
     15: "Encoder DT", 16: "Clock divider out 1", 17: "Clock divider out 2",
     18: "Clock divider out 3",

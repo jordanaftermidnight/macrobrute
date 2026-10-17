@@ -145,7 +145,7 @@ def _expander(card):
     # 3V3 loads
     card.add(wire([(XCOL, l_g), (BUS_E["GND"], l_g)], C_GND, junctions=[(BUS_E["GND"], l_g)]))
     card.add(box(XCOL, 556, XW, 80, ["3V3 loads (Pico 3V3 OUT)"],
-                 ["OLED 1.3in I2C, encoder +", "I2C0 pull-ups 4.7k", "(value to confirm, BF Q5)", "CD4049UB clock buffers"],
+                 ["OLED 1.3in 7-pin SPI", "(SPI: no pull-ups)", "encoder +", "CD4049UB clock buffers"],
                  left=[("GND", l_g)], right=[("3V3", l_3 + 0)]))
     card.add(tag(XCOL, 642, "UNVERIFIED", "UNVERIFIED load"))
 
@@ -167,7 +167,7 @@ def _expander(card):
         "Rack +5 V: 0.5 A, shared with the rack (CP1A QSG p20).",
         "Pico 3V3 OUT: keep the load under 300 mA (Pico datasheet p9).",
         ("Pico draw from VSYS.", "UNVERIFIED"),
-        ("OLED, encoder and pull-up load on 3V3.", "UNVERIFIED"),
+        ("OLED, encoder and clock buffer load on 3V3.", "UNVERIFIED"),
         ("Analog utilities draw on +/-12 V.", "UNVERIFIED"),
         ("Rack +5 V present on the owner's bus slot (BT-12).", "UNVERIFIED"),
         ("VSYS diode is the only +5 V diode; frees one BAT85 from the BF 1.2 budget.", "OWNER-CONFIRM"),

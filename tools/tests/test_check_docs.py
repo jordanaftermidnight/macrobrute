@@ -90,3 +90,15 @@ def test_flags_p0_0_p0_1_claimed_as_uart0():
 def test_correct_uart0_pins_not_flagged():
     docs = {"a.md": "ISP UART0 is P0.2 (TXD0) and P0.3 (RXD0), pins 98 and 99"}
     assert check_lpc_uart_claims(docs) == []
+
+
+def test_spi_oled_rows_pass_and_old_i2c_row_is_flagged():
+    ok = "\n".join([
+        "| GP2 | 4 | OLED SCK (SPI0 SCK) | OUT | x |",
+        "| GP3 | 5 | OLED MOSI (SPI0 TX) | OUT | x |",
+        "| GP4 | 6 | OLED DC | OUT | x |",
+        "| GP5 | 7 | OLED RES | OUT | x |",
+        "| GP11 | 15 | OLED CS | OUT | x |",
+    ])
+    assert check_connection_map(ok) == []
+    assert any("GP4" in p for p in check_connection_map("| GP4 | 6 | I²C0 SDA | I/O | x |"))

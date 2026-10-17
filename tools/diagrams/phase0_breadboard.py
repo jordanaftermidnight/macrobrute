@@ -23,9 +23,9 @@ from tools.hwdata.pico import PICO_PHYSICAL_PIN
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_breadboard.svg"
 
 C_3V3, C_GND = PALETTE["p3v3"], PALETTE["gnd"]
-C_I2C, C_LED = PALETTE["audio"], PALETTE["p12"]
+C_SPI, C_LED = PALETTE["audio"], PALETTE["p12"]
 C_GPIO, C_CLK = PALETTE["cv"], PALETTE["clock"]
-COLOUR_NAME = {C_3V3: "amber", C_GND: "green", C_I2C: "blue", C_LED: "red",
+COLOUR_NAME = {C_3V3: "amber", C_GND: "green", C_SPI: "blue", C_LED: "red",
                C_GPIO: "orange", C_CLK: "violet"}
 
 W, H = 990, 1150
@@ -74,15 +74,27 @@ def _phys(role):
 
 
 # ---------------------------------------------------------------- jumpers
-def _jumper(kind, net, a_end, a_hole, b_end, b_hole, color, lane=None, dashed=False):
+def _jumper(kind, net, a_end, a_hole, b_end, b_hole, color, lane=None, dashed=False, via=()):
     return {"kind": kind, "net": net, "a_end": a_end, "a_hole": a_hole,
             "b_end": b_end, "b_hole": b_hole, "color": color, "lane": lane,
-            "dashed": dashed}
+            "dashed": dashed, "via": tuple(via)}
 
 
 def _top_signal(role, net, dest_end, dest_hole, lane, color):
     src = "a" + pico_hole(_phys(role))[1:]
     return _jumper("signal", net, ("PICO", gp(role)), src, dest_end, dest_hole, color, lane)
+
+
+# routing channel between the OLED module and the top lanes
+JOG_CS_Y = 146                                  # above the highest top lane
+JOG_RES_Y2, JOG_DC_Y, JOG_RES_Y = 188, 206, 226  # DC and RES swap columns here
+JOG_RES_X = colx(24) + BB_PITCH / 2
+
+
+def _oled(role, pin, via=()):
+    """Pico top-row hole of a role to the OLED module pin."""
+    return _jumper("module", role, ("PICO", gp(role)), "a" + pico_hole(_phys(role))[1:],
+                   ("OLED", pin), None, C_SPI, via=via)
 
 
 JUMPERS = [
@@ -94,13 +106,15 @@ JUMPERS = [
     _top_signal("ENC_SW", "ENC_SW", ("ENC", "SW"), "a8", 3, C_GPIO),
     _top_signal("ENC_DT", "ENC_DT", ("ENC", "DT"), "a9", 2, C_GPIO),
     _top_signal("ENC_CLK", "ENC_CLK", ("ENC", "CLK"), "a10", 1, C_GPIO),
-    # OLED module (off the board) wired straight down to the board
-    _jumper("module", "I2C0_SDA", ("PICO", gp("OLED_SDA")), "a" + pico_hole(_phys("OLED_SDA"))[1:],
-            ("OLED", "SDA"), None, C_I2C),
-    _jumper("module", "I2C0_SCL", ("PICO", gp("OLED_SCL")), "a" + pico_hole(_phys("OLED_SCL"))[1:],
-            ("OLED", "SCL"), None, C_I2C),
-    _jumper("module", "3V3", ("OLED", "VCC"), None, ("RAIL", "3V3"), "+T23", C_3V3),
-    _jumper("module", "GND", ("OLED", "GND"), None, ("RAIL", "GND"), "-T22", C_GND),
+    # 7-pin SPI OLED module (off the board) wired down to the board
+    _oled("OLED_SCK", "D0"),
+    _oled("OLED_MOSI", "D1"),
+    _oled("OLED_DC", "DC", via=[(colx(25), JOG_DC_Y), (colx(24), JOG_DC_Y)]),
+    _oled("OLED_RES", "RES", via=[(colx(24), JOG_RES_Y), (JOG_RES_X, JOG_RES_Y),
+                                  (JOG_RES_X, JOG_RES_Y2), (colx(25), JOG_RES_Y2)]),
+    _oled("OLED_CS", "CS", via=[(colx(16), JOG_CS_Y), (colx(23), JOG_CS_Y)]),
+    _jumper("module", "3V3", ("OLED", "VCC"), None, ("RAIL", "3V3"), "+T28", C_3V3),
+    _jumper("module", "GND", ("OLED", "GND"), None, ("RAIL", "GND"), "-T29", C_GND),
     # power taps
     _jumper("power", "3V3", ("ENC", "+"), "a7", ("RAIL", "3V3"), "+T7", C_3V3),
     _jumper("power", "GND", ("ENC", "GND"), "a6", ("RAIL", "GND"), "-T6", C_GND),
@@ -123,8 +137,9 @@ JUMPERS = [
 ]
 
 # ------------------------------------------------------- off-board geometry
-OLED_X = {"GND": colx(22), "VCC": colx(23), "SCL": colx(24), "SDA": colx(25)}
-OLED_BOX = (colx(22) - 30, 64, 4 * BB_PITCH + 40, 54)
+OLED_X = {"CS": colx(23), "DC": colx(24), "RES": colx(25), "D1": colx(26), "D0": colx(27),
+          "VCC": colx(28), "GND": colx(29)}
+OLED_BOX = (colx(23) - 18, 64, 6 * BB_PITCH + 36, 66)
 OLED_PIN_Y = OLED_BOX[1] + OLED_BOX[3]
 JACK_Y = 805
 JACK_OUT_X = colx(6) + 2
@@ -170,7 +185,7 @@ def _route(j):
         if abs(mx - hx) < 0.5:
             return [(mx, my), (hx, hy)]
         return [(mx, my), (mx, my - 12), (hx, my - 12), (hx, hy)]
-    return [(ax, ay), (bx, by)]
+    return [(ax, ay), *j["via"], (bx, by)]
 
 
 def _length_class(j):
@@ -292,7 +307,7 @@ def _led_svg():
     out = [f'<circle cx="{_n(cx)}" cy="{_n(cy)}" r="42" fill="#ffffff" fill-opacity="0.55" '
            f'stroke="#777" stroke-width="1.2"/>']
     legs = {"h1": ("R", C_LED), "h2": ("K", "#333"), "h3": ("G", PALETTE["gate"]),
-            "h4": ("B", C_I2C)}
+            "h4": ("B", C_SPI)}
     for hole, (ltr, col) in legs.items():
         x, y = hxy(hole)
         out.append(_dot(x, y, 4, col))
@@ -331,7 +346,8 @@ def _oled_svg():
     out = [f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="{_n(h)}" rx="4" fill="#e4e4dc" '
            f'stroke="#555" stroke-width="1.2"/>',
            _t(x + w / 2, y + 17, "1.3in OLED module", 11, "middle", PALETTE["title"], True),
-           _t(x + w / 2, y + 31, "I2C 0x3C, chip per marking", 9, "middle", PALETTE["muted"])]
+           _t(x + w / 2, y + 30, "7-pin SPI, chip per marking", 9, "middle", PALETTE["muted"]),
+           _t(x + w / 2, y + 42, "flipped: header toward board", 9, "middle", PALETTE["muted"])]
     for name, px in OLED_X.items():
         out.append(_t(px, y + h - 5, name, 9, "middle", PALETTE["title"], True))
         out.append(_dot(px, OLED_PIN_Y, 3.5))
@@ -397,12 +413,12 @@ def build():
     card.add(label_box(mx - 32, hxy(tj["a_hole"])[1] - 7, "test jumper"))
 
     # tags for anything not verified
-    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 8, 70, "UNVERIFIED: OLED chip"))
-    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 8, 88, "UNVERIFIED: OLED pin order"))
+    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 70, "UNVERIFIED: OLED chip"))
+    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 88, "UNVERIFIED: OLED pin order"))
     card.add(_tag(colx(6) - 10, hxy("b6")[1] - 7, "UNVERIFIED: KY-040 header order, read silkscreen"))
 
     _tables(card)
-    card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_I2C, "I2C0 (SDA, SCL)"),
+    card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_SPI, "SPI0 main OLED"),
                  (C_LED, "RGB LED drive"), (C_GPIO, "Button and encoder"),
                  (C_CLK, "Clock in and out")])
     return card

@@ -23,3 +23,12 @@ def test_no_gpio_assigned_twice():
     for gp in FIRMWARE_ROLES.values():
         flat.extend(gp if isinstance(gp, tuple) else (gp,))
     assert len(flat) == len(set(flat))
+
+
+def test_main_oled_is_spi0_on_the_decided_pins():
+    # owner ruling 2026-10-17: 7-pin SPI 1.3" OLED is the baseline main display
+    assert FIRMWARE_ROLES["OLED_SCK"] == 2 and FIRMWARE_ROLES["OLED_MOSI"] == 3
+    assert FIRMWARE_ROLES["OLED_CS"] == 11
+    assert FIRMWARE_ROLES["OLED_DC"] == 4 and FIRMWARE_ROLES["OLED_RES"] == 5
+    assert not any(k.startswith("DAISY") or k in ("OLED_SDA", "OLED_SCL")
+                   for k in FIRMWARE_ROLES)

@@ -10,7 +10,7 @@ The two Phase 0 diagrams, `schematics/phase0_wiring_schematic.svg` and `schemati
 - **Schematic** (`phase0_wiring_schematic.svg`) — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
 - **Breadboard layout** (`phase0_breadboard.svg`) — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
-Phase 0 covers: **one OLED on I²C0** (main display at `0x3C`; the 0.91″ strip OLED is dropped). Main OLED baseline (owner, 2026-10-17): the owner's 1.3″ 4-pin I²C module, controller likely SH1106 (UNVERIFIED); a 1.3″ 7-pin SPI module is a spare. `config.py` and the display driver still describe a 0.96″ SSD1306; that change is a firmware task · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
+Phase 0 covers: **one OLED on SPI0** (the 0.91″ strip OLED is dropped). Main OLED baseline (owner ruling, 2026-10-17): the owner's 1.3″ 7-pin SPI module, write-only (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11), powered from the Pico 3V3 pin. Controller UNVERIFIED (SSD1306 or SH1106: read the module); module pin order UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI, RES, DC, CS). The 4-pin I²C 1.3″ module is in a TD-3 and not available. `display.py` still holds only an I²C driver; the SPI driver is a firmware task · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
 
 ## Pin Assignment Table
 
@@ -18,16 +18,16 @@ Phase 0 covers: **one OLED on I²C0** (main display at `0x3C`; the 0.91″ strip
 |------|------|----------|-----------|-----------|-------|
 | GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16, pin 63; UNVERIFIED until the Phase 0 continuity check) |
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15, pin 62; UNVERIFIED) |
-| GP2 | 4 | Free, reserved | — | — | config.py still names it I²C1 SDA for the shelved EFFIGY code |
-| GP3 | 5 | Free, reserved | — | — | config.py still names it I²C1 SCL for the shelved EFFIGY code |
-| GP4 | 6 | OLED SDA | I2C0 | In/Out | Main OLED (0x3C; 1.3″ I²C module, controller UNVERIFIED), the only device on I2C0 |
-| GP5 | 7 | OLED SCL | I2C0 | Out | Main OLED (0x3C); code runs 400 kHz |
+| GP2 | 4 | OLED SCK | SPI0 SCK | Out | Main OLED D0 (1.3″ 7-pin SPI module, controller UNVERIFIED) |
+| GP3 | 5 | OLED MOSI | SPI0 TX | Out | Main OLED D1; write-only, no MISO |
+| GP4 | 6 | OLED DC | GPIO | Out | Main OLED data/command select |
+| GP5 | 7 | OLED RES | GPIO | Out | Main OLED reset, active LOW |
 | GP6 | 9 | Aux output 3 | GPIO/PWM3A | Out | Programmable aux jack |
 | GP7 | 10 | Aux output 4 | GPIO/PWM3B | Out | Programmable aux jack |
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
 | GP9 | 12 | LED Gate | PWM4B | Out | Gate activity indicator |
 | GP10 | 14 | LED Mode | PWM5A | Out | Mode indicator |
-| GP11 | 15 | Free, reserved | — | — | config.py still names it EFFIGY INT (shelved); candidate gate input |
+| GP11 | 15 | OLED CS | GPIO | Out | Main OLED chip select, active LOW (was the candidate gate input) |
 | GP12 | 16 | Tap Button | GPIO | In | Pull-up, active LOW |
 | GP13 | 17 | Encoder SW | GPIO | In | Pull-up, active LOW, IRQ |
 | GP14 | 19 | Encoder CLK | GPIO | In | Pull-up, IRQ on edges |
@@ -48,7 +48,7 @@ Phase 0 covers: **one OLED on I²C0** (main display at `0x3C`; the 0.91″ strip
 | Peripheral | Usage | Pins |
 |------------|-------|------|
 | UART0 | LPC2361 Pico Bridge (115200 baud) | GP0, GP1 |
-| I2C0 | Main OLED display (0x3C; config.py says SSD1306, owner module likely SH1106, UNVERIFIED) | GP4, GP5 |
+| SPI0 (write-only) + GPIO | Main OLED display (controller SSD1306 or SH1106, UNVERIFIED): SCK, MOSI; DC, RES, CS | GP2, GP3; GP4, GP5, GP11 |
 | GPIO (Timer) | Clock output | GP22 |
 | GPIO | Clock input, clock divider outputs | GP21; GP16, GP17, GP18 |
 | GPIO/PWM | Aux outputs (PWM at 20 kHz in PWM_CV mode) | GP19, GP20, GP6, GP7 |
@@ -58,24 +58,23 @@ Phase 0 covers: **one OLED on I²C0** (main display at `0x3C`; the 0.91″ strip
 
 ## Free GPIO
 
-6 free pins (owner decision, 2026-10-17):
+3 free pins (owner ruling, 2026-10-17: GP2, GP3 and GP11 went to the SPI main OLED):
 
 | GPIO | Pin# | Type | Note |
 |------|------|------|------|
-| GP2 | 4 | Digital, fault tolerant | Was EFFIGY I²C1 SDA (shelved) |
-| GP3 | 5 | Digital, fault tolerant | Was EFFIGY I²C1 SCL (shelved) |
-| GP11 | 15 | Digital, fault tolerant | Was EFFIGY INT (shelved); candidate gate input |
 | GP26 | 31 | ADC0, not fault tolerant | PWM slice 5A shared with GP10 |
 | GP27 | 32 | ADC1, not fault tolerant | — |
 | GP28 | 34 | ADC2, not fault tolerant | — |
 
 GP6, GP7, GP16, GP17, GP18, GP19 and GP20 are NOT free: they are the aux outputs and clock divider outputs above.
+No fault-tolerant pin is free, so an input that sees a jack signal (the gate input idea) has no pin yet (connection map section 12G).
+No I²C bus is used on the expander. An I²C display alternative would need GP4/GP5, which are OLED DC/RES, so it requires re-pinning.
 GP23, GP24, GP25 and GP29 are RP2040-internal and not exposed on the header.
 
 ## I²C1 EFFIGY / Daisy Seed Expansion — SHELVED
 
 SHELVED (2026-10-17): the EFFIGY pairing is kept as an idea for another project and is not part
-of this build. No rear JST-XH header is fitted; GP2, GP3 and GP11 are free (table above).
+of this build. No rear JST-XH header is fitted; GP2, GP3 and GP11 are now the main OLED's SPI pins (table above).
 
 ## USB-MIDI (micro-USB)
 

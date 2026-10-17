@@ -42,7 +42,8 @@ def test_wired_gpios_match_config():
     cfg = load_firmware_gpio(ROOT / "firmware" / "pico" / "config.py")
     wired = {n: e[1] for n, ends in p0.NETS.items() for e in ends
              if e[0] == "PICO" and e[1].startswith("GP")}
-    expect = {"I2C0_SDA": cfg["OLED_SDA"], "I2C0_SCL": cfg["OLED_SCL"],
+    expect = {"OLED_SCK": cfg["OLED_SCK"], "OLED_MOSI": cfg["OLED_MOSI"],
+              "OLED_DC": cfg["OLED_DC"], "OLED_RES": cfg["OLED_RES"], "OLED_CS": cfg["OLED_CS"],
               "LED_R": cfg["LED_CLOCK"], "LED_G": cfg["LED_GATE"], "LED_B": cfg["LED_MODE"],
               "BTN_TAP": cfg["BTN_TAP"], "ENC_SW": cfg["ENC_SW"], "ENC_CLK": cfg["ENC_CLK"],
               "ENC_DT": cfg["ENC_DT"], "CLOCK_IN": cfg["CLOCK_IN"], "CLOCK_OUT": cfg["CLOCK_OUT"]}
@@ -52,9 +53,15 @@ def test_wired_gpios_match_config():
 
 def test_forbidden_text_absent():
     s = _svg_text().lower()
-    for bad in ("strip oled", "0x3d", "effigy"):
+    for bad in ("strip oled", "0x3d", "0x3c", "effigy", "i2c", "sda", "scl"):
         assert bad not in s
-    assert "0x3c" in s
+    assert "spi" in s
+
+
+def test_oled_unverified_items_tagged():
+    s = _svg_text()
+    assert "UNVERIFIED: OLED pin order" in s
+    assert "UNVERIFIED: OLED chip" in s
 
 
 def test_committed_svg_matches_generator():

@@ -13,7 +13,7 @@ FULL_ROW = re.compile(r"^\|\s*GP(\d+)\s*\|\s*(\d+)\s*\|\s*([^|]+)\|\s*([^|]+)\|"
 
 # keyword each card role must find in the connection map function text
 KEYWORD = {
-    "uart0": "UART0", "i2c0": "I²C0", "led": "RGB LED", "button": "Tap button",
+    "uart0": "UART0", "oled": "OLED", "led": "RGB LED", "button": "Tap button",
     "encoder": "Encoder", "clkdiv": "Clock divider", "aux": "Aux output",
     "clock_in": "Clock input", "clock_out": "Clock output", "free": "Free",
 }
@@ -42,12 +42,10 @@ def test_every_table_gp_has_a_card_role_that_matches():
 
 def test_roles_cover_firmware_roles():
     used = set()
-    for k, v in FIRMWARE_ROLES.items():
-        if k.startswith("DAISY"):
-            continue
+    for v in FIRMWARE_ROLES.values():
         used.update(v if isinstance(v, tuple) else (v,))
     assert {g for g, r in pp.ROLES.items() if r["status"] == "Used"} == used
-    assert {g for g, r in pp.ROLES.items() if r["status"] == "Free"} == {2, 3, 11, 26, 27, 28}
+    assert {g for g, r in pp.ROLES.items() if r["status"] == "Free"} == {26, 27, 28}
 
 
 def test_internal_gpios_never_usable():
@@ -63,8 +61,9 @@ def test_svg_valid_and_fonts_ok():
 
 def test_unverified_items_tagged_on_card():
     s = pp.render()
-    assert s.count("UNVERIFIED") >= 2
-    assert "PROVISIONAL" in s
+    assert s.count("UNVERIFIED") >= 3
+    assert "pin order: UNVERIFIED" in s
+    assert "PROVISIONAL" not in s and "I2C0" not in s
     assert "slice 5A" in s
 
 

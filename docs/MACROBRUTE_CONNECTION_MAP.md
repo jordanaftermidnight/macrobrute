@@ -10,7 +10,7 @@ every value here is a design value, and anything marked UNVERIFIED waits for a b
 
 **Connector:** 2× DB-9, CONFIRMED by the owner (2026-10-17; the VGA HD-15 line in a pasted inventory was an error; HD-15 rejected — shorts pins 6-8 to GND). Both mount on the MicroBrute **rear panel, left of Pitch/Gate** (owner decision a). Panel dimensions, free area and depth: UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 mounting-hole spacing 24.99 mm (Spectrum Control cut-out, DATASHEETS (g)); flange size of the owner's part UNVERIFIED.
 **Power:** split. The expander is powered only from the Eurorack rack; the MicroBrute-side breakout is powered only from the synth (TP70/TP71/TP72). **No supply rail crosses either DB-9 cable**; only ground is shared.
-**OLED:** one **1.3" 4-pin I²C 128×64** main display on the expander (owner baseline, 2026-10-17; chip SH1106 likely, UNVERIFIED: owner to read the marking, BF Q22). Driver `OLED_I2C` in `firmware/pico/display.py` already supports SH1106 (`OLED_CHIP`, `OLED_COL_OFFSET=2` in `config.py`; `config.py` still ships `OLED_CHIP="SSD1306"`, a firmware follow-up). A 1.3" module is larger than the 0.96" panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). The owner's 7-pin SPI 1.3" module is spare/dev. The 0.96" SSD1306 may not have arrived (owner to confirm). The 0.91" strip OLED is dropped (decision c). **No I²C crosses the DB-9 cable.**
+**OLED:** one **1.3" 7-pin SPI 128×64** main display on the expander (owner ruling, 2026-10-17), write-only on Pico SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 (section 1). Chip UNVERIFIED (SSD1306 or SH1106: owner to read the module, BF Q22). Module pin order UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI, RES, DC, CS: read the silkscreen). Powered from the Pico 3V3 pin, 3V3 logic; current draw UNVERIFIED. The firmware has no SPI driver yet: `display.py` still holds the I²C driver (`OLED_I2C`), and an SPI driver is a firmware follow-up (for SH1106: `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`). A 1.3" module is larger than the 0.96" panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). The owner's 4-pin I²C 1.3" module is wired into a TD-3 and is not available. Alternatives only: the 0.96" SSD1306 (may not have arrived, owner to confirm) or another I²C module; an I²C display would need GP4/GP5, which are DC/RES here, so it requires re-pinning and is not a drop-in. The 0.91" strip OLED is dropped (decision c). **No I²C is used on the expander, and none crosses the DB-9 cable.**
 **MIDI path:** Pico UART0 ↔ LPC2361 UART bridge @ 115200 baud (LPC side: see section 5.4). LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
 **Firmware:** Pico MicroPython (14 modules + `_effigy_constants.py` generated from EFFIGY's C header; the EFFIGY pairing is SHELVED, section 5.6), LPC2361 ARM7 (stock + planned bridge extension). Pico variant: the docs say Pico WH; UNVERIFIED, owner to confirm (BF Q21).
 
@@ -24,16 +24,16 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 |------|----------|----------|-----------|-------|
 | GP0 | 1 | UART0 TX → LPC2361 | OUT | 115200 baud, DB-9 B:1, 1kΩ series on the expander board (BF 3.1). Design rule: GP0 stays an input until GP1 reads high (firmware rule, not yet implemented) |
 | GP1 | 2 | UART0 RX ← LPC2361 | IN | 115200 baud, DB-9 B:6, 1kΩ series on the expander board. Fault-tolerant pin (BF 3.1) |
-| GP2 | 4 | Free, reserved (config.py still names it I²C1 SDA for the shelved EFFIGY code) | — | Fault-tolerant digital pin |
-| GP3 | 5 | Free, reserved (config.py still names it I²C1 SCL for the shelved EFFIGY code) | — | Fault-tolerant digital pin |
-| GP4 | 6 | I²C0 SDA | I/O | Main OLED 0x3C on the expander only (short on-board bus) · 4.7kΩ pull-up to 3V3 |
-| GP5 | 7 | I²C0 SCL | OUT | Code runs I²C0 at 400 kHz (`display.py`); older docs said 100 kHz for the cable run, which no longer exists. Doc/code mismatch flagged (audit S05) |
+| GP2 | 4 | OLED SCK (SPI0 SCK) | OUT | Main OLED D0, on the expander only (short on-board run). Module pin order UNVERIFIED |
+| GP3 | 5 | OLED MOSI (SPI0 TX) | OUT | Main OLED D1. Write-only display: no MISO, no pull-ups |
+| GP4 | 6 | OLED DC | OUT | Main OLED data/command select |
+| GP5 | 7 | OLED RES | OUT | Main OLED reset (active low) |
 | GP6 | 9 | Aux output 3 | OUT | Programmable: tap-div / euclidean / random / passthrough / PWM-CV |
 | GP7 | 10 | Aux output 4 | OUT | Programmable, same modes as GP6 |
 | GP8 | 11 | RGB LED R · Clock tick | OUT | PWM, owned exclusively by `leds.LEDManager` |
 | GP9 | 12 | RGB LED G · Gate active | OUT | PWM |
 | GP10 | 14 | RGB LED B · Mode | OUT | PWM (1 kHz), slice 5A |
-| GP11 | 15 | Free, reserved (config.py still names it EFFIGY INT for the shelved EFFIGY code) | — | Fault-tolerant digital pin. Candidate for the gate input (BF 3.5); not assigned |
+| GP11 | 15 | OLED CS | OUT | Main OLED chip select (active low). Was the gate-input candidate (BF 3.5); see section 12G |
 | GP12 | 16 | Tap button | IN | Pull-up; short = tap tempo, long-hold = manual gate |
 | GP13 | 17 | Encoder switch | IN | Pull-up, short = select, long = back |
 | GP14 | 19 | Encoder CLK (A) | IN | Pull-up, IRQ on both edges |
@@ -48,12 +48,12 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 | GP26 | 31 | ADC0 (free) | IN | Not fault tolerant, diode to IOVDD (Pico datasheet p20). PWM slice 5A shared with GP10 (section 12C) |
 | GP27 | 32 | ADC1 (free) | IN | Not fault tolerant |
 | GP28 | 34 | ADC2 (free) | IN | Not fault tolerant |
-| 3V3 | 36 | 3V3 out | PWR | OLED + encoder + I²C0 pull-ups |
+| 3V3 | 36 | 3V3 out | PWR | Main OLED (draw UNVERIFIED) + encoder |
 | VSYS | 39 | +5V input | PWR | From rack CP1A +5V via a Schottky OR diode + bulk + 100nF (section 10) |
 | GND | 3,8,13,18,23,28,33,38 | Ground | — | To the expander star point (rack 0 V at the 16-pin header), not to TP72 (BF 4.1) |
 
-**Free pins: 6** — GP2, GP3, GP11 (fault-tolerant digital) and GP26, GP27, GP28 (ADC-capable, not fault tolerant). Source: owner decision g, BF section 5.
-Allocated in config.py: GP0, GP1, GP4, GP5, GP6, GP7, GP8, GP9, GP10, GP12, GP13, GP14, GP15, GP16, GP17, GP18, GP19, GP20, GP21, GP22.
+**Free pins: 3** — GP26, GP27, GP28 (ADC-capable, not fault tolerant). GP2, GP3 and GP11 went to the SPI main OLED (owner ruling, 2026-10-17). The I²C0 bus speed question (400 kHz in code against 100 kHz in older docs, audit S05) is moot: the display is SPI.
+Allocated in config.py: GP0, GP1, GP2, GP3, GP4, GP5, GP6, GP7, GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15, GP16, GP17, GP18, GP19, GP20, GP21, GP22.
 GP23, GP24, GP25 and GP29 are RP2040-internal and not exposed on the Pico header.
 Rule (BF 5): any input that can see a cable or jack signal while the Pico may be unpowered goes on a fault-tolerant pin (GP0-GP22), not on GP26-GP28.
 
@@ -300,7 +300,7 @@ Dropped by owner decision c (2026-10-17). Nothing on the MicroBrute panel uses I
 
 SHELVED (owner decision b, 2026-10-17): the EFFIGY I²C pairing is kept as an idea for another
 project and is not part of this build. No rear JST-XH header is fitted, and nothing is designed
-around it. GP2, GP3 and GP11 are free, reserved (section 1). The protocol document
+around it. GP2, GP3 and GP11, which that code used, are now the main OLED's SPI pins (section 1). The protocol document
 `docs/MACROBRUTE_EFFIGY_BRIDGE.md` and `firmware/pico/effigy_bridge.py` are archived as they are.
 
 ---
@@ -433,7 +433,7 @@ series resistor in the integrator is mandatory (audit S61). S&H trigger conditio
 | Row | Element | Notes |
 |-----|---------|-------|
 | Title strip | "MACROBRUTE" silkscreen | — |
-| 1 | Main OLED — 1.3" 4-pin I²C (SH1106 likely, UNVERIFIED, BF Q22) | I²C0 @ 0x3C, the only device on I²C0 |
+| 1 | Main OLED — 1.3" 7-pin SPI (chip SSD1306 or SH1106, UNVERIFIED, BF Q22) | SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 |
 | 2 | HW-040 encoder + tap button + RGB LED | Encoder = menu nav · Tap = tempo/gate · RGB = status |
 | 3 | Clock IN, Clock OUT jacks | 3.5 mm panel jacks (type UNVERIFIED, BF Q8) |
 | 4 | Clock divider outputs ÷2, ÷4, ÷8 | Firmware-driven (GP16/17/18) |
@@ -449,7 +449,7 @@ divider outs × 3, slew × 2, aux × 4 = 11 jacks and 1 pot; the old "14" was an
 LFO + S&H raise the minimum to 16 jacks and 2 pots) — plus holes for OLED / encoder / tap and 1 RGB LED.
 
 **Behind the panel:** Pico on a small sub-board, Pico VSYS filter (Schottky OR diode + bulk from
-owned 10µF parts + 100nF), I²C0 pull-ups for the main OLED, the CD4049UB clock buffers (section 4),
+owned 10µF parts + 100nF), the main OLED's 7-pin SPI header (no pull-ups), the CD4049UB clock buffers (section 4),
 the 22k / 33k gate divider (section 2), and 2× DB-9 connectors for the link to MicroBrute, with the
 expander-side shells isolated from the panel by insulating shoulder washers (not owned, BF Q10;
 section 11).
@@ -551,30 +551,24 @@ cable pin, and DB-9 B has none free for signals (section 3).
 
 ### 12G. Future GPIO Expansion
 
-6 free pins (owner decision g, BF section 5):
+3 free pins (GP2, GP3 and GP11 went to the SPI main OLED, owner ruling 2026-10-17):
 
 | GPIO | Physical pin | Note | Type (RP2040 datasheet) |
 |------|--------------|------|-------------------------|
-| GP2 | 4 | Was EFFIGY I²C1 SDA (shelved) | Digital IO (FT) |
-| GP3 | 5 | Was EFFIGY I²C1 SCL (shelved) | Digital IO (FT) |
-| GP11 | 15 | Was EFFIGY INT (shelved). Candidate for the gate input (BF 3.5) | Digital IO (FT) |
 | GP26 | 31 | PWM slice 5A shared with GP10 (12C) | Digital IO / ADC0, not FT, diode to IOVDD (Pico p20) |
 | GP27 | 32 | — | Digital IO / ADC1, not FT |
 | GP28 | 34 | — | Digital IO / ADC2, not FT |
 
-Each expansion below must fit in those 6 pins; they do not all fit at once.
+Each expansion below must fit in those 3 pins; they do not all fit at once, and none of them is fault tolerant.
 
 | Expansion | GPIOs Needed | Notes |
 |-----------|-------------|-------|
-| Gate input (Pico mirror of A:1) | 1 digital (FT) | GP11 suggested (BF 3.5); not assigned in config.py |
-| Touch plate scanning (4ch) | 3 ADC + 3 digital (mux control) | CD4051 multiplexer; uses all 6 pins |
+| Gate input (Pico mirror of A:1) | 1 digital (FT) | OPEN: GP11, the BF 3.5 suggestion, is now OLED CS, and no fault-tolerant pin is free |
+| Touch plate scanning (4ch) | 3 ADC + 3 digital (mux control) | CD4051 multiplexer; needs 6 pins, more than are free |
 | DSO channel select | 3 digital | CD4051 address lines |
 | Additional LEDs | 1-2 digital | Expander status |
-| I2C peripherals | 2 (SDA/SCL) | GP2/GP3 (I²C1). DAC, sensors, etc. |
+| I2C peripherals | 2 (SDA/SCL) | Would take 2 of the 3 free pins. DAC, sensors, etc. |
 | Second encoder | 3 digital | Expander-side control |
-
-If the owner's main OLED turns out to be SPI only (BF Q22), it would take GP2 and GP3 (SPI0 SCK /
-MOSI) plus DC, RST and CS from the same free set.
 
 ---
 
@@ -640,9 +634,9 @@ are purchase lists. The owner has further parts not yet listed (BF Q18).
 | 100kΩ pots | 4 | ✓ Have |
 | 3.5mm jacks | 25 | ✓ Have (type UNVERIFIED, BF Q8) |
 | Raspberry Pi Pico | 1 | ✓ Have; variant UNVERIFIED (docs say Pico WH; package says "Raspberry Pi Pico"; another description says "Pico H"), owner to confirm (BF Q21) |
-| 1.3" 4-pin I²C OLED (main) | 1 | ✓ Have (owner, 2026-10-17); chip likely SH1106, UNVERIFIED: read the marking (BF Q22) |
-| 1.3" 7-pin SPI OLED | 1 | ✓ Have (spare / dev) |
-| 0.96" SSD1306 OLED | 1 | Owner to confirm (may not have arrived); no longer the baseline |
+| 1.3" 7-pin SPI OLED (main) | 1 | ✓ Have; the baseline main display (owner ruling, 2026-10-17). Chip (SSD1306 or SH1106) and pin order UNVERIFIED: read the module (BF Q22) |
+| 1.3" 4-pin I²C OLED | 1 | ✓ Have, but wired into a TD-3: not available |
+| 0.96" SSD1306 OLED | 1 | Owner to confirm (may not have arrived); alternative only: as an I²C module it needs GP4/GP5 (OLED DC/RES), so re-pinning, not a drop-in |
 | 0.91" SSD1306 128×32 OLED | 1 | ✓ Have (spare; strip OLED dropped) |
 | KY-040 / HW-040 encoder | 1 | ✓ Have (owner 2026-10-17) |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare; the VGA line in a pasted inventory was an error, DB-9 are confirmed) |

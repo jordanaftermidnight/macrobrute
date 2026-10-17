@@ -79,7 +79,7 @@ def build():
     # 3V3 loads
     card.add(wire([(870, y5), (930, y5)], C_3V3))
     card.add(box(930, 170, 170, 130, ["3V3 loads"],
-                 ["OLED 1.3in I2C", "encoder +", "I2C0 pull-ups", "CD4049UB VCC"],
+                 ["OLED 1.3in SPI", "(draw UNVERIFIED)", "encoder +", "CD4049UB VCC"],
                  left=[("3V3", y5), ("GND", 280)]))
     card.add(wire([(930, 280), (910, 280), (910, GND_Y)], C_GND, junctions=[(910, GND_Y)]))
     card.add(tag(930, 308, "UNVERIFIED", "UNVERIFIED actual load"))
@@ -107,7 +107,7 @@ def build():
         "Bulk: 2-4x owned 10uF/63V electrolytic in parallel, plus 100 nF (BF 1.4, CM section 10).",
         "No USB cable on the Pico while the rack powers it and the DB-9 cables are connected "
         "(BF 4.3). USB with rack 5 V is safe for the Pico (on-board VBUS Schottky, p21-22).",
-        "Pico 3V3 OUT feeds the OLED, encoder and pull-ups: keep the load under 300 mA (p9).",
+        "Pico 3V3 OUT feeds the OLED, encoder and clock buffers: keep the load under 300 mA (p9).",
     ])
     card.add(s1 + s2 + s3)
     card.legend([(C_5V, "+5 V (rack)"), (C_3V3, "3V3 (Pico out)"), (C_GND, "GND")])
