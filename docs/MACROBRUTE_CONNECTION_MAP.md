@@ -33,7 +33,7 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 | GP8 | 11 | RGB LED R · Clock tick | OUT | PWM, owned exclusively by `leds.LEDManager` |
 | GP9 | 12 | RGB LED G · Gate active | OUT | PWM |
 | GP10 | 14 | RGB LED B · Mode | OUT | PWM (1 kHz), slice 5A |
-| GP11 | 15 | Gate input (Pico mirror of DB-9 A:1) | IN | `GATE_IN`. From the MicroBrute CD40106 stage output through the 22k / 33k divider (BF 3.5). Fault-tolerant pin. PROVISIONAL (BT-14): the OLED CS pin is tied to GND to free it; see section 12G for the fallback |
+| GP11 | 15 | Gate input (Pico mirror of DB-9 A:1) | IN | `GATE_IN`. From the MicroBrute CD40106 stage output through the 22k / 33k divider (BF 3.5). Fault-tolerant pin. PROVISIONAL (BT-14): the OLED CS pin is tied to GND so GP11 can take this input; see section 12G for the fallback |
 | GP12 | 16 | Tap button | IN | Pull-up; short = tap tempo, long-hold = manual gate |
 | GP13 | 17 | Encoder switch | IN | Pull-up, short = select, long = back |
 | GP14 | 19 | Encoder CLK (A) | IN | Pull-up, IRQ on both edges |
@@ -52,7 +52,7 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 | VSYS | 39 | +5V input | PWR | From rack CP1A +5V via a Schottky OR diode + bulk + 100nF (section 10) |
 | GND | 3,8,13,18,23,28,33,38 | Ground | — | To the expander star point (rack 0 V at the 16-pin header), not to TP72 (BF 4.1) |
 
-**Free pins: 3** — GP26, GP27, GP28 (ADC-capable, not fault tolerant). No other pin is free: GP2 and GP3 are the SPI main OLED, GP11 is the gate input (owner rulings, 2026-10-17). The I²C0 bus speed question (400 kHz in code against 100 kHz in older docs, audit S05) is moot: the display is SPI.
+**Free pins: 3** — GP26, GP27, GP28 (ADC-capable, not fault tolerant). GP2 and GP3 (SPI main OLED) and GP11 (gate input) are not free (owner rulings, 2026-10-17). The I²C0 bus speed question (400 kHz in code against 100 kHz in older docs, audit S05) is moot: the display is SPI.
 Allocated in config.py: GP0, GP1, GP2, GP3, GP4, GP5, GP6, GP7, GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15, GP16, GP17, GP18, GP19, GP20, GP21, GP22.
 GP23, GP24, GP25 and GP29 are RP2040-internal and not exposed on the Pico header.
 Rule (BF 5): any input that can see a cable or jack signal while the Pico may be unpowered goes on a fault-tolerant pin (GP0-GP22), not on GP26-GP28.

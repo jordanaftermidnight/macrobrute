@@ -114,16 +114,55 @@ def test_flags_allocated_gpio_called_free_in_prose():
     assert not any(": GP26 is" in p for p in problems)
 
 
-def test_spare_claim_allows_tables_history_and_negation():
+def test_spare_claim_allows_history_and_negation():
     from tools.check_docs import check_spare_claims
     docs = {"a.md": "\n".join([
-        "| GP2 | 4 | Free, reserved | x |",
         "SUPERSEDED: GP2, GP3 and GP11 were free before the SPI ruling.",
-        "GP2, GP3 and GP11 went to the SPI OLED; free pins are GP26-28 only.",
+        "GP2 and GP3 are the SPI OLED and GP11 the gate input; they are not free.",
         "GP6 and GP7 are NOT free: they are aux outputs.",
         "STALE drawing: MPR121 on GP2/GP3 (spare).",
+        "GP11 was formerly free; it is no longer spare.",
+        "| GP26 | 31 | ADC0 | In | Free (PWM slice 5A shared with GP10) |",
+        "| GP11 | 15 | Gate input | In | Fault tolerant |",
     ])}
     assert check_spare_claims(docs) == []
+
+
+def test_was_and_were_do_not_excuse_a_free_claim():
+    from tools.check_docs import check_spare_claims
+    problems = check_spare_claims({"a.md": "GP2 was busy but is free now."})
+    assert any("a.md:1: GP2 is" in p for p in problems)
+    problems = check_spare_claims({"a.md": "GP2 and GP3 were the OLED pins; both are spare."})
+    assert any(": GP2 is" in p for p in problems) and any(": GP3 is" in p for p in problems)
+
+
+def test_table_row_for_allocated_gp_marked_free_is_flagged():
+    from tools.check_docs import check_spare_claims
+    problems = check_spare_claims({"a.md": "| GP2 | 4 | Free, reserved | x |"})
+    assert any("a.md:1: GP2 is" in p for p in problems)
+    problems = check_spare_claims({"a.md": "| GP11 | 15 | spare | — |"})
+    assert any(": GP11 is" in p for p in problems)
+
+
+def test_table_status_or_free_column_with_allocated_gp_is_flagged():
+    from tools.check_docs import check_spare_claims
+    status = "\n".join([
+        "| Pin | Role | Status |",
+        "|---|---|---|",
+        "| GP4 | OLED DC | available |",
+        "| GP26 | ADC0 | available |",
+    ])
+    problems = check_spare_claims({"a.md": status})
+    assert any("a.md:3: GP4 is" in p for p in problems)
+    assert not any("GP26 is" in p for p in problems)
+    free_col = "\n".join([
+        "| Block | Free pins |",
+        "|---|---|",
+        "| Expander | GP3, GP27 |",
+    ])
+    problems = check_spare_claims({"a.md": free_col})
+    assert any("a.md:3: GP3 is" in p for p in problems)
+    assert not any("GP27 is" in p for p in problems)
 
 
 def test_main_scans_schematics_and_readme(tmp_path, monkeypatch):

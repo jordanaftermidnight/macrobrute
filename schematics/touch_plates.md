@@ -298,7 +298,7 @@ channel for touch CV output.
 - **Pico ADC via CD4051 multiplexer** (reuse existing mux)
 - **Map to:** Filter CV, VCA CV, LFO rate, resonance
 - **PWM → RC filter → CV output** (cheapest, adequate resolution)
-- Optional: MPR121 for capacitive proximity detection (I2C; no pin free: it needs 2 of GP26-28, since GP2/GP3 are now the OLED SPI pins)
+- Optional: MPR121 for capacitive proximity detection (I2C; no free pin: it needs 2 of GP26-28, since GP2/GP3 are now the OLED SPI pins)
 
 ---
 

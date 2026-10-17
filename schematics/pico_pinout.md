@@ -27,7 +27,7 @@ Phase 0 covers: **one OLED on SPI0** (the 0.91″ strip OLED is dropped). Main O
 | GP8 | 11 | LED Clock | PWM4A | Out | Pulse on each clock tick |
 | GP9 | 12 | LED Gate | PWM4B | Out | Gate activity indicator |
 | GP10 | 14 | LED Mode | PWM5A | Out | Mode indicator |
-| GP11 | 15 | Gate input | GPIO | In | `GATE_IN`: Pico mirror of DB-9 A:1 through the 22k / 33k divider; fault tolerant. PROVISIONAL (BT-14): the OLED CS pin is tied to GND to free it |
+| GP11 | 15 | Gate input | GPIO | In | `GATE_IN`: Pico mirror of DB-9 A:1 through the 22k / 33k divider; fault tolerant. PROVISIONAL (BT-14): the OLED CS pin is tied to GND so GP11 can take this input |
 | GP12 | 16 | Tap Button | GPIO | In | Pull-up, active LOW |
 | GP13 | 17 | Encoder SW | GPIO | In | Pull-up, active LOW, IRQ |
 | GP14 | 19 | Encoder CLK | GPIO | In | Pull-up, IRQ on edges |

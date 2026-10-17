@@ -78,22 +78,61 @@ def check_connection_map(text):
     return problems
 
 
-# lines that describe history or say a pin is NOT spare are fine
+# Only explicit historical markers or an explicit "not free" excuse a line. Bare
+# "was"/"were" do not: "GP2 was busy but is free now" is still a free claim.
 _ALLOW_SPARE = re.compile(
-    r"historical|superseded|stale|legacy|archiv|shelved|\bwas\b|\bwere\b|went to|"
-    r"\b(not|no|none|never)\b[^.;:]{0,60}\b(free|spare|available|unused)\b|"
-    r"\b(free|spare|available|unused)\b[^.;]{0,12}\b(not|no)\b", re.I)
+    r"historical|superseded|\bstale\b|legacy|archived|\bshelved\b|no longer|formerly|"
+    r"\bnot (free|spare|available|unused)\b|\bno (free|spare)\b", re.I)
+_TABLE_SEP = re.compile(r"^\s*\|?\s*:?-{2,}")
+_FREE_HEADER = re.compile(r"\b(free|spare|available)\b", re.I)
+_STATUS_HEADER = re.compile(r"\bstatus\b", re.I)
+
+
+def _cells(line):
+    return [c.strip() for c in line.strip().strip("|").split("|")]
+
+
+def _table_problems(f, n, line, header, fw):
+    """A table row is a free claim when its subject GP (first cell) is allocated
+    and another cell calls it free/spare, or when a Free/Spare column names an
+    allocated GP, or a Status column calls the row's allocated GP free."""
+    if _ALLOW_SPARE.search(line):
+        return []
+    cells = _cells(line)
+    subject = gp_numbers(cells[0]) & fw if cells else set()
+    bad = set()
+    if subject and any(SPARE_WORDS.search(c) for c in cells[1:]):
+        bad |= subject
+    for i, head in enumerate(header or []):
+        if i >= len(cells) or i == 0:
+            continue
+        if _FREE_HEADER.search(head):
+            bad |= gp_numbers(cells[i]) & fw
+        elif _STATUS_HEADER.search(head) and SPARE_WORDS.search(cells[i]):
+            bad |= (gp_numbers(cells[i]) & fw) | subject
+    return [f"{f}:{n}: GP{gp} is allocated in firmware but the table row calls it "
+            f"spare/free: {line.strip()[:80]}" for gp in sorted(bad)]
 
 
 def check_spare_claims(docs):
-    """docs: {filename: text}. Flag prose lines that call an allocated GP free or spare."""
+    """docs: {filename: text}. Flag lines and table rows that call an allocated GP free or spare."""
     fw = _flat_firmware_gps()
     problems = []
     for f, t in docs.items():
-        for n, line in enumerate(t.splitlines(), 1):
-            if line.lstrip().startswith("|") or not SPARE_WORDS.search(line):
+        lines = t.splitlines()
+        header = None
+        for n, line in enumerate(lines, 1):
+            if line.lstrip().startswith("|"):
+                if _TABLE_SEP.match(line.strip().lstrip("|")):
+                    continue
+                nxt = lines[n] if n < len(lines) else ""
+                if _TABLE_SEP.match(nxt.strip().lstrip("|")):
+                    header = _cells(line)          # header row of a new table
+                    continue
+                problems += _table_problems(f, n, line, header, fw)
                 continue
-            if _ALLOW_SPARE.search(line):
+            header = None
+            if not SPARE_WORDS.search(line) or _ALLOW_SPARE.search(line):
                 continue
             for gp in sorted(gp_numbers(line) & fw):
                 problems.append(f"{f}:{n}: GP{gp} is allocated in firmware but the line calls "

@@ -315,7 +315,7 @@ plus two I²C hops (~1 ms total). Well inside any musical jitter budget.
 allocation has I²C0 (GP4/GP5) consumed by the OLED bus and I²C1 (GP2/GP3)
 by the EFFIGY pair bus — both RP2040 hardware I²C peripherals are already
 in use. The ii target will need a third I²C bitbanged via PIO on spare
-GPIOs (GP6/GP7 candidate; both are aux outputs, so not actually spare). This is
+GPIOs (GP6/GP7 candidate; both are aux outputs, so not spare). This is
 a Phase 7D decision, not a Phase 0 concern. See the forthcoming
 `docs/MACROBRUTE_NORNS_BRIDGE.md` for the full plan.
 
