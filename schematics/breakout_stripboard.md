@@ -89,8 +89,8 @@ Col 9 isolates the right-hand pins from the area to the right. Row 13 also has a
 
 ### Power Connections
 
-Rail protection part is OPEN (owner), audit conflict C12: a BAT85 per rail (as below) or a
-4.7-10 Ω series resistor per rail. Ferrites and 100µF parts are not owned (BF 1.4, 1.5).
+Rail protection part is OPEN (owner), audit conflict C12: a BAT85 per rail (as below), an owned
+1N5819 per rail (same orientation), or a 4.7-10 Ω series resistor per rail. Ferrites and 100µF parts are not owned (BF 1.4, 1.5).
 
 | From | To | Wire/Component |
 |------|----|----------------|
@@ -169,14 +169,15 @@ fault-tolerant Pico GPIO (BF 3.5).
 
 ### LED Drivers — removed
 
-Q1-Q3 (2N3904), their resistors and LEDs are removed (audit S12, R3-17). The RGB LED is on the
-expander, driven from GP8-10. The 2N3904 is not owned.
+Q1-Q3 (2N3904), their resistors and LEDs are removed (audit S12, R3-17): the RGB LED is on the
+expander, driven from GP8-10 (connection map sections 1 and 10).
 
 ### Vactrol Driver — TO DESIGN
 
 The old 2N3904 driver is withdrawn: it switched the LED on/off at about 9 mA instead of giving a
 continuous control, and took CV from DB-9 B pin 3, which is now VCA CV (audit S37). Replacement:
-TL072 voltage-to-current stage, CV from the new MB panel jack. R_sense waits for the vactrol
+a linear voltage-to-current stage (op-amp, or op-amp plus an owned transistor), CV from the new MB
+panel jack. R_sense waits for the vactrol
 marking (OPEN (owner), BF Q2). Constraints are listed in `breakout_pcb.md`, "Vactrol Driver".
 
 ### CV Input Clamps (DB-9 B:3 VCA CV, B:5 Filter CV)

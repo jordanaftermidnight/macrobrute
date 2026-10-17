@@ -19,7 +19,8 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 - Check: in normal operation current flows from the breakout -12V_BRK rail into TP71, so the diode
   conducts anode (rail) to cathode (TP71). A positive voltage on TP71 reverse-biases it and is blocked.
 - Part: owned BAT85 per rail, or a 4.7-10 Ω series resistor instead: OPEN (owner), audit conflict
-  C12. The 1N5817 is not owned and is a 20 V part (`docs/DATASHEETS.md` (e)).
+  C12; an owned 1N5819 (40 V) per rail is a third option. The 1N5817 is not owned and is a 20 V
+  part (`docs/DATASHEETS.md` (e)); the owned 1N5819 serves wherever a 1N5817 was drawn.
 
 ### Issue: Pico power from +5V rail
 **Status:** REMOVED (audit S12, B09)
@@ -102,11 +103,12 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 - The old circuit (TL072 → 1kΩ → 2N3904 base, LED in the collector) had no collector supply as
   drawn. With LED + R from +12 V to the collector, the LED current is fixed at about
   (12 - 2 - 0.2) / 1k ≈ 9 mA once the base passes about 0.8 V: on/off, not a continuous resonance
-  control. The base had no protection against negative TL072 swings. The 2N3904 is not owned.
+  control. The base had no protection against negative TL072 swings.
 - The earlier "Final value: 1kΩ confirmed" and "base current 4.3 mA, saturated: CORRECT" entries
   are withdrawn.
-- Replacement: TL072 voltage-to-current stage (+IN = CV; output → LED anode; LED cathode → R_sense
-  → GND; R_sense node → -IN; I = V_CV / R_sense). R_sense depends on the owned vactrol's LED rating,
+- Replacement: a linear voltage-to-current stage, TO DESIGN: an op-amp stage (+IN = CV; output →
+  LED anode; LED cathode → R_sense → GND; R_sense node → -IN; I = V_CV / R_sense) or an op-amp
+  driving an owned transistor (2N3904 etc., kit contents UNVERIFIED) as a current sink. R_sense depends on the owned vactrol's LED rating,
   unread (OPEN (owner), BF Q2). CV comes from the new MB panel jack, not DB-9 B pin 3 (now VCA CV).
 
 ### Issue: Vactrol response asymmetry
@@ -139,7 +141,7 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 ## 6. Noise Generator
 
 > **DROPPED (archive).** The noise generator is out of the expander scope (audit section 1, S59);
-> the rack's existing noise module covers it. Kept for reference only; the 2N3904 is not owned.
+> the rack's existing noise module covers it. Kept for reference only.
 
 ### Issue: 2N3904 selection
 **Status:** CORRECT with note
@@ -232,6 +234,9 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 - Sample when LOGIC is high relative to LOGIC REFERENCE, hold when low (p14). Logic threshold
   1.4 V typ (p5); logic edges need at least 1 V/µs (p15); the logic-to-reference differential
   limit is printed on p4. Trigger conditioning from a rack gate is required (audit S65): TO DESIGN.
+- Owned-parts alternative to buying the LF398: a CD4051 channel as the switch, a TL072 follower and
+  the same 10 nF film cap (`expander_circuits.md` section 2b). It cannot run from ±12 V (CD4051
+  V+ to V- 20 V abs max); charge injection UNVERIFIED. LF398 stays the default.
 
 ---
 
@@ -248,7 +253,7 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
   2. Add 10kΩ input attenuator (halve signal to ±5V) — simple fix
   3. Use OPA2134 (rail-to-rail output, wider input) — not owned
 - **Simplest fix:** Accept ±8V range (adequate for most CV signals)
-- Parts: 1N4148 steering diodes and 1MΩ pots are not owned (BF Q4, Q6).
+- Parts: 1N4148 steering diodes are owned (owner, kit contents UNVERIFIED); 1MΩ pots are not (BF Q6).
 
 ---
 
@@ -293,7 +298,7 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 - Two separate supplies (split power): the breakout from TP70 / TP71 / TP72, the expander from the
   rack 16-pin header. No supply crosses the DB-9 cable.
 - Series Schottky per rail on the expander header (justified against reverse insertion, audit N04);
-  on the breakout a BAT85 or a 4.7-10 Ω resistor per rail (OPEN (owner), C12). 1N5817 is not owned
+  on the breakout a BAT85, an owned 1N5819 or a 4.7-10 Ω resistor per rail (OPEN (owner), C12). 1N5817 is not owned
   (20 V part); owned BAT85 is used (BF 1.2). -12 V diode: cathode to the source, anode to the rail.
 - Ferrite beads not owned (omitted); bulk 2-4 owned 10µF / 63 V per rail instead of 47µF / 100µF.
 

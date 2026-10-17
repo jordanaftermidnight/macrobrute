@@ -40,8 +40,10 @@ MicroBrute -12V (TP71) ──[D2 BAT85: cathode at TP71, anode at rail]──┬
   Either way the diode conducts in normal operation and blocks a reversed supply.
 - **Rail protection part: OPEN (owner), audit conflict C12.** Option 1: one owned BAT85 per rail as
   drawn (uses 2 of the 10 owned BAT85; BF 1.2). Option 2: a 4.7-10 Ω series resistor per rail
-  instead, which frees two BAT85 for hum-ladder step 4 (BF 4.5, Q3). The 1N5817 in older drawings
-  is a 20 V / 1 A part (not 40 V; `docs/DATASHEETS.md` (e)) and is not owned.
+  instead, which frees two BAT85 for hum-ladder step 4 (BF 4.5, Q3). Option 3: an owned 1N5819
+  (40 V / 1 A Schottky, 0.60 V max at 1 A, `docs/DATASHEETS.md` (e); owned x10 (owner, kit card contents UNVERIFIED)) per
+  rail, same orientation rule; this also frees two BAT85. The 1N5817 in older drawings is a 20 V
+  part (not 40 V) and is not owned; the 1N5819 serves where the docs wanted a 1N5817.
 - BAT85 drop: 400 mV at 10 mA, 800 mV at 100 mA (BAT85 p2-p3), so the rails sit roughly 0.4-0.7 V
   inside ±12 V at the expected load. Breakout load and synth rail capacity are UNVERIFIED (audit E-04).
 - Bulk: 100µF parts are not owned; use 2-4 owned 10µF / 63 V in parallel per rail (BF 1.4).
@@ -168,8 +170,9 @@ The IC choice (2× TL072 or 2× TL074) is OPEN (owner), audit S17 / conflict C10
 
 ## LED Drivers — removed
 
-Removed (audit S12, R3-17). The RGB LED and its drive are on the expander (Pico GP8-10), and the
-2N3904 is not owned. Nothing on the breakout drives an LED.
+Removed (audit S12, R3-17): the RGB LED and its drive are on the expander (Pico GP8-10, connection
+map sections 1 and 10), so nothing on the breakout drives an LED. (The 2N3904 is now owned, but that
+does not change where the LED lives.)
 
 ## Vactrol Driver (Resonance CV) — TO DESIGN
 
@@ -178,19 +181,23 @@ vactrol LED in the collector. As drawn no supply reached the collector; with the
 (LED + R from +12 V to the collector) the LED current is fixed at about (12 - 2 - 0.2) / 1k ≈ 9 mA
 once the base is above about 0.8 V, so the vactrol works as an on/off switch, not a continuous
 resonance control. The base had no protection against negative TL072 swings, and the CV came from
-DB-9 B pin 3, which is now VCA CV (BF 2.2). The 2N3904 is not owned. The old circuit is withdrawn.
+DB-9 B pin 3, which is now VCA CV (BF 2.2). The old circuit is withdrawn.
 
-Replacement: an op-amp voltage-to-current stage, **TO DESIGN**. Constraints (r3 R3-12, BF 1.1, Q2):
+Replacement: a linear voltage-to-current stage, **TO DESIGN** until the vactrol marking is read.
+Constraints (r3 R3-12, BF 1.1, Q2):
 
-- Topology: TL072 section, +IN = CV, output → vactrol LED anode, LED cathode → R_sense → GND,
-  R_sense node → -IN, so I_LED = V_CV / R_sense (linear). No transistor.
+- Topology: either an op-amp stage (TL072 section, +IN = CV, output → vactrol LED anode, LED
+  cathode → R_sense → GND, R_sense node → -IN, so I_LED = V_CV / R_sense) or a transistor current
+  sink driven by the op-amp with emitter feedback. The owner has 2N3904 / 2N3906 / S8050 / S8550
+  (owner, kit card contents UNVERIFIED), so either is possible; the choice is TO DESIGN. A bare saturated switch (the old
+  circuit) is not acceptable.
 - R_sense depends on the owned vactrol's LED forward-current rating: the vactrol type and marking
   are unread (OPEN (owner), BF Q2). No value is given here until then.
 - CV source: the new 3.5 mm resonance jack on the MicroBrute panel (connection map section 3,
   "Migrated to MB panel"), not the DB-9. Input protection on that jack: series resistor plus clamps
   to ±12V_BRK as for the B CV lines (below); values TO DESIGN.
-- Negative CV must not reverse-bias the LED: r3 suggests a BAT85 anti-parallel across the LED, but
-  all 10 owned BAT85 are already allocated (BF 1.2, Q3).
+- Negative CV must not reverse-bias the LED: an anti-parallel diode across the LED (r3 suggested a
+  BAT85, all 10 of which are allocated, BF 1.2; an owned 1N4148 (owner, kit card contents UNVERIFIED) can serve).
 - Op-amp section: depends on the U2 decision above (C10).
 - LDR side: the vactrol LDR in parallel with RP13 (resonance JFET path), as in the old docs;
   UNVERIFIED against the synth schematic.
