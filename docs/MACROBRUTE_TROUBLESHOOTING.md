@@ -14,7 +14,7 @@ they go deeper on the analog circuits.
 
 ### The OLED shows nothing
 
-The main display is the 1.3″ 7-pin SPI OLED on SPI0, write-only: SCK GP2 (module D0),
+The main display is the Keyestudio-clone IIC/SPI 1.3″ V2.0 OLED (SPI mode) on SPI0, write-only: SCK GP2 (module D0),
 MOSI GP3 (D1), DC GP4, RES GP5; the module's CS pin is tied to GND (PROVISIONAL,
 BT-14). SPI has no address and no scan; the driver is `display.py` (`OLED_SPI`), and
 `test_hw.py`'s OLED test draws a test frame through it.

@@ -10,7 +10,7 @@ The two Phase 0 diagrams, `schematics/phase0_wiring_schematic.svg` and `schemati
 - **Schematic** (`phase0_wiring_schematic.svg`) — flat view, elbow-routed nets, useful for understanding *what* connects to *what*.
 - **Breadboard layout** (`phase0_breadboard.svg`) — top-down view with the Pico straddling the centre channel and jumper paths colour-coded; useful for actually wiring it on the bench.
 
-Phase 0 covers: **one OLED on SPI0** (the 0.91″ strip OLED is dropped). Main OLED baseline (owner ruling, 2026-10-17): the owner's 1.3″ 7-pin SPI module, write-only (SCK GP2, MOSI GP3, DC GP4, RES GP5; the CS lead goes to the GND rail, PROVISIONAL, BT-14), powered from the Pico 3V3 pin. GP11 (gate input) is not used in Phase 0. Controller UNVERIFIED (SSD1306 or SH1106: read the module); module pin order UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI, RES, DC, CS). The 4-pin I²C 1.3″ module is in a TD-3 and not available. Driver: `display.py` (`OLED_SPI`) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline; CLOCK IN is loop-back only, no external signals: no CD4049UB on the bench). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
+Phase 0 covers: **one OLED on SPI0** (the 0.91″ strip OLED is dropped). Main OLED baseline (owner ruling, 2026-10-17): the owner's Keyestudio-clone IIC/SPI 1.3″ V2.0 board in SPI mode, write-only (SCK GP2, MOSI GP3, DC GP4, RES GP5; the CS lead goes to the GND rail, PROVISIONAL, BT-14), powered from the Pico 3V3 pin. GP11 (gate input) is not used in Phase 0. Controller UNVERIFIED (SSD1306 or SH1106: read the module); SPI-mode selection on the board UNVERIFIED (solder jumpers or resistors, silkscreen "IIC/SPI"); module pin order UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI, RES, DC, CS). The earlier 4-pin I²C 1.3″ module is in a TD-3 and not available; the GME12864-11 0.96″ is an owned alternative (interface and chip UNVERIFIED). Driver: `display.py` (`OLED_SPI`) · KY-040 rotary encoder · tap button · RGB LED (3× 220 Ω) · clock IN/OUT (1 kΩ inline; CLOCK IN is loop-back only, no external signals: no CD4049UB on the bench). Power comes from USB; +3V3 and GND are bridged to both top and bottom breadboard rails so peripherals can pull from the closer side.
 
 ## Pin Assignment Table
 
@@ -18,7 +18,7 @@ Phase 0 covers: **one OLED on SPI0** (the 0.91″ strip OLED is dropped). Main O
 |------|------|----------|-----------|-----------|-------|
 | GP0 | 1 | LPC2361 TX | UART0 | Out | Pico Bridge → LPC2361 RXD1 (P0.16, pin 63; UNVERIFIED until the Phase 0 continuity check) |
 | GP1 | 2 | LPC2361 RX | UART0 | In | Pico Bridge ← LPC2361 TXD1 (P0.15, pin 62; UNVERIFIED) |
-| GP2 | 4 | OLED SCK | SPI0 SCK | Out | Main OLED D0 (1.3″ 7-pin SPI module, controller UNVERIFIED) |
+| GP2 | 4 | OLED SCK | SPI0 SCK | Out | Main OLED D0 (Keyestudio-clone 1.3″ V2.0 module in SPI mode, controller UNVERIFIED) |
 | GP3 | 5 | OLED MOSI | SPI0 TX | Out | Main OLED D1; write-only, no MISO |
 | GP4 | 6 | OLED DC | GPIO | Out | Main OLED data/command select |
 | GP5 | 7 | OLED RES | GPIO | Out | Main OLED reset, active LOW |

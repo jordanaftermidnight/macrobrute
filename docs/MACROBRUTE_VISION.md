@@ -13,7 +13,7 @@ guides, see `panel/expander_17hp.svg` and `panel/microbrute_panel_template.svg`.
 ## The expander module (17 or about 20 HP, open)
 
 The expander is a self-contained Eurorack module that pairs to the
-modified MicroBrute over a 2× DB-9 cable. It hosts the main 1.3″ 7-pin SPI OLED (chip UNVERIFIED),
+modified MicroBrute over a 2× DB-9 cable. It hosts the main OLED (Keyestudio-clone IIC/SPI 1.3″ V2.0 board in SPI mode; chip UNVERIFIED),
 the rotary encoder, the tap button, the RGB status LED, all clock I/O,
 the analogue slew limiter, a standalone LFO, a standalone Sample & Hold,
 the firmware clock dividers and the four firmware-assignable aux outputs.
