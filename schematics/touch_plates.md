@@ -3,9 +3,10 @@
 ## Overview
 
 > **Status (2026-10-17): idea notes, not part of the current build.** Several pin choices below
-> predate `firmware/pico/config.py`: GP2 / GP3 are I²C1 (not I²C0) and are free since EFFIGY was
-> shelved; GP6 / GP7 are aux outputs 3 / 4 and are not available for a mux; GP26-28 are the only
-> ADC pins (not fault tolerant). The MCP4728 and MPR121 are not on the owned list. Pin choices for
+> predate `firmware/pico/config.py`: GP2, GP3 and GP11 are the main OLED's SPI SCK, MOSI and CS
+> (owner ruling, 2026-10-17), so the MPR121 on GP2 / GP3 and the CD4051 line on GP11 below are not
+> available; GP6 / GP7 are aux outputs 3 / 4 and are not available for a mux; GP26-28 are the only
+> free pins and the only ADC pins (not fault tolerant). The MCP4728 and MPR121 are not on the owned list. Pin choices for
 > any touch circuit: OPEN (owner).
 
 Touch plates add body-contact expression to the MicroBrute expander.

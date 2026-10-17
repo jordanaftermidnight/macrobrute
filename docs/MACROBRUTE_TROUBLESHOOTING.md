@@ -14,13 +14,16 @@ they go deeper on the analog circuits.
 
 ### The OLED shows nothing
 
-The strip OLED is dropped, so I²C0 carries one device: the main 1.3″ OLED (SH1106 likely, UNVERIFIED; a 0.96″ SSD1306 behaves the same here)
-at `0x3C` (a few modules use `0x3D`). Confirm with an I²C scan from the Pico:
-`for addr in I2C.scan(): print(hex(addr))` should print `0x3c`.
+The main display is the 1.3″ 7-pin SPI OLED on SPI0, write-only: SCK GP2 (module D0),
+MOSI GP3 (D1), DC GP4, RES GP5, CS GP11. SPI has no address and no scan, and the
+firmware has no SPI driver yet (follow-up), so a blank screen before that driver lands
+is expected.
 
-**Fix:** if the scan is empty, check SDA/SCL are not swapped (GP4 = SDA,
-GP5 = SCL), then VCC and GND. If the owned module has a 7-pin header it is an
-SPI module, not I²C, and the display driver and pins change (BF Q22).
+**Fix:** check the module pin order against its silkscreen (UNVERIFIED; the common order
+is GND, VCC, D0, D1, RES, DC, CS), that D0/D1 are not swapped, that RES is driven high
+after reset and CS low while writing, then VCC and GND. If the picture is shifted by two
+columns or shows a stripe at the edge, the chip is probably SH1106 (UNVERIFIED): set
+`OLED_CHIP="SH1106"` and `OLED_COL_OFFSET=2` (BF Q22).
 
 ### KY-040 encoder reports two ticks per detent
 

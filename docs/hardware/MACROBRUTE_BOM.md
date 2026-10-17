@@ -21,7 +21,7 @@
 > - **Owned parts only:** the Have/Missing table below (from BF section 1) is the ownership record.
 >   Rows in Parts 1 and 2 that are not named there are Missing. Items marked "owner to confirm" are
 >   open owner questions (Pico variant, whether the 0.96" SSD1306 has arrived, DB-9 count); they are not decided here.
-> - **Later owner decisions (2026-10-17):** the main OLED baseline is the owner's 1.3" 4-pin I²C module (SH1106 likely, UNVERIFIED: read the marking); kit transistors and diodes from the owner's pasted inventory are Have (card contents UNVERIFIED), including 2N3904 and 1N5819 (a possible stand-in for the 1N5817, UNVERIFIED part); LF398 stays the S&H default.
+> - **Later owner decisions (2026-10-17):** the main OLED baseline is the owner's 1.3" 7-pin SPI module (owner ruling; chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module; the 4-pin I²C module is wired into a TD-3 and not available); kit transistors and diodes from the owner's pasted inventory are Have (card contents UNVERIFIED), including 2N3904 and 1N5819 (a possible stand-in for the 1N5817, UNVERIFIED part); LF398 stays the S&H default.
 
 ---
 
@@ -34,9 +34,9 @@ table is Missing, even where it is likely in a drawer.
 | Part | Qty | Status | Used for / note |
 |------|-----|--------|-----------------|
 | Raspberry Pi Pico | 1 | Have, **variant owner to confirm** (docs say WH; package says no W; another description says H) | Expander controller. Nothing here uses wireless (BF Q21) |
-| 1.3" 4-pin I²C OLED (SH1106 likely, UNVERIFIED: read the marking) | 1 | Have (owner, 2026-10-17) | Expander main display, baseline (BF Q22). Larger than the 0.96" panel cutout; bears on the open expander width |
-| 1.3" 7-pin SPI OLED | 1 | Have | Spare / dev |
-| 0.96" SSD1306 OLED | 1 | **Owner to confirm** (may not have arrived) | No longer the baseline |
+| 1.3" 7-pin SPI OLED (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | 1 | Have | Expander main display, baseline (owner ruling 2026-10-17, BF Q22): SPI0 SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11. Larger than the 0.96" panel cutout; bears on the open expander width |
+| 1.3" 4-pin I²C OLED | 1 | Have, not available | Wired into a TD-3 |
+| 0.96" SSD1306 OLED | 1 | **Owner to confirm** (may not have arrived) | Alternative only: as an I²C module it needs GP4/GP5 (OLED DC/RES), so re-pinning |
 | 0.91" SSD1306 128×32 | 1 | Have, no longer used | Strip OLED dropped; spare |
 | KY-040 / HW-040 encoder | 1 | Have | Expander encoder |
 | TL074C | 4 | Have | Breakout U1; expander outputs |
@@ -107,7 +107,7 @@ The euro figures below predate the Have/Missing table and the scope change; they
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
 | 1 | Raspberry Pi Pico — **Have** (variant owner to confirm; see the table above, no purchase) | 1 | €0 | €0 | — |
-| 2 | 1.3" 128x64 4-pin I²C OLED (main baseline, on hand; SH1106 likely, UNVERIFIED) — on hand: 1.3" 7-pin SPI (spare/dev), 0.91" 128×32 SSD1306 (strip OLED dropped), 16×2 1602 I²C LCD; 0.96" SSD1306 owner to confirm | 1 | €0 | €0 | — |
+| 2 | 1.3" 128x64 7-pin SPI OLED (main baseline, on hand; chip and pin order UNVERIFIED) — also on hand: 0.91" 128×32 SSD1306 (strip OLED dropped), 16×2 1602 I²C LCD; the 1.3" 4-pin I²C is in a TD-3; 0.96" SSD1306 owner to confirm | 1 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -416,7 +416,7 @@ The owned through-hole kit covers these rows; 1 % parts are not assumed. Older d
 **Superseded.** The earlier table here (SPI OLED on GP16-20, CV outputs on GP10-13) predates the
 firmware and is removed (audit S04). The canonical source is `firmware/pico/config.py`; the table is
 mirrored in `docs/MACROBRUTE_CONNECTION_MAP.md` section 1 and `schematics/pico_pinout.md`. Free pins:
-GP2, GP3, GP11 (fault-tolerant) and GP26-GP28 (ADC-capable).
+GP26-GP28 only (ADC-capable, not fault tolerant); GP2, GP3 and GP11 are the SPI main OLED.
 
 ### MicroBrute Test Points (Key Signals)
 
@@ -483,7 +483,7 @@ Pico GPIO (PWM)
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
-- (OLED already on hand — 1.3" 4-pin I²C main (SH1106 likely, UNVERIFIED), spares 1.3" 7-pin SPI, 0.91" SSD1306, 16x2 1602 LCD; 0.96" SSD1306 owner to confirm)
+- (OLED already on hand — 1.3" 7-pin SPI main (chip and pin order UNVERIFIED), spares 0.91" SSD1306, 16x2 1602 LCD; the 1.3" 4-pin I²C is in a TD-3; 0.96" SSD1306 owner to confirm)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)

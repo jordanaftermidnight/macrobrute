@@ -81,7 +81,8 @@ the rest of the manual leans on these without re-defining them.
 | **RP2040** | The chip on the Pico (used interchangeably with "Pico" when context is clear). |
 | **MicroPython** | Subset of Python that runs on microcontrollers. Used for all Pico firmware in this project. |
 | **UART** | Asynchronous serial protocol. Used for Pico ↔ LPC2361 bridge (115 200 baud) and for MIDI (31 250 baud). |
-| **I²C** | Two-wire synchronous serial bus (SDA + SCL). Used for the main OLED only (0x3C, short on-board bus on the expander). No I²C crosses the DB-9. The rear Daisy Seed (EFFIGY) expansion is shelved. |
+| **I²C** | Two-wire synchronous serial bus (SDA + SCL). Not used in this build: the main OLED is SPI, no I²C crosses the DB-9, and the rear Daisy Seed (EFFIGY) expansion is shelved. |
+| **SPI** | Synchronous serial bus with a clock (SCK), data out (MOSI), optional data in (MISO) and a chip select (CS). The main OLED uses Pico SPI0 write-only (SCK GP2, MOSI GP3) plus DC GP4, RES GP5 and CS GP11. |
 | **PIO** | RP2040's Programmable I/O — small state machines that handle precise timing-critical I/O without the CPU. Used for the clock-out generator. |
 | **PWM** | Pulse-width modulation. Used for LED brightness and for low-resolution analog CV output (filtered to DC). |
 | **ADC** | Analog-to-digital converter. Pico has 4 channels @ 12-bit. |

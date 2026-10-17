@@ -18,7 +18,7 @@ this is mounted inside the synth.
 | Qty | Part | Have? | Notes | ≈ USD |
 |---|---|---|---|---|
 | 1 | Raspberry Pi Pico (Pico / Pico H / Pico WH) | Have; **variant owner to confirm** (BF Q21) | "WH" = wireless + headers pre-soldered; nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
-| 1 | 1.3″ OLED, I²C, 4-pin (SH1106 likely, UNVERIFIED: read the marking) | Have (owner, 2026-10-17); 0.96″ SSD1306 owner to confirm (BF Q22) | Default address `0x3C`. The "main" display. Set `OLED_CHIP="SH1106"` and `OLED_COL_OFFSET=2` in `config.py` if the chip is SH1106 (firmware follow-up). The owner's 7-pin 1.3″ module is SPI (spare/dev) and would change the driver and pins. | $4 |
+| 1 | 1.3″ OLED, SPI, 7-pin (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Have (owner ruling, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5, CS GP11, power from the Pico 3V3. Needs an SPI driver (firmware follow-up); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The 4-pin I²C 1.3″ module is in a TD-3 (not available); the 0.96″ SSD1306 may not have arrived and is an alternative only (I²C would need re-pinning). | $4 |
 | 1 | KY-040 rotary encoder module | Have | 5 pins (CLK, DT, SW, +, GND). On-board 10 kΩ pull-ups. | $2 |
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
@@ -67,10 +67,10 @@ weekend's worth of parts.
 After wiring the breadboard per `schematics/phase0_breadboard.svg`:
 
 - [ ] Pico powered from USB; on-board green LED is solid.
-- [ ] The main OLED powers up and draws its splash frame from
-      `firmware/pico/test_hw.py`. If it stays blank, check SDA/SCL and
-      VCC/GND; a 7-pin module is SPI and needs a different driver (owner to
-      confirm the module, BF Q22).
+- [ ] The main OLED powers up and draws its splash frame (needs the SPI
+      driver, a firmware follow-up; `test_hw.py` still checks the old I²C
+      module). If it stays blank, check the module pin order (UNVERIFIED),
+      D0/D1 (SCK/MOSI), DC, RES and CS, then VCC/GND (BF Q22).
 - [ ] Encoder rotation increments / decrements a counter on the OLED.
 - [ ] Encoder push button toggles the on-screen indicator.
 - [ ] Tap button (GP12) registers as a separate input.
@@ -91,7 +91,7 @@ later phases may assume.
   on-board caps but firmware *also* enables `Pin.PULL_UP` on GP13/14/15.
   That's intentional and fine. If you still see 2 ticks per detent, add
   the optional 100 nF + 10 kΩ RC filter shown in `pico_pinout.md`.
-- **No second OLED** — the strip OLED is dropped, so I²C0 carries one device (the main OLED). An empty I²C scan means wiring, not an address clash.
+- **No second OLED and no I²C** — the strip OLED is dropped and the main OLED is SPI, so there is no address and no I²C scan to run.
 - **Common-anode RGB LED instead of common-cathode** — they look
   identical. With common-anode, "off" is +3.3 V on the GPIO and the LED
   is *always lit* until firmware drives the pin high. Verify the part

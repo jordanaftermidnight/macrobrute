@@ -47,6 +47,10 @@ EFFIGY does not change. MACROBRUTE absorbs the translator role.
 
 RP2040 has only **two** hardware I²C peripherals:
 
+> Update (owner ruling, 2026-10-17): the main OLED is now SPI (SCK GP2, MOSI GP3, DC GP4, RES GP5,
+> CS GP11), so neither I²C peripheral is in use, but their usual pins are taken and only GP26-28
+> are free. The table below is the older plan.
+
 | Peripheral | Currently used for |
 |------------|--------------------|
 | I²C0 (GP4/GP5) | Main OLED + strip OLED (shared bus, 0x3C / 0x3D) (strip OLED dropped) |

@@ -22,7 +22,7 @@
 | Decision | Choice |
 |----------|--------|
 | Connector | 2× DB-9 (18 pins total) on the MB rear panel, left of Pitch/Gate — CONFIRMED by the owner; VGA HD-15 rejected. DB-9 B = UART TX/RX, Filter CV, VCA CV, grounds; no supply, no I²C |
-| OLED | **1.3" 4-pin I²C** (SH1106 likely, UNVERIFIED: read the marking) on GP4 (SDA) / GP5 (SCL) — main display on the expander panel (owner baseline, 2026-10-17; larger than the 0.96" cutout, bears on the open width). The 0.91" strip OLED is **dropped**. Spares: 1.3" 7-pin SPI, 0.96" SSD1306 (owner to confirm), 16×2 1602 I²C LCD. |
+| OLED | **1.3" 7-pin SPI** (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) on SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 — main display on the expander panel (owner ruling, 2026-10-17; larger than the 0.96" cutout, bears on the open width). The 0.91" strip OLED is **dropped**; the 1.3" 4-pin I²C module is in a TD-3, not available. Alternatives only (I²C needs re-pinning): 0.96" SSD1306 (owner to confirm), 16×2 1602 I²C LCD. |
 | MIDI path | **Pico ↔ LPC2361 UART bridge** over Pico UART0 (GP0/GP1) @ 115200 baud, DB-9 B pins 1 and 6; LPC UART1 (P0.15/P0.16, pins 62/63) UNVERIFIED until the Phase 0 continuity check. No direct 31250-baud MIDI from Pico. |
 | Analog utilities | Slew limiter, LFO, Sample & Hold (LF398, not owned) on the expander; CD4066 and CD4024 are dropped (S&H uses the LF398; the owned CD4051 has no role in the decided design) |
 | EFFIGY pair | **Shelved** |

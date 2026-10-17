@@ -133,8 +133,8 @@ Locked (don't propose changes here without strong reason):
 - **2× DB-9 connector** as the MB ↔ expander interface (confirmed by the owner; HD-15 was rejected;
   see Key Decisions in the Master Index for why).
 - **Pico GPIO assignments** — `firmware/pico/config.py` is canonical; see
-  `schematics/pico_pinout.md` and the connection map. 6 pins are free
-  (GP2, GP3, GP11, GP26-28).
+  `schematics/pico_pinout.md` and the connection map. 3 pins are free
+  (GP26-28); GP2, GP3 and GP11 went to the SPI main OLED.
 - **Power scheme** — split: the expander runs from the rack only, the
   breakout from the synth only; only ground is shared over the DB-9.
   No supply rail and no I²C cross the cable.
@@ -143,7 +143,7 @@ Still in flux (your input welcome):
 
 - **Expander size** — 17 HP or about 20 HP, open until the owner measures
   the blank.
-- Pico variant (Pico / Pico H / Pico WH), the main OLED chip marking (1.3" I²C baseline, SH1106 likely)
+- Pico variant (Pico / Pico H / Pico WH), the main OLED chip marking and pin order (1.3" 7-pin SPI baseline, SSD1306 or SH1106)
   and the DB-9 count are for the owner to confirm (BF Q21, Q22, Q9).
 - LPC bridge UART (UART1 is the working assumption, UNVERIFIED until the
   Phase 0 continuity check).
