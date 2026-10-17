@@ -53,7 +53,7 @@ RP2040 has only **two** hardware I²C peripherals:
 
 | Peripheral | Currently used for |
 |------------|--------------------|
-| I²C0 (GP4/GP5) | Main OLED + strip OLED (shared bus, 0x3C / 0x3D) (strip OLED dropped) |
+| I²C0 (GP4/GP5) | Main OLED + strip OLED (shared bus, 0x3C / 0x3D) (strip OLED dropped) (superseded: main OLED is SPI) |
 | I²C1 (GP2/GP3) | EFFIGY pair bus (target 0x42) |
 
 Both are full. The ii target needs a third bus. Two viable options:

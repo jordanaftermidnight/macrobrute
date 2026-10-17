@@ -98,14 +98,16 @@ def test_encoder():
 
 
 def test_oled():
-    print("\n[4/6] OLED TEST (I2C)")
+    print("\n[4/6] OLED TEST (I2C, legacy)")
+    print("  NOTE — the main OLED is now SPI (GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS);")
+    print("  this I2C check is for the old module and does not apply until the SPI driver lands")
     try:
         i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400_000)
         devices = i2c.scan()
         print(f"  I2C devices found: {[hex(d) for d in devices]}")
         if 0x3C not in devices and 0x3D not in devices:
             print("  WARN — no OLED at 0x3C or 0x3D")
-            print("  Check wiring: VCC→3V3, GND, SDA→GP4, SCL→GP5")
+            print("  Legacy I2C check only: the SPI OLED wiring is GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS")
             return
 
         addr = 0x3C if 0x3C in devices else 0x3D
@@ -147,7 +149,7 @@ def test_oled():
 
     except Exception as e:
         print(f"  FAIL — {e}")
-        print("  Check wiring: VCC→3V3, GND, SDA→GP4, SCL→GP5")
+        print("  Legacy I2C check only: the SPI OLED wiring is GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS")
 
 
 def test_lpc_bridge():

@@ -1,3 +1,8 @@
+# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
+# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11). This file still
+# !!! drives I2C on config.OLED_SDA / config.OLED_SCL, which are GP4 / GP5, i.e. the
+# !!! SPI DC and RES pins. Do not run it against the SPI wiring. The SPI driver is a
+# !!! firmware follow-up (see docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md).
 """MACROBRUTE Pico WH — main OLED driver (128×64, I²C).
 
 Primary target is the **0.96" SSD1306** (matches the strip OLED's chip family
