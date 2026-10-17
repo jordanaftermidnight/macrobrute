@@ -194,16 +194,16 @@ static inline void dbg_hexdump(const char* label, uint8_t* data, int len) {
 // PIN ASSIGNMENTS
 // ===================
 
-// UART0 (Debug + ISP)
-#define PIN_UART0_TX 0  // P0.0
-#define PIN_UART0_RX 1  // P0.1
+// UART0 (Debug + ISP): P0.2 / P0.3, pins 98 / 99 (DATASHEETS (b))
+#define PIN_UART0_TX 2  // P0.2 (TXD0)
+#define PIN_UART0_RX 3  // P0.3 (RXD0)
 
-// UART1 (MIDI IN)
-#define PIN_MIDI_RX 9   // P0.9 (check actual MicroBrute routing)
+// UART3 (stock MIDI): P4.28 / P4.29, pins 82 / 85 (connection map section 6)
 
-// UART3 (Pico communication)
-#define PIN_PICO_TX 0   // P0.0 (shared with debug in dev)
-#define PIN_PICO_RX 1   // P0.1
+// UART1 (Pico bridge): P0.15 (TXD1) / P0.16 (RXD1), pins 62 / 63.
+// Working assumption, UNVERIFIED pending gate G1 (LPC bridge UART continuity).
+#define PIN_PICO_TX 15  // P0.15
+#define PIN_PICO_RX 16  // P0.16
 
 // DAC
 #define PIN_DAC_OUT 26  // P0.26 (AOUT)
@@ -391,8 +391,8 @@ int main(void) {
         keyboard_scan();
         
         // Process incoming MIDI
-        while (uart_available(1)) {  // UART1 = MIDI
-            uint8_t byte = uart_read(1);
+        while (uart_available(3)) {  // UART3 = stock MIDI
+            uint8_t byte = uart_read(3);
             midi_parser_feed(byte);
         }
         
@@ -947,8 +947,8 @@ Connect your USB-TTL adapter:
 
 | USB-TTL | LPC2361 (MicroBrute) |
 |---------|---------------------|
-| TX | P0.1 (RXD0) - Pin 47 |
-| RX | P0.0 (TXD0) - Pin 46 |
+| TX | P0.3 (RXD0) - Pin 99 |
+| RX | P0.2 (TXD0) - Pin 98 |
 | GND | GND |
 | 3.3V | DO NOT CONNECT |
 
@@ -1063,8 +1063,8 @@ Same wiring as debug UART, plus ISP enable:
 
 | USB-TTL | LPC2361 |
 |---------|---------|
-| TX | P0.1 (RXD0) |
-| RX | P0.0 (TXD0) |
+| TX | P0.3 (RXD0) - Pin 99 |
+| RX | P0.2 (TXD0) - Pin 98 |
 | GND | GND |
 
 **ISP Enable:** P0.14 must be LOW during reset to enter ISP mode.

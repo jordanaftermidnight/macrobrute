@@ -78,3 +78,15 @@ def test_flags_unexposed_gpio_en_dash_range():
 
 def test_exposed_range_listed_as_free_passes():
     assert check_connection_map("Free pins: GP2, GP3, GP11 and GP26-28") == []
+
+
+def test_flags_p0_0_p0_1_claimed_as_uart0():
+    docs = {"a.md": "| TX | P0.1 (RXD0) - Pin 47 |", "b.md": "#define PIN_UART0_TX 0  // P0.0"}
+    problems = check_lpc_uart_claims(docs)
+    assert any("a.md:1" in p for p in problems)
+    assert any("b.md:1" in p for p in problems)
+
+
+def test_correct_uart0_pins_not_flagged():
+    docs = {"a.md": "ISP UART0 is P0.2 (TXD0) and P0.3 (RXD0), pins 98 and 99"}
+    assert check_lpc_uart_claims(docs) == []

@@ -81,22 +81,29 @@ def check_connection_map(text):
 _CONTEXT = re.compile(r"bridge|Pico|\bGP[01]\b|DB-9", re.I)
 _UART1 = re.compile(r"P0\.1[56]\b")
 _UART0 = re.compile(r"P0\.[23]\b")
+# UART0 is P0.2 / P0.3 (pins 98 / 99, DATASHEETS (b)); P0.0 / P0.1 are not UART0
+_WRONG_UART0 = re.compile(r"P0\.[01]\b")
+_UART0_WORD = re.compile(r"UART0|TXD0|RXD0", re.I)
 
 
 def check_lpc_uart_claims(docs):
     """docs: {filename: text}. Flag if the Pico bridge UART is described two ways."""
-    uart1, uart0 = [], []
+    uart1, uart0, wrong = [], [], []
     for f, t in docs.items():
         for n, line in enumerate(t.splitlines(), 1):
+            if _WRONG_UART0.search(line) and _UART0_WORD.search(line):
+                wrong.append(f"{f}:{n}")
             if not _CONTEXT.search(line):
                 continue
             if _UART1.search(line):
                 uart1.append(f"{f}:{n}")
             if _UART0.search(line):
                 uart0.append(f"{f}:{n}")
+    problems = [f"P0.0/P0.1 claimed as UART0 (UART0 is P0.2/P0.3) at {w}" for w in wrong]
     if uart1 and uart0:
-        return [f"bridge UART conflict: UART1 (P0.15/16) at {uart1}, UART0 (P0.2/3) at {uart0}"]
-    return []
+        problems.append(
+            f"bridge UART conflict: UART1 (P0.15/16) at {uart1}, UART0 (P0.2/3) at {uart0}")
+    return problems
 
 
 def main():
@@ -106,7 +113,9 @@ def main():
     problems = []
     cmap = docs.get("docs/MACROBRUTE_CONNECTION_MAP.md", "")
     problems += check_connection_map(cmap)
-    problems += check_lpc_uart_claims(docs)
+    # docs/legacy carries a DEPRECATED banner and keeps the old pin claims on purpose
+    current = {k: v for k, v in docs.items() if not k.startswith("docs/legacy/")}
+    problems += check_lpc_uart_claims(current)
     for p in problems:
         print("PROBLEM:", p)
     return 1 if problems else 0
