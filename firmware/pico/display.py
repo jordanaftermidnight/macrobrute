@@ -1,6 +1,6 @@
 """MACROBRUTE Pico — main OLED driver (128×64, SPI, write-only).
 
-Targets the owner's 1.3" 7-pin SPI module on SPI0: SCK GP2, MOSI GP3,
+Targets the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 module, used in SPI mode, on SPI0: SCK GP2, MOSI GP3,
 DC GP4, RES GP5 (pins from config.py). The module's CS pin is strapped to
 GND (one device on the bus), so config.OLED_CS is None and this driver never
 drives CS; if CS is moved back onto a GPIO, set config.OLED_CS to that GP and

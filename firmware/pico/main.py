@@ -1,4 +1,4 @@
-# Note (owner rulings, 2026-10-17): the main OLED is the 1.3" 7-pin SPI module on
+# Note (owner rulings, 2026-10-17): the main OLED is the Keyestudio-clone IIC/SPI 1.3" module (SPI mode) on
 # SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5; CS strapped to GND). The strip OLED is
 # dropped and the EFFIGY pairing is shelved; their I2C drivers would fight the SPI
 # pins, so `strip` and `effigy` below are inert stand-ins (_Shelved).

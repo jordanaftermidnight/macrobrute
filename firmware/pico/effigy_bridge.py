@@ -1,5 +1,5 @@
-# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
-# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5; CS strapped to GND).
+# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the Keyestudio-clone IIC/SPI
+# !!! 1.3" module (SPI mode) on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5; CS strapped to GND).
 # !!! EffigyBridge opens I2C1 on config.DAISY_SDA / DAISY_SCL = GP2 / GP3 (now OLED
 # !!! SCK / MOSI) and reads GP11 (now the gate input) as INT. EFFIGY is SHELVED: do
 # !!! not instantiate it on this wiring (main.py no longer does). Removal is a

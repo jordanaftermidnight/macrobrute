@@ -5,8 +5,8 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 """
 
 # ---------------------------------------------------------------------------
-# Main OLED — baseline (owner ruling, 2026-10-17): the owner's 1.3" 7-pin SPI
-#   module, 128×64, write-only on SPI0 (no MISO), driven by display.py
+# Main OLED — baseline (owner ruling, 2026-10-17): the owner's Keyestudio-clone
+#   IIC/SPI 1.3" V2.0 module (used in SPI mode; SPI-mode selection UNVERIFIED), 128×64, write-only on SPI0 (no MISO), driven by display.py
 #   (OLED_SPI). The module's CS pin is strapped to GND (single device on the
 #   bus; that the module works with CS tied low is UNVERIFIED, bench check
 #   BT-14). Fallback if it does not: CS back on a GPIO (set OLED_CS to it) and
@@ -19,7 +19,7 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 #   the old 0.96" panel cutout, which bears on the open expander width.
 #
 #   The 4-pin I²C 1.3" module is in a TD-3 and is not available. Alternatives
-#   only: the 0.96" SSD1306 (owner to confirm it has arrived) or a 4-pin I²C
+#   only: the owned GME12864-11 0.96" (arrived; interface and chip UNVERIFIED) or a 4-pin I²C
 #   module; an I²C alternative would need GP4/GP5, which are DC/RES here, so
 #   it requires re-pinning (not a drop-in). 16×2 1602 I²C LCD: different
 #   driver entirely. No I²C is used anywhere on the expander.
