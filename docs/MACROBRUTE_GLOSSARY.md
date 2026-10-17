@@ -68,7 +68,7 @@ the rest of the manual leans on these without re-defining them.
 | **1N5819** | Schottky diode, 40 V / 1 A. Owned (x10, kit; the part and its datasheet are UNVERIFIED). May serve where a 1N5817 was wanted (provisional). |
 | **BAT54S** | Dual Schottky in SOT-23. Not owned; two owned BAT85 take its place as the CV-input clamp to ±supply rails. |
 | **Vactrol** | Optocoupler made from an LED + LDR (light-dependent resistor) pair sealed in a black package. Used for smooth, click-free resonance modulation. |
-| **MPR121** | Capacitive touch sensor IC (12 channels, I²C). Optional alternative to direct touch bolts on GPIO. |
+| **MPR121** | Capacitive touch sensor IC (12 channels, I²C). Optional alternative to direct touch bolts on GPIO; not owned, and no Pico pins are free for it now (I²C would need 2 of GP26-28). |
 
 ---
 

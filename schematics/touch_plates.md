@@ -140,9 +140,13 @@ capacitive touch controller (I2C, up to 12 touch channels).
 
 ### Wiring
 
+STALE (owner ruling, 2026-10-17): GP2 and GP3 are now the main OLED's SPI SCK and MOSI, and GP6
+is aux output 3. No pin is free for this wiring: I²C would need 2 of GP26-28, the only free pins.
+The drawing below is the older plan.
+
 ```
-  Pico GP2 (I2C1 SDA) ─── MPR121 SDA
-  Pico GP3 (I2C1 SCL) ─── MPR121 SCL
+  Pico GP2 (I2C1 SDA) ─── MPR121 SDA   (stale: GP2 is OLED SCK)
+  Pico GP3 (I2C1 SCL) ─── MPR121 SCL   (stale: GP3 is OLED MOSI)
   3.3V ────────────────── MPR121 VCC
   GND ─────────────────── MPR121 GND
   MPR121 ADDR ─────────── GND (address 0x5A)
@@ -226,7 +230,7 @@ a single ADC channel on the Pico.
   
   CD4051 A ── Pico GP6
   CD4051 B ── Pico GP7
-  CD4051 C ── Pico GP11
+  CD4051 C ── Pico GP11   (stale: GP11 is OLED CS; GP6/GP7 are aux outputs)
   
   CD4051 VDD = +3.3V
   CD4051 VEE = GND
@@ -294,7 +298,7 @@ channel for touch CV output.
 - **Pico ADC via CD4051 multiplexer** (reuse existing mux)
 - **Map to:** Filter CV, VCA CV, LFO rate, resonance
 - **PWM → RC filter → CV output** (cheapest, adequate resolution)
-- Optional: MPR121 for capacitive proximity detection (I2C on GP2/GP3)
+- Optional: MPR121 for capacitive proximity detection (I2C; no pin free: it needs 2 of GP26-28, since GP2/GP3 are now the OLED SPI pins)
 
 ---
 

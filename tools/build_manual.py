@@ -295,7 +295,8 @@ SVG_DESCRIPTIONS = {
         "circuit on a small stripboard with four bolts on a piece of wood.",
     "schematics/touch_plate_redesign.svg":
         "Revised touch-plate front-end after the first prototype was too touchy. Adds a 100 nF "
-        "filter cap and lowers the bias resistor to 1 MΩ for cleaner discrimination.",
+        "filter cap and lowers the bias resistor to 1 MΩ for cleaner discrimination. Its Pico pins "
+        "are stale: GP2 and GP3 are now the main OLED's SPI pins (see `schematics/touch_plates.md`).",
 
     # Protection / safety
     "schematics/led_driver_array_schematic.svg":
