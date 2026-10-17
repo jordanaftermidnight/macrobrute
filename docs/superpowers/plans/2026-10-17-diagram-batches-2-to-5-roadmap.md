@@ -52,7 +52,7 @@ Old SVGs found by `grep` to still show DB-9 B (some with supply rails, which con
 
 ## Bench checks referenced
 
-BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, gate, cable capacitance, DB-9 geometry, shield continuity, hum and crosstalk, CD4049UB input, clock IN, bus +5 V, PC817 baud). The checks named G1-G5 in the brief are NOT defined under that name in the audit, the BF note or the plan (searched); until the owner points to their definition they are treated as UNVERIFIED and no card cites them. Every card below carries a "Bench" tag naming the BT items that gate its numbers. No hardware is built; every value that a BT item would measure is drawn as UNVERIFIED.
+BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, gate, cable capacitance, DB-9 geometry, shield continuity, hum and crosstalk, CD4049UB input, clock IN, bus +5 V, PC817 baud). The gates G1-G5 are defined in `docs/hardware/MACROBRUTE_PHASE0_BOM.md`: G1 (line 114) LPC bridge UART continuity; G2 (line 127) TP83 logic level; G3 (line 132) synth rail drop and current margin at TP70 / TP71; G4 (line 139) D-sub neighbour geometry, the same check as BT-7; G5 (line 145) optional rack checks, the same as BT-12. Every card below carries a "Bench" tag naming the BT and G items that gate its numbers. No hardware is built; every value that a BT item would measure is drawn as UNVERIFIED.
 
 ---
 
@@ -61,15 +61,15 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 **Goal.** Redraw everything that touches the cable and the synth-side breakout so each card shows: DB-9 A (8 signals plus ground, order as in CM, BF section 2.3), DB-9 B (UART TX/RX, Filter CV, VCA CV and grounds only, BF section 2.2), no supply on either cable, ground joined only through the cable grounds with the star at TP72, shield drained at the MicroBrute end (BF rule, fallback in ladder step 3). Cards: interconnect wiring, DB-9 map, signal flow, output buffer board, CV input protection, plus the synth-side breakout stripboard layout.
 
 **Inputs and owner decisions still needed.**
-- OPEN Q9: DB-9 count, gender and flange of the owned connectors (4 panel connectors plus 2 cables are needed; count UNVERIFIED). Geometry stays UNVERIFIED until BT-7.
+- OPEN Q9: DB-9 count, gender and flange of the owned connectors (4 panel connectors plus 2 cables are needed; count UNVERIFIED). Geometry stays UNVERIFIED until BT-7 (= G4).
 - OPEN Q10: insulating shoulder washers for the expander-side shells, or the alternative shield rule.
 - OPEN Q14: keep the DB-9 A order or adopt a re-order, decided by BT-9.
-- OPEN Q15: gate stage if TP83 is 3.3 V logic (UNVERIFIED, E-09); decision 3 (78L05 on the breakout) is Provisional.
+- OPEN Q15: gate stage if TP83 is 3.3 V logic (UNVERIFIED, E-09; gated by G2); decision 3 (78L05 on the breakout) is Provisional.
 - OPEN Q19 (CV mute) and Q20 (PC817 UART at 4800-9600 baud; UNVERIFIED until BT-13).
-- OPEN C12: series diode or series resistor on the breakout rails; Q3 (BAT85 stock exactly used; 1N4148 or 1N5819 as provisional substitutes, recheck BT-2, BT-3, BT-5).
-- Audit decision 7 (LPC bridge UART) stays open until the continuity check; the UART pair is drawn as provisional.
+- OPEN C12: series diode or series resistor on the breakout rails; Q3 (BAT85 stock exactly used; 1N4148 or 1N5819 as provisional substitutes, recheck BT-2, BT-3, BT-5; the rail-drop margin is gate G3).
+- Audit decision 7 (LPC bridge UART) stays open until the continuity check (gate G1); the UART pair is drawn as provisional.
 - Owned parts only: the LF398 (Q1) is not owned, so no card in this batch may need it.
-- Bench tags: BT-1, BT-2, BT-3, BT-4, BT-5, BT-6, BT-7, BT-8, BT-9, BT-10, BT-11, BT-12.
+- Bench tags: BT-1, BT-2, BT-3, BT-4, BT-5, BT-6, BT-7, BT-8, BT-9, BT-10, BT-11, BT-12; gates G1 (DB-9 map, interconnect and signal-flow UART cards), G2 (gate stage), G3 (breakout supply and rail-diode cards), G4 (= BT-7), G5 (= BT-12).
 
 **Supersedes.** `interconnect_wiring.svg`, `db9_connector_diagram.svg`, `signal_flow_overview.svg`, `output_buffer_board.svg`, `cv_input_protection_diagram.svg`, `esd_protection_schematic.svg`, `breakout_layout.svg` (defective, see table), `cv_control_flow.svg`, `system_architecture_block.svg`, `expander_power_distribution.svg`, `wiring_*.svg`, `zone_layout_stripboard.svg`; generators `generate_schematics.py`, `generate_circuit_schematics_v2.py`, `generate_layouts.py` (breakout part), the `generate_cv_bus_diagram.py` family. `SVG_MAP` lines in `tools/build_manual.py` at the matching paths.
 
@@ -77,8 +77,8 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 1. Kit: add glyphs to `tools/diagram_kit.py` with `*_pins` helpers and tests: `opamp(x, y, label)` (triangle, inverting/non-inverting pins), `transistor(x, y, label, kind)` (NPN/PNP for 2N3904/2N3906), `cable_pair(x, y, label)` (shielded cable with drain end marked), `star_ground(x, y, label)` (TP72 star), `test_point(x, y, label)`, `stripboard(x, y, rows, cols, cuts)` for layouts (hole grid, track cuts, jumpers), `trimmer(x, y, label)`.
 2. Validator rules in `tools/check_diagrams.py` with tests: no supply-named net (`P12`, `N12`, `P5`, `3V3`) may contain a `DB9_*` endpoint; every `CABLE_*` digital net has a series `R`; a second ground path between synth and rack is rejected (only `DB9_A:9`, `DB9_B:2/4/7/8/9` join the stars); shield drain nets have exactly one grounded end; an op-amp output driving a cable needs a series `R`; a part not in an owned set (new `tools/hwdata/owned.py`, read from the BOM "Have" rows) is flagged.
 3. `tools/hwdata/db9.py`: the A and B pin maps from CM and BF as data, with a test that diffs it against `docs/MACROBRUTE_CONNECTION_MAP.md` (extend `tools/check_docs.py`).
-4. `tools/diagrams/db9_map.py` -> `schematics/db9_connector_diagram.svg` (face view, numbers as moulded, UNVERIFIED tag on geometry until BT-7). Test: pins match `hwdata/db9.py`.
-5. `tools/diagrams/interconnect.py` -> `schematics/interconnect_wiring.svg`. Test: no supply on cable, one ground join.
+4. `tools/diagrams/db9_map.py` -> `schematics/db9_connector_diagram.svg` (face view, numbers as moulded, UNVERIFIED tag on geometry until BT-7 = G4; the UART pins carry a G1 tag). Test: pins match `hwdata/db9.py`.
+5. `tools/diagrams/interconnect.py` -> `schematics/interconnect_wiring.svg`. Test: no supply on cable, one ground join. The UART pair carries a G1 tag.
 6. `tools/diagrams/signal_flow.py` -> `schematics/signal_flow_overview.svg` (audio blue, CV amber, gate green, UART in a distinct colour from the kit palette).
 7. `tools/diagrams/output_buffer.py` -> `schematics/output_buffer_board.svg` (op-amp follower + 1k per output, per BF).
 8. `tools/diagrams/cv_input_protection.py` -> `schematics/cv_input_protection_diagram.svg` (Clock IN 100k + 4049 stage, BT-10 and BT-11 tags; CV back-feed resistors 10k + 100k + 1 nF per BF with the BT-3 and BT-4 UNVERIFIED tags).
@@ -100,7 +100,7 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 - OPEN Q4 (1N4148 stock), Q5 (resistor values present), Q7 (aux-out trimmers), Q8 (jack type), Q12 (RGB LED, tactile button), Q13 (stripboard, sockets, wire); KY-040 encoder is owned.
 - Owned ICs worth evaluating: NE5532, JRC4558, LM358, LM324, LM393, NE555, ICL7660S (negative rail option). Nothing is assumed suitable until checked against `docs/DATASHEETS.md`.
 - Pico spare pins: GP2, GP3, GP11, GP26-28 (DECIDED, g). Any module using them must go through `FIRMWARE_ROLES`.
-- Bench tags: BT-3, BT-4, BT-9, and a new S&H droop/charge-injection check to be defined in the Batch B plan (not in BF yet).
+- Bench tags: BT-3, BT-4, BT-9, G5 (rack +5 V slot, = BT-12), and a new S&H droop/charge-injection check to be defined in the Batch B plan (not in BF yet).
 
 **Supersedes.** `schematics/lfo_schematic.svg`, `sah_schematic.svg`, `slew_limiter_schematic.svg`, `expander_lfo.svg`, `expander_sah.svg`, `expander_slew.svg`, `schematics/expander_stripboard.md` and `expander_circuits.md` (mixed files still holding dropped modules), `panel/expander_17hp.svg`, `panel/expander_finished_panel.svg` (0.96 inch OLED, DB-9 B supply labels), `kicad/expander` (owner decision pending: redraw or archive). Generators: `generate_schematics.py`, `generate_layouts.py`, `generate_circuit_schematics_v2.py`.
 
@@ -118,7 +118,7 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 
 **Goal.** A 1:1 printable drill template for the two DB-9 connectors on the MicroBrute rear panel, left of the Pitch/Gate section (DECIDED, owner a).
 
-**Blocked on.** Owner caliper measurements, audit decision 6 (list items 1-7: W_total, H_face, T_panel; X and Z positions of every rear feature; surface and ribs; depth behind the panel; connector flange, hole spacing, hole diameter, body, cup and nut dimensions; nearby case screws and PCB posts). Also needed: an owner photo of the rear face square-on with a scale (conflict C5 evidence, E-20). Known so far: hole spacing 24.99 mm and a size 9 cut-out of 19.74 x 11.18 mm from the Spectrum Control drawing; the owner's "24.5 x 11 mm" cut-out does not match either drawing; flange size, body depth and gender stay UNVERIFIED. Side-by-side needs about 62-71 mm free width (UNVERIFIED), stacked needs about 36 mm height and 39 mm width (UNVERIFIED). BT-7 and BT-8 apply. Whether the rear panel is plastic is UNVERIFIED.
+**Blocked on.** Owner caliper measurements, audit decision 6 (list items 1-7: W_total, H_face, T_panel; X and Z positions of every rear feature; surface and ribs; depth behind the panel; connector flange, hole spacing, hole diameter, body, cup and nut dimensions; nearby case screws and PCB posts). Also needed: an owner photo of the rear face square-on with a scale (conflict C5 evidence, E-20). Known so far: hole spacing 24.99 mm and a size 9 cut-out of 19.74 x 11.18 mm from the Spectrum Control drawing; the owner's "24.5 x 11 mm" cut-out does not match either drawing; flange size, body depth and gender stay UNVERIFIED. Side-by-side needs about 62-71 mm free width (UNVERIFIED), stacked needs about 36 mm height and 39 mm width (UNVERIFIED). BT-7 (= G4) and BT-8 apply. Whether the rear panel is plastic is UNVERIFIED.
 
 **Supersedes.** Nothing existing: no rear-panel template exists (`panel/microbrute_panel_template.svg` covers the top panel). `panel/microbrute_finished_panel.svg` is kept as is.
 
@@ -142,7 +142,7 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 - Owned-parts check per mod (Q5, Q18: further components not yet listed by the owner).
 - OPEN: the vactrol-based mods need Q2.
 - Touch-plate and test-board cards (`touch_plate_*.svg`, `touch_test_board.svg`) are optional additions; decide with the owner.
-- Bench tags: BT-3, BT-4, BT-9 where a mod injects into the synth; mod-specific bench checks are to be defined in the Batch D plan.
+- Bench tags: BT-3, BT-4, BT-9 where a mod injects into the synth; G3 (TP70 / TP71 rail drop) where a mod draws power from those points; mod-specific bench checks are to be defined in the Batch D plan.
 
 **Supersedes.** `schematics/mod_m01_triangle_gain.svg` through `mod_m14_vco_bias_starve.svg` (14 files) and the four `*_stripboard.svg` (m02, m04, m08, m12); emitting generators `generate_schematics.py` and `generate_layouts.py`; `SVG_MAP` lines 109-126 and the description entries around lines 334-393 in `tools/build_manual.py`.
 
