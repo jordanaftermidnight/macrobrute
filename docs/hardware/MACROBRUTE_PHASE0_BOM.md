@@ -18,7 +18,7 @@ this is mounted inside the synth.
 | Qty | Part | Have? | Notes | ≈ USD |
 |---|---|---|---|---|
 | 1 | Raspberry Pi Pico | Have | Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350); nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
-| 1 | Keyestudio-clone IIC/SPI 1.3″ 128×64 OLED V2.0, used in SPI mode (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED: read the silkscreen and chip marking) | Have (owner ruling and statement, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5; the CS lead goes to the GND rail (PROVISIONAL, BT-14); power from the Pico 3V3. GP11 (gate input) is not used in Phase 0. Driver: `display.py` (`OLED_SPI`); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The earlier 4-pin I²C 1.3″ module is in a TD-3 (not available); the GME12864-11 0.96″ has arrived and is an owned spare (interface, chip and pin order UNVERIFIED; if I²C it would need re-pinning). | $4 |
+| 1 | Keyestudio-clone IIC/SPI 1.3″ 128×64 OLED V2.0, used in SPI mode (7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified) | Have (owner ruling and statement, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (CLK), MOSI GP3, DC GP4, RES GP5; the CS lead goes to the GND rail (PROVISIONAL, BT-14); power from the Pico 3V3. GP11 (gate input) is not used in Phase 0. Driver: `display.py` (`OLED_SPI`); `config.py` sets `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The earlier 4-pin I²C 1.3″ module is in a TD-3 (not available). | $4 |
 | 1 | KY-040 rotary encoder module | Have | 5 pins (CLK, DT, SW, +, GND). On-board 10 kΩ pull-ups. | $2 |
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
@@ -64,20 +64,18 @@ weekend's worth of parts.
 
 ## Bench-validation checklist
 
-Before wiring (owner to-do, record the result next to each item; all UNVERIFIED until done, BF Q22):
+Before wiring (owner to-do; the chip SH1106 and the 7-pin order GND, VCC, CLK, MOSI, RES, DC, CS are owner-stated, not bench-verified; BF Q22):
 
-- [ ] Keyestudio-clone IIC/SPI 1.3" V2.0 board: read the silkscreen and the chip marking (SSD1306 or SH1106).
-- [ ] Bench note: the board has 7 pins (owner confirmed), so it is used in SPI by construction. If it has IIC/SPI selection pads or resistors, leave them in the SPI position (UNVERIFIED: no manual found).
-- [ ] Read the silkscreen order of the 7 pins (do not assume D0 = SCK, D1 = MOSI without reading it).
-- [ ] GME12864-11 0.96" (spare): confirm its interface (I2C or SPI), chip and pin order.
+- [x] The board has 7 pins and its IIC/SPI selection pads are in the SPI position, an SMD resistor on the SPI pad and the IIC pad clear (owner-confirmed 2026-10-17); nothing to do.
+- [ ] Wire the header in its stated order (GND, VCC, CLK, MOSI, RES, DC, CS) and run [BT-14](#bt-14-oled-works-with-cs-strapped-to-gnd) below (CS tied to GND).
 
 After wiring the breadboard per `schematics/phase0_breadboard.svg`:
 
 - [ ] Pico powered from USB; on-board green LED is solid.
 - [ ] The main OLED powers up and draws its splash frame (`test_hw.py`'s
       OLED test draws through `display.OLED_SPI`; with CS on the GND rail this
-      is bench check BT-14). If it stays blank, check the module pin order
-      (UNVERIFIED), D0/D1 (SCK/MOSI), DC, RES and CS on GND, then VCC/GND
+      is bench check [BT-14](#bt-14-oled-works-with-cs-strapped-to-gnd)). If it stays blank, check the header order,
+      CLK/MOSI (GP2/GP3), DC, RES and CS on GND, then VCC/GND
       (BF Q22).
 - [ ] Encoder rotation increments / decrements a counter on the OLED.
 - [ ] Encoder push button toggles the on-screen indicator.
@@ -92,6 +90,19 @@ gate checks below before Phase 1 and record each result: they decide what the
 later phases may assume.
 
 ---
+
+### BT-14: OLED works with CS strapped to GND
+
+PROVISIONAL until the owner records a Pass. This is the owner's only OLED to-do. It decides whether the OLED CS pin can stay tied to GND, which frees fault-tolerant GP11 for the gate input.
+
+Needs: Pico on USB, the 1.3" Keyestudio-clone module, five jumper wires or a breadboard (plus the CS-to-GND jumper), and `firmware/pico/test_hw.py`, `display.py` and `config.py` copied to the Pico. No scope is needed.
+
+1. Wire GND to GND, VCC to 3V3 (pin 36), CLK to GP2, MOSI to GP3, RES to GP5, DC to GP4, and CS to GND with a jumper (header order GND, VCC, CLK, MOSI, RES, DC, CS, owner-stated).
+2. Optional, informational, before powering: with a multimeter check continuity from the CS pin to VCC and to GND, to see whether the board already pulls CS to a rail.
+3. Power the Pico and run `test_hw.py`'s OLED test. Look for the text, the line and the "SPI SH1106" label.
+4. Pass criteria: the picture is stable, sharp and not shifted, with no garbage and no blank frame. Repeat across 10 resets, 3 full power cycles and a cold start.
+5. If the picture is shifted by 2 columns, check `OLED_COL_OFFSET = 2` in `config.py`. If it is blank or garbage, first check the DC and RES wiring and the 4 MHz clock (`SPI_BAUD` in `display.py`). Only then move CS to a GPIO (GP26-28 or another unallocated pin; do not take an allocated pin) and set `OLED_CS` to it; this gives up the plan of putting the gate input on fault-tolerant GP11 (connection map 12G has the fallback).
+6. Record the result in the project notes as a dated Pass or Fail line (for example "2026-MM-DD BT-14 Pass"). Until a Pass is recorded, every "CS tied to GND" statement stays PROVISIONAL.
 
 ## Common Phase 0 gotchas
 

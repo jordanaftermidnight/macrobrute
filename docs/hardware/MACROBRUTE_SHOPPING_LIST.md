@@ -32,7 +32,7 @@ The March 2026 list ordered CD4066, CD4017, CD4024, LM13700, BC547/BC557/2N3906,
 
 ## 3. Open owner questions that decide whether anything is bought
 
-These are not resolved here (BF section 6.1): OLED checks (Q22; the baseline is the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 board in SPI mode: 7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED, read the silkscreen and chip marking; the GME12864-11 0.96" has arrived and is the spare, interface and chip UNVERIFIED; the 4-pin I²C module is in a TD-3; the 1.3" size also bears on the open expander width), DB-9 count (Q9), expander width (17 HP or about 20 HP, audit decision e; a blank panel is owned per the earlier docs, its size is to be measured), and whether the PC817 isolated UART (BF 3.9) is wanted.
+These are not resolved here (BF section 6.1): OLED checks (Q22; the baseline is the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 board in SPI mode: 7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified; the 4-pin I²C module is in a TD-3; the 1.3" size also bears on the open expander width), DB-9 count (Q9), expander width (17 HP or about 20 HP, audit decision e; a blank panel is owned per the earlier docs, its size is to be measured), and whether the PC817 isolated UART (BF 3.9) is wanted.
 
 ## 4. Not needed (do not buy)
 

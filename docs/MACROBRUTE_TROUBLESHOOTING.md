@@ -14,17 +14,16 @@ they go deeper on the analog circuits.
 
 ### The OLED shows nothing
 
-The main display is the Keyestudio-clone IIC/SPI 1.3″ V2.0 OLED (SPI mode) on SPI0, write-only: SCK GP2 (module D0),
-MOSI GP3 (D1), DC GP4, RES GP5; the module's CS pin is tied to GND (PROVISIONAL,
-BT-14). SPI has no address and no scan; the driver is `display.py` (`OLED_SPI`), and
+The main display is the Keyestudio-clone IIC/SPI 1.3″ V2.0 OLED (7-pin SPI header) on SPI0, write-only: SCK GP2 (module CLK),
+MOSI GP3, DC GP4, RES GP5; the module's CS pin is tied to GND (PROVISIONAL,
+[BT-14](hardware/MACROBRUTE_PHASE0_BOM.md#bt-14-oled-works-with-cs-strapped-to-gnd)). SPI has no address and no scan; the driver is `display.py` (`OLED_SPI`), and
 `test_hw.py`'s OLED test draws a test frame through it.
 
-**Fix:** check the module pin order against its silkscreen (UNVERIFIED; the common order
-is GND, VCC, D0, D1, RES, DC, CS), that D0/D1 are not swapped, that RES is driven high
+**Fix:** check the wiring against the owner-stated header order (GND, VCC, CLK, MOSI, RES, DC, CS), that CLK/MOSI are not swapped, that RES is driven high
 after reset and CS really is on GND, then VCC and GND. If CS on GND does not work
-(BT-14 fails), move CS back to a GPIO and set `OLED_CS` to it (connection map 12G). If the picture is shifted by two
-columns or shows a stripe at the edge, the chip is probably SH1106 (UNVERIFIED): set
-`OLED_CHIP="SH1106"` and `OLED_COL_OFFSET=2` (BF Q22).
+(BT-14 fails; procedure in the Phase 0 BOM, section BT-14), move CS back to a GPIO and set `OLED_CS` to it (connection map 12G). If the picture is shifted by two
+columns or shows a stripe at the edge, check that `OLED_CHIP="SH1106"` and
+`OLED_COL_OFFSET=2` are set in `config.py` (the chip is owner-stated SH1106; BF Q22).
 
 ### KY-040 encoder reports two ticks per detent
 

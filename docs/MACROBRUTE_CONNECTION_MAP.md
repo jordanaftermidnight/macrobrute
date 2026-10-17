@@ -10,9 +10,9 @@ every value here is a design value, and anything marked UNVERIFIED waits for a b
 
 **Connector:** 2× DB-9, CONFIRMED by the owner (2026-10-17; the VGA HD-15 line in a pasted inventory was an error; HD-15 rejected — shorts pins 6-8 to GND). Both mount on the MicroBrute **rear panel, left of Pitch/Gate** (owner decision a). Panel dimensions, free area and depth: UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 mounting-hole spacing 24.99 mm (Spectrum Control cut-out, DATASHEETS (g)); flange size of the owner's part UNVERIFIED.
 **Power:** split. The expander is powered only from the Eurorack rack; the MicroBrute-side breakout is powered only from the synth (TP70/TP71/TP72). **No supply rail crosses either DB-9 cable**; only ground is shared.
-**OLED:** one **Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0** (the owner's 7-pin board, SPI only) as the main display on the expander (owner ruling, 2026-10-17), write-only on Pico SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5 (section 1); the module's CS pin is tied to GND, no GPIO (PROVISIONAL, BT-14; section 12G). Chip UNVERIFIED (SSD1306 or SH1106: owner to read the chip marking, BF Q22). The board has 7 pins (owner confirmed), an SPI-only header. Bench note: any IIC/SPI selection pads or resistors must be left in the SPI position (UNVERIFIED: no manual found). Module pin order UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI, RES, DC, CS: read the silkscreen). Powered from the Pico 3V3 pin, 3V3 logic; current draw UNVERIFIED. Driver: `firmware/pico/display.py` (`OLED_SPI`, SPI0 at 4 MHz, safe for either chip; limits from datasheet memory, UNVERIFIED); for SH1106 set `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. A 1.3" module is larger than the 0.96" panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). The owner's earlier 4-pin I²C 1.3" module is wired into a TD-3 and is not available. The GME12864-11 0.96" (arrived; interface, chip and pin order UNVERIFIED) is the owned alternative, as is any other I²C module; an I²C display would need GP4/GP5, which are DC/RES here, so it requires re-pinning and is not a drop-in. The 0.91" strip OLED is dropped (decision c). **No I²C is used on the expander, and none crosses the DB-9 cable.**
+**OLED:** one **Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0** (the owner's 7-pin board, SPI only) as the main display on the expander (owner ruling, 2026-10-17), write-only on Pico SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5 (section 1); the module's CS pin is tied to GND, no GPIO (PROVISIONAL, BT-14; section 12G). The board has 7 pins (owner confirmed), an SPI-only header. Chip SH1106 and the 7-pin header order GND, VCC, CLK, MOSI, RES, DC, CS are owner-stated, not bench-verified (BF Q22). The IIC/SPI selection pads are in the SPI position (SMD resistor on the SPI pad, IIC pad clear; owner-confirmed 2026-10-17). Pin mapping: GND to GND, VCC to 3V3, CLK to GP2, MOSI to GP3, RES to GP5, DC to GP4, CS to the GND strap. Powered from the Pico 3V3 pin, 3V3 logic; current draw UNVERIFIED. Driver: `firmware/pico/display.py` (`OLED_SPI`, SPI0 at 4 MHz, the chip is owner-stated SH1106, whose write-clock limit of about 4 MHz is from datasheet memory, UNVERIFIED); `config.py` sets `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`, and the driver still supports SSD1306. A 1.3" module is larger than the 0.96" panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). The owner's earlier 4-pin I²C 1.3" module is wired into a TD-3 and is not available. An I²C display would need GP4/GP5, which are DC/RES here, so it requires re-pinning and is not a drop-in. The 0.91" strip OLED is dropped (decision c). **No I²C is used on the expander, and none crosses the DB-9 cable.**
 
-**OLED owner to-do (pre-bench, record the result here):** (1) read the Keyestudio board silkscreen and the chip marking (SSD1306 or SH1106); (2) read the silkscreen order of the 7 pins (the board has 7 pins, owner confirmed, SPI only; common order GND VCC D0 D1 RES DC CS, UNVERIFIED); (3) read the GME12864-11 silkscreen and chip to confirm its interface and chip. Until done these are UNVERIFIED (BF Q22); also check that any IIC/SPI selection pads or resistors sit in the SPI position (UNVERIFIED, no manual found).
+**OLED owner to-do:** only the BT-14 bench check ([procedure](hardware/MACROBRUTE_PHASE0_BOM.md#bt-14-oled-works-with-cs-strapped-to-gnd): the module works with CS tied to GND). The chip (SH1106) and header order are owner-stated; record any bench contradiction in BF Q22.
 **MIDI path:** Pico UART0 ↔ LPC2361 UART bridge @ 115200 baud (LPC side: see section 5.4). LPC firmware relays as internal MIDI SysEx. No direct 31250-baud MIDI from Pico.
 **Firmware:** Pico MicroPython (14 modules + `_effigy_constants.py` generated from EFFIGY's C header; the EFFIGY pairing is SHELVED, section 5.6), LPC2361 ARM7 (stock + planned bridge extension). Board: Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350).
 
@@ -26,8 +26,8 @@ Canonical source: `firmware/pico/config.py`. Update this table AND that file tog
 |------|----------|----------|-----------|-------|
 | GP0 | 1 | UART0 TX → LPC2361 | OUT | 115200 baud, DB-9 B:1, 1kΩ series on the expander board (BF 3.1). Design rule: GP0 stays an input until GP1 reads high (firmware rule, not yet implemented) |
 | GP1 | 2 | UART0 RX ← LPC2361 | IN | 115200 baud, DB-9 B:6, 1kΩ series on the expander board. Fault-tolerant pin (BF 3.1) |
-| GP2 | 4 | OLED SCK (SPI0 SCK) | OUT | Main OLED D0, on the expander only (short on-board run). Module pin order UNVERIFIED |
-| GP3 | 5 | OLED MOSI (SPI0 TX) | OUT | Main OLED D1. Write-only display: no MISO, no pull-ups |
+| GP2 | 4 | OLED SCK (SPI0 SCK) | OUT | Main OLED CLK, on the expander only (short on-board run) |
+| GP3 | 5 | OLED MOSI (SPI0 TX) | OUT | Main OLED MOSI. Write-only display: no MISO, no pull-ups |
 | GP4 | 6 | OLED DC | OUT | Main OLED data/command select |
 | GP5 | 7 | OLED RES | OUT | Main OLED reset (active low) |
 | GP6 | 9 | Aux output 3 | OUT | Programmable: tap-div / euclidean / random / passthrough / PWM-CV |
@@ -435,7 +435,7 @@ series resistor in the integrator is mandatory (audit S61). S&H trigger conditio
 | Row | Element | Notes |
 |-----|---------|-------|
 | Title strip | "MACROBRUTE" silkscreen | — |
-| 1 | Main OLED — Keyestudio-clone IIC/SPI 1.3" V2.0 in SPI mode (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED, BF Q22) | SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14) |
+| 1 | Main OLED — Keyestudio-clone IIC/SPI 1.3" V2.0 in SPI mode (7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified, BF Q22) | SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14) |
 | 2 | HW-040 encoder + tap button + RGB LED | Encoder = menu nav · Tap = tempo/gate · RGB = status |
 | 3 | Clock IN, Clock OUT jacks | 3.5 mm panel jacks (type UNVERIFIED, BF Q8) |
 | 4 | Clock divider outputs ÷2, ÷4, ÷8 | Firmware-driven (GP16/17/18) |
@@ -572,9 +572,9 @@ Each expansion below must fit in those 3 pins; they do not all fit at once, and 
 | I2C peripherals | 2 (SDA/SCL) | Needs 2 free pins: would take 2 of the 3 free pins (GP26-28); none of GP0-GP22 is free. DAC, sensors, etc. |
 | Second encoder | 3 digital | Expander-side control |
 
-**Gate input pin: DECIDED-PROVISIONAL (owner said "whichever is better"; ruling 2026-10-17).** The rule above (BF 5) puts a jack-fed input on a fault-tolerant pin (GP0-GP22). The OLED module's CS pin is strapped permanently to GND (one device on the SPI bus, common practice), which frees GP11, a fault-tolerant pin, for the gate mirror of A:1 (`GATE_IN = 11`, direction IN, fed from the CD40106 stage output through the 22k / 33k divider, BF 3.5). That the module works with CS tied low is UNVERIFIED: bench check BT-14.
+**Gate input pin: DECIDED-PROVISIONAL (owner said "whichever is better"; ruling 2026-10-17).** The rule above (BF 5) puts a jack-fed input on a fault-tolerant pin (GP0-GP22). The OLED module's CS pin is strapped permanently to GND (one device on the SPI bus, common practice), which frees GP11, a fault-tolerant pin, for the gate mirror of A:1 (`GATE_IN = 11`, direction IN, fed from the CD40106 stage output through the 22k / 33k divider, BF 3.5). That the module works with CS tied low is UNVERIFIED (PROVISIONAL): bench check BT-14.
 
-Fallback if BT-14 fails: put the OLED CS back on a GPIO (GP11, `OLED_CS = 11`) and move the gate input to GP27 or GP28, either accepting the clamp current when the Pico is unpowered (about 0.17 mA worst case by the BF 3.5 arithmetic, (2.95 - 0.6) V / 13.6k, checked with BT-5) or adding a series diode or a 3V3-powered buffer in front of the pin.
+Procedure: [BT-14](hardware/MACROBRUTE_PHASE0_BOM.md#bt-14-oled-works-with-cs-strapped-to-gnd) (still PROVISIONAL until the owner records a pass). Fallback if BT-14 fails: put the OLED CS back on a GPIO (GP11, `OLED_CS = 11`) and move the gate input to GP27 or GP28, either accepting the clamp current when the Pico is unpowered (about 0.17 mA worst case by the BF 3.5 arithmetic, (2.95 - 0.6) V / 13.6k, checked with BT-5) or adding a series diode or a 3V3-powered buffer in front of the pin.
 
 ---
 
@@ -640,9 +640,9 @@ are purchase lists. The owner has further parts not yet listed (BF Q18).
 | 100kΩ pots | 4 | ✓ Have |
 | 3.5mm jacks | 25 | ✓ Have (type UNVERIFIED, BF Q8) |
 | Raspberry Pi Pico | 1 | ✓ Have. Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350) |
-| Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0 (main) | 1 | ✓ Have; the baseline main display, used in SPI mode (owner statement, 2026-10-17). Chip (SSD1306 or SH1106), 7 pins (owner confirmed), order of the 7 pins UNVERIFIED: read the silkscreen and chip marking (BF Q22) |
+| Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0 (main) | 1 | ✓ Have; the baseline main display, used in SPI mode (owner statement, 2026-10-17). 7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified (BF Q22) |
 | 1.3" 4-pin I²C OLED | 1 | ✓ Have, but wired into a TD-3: not available |
-| GME12864-11 0.96" OLED | 1 | ✓ Have (arrived); owned dev alternative. Interface, chip and pin order UNVERIFIED (no datasheet found; 0.96" 128×64 modules are typically SSD1306-family). If it is I²C it needs GP4/GP5 (OLED DC/RES), so re-pinning, not a drop-in |
+| 0.96in GME12864-11 OLED | 1 | ✓ Have (owned, not used) |
 | 0.91" SSD1306 128×32 OLED | 1 | ✓ Have (spare; strip OLED dropped) |
 | KY-040 / HW-040 encoder | 1 | ✓ Have (owner 2026-10-17) |
 | VGA HD-15 connectors | 2 | ✓ Have (rejected for this project → spare; the VGA line in a pasted inventory was an error, DB-9 are confirmed) |

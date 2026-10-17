@@ -21,7 +21,7 @@
 > - **Owned parts only:** the Have/Missing table below (from BF section 1) is the ownership record.
 >   Rows in Parts 1 and 2 that are not named there are Missing. Items marked "owner to confirm" are
 >   open owner questions (DB-9 count); they are not decided here.
-> - **Later owner decisions (2026-10-17):** the main OLED baseline is the owner's Keyestudio-clone IIC/SPI 1.3" 128×64 V2.0 board used in SPI mode (owner ruling and statement; 7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED: read the silkscreen and chip marking; an earlier 4-pin I²C module is wired into a TD-3 and not available; the GME12864-11 0.96" has arrived and is the spare); kit transistors and diodes from the owner's pasted inventory are Have (card contents UNVERIFIED), including 2N3904 and 1N5819 (a possible stand-in for the 1N5817, UNVERIFIED part); LF398 stays the S&H default.
+> - **Later owner decisions (2026-10-17):** the main OLED baseline is the owner's Keyestudio-clone IIC/SPI 1.3" 128×64 V2.0 board used in SPI mode (owner ruling and statement; 7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified; an earlier 4-pin I²C module is wired into a TD-3 and not available); kit transistors and diodes from the owner's pasted inventory are Have (card contents UNVERIFIED), including 2N3904 and 1N5819 (a possible stand-in for the 1N5817, UNVERIFIED part); LF398 stays the S&H default.
 
 ---
 
@@ -34,9 +34,9 @@ table is Missing, even where it is likely in a drawer.
 | Part | Qty | Status | Used for / note |
 |------|-----|--------|-----------------|
 | Raspberry Pi Pico | 1 | Have | Expander controller. Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350). Nothing here uses wireless |
-| Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0 (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED: read the silkscreen and chip marking) | 1 | Have | Expander main display, baseline, used in SPI mode (owner ruling and statement 2026-10-17, BF Q22): SPI0 SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14). Larger than the 0.96" panel cutout; bears on the open expander width |
+| Keyestudio-clone IIC/SPI 1.3" 128×64 OLED V2.0 (7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified) | 1 | Have | Expander main display, baseline, 7-pin SPI header (owner ruling and statement 2026-10-17, BF Q22): SPI0 SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14). Larger than the 0.96" panel cutout; bears on the open expander width |
 | 1.3" 4-pin I²C OLED (earlier-known) | 1 | Have, not available | Wired into a TD-3 |
-| GME12864-11 0.96" OLED | 1 | Have (arrived) | Spare / dev alternative; interface, chip and pin order UNVERIFIED (no datasheet found). If I²C it needs GP4/GP5 (OLED DC/RES), so re-pinning |
+| 0.96in GME12864-11 OLED | 1 | Have | Owned, not used |
 | 0.91" SSD1306 128×32 | 1 | Have, no longer used | Strip OLED dropped; spare |
 | KY-040 / HW-040 encoder | 1 | Have | Expander encoder |
 | TL074C | 4 | Have | Breakout U1; expander outputs |
@@ -107,7 +107,7 @@ The euro figures below predate the Have/Missing table and the scope change; they
 | # | Component | Qty | Unit € | Total € | Source |
 |---|-----------|-----|--------|---------|--------|
 | 1 | Raspberry Pi Pico — **Have** (any variant with the standard 40-pin layout; no purchase) | 1 | €0 | €0 | — |
-| 2 | Keyestudio-clone IIC/SPI 1.3" 128x64 OLED V2.0 (main baseline in SPI mode, on hand; 7 pins (owner confirmed); chip and order of the 7 pins UNVERIFIED) — also on hand: 0.91" 128×32 SSD1306 (strip OLED dropped), 16×2 1602 I²C LCD; the 1.3" 4-pin I²C is in a TD-3; GME12864-11 0.96" on hand as spare | 1 | €0 | €0 | — |
+| 2 | Keyestudio-clone IIC/SPI 1.3" 128x64 OLED V2.0 (main baseline in SPI mode, on hand; 7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified) — also on hand: 0.91" 128×32 SSD1306 (strip OLED dropped), 16×2 1602 I²C LCD; the 1.3" 4-pin I²C is in a TD-3; 0.96in GME12864-11 owned, not used | 1 | €0 | €0 | — |
 | 3 | J-Link EDU Mini (JTAG debugger) | 1 | €20.00 | €20.00 | Segger/Mouser |
 
 ### Connectors & Cables
@@ -483,7 +483,7 @@ Pico GPIO (PWM)
 - M2/M3 hardware
 - Toggle switches
 - Breadboard
-- (OLED already on hand — Keyestudio-clone IIC/SPI 1.3" V2.0 main in SPI mode (7 pins (owner confirmed); chip and order of the 7 pins UNVERIFIED), spares GME12864-11 0.96", 0.91" SSD1306, 16x2 1602 LCD; the 1.3" 4-pin I²C is in a TD-3)
+- (OLED already on hand — Keyestudio-clone IIC/SPI 1.3" V2.0 main in SPI mode (7 pins (owner confirmed); chip SH1106 and pin order GND, VCC, CLK, MOSI, RES, DC, CS owner-stated, not bench-verified), spares 0.91" SSD1306, 16x2 1602 LCD; the 1.3" 4-pin I²C is in a TD-3)
 
 ### Order 4: Mouser/Amazon (fills)
 - J-Link EDU Mini (or Segger direct)

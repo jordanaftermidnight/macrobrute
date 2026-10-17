@@ -11,7 +11,7 @@ They communicate over UART0 at 115 200 baud through a small framed protocol
 firmware/pico/
 ├── main.py             # Entry point: init, run loop, message dispatch
 ├── config.py           # GPIO pin map (mirrors schematics/pico_pinout.md)
-├── display.py          # SSD1306/SH1106 main OLED driver over SPI0 (Keyestudio-clone IIC/SPI 1.3" V2.0 module in SPI mode, chip UNVERIFIED)
+├── display.py          # SSD1306/SH1106 main OLED driver over SPI0 (Keyestudio-clone IIC/SPI 1.3" V2.0 module, 7-pin SPI header, chip SH1106 owner-stated)
 ├── strip_display.py    # SSD1306 0x3D strip OLED driver (dropped, to be removed; main.py no longer builds it)
 ├── encoder.py          # KY-040 rotary encoder + button debounce
 ├── leds.py             # RGB status LED PWM
@@ -42,8 +42,8 @@ low is UNVERIFIED (bench check BT-14). GP11 is the gate input instead.
 - RES is pulsed low once at start-up; commands go out with DC low and pixel
   data with DC high; CS is toggled around each transfer only if `OLED_CS` is
   set to a GP (the BT-14 fallback);
-- the chip choice is `OLED_CHIP`: the controller is UNVERIFIED (SSD1306 or
-  SH1106, read the module). The two differ in the charge-pump bytes
+- the chip choice is `OLED_CHIP`: the controller is SH1106 (owner-stated,
+  not bench-verified; `config.py` defaults to it with `OLED_COL_OFFSET = 2`), SSD1306 stays an option. The two differ in the charge-pump bytes
   (`0x8D 0x14` vs `0xAD 0x8B`); SH1106 also needs `OLED_COL_OFFSET = 2`.
   Both are written in page mode;
 - `tools/tests/test_display_driver.py` checks this with `machine`/`framebuf`

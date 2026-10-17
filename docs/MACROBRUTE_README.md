@@ -143,7 +143,7 @@ Still in flux (your input welcome):
 
 - **Expander size** — 17 HP or about 20 HP, open until the owner measures
   the blank.
-- The main OLED chip marking and the order of its 7 pins (Keyestudio-clone IIC/SPI 1.3" V2.0 baseline in SPI mode, SSD1306 or SH1106), plus the GME12864-11 0.96" interface and chip
+- BT-14: the main OLED (Keyestudio-clone IIC/SPI 1.3" V2.0, chip SH1106 and pin order owner-stated) works with its CS pin tied to GND
   and the DB-9 count are for the owner to confirm (BF Q22, Q9). The board is a
   Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical
   facts quoted here come from the RP2040 datasheet and were not checked against
