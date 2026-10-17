@@ -3732,8 +3732,8 @@ def generate_mod_m14_vco_bias_starve() -> str:
 
 # ─── Phase 0 Bench Validation Wiring ────────────────────────────────
 # Two views of the same circuit:
-#   1. phase0_wiring_schematic.svg — flat schematic, power-rail style
-#   2. phase0_breadboard.svg       — top-down breadboard layout
+#   1. wiring schematic card — flat schematic, power-rail style
+#   2. breadboard card — top-down breadboard layout
 #
 # Pin map (must match firmware/pico/config.py — keep in sync):
 #   0.96" SSD1306 OLED (I²C0 @ 0x3C):  VCC=+3V3, GND, SDA=GP4, SCL=GP5
@@ -5090,17 +5090,11 @@ def main():
         ("signal_flow_overview.svg", generate_signal_flow_overview),
         ("cd4051_multiplexer.svg", generate_cd4051_multiplexer),
         ("cv_input_protection_diagram.svg", generate_cv_input_protection_diagram),
-        ("pico_pinout_diagram.svg", generate_pico_pinout_diagram),
         ("lpc2361_pinout_diagram.svg", generate_lpc2361_pinout_diagram),
         ("db9_connector_diagram.svg", generate_db9_connector_diagram),
-        ("power_regulation_diagram.svg", generate_power_regulation_diagram),
         ("testpoints_map.svg", generate_testpoints_map),
         ("expander_power_distribution.svg", generate_expander_power_distribution),
         ("midi_interface_circuit.svg", generate_midi_interface_circuit),
-        ("pico_power_protection.svg", generate_pico_power_protection),
-        # Phase 0 bench validation
-        ("phase0_wiring_schematic.svg", generate_phase0_wiring_schematic),
-        ("phase0_breadboard.svg",       generate_phase0_breadboard),
         # Mod catalog (M01–M14)
         ("mod_m01_triangle_gain.svg",        generate_mod_m01_triangle_gain),
         ("mod_m02_soft_sync.svg",            generate_mod_m02_soft_sync),

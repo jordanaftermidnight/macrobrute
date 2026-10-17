@@ -368,7 +368,6 @@ def main():
     diagrams = [
         ("audio_signal_flow", audio_signal_flow_v2),
         ("cv_control_flow", cv_control_flow_v2),
-        ("pico_pinout_diagram", pico_pinout_v2),
     ]
     
     for name, func in diagrams:

@@ -450,7 +450,6 @@ def main():
         ("system_architecture_block", system_architecture_v3),
         ("audio_signal_flow", audio_signal_flow_v3),
         ("cv_control_flow", cv_control_flow_v3),
-        ("pico_pinout_diagram", pico_pinout_v3),
     ]
     
     for name, func in diagrams:
