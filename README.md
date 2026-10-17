@@ -34,12 +34,11 @@ Transform an Arturia MicroBrute into a fully semi-modular instrument through int
 ```
 macrobrute/
 ├── docs/
-│   ├── architecture/        # System design, signal maps, research
 │   ├── hardware/            # BOM, shopping list, pinouts
 │   ├── firmware/            # LPC2361 investigation guide, firmware project docs
 │   ├── mods/                # Modification guides, circuit bending (4 docs)
 │   ├── research/            # Firmware RE findings, .mbf analysis
-│   └── legacy/              # Earlier spec revisions
+│   └── legacy/              # Earlier spec revisions and archived research
 ├── firmware/
 │   ├── pico/                # Pico MicroPython firmware (15 .py files: 14 modules + 1 generated)
 │   ├── lpc2361/             # LPC2361 ARM7 C firmware skeleton (48 files)

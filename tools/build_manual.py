@@ -463,7 +463,7 @@ SECTIONS = [
         "docs/research/mbf_analysis.md",
         "docs/research/firmware_re_findings.md",
         "docs/firmware/lpc2361_investigation_guide.md",
-        "docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
+        "docs/legacy/MACROBRUTE_COMPLETE_EXPANSION_MAP.md",
     ]),
     ("12. Legacy & Archive", "legacy", "REFERENCE", [
         "docs/legacy/MACROBRUTE_FINAL_ARCHITECTURE.md",

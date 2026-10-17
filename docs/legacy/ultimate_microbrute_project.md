@@ -1,3 +1,5 @@
+ARCHIVED (2026-10-17): superseded by docs/MACROBRUTE_CONNECTION_MAP.md; kept for reference
+
 # THE ULTIMATE MICROBRUTE PROJECT
 ## Deep Modding, Circuit Bending & Hardware Hacking Blueprint
 

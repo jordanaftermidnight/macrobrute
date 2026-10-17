@@ -47,7 +47,7 @@
 - `docs/MACROBRUTE_FIRMWARE_MOD_PLAN.md` — LPC2361 custom firmware plan
 
 ### Architecture & Research
-- `docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md` — every tap/inject/bend point
+- `docs/legacy/MACROBRUTE_COMPLETE_EXPANSION_MAP.md` — every tap/inject/bend point
 - `docs/research/mbf_analysis.md` — .mbf firmware decryption + Ghidra findings (43 SysEx cmds, 427 fns)
 - `docs/research/firmware_re_findings.md` — CRP bypass methods, tools
 - `spinoffs/jf33-eurorack/docs/pt2399_dso138_findings.md` — moved with the JF-33 spinoff
@@ -106,15 +106,14 @@
 
 ### Legacy (`docs/legacy/`) — superseded, kept on disk for reference
 
-(Locations differ from the heading for three files: see the last entry.)
 - `MACROBRUTE_FINAL_ARCHITECTURE.md` — pre-reconciliation architecture draft (Apr 15)
 - `MACROBRUTE_PROJECT_HANDOFF.md` — early handoff doc
 - `MACROBRUTE_MASTER_PLAN.md` — early planning
 - `MACROBRUTE_V2_SPEC.md` / `MACROBRUTE_V2_COMPLETE_SPEC.md` — earlier spec revisions
 - `MACROBRUTE_REVISED_SPEC.md` — DB-9 correction from DB-25
-- `MACROBRUTE_EXPANDER_DB37_PINOUT.md` (in `docs/legacy/`), `docs/architecture/MACROBRUTE_COMPREHENSIVE_RESEARCH.md`,
-  `docs/mods/ultimate_microbrute_project.md` — kept on disk but no longer included in the manual
-  (off-scope ÜBERBRUTE brainstorm + obsolete DB-37 + stale JF-33/DSO138 research). The last two are not under `docs/legacy/` (audit S68)
+- `MACROBRUTE_EXPANDER_DB37_PINOUT.md` (all in `docs/legacy/`), `MACROBRUTE_COMPREHENSIVE_RESEARCH.md`,
+  `ultimate_microbrute_project.md`, `MACROBRUTE_COMPLETE_EXPANSION_MAP.md` — kept on disk for reference
+  (off-scope ÜBERBRUTE brainstorm, obsolete DB-37 and DB-25 scope, stale JF-33/DSO138 research)
 
 ---
 

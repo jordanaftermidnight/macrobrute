@@ -108,7 +108,7 @@ unity-gain TL074 buffer prevents loading the original signal path.
 | Safety | LM13700 needs ±12V — already available on the breakout |
 
 **Wiring**: cut the Metalizer feedback trace at the documented point in
-`docs/architecture/MACROBRUTE_COMPLETE_EXPANSION_MAP.md`; re-route through
+`docs/legacy/MACROBRUTE_COMPLETE_EXPANSION_MAP.md`; re-route through
 the OTA's signal input. CV (0–5 V from expander or panel jack) feeds the
 OTA control current via a 100 kΩ resistor; CV at +5 V → full feedback,
 CV at 0 V → muted. The amount pot manually offsets the CV bias.
