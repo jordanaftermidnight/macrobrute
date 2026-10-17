@@ -59,3 +59,7 @@ dist/
 
 # Manufacturer datasheets (not ours to redistribute; see docs/DATASHEETS.md)
 datasheets/
+
+# Ghidra exports of the MicroBrute firmware (large, regenerable)
+MicroBrute_v1.0.4.114.bin.c
+MicroBrute_v1.0.4.114.bin.h
