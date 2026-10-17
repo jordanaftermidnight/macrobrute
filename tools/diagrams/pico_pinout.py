@@ -198,7 +198,7 @@ def build():
             "GP27 is slice 5B and follows GP10's 1 kHz slice frequency."]),
         ("Main OLED, Keyestudio IIC/SPI V2.0, SPI mode", [
             "Write-only (no MISO), 3V3 logic, powered from the 3V3 pin.",
-            "Chip (SSD1306 or SH1106), SPI mode set on board, pin order: UNVERIFIED.",
+            "7-pin SPI-only board; chip (SSD1306 or SH1106), pin order: UNVERIFIED.",
             "CS strapped to GND (no GPIO): PROVISIONAL (BT-14).",
             "No I2C on the expander, so no pull-ups. Driver: display.py."]),
         ("Not usable", [

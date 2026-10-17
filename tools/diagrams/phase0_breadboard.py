@@ -414,7 +414,7 @@ def build():
     for i, line in enumerate(MISSING_PARTS):
         card.add(_missing(640, ty + 40 + 18 * i, line))
     card.add(_tag(640, ty + 40 + 18 * len(MISSING_PARTS), RGB_ORDER))
-    card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 1), "UNVERIFIED: SPI mode set on board"))
+    card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 1), "SPI-only 7-pin header (owner confirmed)"))
 
     # wires on top
     for j in JUMPERS:
