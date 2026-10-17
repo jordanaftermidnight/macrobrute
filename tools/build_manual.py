@@ -426,7 +426,7 @@ SECTIONS = [
         "schematics/breakout_stripboard.md",
         "schematics/pico_pinout.md",
     ]),
-    ("5. Expander (reduced scope: LFO and S&H)", "expander", "BUILD", [
+    ("5. Expander", "expander", "BUILD", [
         "schematics/expander_circuits.md",
         "schematics/expander_stripboard.md",
     ]),
