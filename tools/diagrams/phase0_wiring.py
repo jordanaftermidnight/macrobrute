@@ -16,7 +16,8 @@ from tools.diagram_kit import (CHAR_W, PALETTE, Card, _dot, _line, _n, _t, jack,
                                resistor_pins, wire)
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
-from tools.diagrams.phase0_nets import NETS, RAILS, gp  # noqa: F401
+from tools.diagrams.phase0_nets import (CLOCK_IN_NOTE, MISSING_PARTS, NETS, RAILS, RGB_ORDER,  # noqa: F401
+                                        gp)
 from tools.diagrams.power_common import box
 
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_wiring_schematic.svg"
@@ -70,6 +71,14 @@ def _tag(x, y, text):
     return (f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="14" rx="3" fill="#fff3cd" '
             f'stroke="#c96a00" stroke-width="1"/>'
             + _t(x + 5, y + 10.5, text, 9, "start", "#7a4100", True))
+
+
+def _missing(x, y, text):
+    """Red tag for a part that is not owned."""
+    w = len(text) * 5.6 + 10
+    return (f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="14" rx="3" fill="#fde2e1" '
+            f'stroke="#b3261e" stroke-width="1"/>'
+            + _t(x + 5, y + 10.5, text, 9, "start", "#8c1d18", True))
 
 
 def build():
@@ -207,16 +216,27 @@ def build():
     card.add(_gp_tag(gx, gy, "GND", "R"))
 
     card.add(resistor(620, out_y, "1kΩ") + resistor(620, in_y, "1kΩ"))
-    card.add(jack(760, out_y, "CLOCK OUT (GP22)") + jack(760, in_y, "CLOCK IN (GP21)"))
+    co, ci = gp("CLOCK_OUT"), gp("CLOCK_IN")
+    card.add(jack(760, out_y, f"CLOCK OUT ({co})") + jack(760, in_y, f"CLOCK IN ({ci})"))
     card.add(label_box(613, 243, "test jumper"))
-    card.add(_t(620, 160, "Loop-back test: GP22 > 1k > GP21", 10,
+    card.add(_t(620, 160, f"Loop-back test: {co} > 1k > {ci}", 10,
                 "start", PALETTE["muted"]))
 
+    # bench caveats: clock-in protection is absent on the bench, unowned parts
+    cy = 470
+    for i, line in enumerate(CLOCK_IN_NOTE):
+        card.add(_tag(600, cy + 18 * i, line))
+    for i, line in enumerate(MISSING_PARTS):
+        card.add(_missing(600, cy + 46 + 18 * i, line))
+    card.add(_tag(600, cy + 46 + 18 * len(MISSING_PARTS), RGB_ORDER))
+
     # note box
-    card.add(f'<rect x="30" y="676" width="560" height="38" rx="4" fill="#fff" '
+    card.add(f'<rect x="30" y="676" width="560" height="52" rx="4" fill="#fff" '
              f'stroke="{PALETTE["stroke"]}" stroke-width="1"/>'
              + _t(40, 692, "Phase 0 bench validation, 3V3 logic only. Run firmware/pico/test_hw.py per-peripheral.",
                   10, "start", PALETTE["text"])
+             + _t(40, 720, "test_hw.py's OLED test is not valid until the SPI driver lands (firmware follow-up).",
+                  10, "start", PALETTE["muted"])
              + _t(40, 706, "OLED chip (SSD1306 or SH1106) and pin order are UNVERIFIED: read the module first.",
                   10, "start", PALETTE["muted"]))
 

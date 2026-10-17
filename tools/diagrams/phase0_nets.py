@@ -38,3 +38,9 @@ NETS = {
     "CLOCK_IN_JACK": [("R", "1K_IN.b"), ("JACK_IN", "T")],
 }
 RAILS = {"3V3": 3.3}
+
+# Phase 0 bench caveats shown on both Phase 0 cards
+CLOCK_IN_NOTE = ("CLOCK IN: loop-back only, no external signals", "(no CD4049UB on the bench)")
+MISSING_PARTS = ("MISSING: RGB LED (Q12)", "MISSING: tactile button (Q12)",
+                 "MISSING: half-size breadboard")
+RGB_ORDER = "UNVERIFIED: RGB lead order R-K-G-B"

@@ -23,7 +23,7 @@ this is mounted inside the synth.
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
 | 3 | 220 Ω resistor, ¼ W | Have (kit; values to confirm, BF Q5) | RGB LED current limiters (one per colour). | — |
-| 2 | 1 kΩ resistor, ¼ W | Have (kit; values to confirm) | Clock IN/OUT inline protection. | — |
+| 2 | 1 kΩ resistor, ¼ W | Have (kit; values to confirm) | Clock IN/OUT series resistors for the loop-back test. Not input protection: CLOCK IN is loop-back only, no external signals (no CD4049UB on the bench). | — |
 | 2 | 3.5 mm mono panel jacks (or PCB-mount equivalent) | Have (25 owned, type unknown, BF Q8) | Clock IN + Clock OUT. Bench-only. | $1 |
 | 1 | Half-size breadboard (400+ tie points) | Not on the owned list | Big enough to span the Pico across the centre channel. | $4 |
 | ~30 | Solid-core jumper wires, 22 AWG | Not on the owned list | Mix of M-M and M-F. Pre-cut sets are fine. | $4 |

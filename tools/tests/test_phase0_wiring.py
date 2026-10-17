@@ -66,3 +66,13 @@ def test_oled_unverified_items_tagged():
 
 def test_committed_svg_matches_generator():
     assert SVG.read_text() == p0.render()
+
+
+def test_clock_in_is_loop_back_only_and_unowned_parts_are_flagged():
+    s = _svg_text()
+    assert "loop-back only, no external signals" in s
+    assert "no CD4049UB on the bench" in s
+    for tag in ("MISSING: RGB LED", "MISSING: tactile button", "MISSING: half-size breadboard",
+                "UNVERIFIED: RGB lead order R-K-G-B"):
+        assert tag in s, tag
+    assert "not valid until the SPI driver" in s

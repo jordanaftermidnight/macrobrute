@@ -16,7 +16,7 @@ from tools.check_diagrams import validate_nets
 from tools.diagram_kit import (BB_PITCH, PALETTE, PICO_NAMES, Card, _dot, _line, _n, _t,
                                breadboard, breadboard_pins, jack, jack_pins, label_box,
                                wire)
-from tools.diagrams.phase0_nets import NETS, RAILS
+from tools.diagrams.phase0_nets import CLOCK_IN_NOTE, MISSING_PARTS, NETS, RAILS, RGB_ORDER
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
 
@@ -233,6 +233,14 @@ def _tag(x, y, text):
             + _t(x + 5, y + 10.5, text, 9, "start", "#7a4100", True))
 
 
+def _missing(x, y, text):
+    """Red tag for a part that is not owned."""
+    w = len(text) * 5.6 + 10
+    return (f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="14" rx="3" fill="#fde2e1" '
+            f'stroke="#b3261e" stroke-width="1"/>'
+            + _t(x + 5, y + 10.5, text, 9, "start", "#8c1d18", True))
+
+
 def _pico_svg():
     top = hxy("c11")[1]
     bot = hxy("h11")[1]
@@ -397,8 +405,14 @@ def build():
 
     # off-board modules
     card.add(_oled_svg())
-    card.add(jack(JACK_OUT_X, JACK_Y, "CLOCK OUT (GP22)"))
-    card.add(jack(JACK_IN_X, JACK_Y, "CLOCK IN (GP21)"))
+    card.add(jack(JACK_OUT_X, JACK_Y, f"CLOCK OUT ({gp('CLOCK_OUT')})"))
+    card.add(jack(JACK_IN_X, JACK_Y, f"CLOCK IN ({gp('CLOCK_IN')})"))
+    ty = 712
+    for i, line in enumerate(CLOCK_IN_NOTE):
+        card.add(_tag(640, ty + 18 * i, line))
+    for i, line in enumerate(MISSING_PARTS):
+        card.add(_missing(640, ty + 40 + 18 * i, line))
+    card.add(_tag(640, ty + 40 + 18 * len(MISSING_PARTS), RGB_ORDER))
 
     # wires on top
     for j in JUMPERS:

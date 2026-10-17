@@ -64,3 +64,10 @@ def test_db9_caption_does_not_call_the_old_map_frozen():
     from tools.build_manual import SVG_DESCRIPTIONS
     cap = SVG_DESCRIPTIONS["schematics/db9_connector_diagram.svg"]
     assert cap.startswith("STALE") and "NO supply on the cable" in cap
+
+
+def test_phase0_captions_flag_loop_back_and_missing_parts():
+    from tools.build_manual import SVG_DESCRIPTIONS
+    for k in ("schematics/phase0_wiring_schematic.svg", "schematics/phase0_breadboard.svg"):
+        cap = SVG_DESCRIPTIONS[k]
+        assert "loop-back only" in cap and "MISSING" in cap and "R-K-G-B" in cap, k

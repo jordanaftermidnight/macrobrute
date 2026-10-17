@@ -260,3 +260,12 @@ def test_oled_module_has_seven_leads_in_one_order():
     # module drawn header-toward-the-board: the assumed order GND VCC D0 D1 RES DC CS
     # (UNVERIFIED) reads right to left
     assert names == ["CS", "DC", "RES", "D1", "D0", "VCC", "GND"]
+
+
+def test_clock_in_is_loop_back_only_and_unowned_parts_are_flagged():
+    s = _svg()
+    assert "loop-back only, no external signals" in s
+    assert "no CD4049UB on the bench" in s
+    for tag in ("MISSING: RGB LED", "MISSING: tactile button", "MISSING: half-size breadboard",
+                "UNVERIFIED: RGB lead order R-K-G-B"):
+        assert tag in s, tag
