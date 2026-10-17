@@ -60,5 +60,11 @@ def test_1n5817_is_20v_and_standin_is_tagged():
     assert "UNVERIFIED" in texts and "PROVISIONAL" in texts
 
 
+def test_d1_is_the_owned_1n5819_not_1n5817():
+    t = _texts()
+    assert "D1 1N5819" in t and "D1 1N5817" not in t
+    assert any("OWNER-CONFIRM" in x and "1N5819" in x for x in t)
+
+
 def test_committed_svg_matches_generator():
     assert SVG.read_text() == pp.render()

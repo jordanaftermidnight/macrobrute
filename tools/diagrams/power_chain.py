@@ -138,14 +138,14 @@ def _expander(card):
     card.add(wire([(XCOL, a_n), (BUS_E["N12"], a_n)], C_N12, junctions=[(BUS_E["N12"], a_n)]))
     card.add(wire([(XCOL, a_g), (BUS_E["GND"], a_g)], C_GND, junctions=[(BUS_E["GND"], a_g)]))
     card.add(box(XCOL, 405, XW, 110, ["Analog utilities"],
-                 ["Slew: TL072 + 2x 1N4148", "LFO: TL072 + CD40106", "S&H: LF398 + TL072"],
+                 ["Slew: TL072 + 2x 1N4148", "LFO: TL072 + CD40106", "S&H: LF398 + TL072", "(LF398 not owned, Q1;", "CD4051 alternative)"],
                  left=[("V+", a_v), ("V-", a_n), ("GND", a_g)]))
     card.add(tag(XCOL, 520, "UNVERIFIED", "UNVERIFIED circuits, CD40106 supply TO DESIGN"))
 
     # 3V3 loads
     card.add(wire([(XCOL, l_g), (BUS_E["GND"], l_g)], C_GND, junctions=[(BUS_E["GND"], l_g)]))
     card.add(box(XCOL, 556, XW, 80, ["3V3 loads (Pico 3V3 OUT)"],
-                 ["OLED 1.3in I2C, encoder +", "I2C0 pull-ups 4.7k", "CD4049UB clock buffers"],
+                 ["OLED 1.3in I2C, encoder +", "I2C0 pull-ups 4.7k", "(value to confirm, BF Q5)", "CD4049UB clock buffers"],
                  left=[("GND", l_g)], right=[("3V3", l_3 + 0)]))
     card.add(tag(XCOL, 642, "UNVERIFIED", "UNVERIFIED load"))
 
@@ -170,6 +170,8 @@ def _expander(card):
         ("OLED, encoder and pull-up load on 3V3.", "UNVERIFIED"),
         ("Analog utilities draw on +/-12 V.", "UNVERIFIED"),
         ("Rack +5 V present on the owner's bus slot (BT-12).", "UNVERIFIED"),
+        ("VSYS diode is the only +5 V diode; frees one BAT85 from the BF 1.2 budget.", "OWNER-CONFIRM"),
+        ("BAT85 is limited to 200 mA continuous (BF 1.2); check the +/-12 V draw.", "PROVISIONAL"),
     ])
     card.add(s)
 
@@ -214,9 +216,11 @@ def _mb(card):
     card.add(wire([(bn, y_cn), (bn + 15, y_cn)], C_N12))
     card.add(wire([(bn + 45, y_cn), (bg, y_cn)], C_GND))
     card.add(capacitor(bn + 15, y_cn, "10uF"))
+    card.add(_t(bn + 52, y_cn - 6, "+", 11, "middle", "#222", True))
     card.add(wire([(bp, y_cp), (bp - 15, y_cp)], C_P12))
     card.add(wire([(bp - 45, y_cp), (bg, y_cp)], C_GND))
     card.add(capacitor(bp - 45, y_cp, "10uF"))
+    card.add(_t(bp - 8, y_cp - 6, "+", 11, "middle", "#222", True))
 
     # op-amp consumer
     card.add(wire([(XMC, ya), (bp, ya)], C_P12, junctions=[(bp, ya)]))
@@ -293,8 +297,8 @@ def _cable(card):
     card.add(wire([(xr + 10, ysh), (gr, ysh)], "#777", junctions=[(gr, ysh)]))
     card.add(_line(xl + 36, ysh - 6, xl + 46, ysh + 6, "#c0392b", 2))
     card.add(_line(xl + 46, ysh - 6, xl + 36, ysh + 6, "#c0392b", 2))
-    card.add(label_box(xr - 380, ysh - 22, "braid bonded to the MicroBrute shell, short lead to TP72"))
-    card.add(label_box(xl + 56, ysh + 8, "braid cut back and insulated at the expander end; shell isolated from the panel"))
+    card.add(label_box(xr - 380, ysh - 22, "each cable's braid bonded to the MicroBrute shell, short lead to TP72"))
+    card.add(label_box(xl + 56, ysh + 8, "each cable's braid cut back and insulated at the expander end; shell isolated from the panel"))
     card.add(tag(xl + 56, ysh + 26, "UNVERIFIED", "UNVERIFIED washers not owned (Q10), bench check BT-8"))
 
 

@@ -52,9 +52,9 @@ def build():
     y5 = 230
     card.add(wire([(170, y5), (230, y5)], C_5V))
     card.add(wire([(260, y5), (700, y5)], C_5V, junctions=[(380, y5), (520, y5)]))
-    card.add(diode(230, y5, "D1 1N5817"))
+    card.add(diode(230, y5, "D1 1N5819"))
     card.add(tag(185, 252, "PROVISIONAL"))
-    card.add(tag(185, 269, "OWNER-CONFIRM", "OWNER-CONFIRM 1N5819"))
+    card.add(tag(185, 269, "OWNER-CONFIRM", "OWNER-CONFIRM 1N5819 (owned)"))
     card.add(tag(185, 286, "UNVERIFIED", "UNVERIFIED 1N5819 part"))
 
     # shunt caps: bulk at 380, 100 nF at 520
@@ -89,10 +89,10 @@ def build():
     # info panels
     px = 30
     s1, b1 = notes(px, 460, 340, "Part choice (BF 1.2)", [
-        "D1 is the 1N5817: a 20 V, 1 A Schottky, not 40 V (DATASHEETS (e)). VF 0.45 V max at 1 A "
-        "(Diodes DS23001 p2). Fine for a 5 V rail.",
-        ("1N5817 is not owned. Owned 1N5819 (40 V, x10, VF 0.60 V at 1 A on the series sheet) may "
-         "stand in; owner to confirm.", "OWNER-CONFIRM"),
+        "D1 is drawn as the owned 1N5819 (40 V, x10, VF 0.60 V at 1 A on the series sheet).",
+        ("Owner to confirm the 1N5819 stands in for the 1N5817 that BF 1.2 names.", "OWNER-CONFIRM"),
+        "Note: the 1N5817 is a 20 V, 1 A Schottky, not 40 V (DATASHEETS (e)); VF 0.45 V max at 1 A "
+        "(Diodes DS23001 p2). Fine for a 5 V rail, but not owned.",
         ("The owned 1N5819 part and its datasheet are not verified.", "UNVERIFIED"),
         ("BAT85 can also stand in: about 4.2 V at VSYS and 100 mA, IF 200 mA max.", "PROVISIONAL"),
     ])

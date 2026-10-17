@@ -89,5 +89,17 @@ def test_provisional_and_unverified_tags_present():
     assert s.count(">OPEN<") >= 1
 
 
+def test_review_fixes_pinned():
+    t = " ".join(_texts(_svg()))
+    assert "(LF398 not owned, Q1;" in t and "CD4051 alternative)" in t
+    assert "VSYS diode is the only +5 V diode" in t and "OWNER-CONFIRM" in t
+    assert "value to confirm, BF Q5" in t
+    assert "each cable's braid" in t
+    assert "200 mA continuous" in t
+    # electrolytic polarity: + to GND on -12V_BRK, + to the rail on +12V_BRK
+    assert ("C_N12", "+") in pc.NETS["GND_BRK"] and ("C_P12", "+") in pc.NETS["P12_BRK"]
+    assert _svg().count(">+<") >= 2
+
+
 def test_committed_svg_matches_generator():
     assert SVG.read_text() == pc.render()
