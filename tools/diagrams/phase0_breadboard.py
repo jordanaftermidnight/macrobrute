@@ -28,7 +28,7 @@ C_GPIO, C_CLK = PALETTE["cv"], PALETTE["clock"]
 COLOUR_NAME = {C_3V3: "amber", C_GND: "green", C_SPI: "blue", C_LED: "red",
                C_GPIO: "orange", C_CLK: "violet"}
 
-W, H = 990, 1150
+W, H = 1010, 1150
 X0, Y0 = 70, 330            # hole a1
 PINS = breadboard_pins(X0, Y0)
 HALO = "#fbfaf4"
