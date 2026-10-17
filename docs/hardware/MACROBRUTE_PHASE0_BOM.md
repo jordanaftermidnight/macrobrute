@@ -18,7 +18,7 @@ this is mounted inside the synth.
 | Qty | Part | Have? | Notes | ≈ USD |
 |---|---|---|---|---|
 | 1 | Raspberry Pi Pico | Have | Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350); nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
-| 1 | Keyestudio-clone IIC/SPI 1.3″ 128×64 OLED V2.0, used in SPI mode (chip SSD1306 or SH1106, SPI-mode selection and pin order UNVERIFIED: read the silkscreen and chip marking) | Have (owner ruling and statement, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5; the CS lead goes to the GND rail (PROVISIONAL, BT-14); power from the Pico 3V3. GP11 (gate input) is not used in Phase 0. Driver: `display.py` (`OLED_SPI`); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The earlier 4-pin I²C 1.3″ module is in a TD-3 (not available); the GME12864-11 0.96″ has arrived and is an owned spare (interface, chip and pin order UNVERIFIED; if I²C it would need re-pinning). | $4 |
+| 1 | Keyestudio-clone IIC/SPI 1.3″ 128×64 OLED V2.0, used in SPI mode (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED: read the silkscreen and chip marking) | Have (owner ruling and statement, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5; the CS lead goes to the GND rail (PROVISIONAL, BT-14); power from the Pico 3V3. GP11 (gate input) is not used in Phase 0. Driver: `display.py` (`OLED_SPI`); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The earlier 4-pin I²C 1.3″ module is in a TD-3 (not available); the GME12864-11 0.96″ has arrived and is an owned spare (interface, chip and pin order UNVERIFIED; if I²C it would need re-pinning). | $4 |
 | 1 | KY-040 rotary encoder module | Have | 5 pins (CLK, DT, SW, +, GND). On-board 10 kΩ pull-ups. | $2 |
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
@@ -67,8 +67,8 @@ weekend's worth of parts.
 Before wiring (owner to-do, record the result next to each item; all UNVERIFIED until done, BF Q22):
 
 - [ ] Keyestudio-clone IIC/SPI 1.3" V2.0 board: read the silkscreen and the chip marking (SSD1306 or SH1106).
-- [ ] Confirm how SPI mode is selected (solder jumpers or resistors, "IIC/SPI" silkscreen) and that the board is set to SPI.
-- [ ] Confirm the pin order (7 or 8 pins; do not assume D0 = SCK, D1 = MOSI without reading it).
+- [ ] Bench note: the board has 7 pins (owner confirmed), so it is used in SPI by construction. If it has IIC/SPI selection pads or resistors, leave them in the SPI position (UNVERIFIED: no manual found).
+- [ ] Read the silkscreen order of the 7 pins (do not assume D0 = SCK, D1 = MOSI without reading it).
 - [ ] GME12864-11 0.96" (spare): confirm its interface (I2C or SPI), chip and pin order.
 
 After wiring the breadboard per `schematics/phase0_breadboard.svg`:

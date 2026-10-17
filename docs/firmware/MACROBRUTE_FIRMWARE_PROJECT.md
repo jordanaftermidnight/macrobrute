@@ -32,7 +32,7 @@ into the MicroPython filesystem; `main.py` runs at boot.
 ### Main OLED driver
 
 The baseline main display is the owner's Keyestudio-clone IIC/SPI 1.3" V2.0 module used in SPI mode (owner ruling and statement,
-2026-10-17; SPI-mode selection UNVERIFIED), write-only on SPI0: `OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4,
+2026-10-17), write-only on SPI0: `OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4,
 `OLED_RES` GP5 (`config.py`). The module's CS pin is strapped to GND (one
 device on the bus), so `OLED_CS = None`; that the module works with CS tied
 low is UNVERIFIED (bench check BT-14). GP11 is the gate input instead.

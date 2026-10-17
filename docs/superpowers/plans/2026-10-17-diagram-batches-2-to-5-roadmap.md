@@ -95,7 +95,7 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 **Inputs and owner decisions still needed.**
 - OPEN (E-22, E-23): width 17 HP versus about 20 HP; plan both layouts. A 1.3 inch OLED is larger than the 0.96 inch cut-out, which bears on width.
 - DECIDED (owner ruling, 2026-10-17): the main OLED is the Keyestudio-clone IIC/SPI 1.3 inch V2.0 board used in SPI mode, on SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14). No I2C on the expander.
-- OPEN Q22 (owner to-do): read the Keyestudio board silkscreen and chip marking (SSD1306 or SH1106, UNVERIFIED), confirm SPI-mode selection (solder jumpers or resistors, UNVERIFIED) and pin order (UNVERIFIED); confirm the GME12864-11 0.96 inch interface and chip (UNVERIFIED); record the result. The 0.96 inch has arrived.
+- OPEN Q22 (owner to-do): read the Keyestudio board silkscreen and chip marking (SSD1306 or SH1106, UNVERIFIED), read the order of the 7 pins (UNVERIFIED; the board has 7 pins, owner confirmed); confirm the GME12864-11 0.96 inch interface and chip (UNVERIFIED); record the result. The 0.96 inch has arrived.
 - OPEN Q1: LF398N and hold capacitor are not owned. Owned alternative to evaluate: one CD4051 channel as the S&H switch with an owned op-amp buffer; charge injection and droop are UNVERIFIED and need a bench test before the card is final. No purchase without approval.
 - OPEN Q6: LFO timing capacitor and 1M pots (not owned?) versus a different range with owned parts.
 - OPEN Q2: vactrol marking and LED forward-current rating, needed for the V-to-I driver; vactrols are owned, type unknown.
