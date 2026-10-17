@@ -30,8 +30,8 @@ or a proper stripboard track cutter.
 
 The old placement on this page (U1 at cols 5/8, U2 at cols 18/21 on rows 6-9, cuts only at cols
 6-7 and 19-20) shorted nets: rows 6-9 had no cut between col 8 and col 18, so U1 pin 14 (OUT_D) met
-U2 pin 1 (OUT_A), pin 13 met pin 2, pin 12 met pin 3, and U1 pin 11 (V-) met U2 pin 5 (+IN_B)
-(audit B16). The placement below is LAY's, which has no such short.
+U2 pin 1 (OUT_A), U1 pin 13 met U2 pin 2 and U1 pin 12 met U2 pin 3 (audit B16). On row 9 U1 pin 11
+(V-) met U2 pin 4 (V-), the same net and harmless. The placement below is LAY's, which has no such short.
 
 ### U1 — TL074 at rows 6-12, left col 10, right col 13
 
@@ -106,7 +106,7 @@ Rail protection part is OPEN (owner), audit conflict C12: a BAT85 per rail (as b
 | Row 3 (+12V_BRK) | 78L05 pin 3 INPUT; pin 2 COMMON to GND; pin 1 OUTPUT = +5V_LOC | Provisional (BF 3.4); position TO DESIGN |
 | +5V_LOC | U3 pin 14 (VDD) | Jumper |
 | Row 5 (GND) | U3 pin 7 (VSS) | Jumper, row 5 col 5 → row 19 col 5 (LAY) |
-| Row 3 and row 4 | 2-4× 10µF/63V each, to GND | Electrolytic, polarity: + to row 3; − to row 4 |
+| Row 3 and row 4 | 2-4× 10µF/63V each, to GND | +12 V caps: + to row 3, − to GND; -12 V caps: − to row 4, + to GND |
 | Each IC V+ pin | 100nF to GND | Within 10mm of pin; needs its GND jumper (LAY lacks it) |
 | Each IC V- pin | 100nF to GND | Within 10mm of pin; needs its GND jumper (LAY lacks it) |
 

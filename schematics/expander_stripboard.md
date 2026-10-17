@@ -67,8 +67,8 @@ Star topology to avoid ground loops (all grounds meet at the expander star, BF 4
    2    ────────────────────────────────────────── LED ───   LFO indicator
    3    ┤1       8├── V+ ─────────────────────────────────
    4    ┤2  U1   7├── SQR_OUT ──[3.3k]──[3.3k]── SQR jack  ±5V scaled
-   5    ┤3  072  6├─────────── 100k ──┐                     -IN_B
-   6    ┤4       5├── 100k ── GND     └── SQR_OUT (hyst)    +IN_B hysteresis
+   5    ┤3  072  6├── GND                                   -IN_B to GND
+   6    ┤4       5├── 50k ← TRI ; 100k ← SQR_OUT             +IN_B hysteresis
    7    ── V- ────────────────────────────────────────────
    8    ── TRI_OUT jack ──────────────────────────────────
 
@@ -78,15 +78,20 @@ Star topology to avoid ground loops (all grounds meet at the expander star, BF 4
     Pin 3 (+IN_A) → GND via 100kΩ (virtual ground)
     Pin 1 (OUT_A) = TRIANGLE output (~10Vpp)
 
-  Section B = Schmitt Trigger (comparator with hysteresis):
-    Pin 6 (-IN_B) ← Triangle from pin 1
-    Pin 5 (+IN_B) ← voltage divider: 100kΩ from pin 7 (own output) + 100kΩ to GND
-    Pin 7 (OUT_B) = SQUARE output (±~11V rail-to-rail)
+  Section B = NON-INVERTING Schmitt trigger (comparator with hysteresis):
+    Pin 6 (-IN_B) → GND
+    Pin 5 (+IN_B) ← R1 = 50kΩ (2 × 100kΩ in parallel) from the triangle (pin 1)
+    Pin 5 (+IN_B) ← R2 = 100kΩ from pin 7 (own output)
+    Pin 7 (OUT_B) = SQUARE output (±Vsat, about ±10.5 V)
+    Thresholds ±Vsat × R1/R2 = ±Vsat/2. (The old wiring, triangle on pin 6 and a 100k/100k
+    divider on pin 5, was an inverting Schmitt and latched at a rail; see expander_circuits.md
+    section 1 for the derivation.) Hole positions of R1 / R2 and the pin 6 ground jumper: TO
+    DESIGN; the DIP-gap cuts below are unchanged.
 
   Square output scaling: 3.3kΩ + 3.3kΩ voltage divider → ±5V for Eurorack
     (pin 7 → 3.3kΩ → tap → 3.3kΩ → GND; tap → 1kΩ → SQR jack; the grid draws them in a line)
 
-  Rate (derived, T = 2RC; audit S60): 1MΩ pot + 10kΩ with 1µF gives about 0.5 Hz to 50 Hz
+  Rate (derived, T = 4RC × R1/R2 = 2RC; audit S60): 1MΩ pot + 10kΩ with 1µF gives about 0.5 Hz to 50 Hz
   (the old "0.04-40 Hz" was wrong). Not measured (E-27).
   REQUIRED (audit S61): 10kΩ fixed resistor in series with the rate pot, between the square
   output and pin 2. Hole position TO DESIGN (not drawn in the grid above).

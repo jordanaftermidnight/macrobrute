@@ -164,7 +164,9 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 ### Issue: Integrator output swing
 **Status:** CORRECT
 - TL072 saturates at approximately ±(Vcc-1.5V) = ±10.5V
-- Schmitt trigger thresholds at ±Vsat/2 ≈ ±5.25V
+- Schmitt trigger: NON-INVERTING (triangle → 50kΩ → +in, 100kΩ from output → +in, -in to GND);
+  thresholds at ±Vsat × 50k/100k = ±Vsat/2 ≈ ±5.25V. The earlier inverting version (triangle on
+  -in) latched at a rail because the integrator already inverts (fix round 1).
 - Triangle amplitude: peak-to-peak = 2 × 5.25V ≈ 10.5Vpp
 - Eurorack compatible (10Vpp standard)
 
@@ -179,8 +181,9 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 
 ### Issue: Rate range
 **Status:** CORRECTED (audit S60, S61)
-- With thresholds at ±Vsat/2 the triangle swings ±5.25 V, so each half-period is R × C and
-  T = 2RC (derived from the component values, not measured; E-27).
+- With thresholds at ±Vsat × R1/R2 the triangle travels 2 × Vsat × R1/R2 per half-period at
+  slope Vsat / (RC), so T = 4RC × R1/R2 = 2RC for R1/R2 = 1/2; Vsat cancels (derived, not
+  measured; E-27). Derivation in `expander_circuits.md` section 1.
 - R = 1MΩ pot + 10kΩ, C = 1µF: slow end T ≈ 2.0 s (about 0.5 Hz); pot at 0: T = 20 ms (about 50 Hz).
   The old "0.04-40 Hz" was wrong.
 - The 10kΩ series resistor is mandatory: at pot = 0 it is the only thing limiting the current from
@@ -244,8 +247,6 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 
 ### Issue: TL072 rail-to-rail behavior
 **Status:** NEEDS ATTENTION
-- TL072 input common-mode range: -(Vcc-4V) to +(Vcc-1.5V)
-- At ±12V: -8V to +10.5V → can't handle full ±10V Eurorack signals
 - Datasheet: at ±15 V the common-mode range is ±11 V min, -12 to +15 V typ (TI SLOS080W p15),
   so about ±8 V min on ±12 V rails.
 - **Recommendation:** For full ±10V range, consider:
@@ -321,10 +322,11 @@ result. Sections 6 and 8 cover dropped circuits; sections 11-12 cover the JF-33 
 | Breakout -12V diode | Orientation stated two ways | Cathode to TP71, anode to rail (B15) |
 | Gate buffer | Pull-up held input high | No pull-up, 2 inverters, 1kΩ out, 22k/33k on expander (B14) |
 | CV input protection | Five conflicting circuits | 100kΩ + 2× BAT85 to ±12V_BRK + 1nF (B17) |
-| Vactrol driver | Transistor switch, not linear | TL072 V-to-I stage, TO DESIGN (S37, Q2) |
+| Vactrol driver | Transistor switch, not linear | Linear V-to-I stage: op-amp, or op-amp + owned transistor; TO DESIGN (S37, Q2) |
 | Output buffers | 10MΩ bias, 1kΩ position | 1MΩ bias; 1kΩ after the feedback tap |
 | LFO square output | Divider ratio too hot | Change 1.8kΩ to 3.3kΩ |
 | LFO range | 0.04-40 Hz wrong | About 0.5-50 Hz; 10kΩ series mandatory (S60, S61) |
+| LFO Schmitt | Inverting comparator latched | Non-inverting: 50k from triangle, 100k feedback, -in to GND |
 | S&H | Pinout, hold cap, droop | Datasheet pinout; 10 nF film; trigger TO DESIGN (B13, S63, S65) |
 | Delay time CV emitter R | Was 220Ω | Already corrected to 1kΩ |
 | Slew limiter | TL072 input range | Accept ±8V or add attenuator |

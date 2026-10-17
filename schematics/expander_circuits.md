@@ -33,10 +33,12 @@ replaced by the netlist below (from the prose that was the reliable part).
     feedback: 1µF capacitor from out (pin 1) to -in (pin 2)
     output (pin 1): Triangle wave → TRIANGLE OUT jack (output series R: see below)
 
-  TL072 B = Schmitt Trigger (comparator with hysteresis)
-    +in (pin 5): 100kΩ from own output (pin 7), 100kΩ to GND  (thresholds ±Vsat/2)
-    -in (pin 6): Triangle from TL072 A output (pin 1)
-    output (pin 7): Square wave (±~10.5 V)
+  TL072 B = NON-INVERTING Schmitt trigger (comparator with hysteresis)
+    +in (pin 5): R1 = 50kΩ from the triangle (TL072 A pin 1)  [two 100kΩ in parallel]
+                 R2 = 100kΩ from own output (pin 7)
+    -in (pin 6): GND
+    output (pin 7): Square wave (±Vsat, about ±10.5 V, UNVERIFIED at ±12 V)
+    thresholds: triangle = ±Vsat × R1/R2 = ±Vsat/2
 
   Square output scaling:
     pin 7 ── 3.3kΩ ──┬── 1kΩ ── SQUARE OUT jack       (±5.25 V, audit N14)
@@ -48,13 +50,27 @@ replaced by the netlist below (from the prose that was the reliable part).
   TL072 supply: pin 8 = +12 V, pin 4 = -12 V (TI SLOS080W p5), 100nF each to GND.
 ```
 
-**Rate range (derived, audit S60):** the triangle swings between the Schmitt thresholds (±5.25 V),
-so each half-period is R × C and **T = 2RC**. With R = 1MΩ + 10kΩ and C = 1µF: T ≈ 2.0 s, about
+**Why B must be non-inverting:** the integrator inverts, so the comparator must not. The earlier
+netlist here (triangle on -in, 100k / 100k divider from pin 7 to +in) was an inverting Schmitt: with
+pin 7 high, +in sits at +Vsat/2 while the triangle ramps down, -in never crosses +in, and the loop
+latches at a rail (fix round 1, reviewer finding).
+
+**Derivation (corrected circuit):** pin 5 = (V_tri × R2 + V_sq × R1) / (R1 + R2). The output flips
+when pin 5 crosses 0 V (pin 6), i.e. at V_tri = -V_sq × R1/R2. With V_sq = +Vsat the integrator
+ramps the triangle down at Vsat / (R C) until V_tri = -Vsat × R1/R2, then the output flips to -Vsat
+and the triangle ramps up to +Vsat × R1/R2. Triangle amplitude: ±Vsat × R1/R2 (±5.25 V for Vsat
+10.5 V and R1/R2 = 1/2; scales with Vsat). Each half-period: travel 2 × Vsat × R1/R2 at slope
+Vsat / (R C), so t_half = 2 R C × R1/R2 and **T = 4 R C × R1/R2 = 2RC** for R1/R2 = 1/2. Vsat cancels,
+so the frequency does not depend on the rail.
+
+**Rate range (derived, audit S60):** **T = 2RC**. With R = 1MΩ + 10kΩ and C = 1µF: T ≈ 2.0 s, about
 **0.5 Hz** at the slow end; with the pot at 0 (10kΩ only): T = 20 ms, about **50 Hz**. The old
 "0.04-40 Hz" was wrong. Not measured (E-27).
 
 **10kΩ series resistor: mandatory** (audit S61). At pot = 0 it is the only limit on the current
-from the Schmitt output into the integrator's virtual ground. Pot taper: rate goes as 1/R, so a
+from the Schmitt output into the integrator's virtual ground.
+With an E12 47kΩ for R1 instead of 2 × 100kΩ in parallel: R1/R2 = 0.47, triangle ±4.9 V, T = 1.88RC
+(about 0.53-53 Hz). Pot taper: rate goes as 1/R, so a
 linear pot crowds the fast end; taper choice OPEN (owner).
 
 **Parts:** 1µF film and 1MΩ pot are not owned (BF Q6). With an owned 100kΩ pot the range becomes
@@ -90,6 +106,11 @@ LF398 PDIP-8 pinout (Pin Functions table, p3). The three older pinouts in the re
 | 8 | LOGIC | From the trigger conditioner (TO DESIGN, below) |
 
 **Supply:** ±5 V to ±18 V operating, ±18 V abs max (p1, p4): ±12 V from the rack is in range.
+Supply current 4.5 mA typ, 6.5 mA max (LF398-N, p7).
+
+**Input range:** the LF398-N parameters are guaranteed for -VS + 3.5 V ≤ VIN ≤ +VS - 3.5 V (p7
+note 1): about ±8.5 V on ±12 V rails. A ±10 V rack signal exceeds it; input scaling, if wanted, is
+TO DESIGN.
 
 **Hold capacitor: 10 nF film** (genuine purchase, with the LF398). 0.01 µF is the characterised
 value: hold step 1 mV typ, 2.5 mV max (p7); acquisition to 0.1 % about 20 µs (p5-p7). Use
@@ -102,7 +123,7 @@ figure). The old "3 pA, 3 mV/s with 1 nF" was wrong (audit S63); with 1 nF it wo
 
 **Trigger: TO DESIGN** (audit S65). Constraints from the datasheet:
 - Sample mode while LOGIC is high relative to LOGIC REFERENCE; hold while low (p14).
-- Logic threshold 0.8 / 1.4 / 2.4 V min / typ / max (p5); logic input current 2 µA typ, 10 µA max (p5).
+- Logic threshold 0.8 / 1.4 / 2.4 V min / typ / max (LF398-N table, p7); logic input current 2 µA typ, 10 µA max (p7).
 - Logic-to-reference differential abs max: the p4 table prints 7 V and -30 V. A +10 V rack gate
   applied directly would exceed +7 V, so a series resistor and clamp are needed (r4 suggests 10kΩ
   plus a clamp; values TO DESIGN). For proper logic operation one logic pin must stay at least 2 V
@@ -110,7 +131,7 @@ figure). The old "3 pA, 3 mV/s with 1 nF" was wrong (audit S63); with 1 nF it wo
 - Logic edges need at least 1 V/µs; an RC in front of LOGIC must keep that slope at the threshold
   (p15).
 - Keep logic lines away from the hold capacitor: 1 pF of stray coupling with a 5 V swing adds
-  0.5 mV hold step at 0.01 µF (p5).
+  0.5 mV hold step at 0.01 µF (p7 note 2).
 
 **Normalling: OPEN (owner).** With noise dropped, S&H IN has nothing patched by default. r4
 suggests IN normalled to the LFO triangle and TRIG to the clock through switched jacks; the owned
@@ -320,7 +341,7 @@ not included.
 | 1N4148 | 2 | Slew steering | Have (owner, kit UNVERIFIED) |
 | 1N5819 | — | Alternative to BAT85 on the rack rails (40 V Schottky) | Have (10; kit UNVERIFIED) |
 | BAT85 | 4 | Pico VSYS, +12 / -12 / +5 V | Have (10, budget BF 1.2) |
-| 100kΩ | 5 | Clock IN (2), LFO Schmitt divider (2), integrator bias (1) | Have (kit, Q5) |
+| 100kΩ | 6 | Clock IN (2), LFO Schmitt R1 (2 in parallel) and R2 (1), integrator bias (1) | Have (kit, Q5) |
 | 10kΩ | 4 | LFO series (1), slew input (1), CV outputs (2) | Have (kit) |
 | 22kΩ, 33kΩ | 1 each | Gate divider | Have (kit) |
 | 3.3kΩ | 2 | LFO square divider | Have (kit) |
