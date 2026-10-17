@@ -131,24 +131,29 @@ SVG_MAP = {
 # Short prose caption rendered BELOW each SVG. Keep each entry tight —
 # 1-3 sentences explaining what the diagram is showing and any non-obvious
 # detail. Markdown inline syntax (backticks for code, **bold**) is supported.
+STALE_DB9 = ("STALE (to be redrawn, see roadmap batch A): decided design has NO supply on the "
+             "cable, only shared ground, and no I²C; see connection map sections 2-3. ")
+STALE_PANEL = ("STALE (to be redrawn, see roadmap batch B): the strip OLED is dropped and the "
+               "expander width is open (17 or about 20 HP). ")
+
 SVG_DESCRIPTIONS = {
     # Vision — finished panel mockups
     "panel/expander_finished_panel.svg":
-        "**The 17 HP expander, finished.** Visualization of the assembled module, "
+        "**The expander, finished (width open: 17 or about 20 HP).** Visualization of the assembled module, "
         "labelled by signal type: blue = audio, **gold** = CV, **green** = gate/clock, "
         "**lavender** = pot/switch. The faux OLED frame shows the kind of UI the firmware "
         "draws (BPM, sequencer state, level meters). For drilling dimensions see "
         "`panel/expander_17hp.svg`.",
     "panel/microbrute_finished_panel.svg":
-        "**MicroBrute panel additions in their final positions.** Stock controls are ghosted "
-        "for spatial reference — the mod adds a strip OLED, 8 new 3.5 mm jacks (4 inserts + 4 "
+        STALE_PANEL + "**MicroBrute panel additions in their final positions.** Stock controls are ghosted "
+        "for spatial reference — the old drawing adds a strip OLED (now dropped), 8 new 3.5 mm jacks (4 inserts + 4 "
         "Phase-2 mod jacks), 5 SPDT toggles, and 6 brass touch bolts plus a GND return bolt. "
         "Color coding matches the expander mockup. For drilling dimensions see "
         "`panel/microbrute_panel_template.svg`.",
 
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
-        "**Flat schematic, power-rail style.** Pico WH on the left, +3V3 rail along the top, "
+        "**Flat schematic, power-rail style.** Pico (variant to confirm, Q21) centre-right, +3V3 rail along the top, "
         "GND rail along the bottom. One 1.3\" 7-pin SPI OLED sits on SPI0, write-only "
         "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES, `GP11` CS). **UNVERIFIED:** the chip "
         "(SSD1306 or SH1106) and the module pin order, so read the module first. Most Pico "
@@ -159,7 +164,7 @@ SVG_DESCRIPTIONS = {
         "before looking at the breadboard view.",
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
-        "physically sits on a half-size breadboard. Pico WH straddles the centre channel; the "
+        "physically sits on a half-size breadboard. The Pico (variant to confirm, Q21) straddles the centre channel; the "
         "single 1.3\" 7-pin SPI OLED sits off the board, drawn flipped with its header toward "
         "the board, and is wired down to it with seven leads; +3V3 and GND rails run along the "
         "top and bottom; jumper paths are colour-coded by net, with a jumper table and part-lead "
@@ -168,7 +173,7 @@ SVG_DESCRIPTIONS = {
 
     # Pinout / pin reference diagrams
     "schematics/pico_pinout_diagram.svg":
-        "Pico WH 40-pin header and GPIO allocation table, colour-coded by role (UART0 bridge, "
+        "Pico (variant to confirm, Q21) 40-pin header and GPIO allocation table, colour-coded by role (UART0 bridge, "
         "SPI0 main OLED, RGB LED, tap button, encoder, clock dividers, aux outs, clock in/out, "
         "free, power). The OLED takes `GP2`, `GP3`, `GP4`, `GP5` and `GP11`; only `GP26`-`GP28` "
         "are free. The UART0 bridge on "
@@ -178,9 +183,9 @@ SVG_DESCRIPTIONS = {
         "touches — the UART1 bridge to the Pico (P0.15 RXD / P0.16 TXD) plus ISP entry pins "
         "(P0.2 / P0.3 / P2.10) for any future firmware injection.",
     "schematics/db9_connector_diagram.svg":
-        "Both DB-9 connectors that link the MicroBrute panel to the 17 HP expander. DB-9 A "
-        "carries audio/CV outputs *to* the expander; DB-9 B carries CV inputs, the I²C0 strip-OLED "
-        "bus, the UART bridge to LPC2361, and ±12 V power. Pin assignments are frozen.",
+        STALE_DB9 + "This old drawing shows DB-9 B with I²C (SDA/SCL, 4.7k pull-ups, 0x3D) and "
+        "±12 V; both are withdrawn. Decided: DB-9 A carries Gate, Pitch, Env, LFO, Mix, VCF, Saw, "
+        "Square and ground; DB-9 B carries UART TX/RX, Filter CV, VCA CV and grounds.",
     "schematics/testpoints_map.svg":
         "TP / GP test-point map on the MicroBrute main PCB. Each labeled point is one place "
         "where a stock signal can be tapped non-destructively for the buffered breakout — "
@@ -192,7 +197,7 @@ SVG_DESCRIPTIONS = {
         "OWNER-CONFIRM) → 2-4x 10 µF/63 V bulk → 100 nF → Pico VSYS "
         "(pin 39). Design values only, nothing built; unmeasured figures are tagged.",
     "schematics/power_distribution.svg":
-        "Power distribution across the breakout PCB and 17 HP expander — Eurorack ±12 V bus, "
+        STALE_DB9 + "Power distribution across the breakout PCB and expander — Eurorack ±12 V bus, "
         "78L05 local +5 V regulator, decoupling caps per supply pin pair, ferrite-bead noise "
         "rejection on the +5 V branch.",
     "schematics/power_regulation_diagram.svg":
@@ -201,12 +206,12 @@ SVG_DESCRIPTIONS = {
         "carry signals and grounds, with no supply on the cable. Unmeasured currents are "
         "tagged UNVERIFIED; nothing is built.",
     "schematics/expander_power_distribution.svg":
-        "How the 17 HP expander distributes its share of Eurorack ±12 V to the noise generator, "
+        STALE_DB9 + "How the expander distributes its share of Eurorack ±12 V to the noise generator, "
         "LFO, S&H, slew, attenuverter, and clock divider — including local 78L05 for the CD4024.",
 
     # System / signal flow
     "schematics/system_architecture_block.svg":
-        "High-level block diagram of the whole MACROBRUTE system: MicroBrute core (VCO/VCF/VCA/LFO/Env), "
+        STALE_DB9 + "High-level block diagram of the whole MACROBRUTE system: MicroBrute core (VCO/VCF/VCA/LFO/Env), "
         "breakout interface (DB-9 A/B + Pico + touch pads), and the expander modules. Useful for "
         "orienting yourself before diving into specific schematics.",
     "schematics/audio_signal_flow.svg":
@@ -216,7 +221,7 @@ SVG_DESCRIPTIONS = {
         "CV control path — every CV input (filter, VCA, resonance, sync, mod, gate inputs) and "
         "where it lands on the LPC2361 / op-amp chain.",
     "schematics/signal_flow_overview.svg":
-        "Combined signal-flow overview that shows audio + CV + clock together on one canvas, "
+        STALE_DB9 + "Combined signal-flow overview that shows audio + CV + clock together on one canvas, "
         "with the Pico bridge in the middle and DB-9 A/B as the only physical bus between sides.",
     "schematics/midi_interface_circuit.svg":
         "Stock MicroBrute MIDI input (6N138 optocoupler) plus the new USB-MIDI path through the "
@@ -226,13 +231,13 @@ SVG_DESCRIPTIONS = {
         "End-to-end interconnect wiring: every wire that crosses between the MicroBrute panel and "
         "the expander, including DB-9 A/B mapping, jack wiring, and ground topology.",
     "schematics/wiring_overview.svg":
-        "Auto-generated wiring overview produced by `tools/generate_schematics.py`. Compact, "
+        STALE_DB9 + "Auto-generated wiring overview produced by `tools/generate_schematics.py`. Compact, "
         "machine-rendered cousin of the hand-authored interconnect diagram.",
     "schematics/wiring_internal.svg":
         "Internal MicroBrute wiring — what stays inside the case, between the breakout PCB and "
         "the stock CPU board / panel jacks. Use alongside the test-points map.",
     "schematics/wiring_power_distribution.svg":
-        "Power-only view of the wiring: where ±12 V, +5 V, and GND travel between Eurorack bus, "
+        STALE_DB9 + "Power-only view of the wiring: where ±12 V, +5 V, and GND travel between Eurorack bus, "
         "breakout PCB, expander, and Pico filter.",
 
     # Breakout buffers / per-channel circuits
@@ -294,9 +299,10 @@ SVG_DESCRIPTIONS = {
         "Bench-test rig for prototyping touch sensitivity before committing to the panel — same "
         "circuit on a small stripboard with four bolts on a piece of wood.",
     "schematics/touch_plate_redesign.svg":
-        "Revised touch-plate front-end after the first prototype was too touchy. Adds a 100 nF "
-        "filter cap and lowers the bias resistor to 1 MΩ for cleaner discrimination. Its Pico pins "
-        "are stale: GP2 and GP3 are now the main OLED's SPI pins (see `schematics/touch_plates.md`).",
+        "STALE pins (to be redrawn): GP2 and GP3 are now the main OLED's SPI pins, so the MPR121 "
+        "I²C wiring shown has no free pins (see `schematics/touch_plates.md`). Revised touch-plate "
+        "front-end after the first prototype was too touchy. Adds a 100 nF filter cap and lowers "
+        "the bias resistor to 1 MΩ for cleaner discrimination.",
 
     # Protection / safety
     "schematics/led_driver_array_schematic.svg":

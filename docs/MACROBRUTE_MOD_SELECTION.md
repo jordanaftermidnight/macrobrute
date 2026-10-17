@@ -96,6 +96,12 @@ Combined parts cost: ~€15–20. Combined panel area: 4 new jacks + 3 pots + 6 
 
 ## BUILD — Expander (17HP Eurorack — 87 × 128.5 mm; width open: 17 or about 20 HP)
 
+> **STALE section (kept for history).** The connection map is the authority: section 10 for the
+> expander (slew limiter, LFO and S&H are all on the expander, decided 2026-10-16) and sections 2-3
+> for the cable. The decided cable has **no supply on it, only shared ground, and no I²C**. The
+> patchbay list below has been corrected to the decided DB-9 map; the utility tables above it are
+> older than section 10.
+
 The expander is now minimal. Most utilities have been moved off it because
 the user already has equivalent modules in the rack. See
 `MACROBRUTE_CONNECTION_MAP.md §10` for the canonical layout.
@@ -126,20 +132,16 @@ the user already has equivalent modules in the rack. See
 | Manual gate button | Folded into the tap button (long-hold mode) |
 | Clock divider chip | Moved to firmware (GP16/17/18) |
 
-### Patchbay (from DB-9)
+### Patchbay (from DB-9) — decided map (connection map sections 2-3)
 
-**DB-9 A outputs (8 signals + GND):**
-SAW, SQR, TRI, SUB, MIX, VCF, ENV, LFO → 8 jacks
+**DB-9 A, MicroBrute to expander (8 signals + GND):**
+A:1 Gate, A:2 Pitch, A:3 Env, A:4 LFO, A:5 Mix, A:6 VCF, A:7 Saw, A:8 Square, A:9 GND
 
-**DB-9 B inputs (6 signals + power + GND):**
-- Filter CV In (with attenuator pot)
-- VCA CV In (with attenuator pot)
-- Resonance CV In (vactrol)
-- Sync In
-- Gate In
-- Ext Audio In
+**DB-9 B, signals and grounds only (no supply, no I²C):**
+B:1 UART TX, B:6 UART RX (Pico ↔ LPC2361 bridge), B:3 VCA CV in, B:5 Filter CV in;
+B:2, B:4, B:7, B:8 and B:9 are ground.
 
-**Additional:** Clock Out (from Pico, separate wire), Gate Out (from Schmitt)
+**Additional (older plan, STALE):** Clock Out (from Pico, separate wire), Gate Out (from Schmitt)
 
 ---
 

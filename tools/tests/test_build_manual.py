@@ -30,3 +30,37 @@ def test_oled_captions_describe_the_spi_baseline():
         assert "SPI" in text, k
     for k in keys[:2]:
         assert "pin order" in SVG_DESCRIPTIONS[k] and "UNVERIFIED" in SVG_DESCRIPTIONS[k], k
+
+
+# SVG text that shows the withdrawn design: supply or I2C on DB-9 B, or the dropped strip OLED
+_STALE_SVG = (r"7:\s*\+12V|\(Inputs \+ Power\)|via DB-9 B|SDA|0x3D|strip OLED|I²C from Pico"
+              r"|DB-9, Power Distribution")
+
+
+def _svg_texts(path):
+    import re
+    return " ".join(re.findall(r">([^<]+)<", path.read_text(encoding="utf-8")))
+
+
+def test_captions_of_withdrawn_designs_are_marked_stale():
+    import re
+    from tools.build_manual import PROJECT, SVG_DESCRIPTIONS, SVG_MAP
+    bad = []
+    for svgs in SVG_MAP.values():
+        for svg in svgs:
+            path = PROJECT / svg
+            if not path.exists():
+                continue
+            cap = SVG_DESCRIPTIONS.get(svg, "")
+            shows_old = re.search(_STALE_SVG, _svg_texts(path), re.I)
+            says_old = (("±12" in cap or "12 V" in cap) and "DB-9 B" in cap) or (
+                re.search(r"strip.OLED", cap, re.I) and "dropped" not in cap.lower())
+            if (shows_old or says_old) and not cap.startswith("STALE"):
+                bad.append(svg)
+    assert bad == []
+
+
+def test_db9_caption_does_not_call_the_old_map_frozen():
+    from tools.build_manual import SVG_DESCRIPTIONS
+    cap = SVG_DESCRIPTIONS["schematics/db9_connector_diagram.svg"]
+    assert cap.startswith("STALE") and "NO supply on the cable" in cap
