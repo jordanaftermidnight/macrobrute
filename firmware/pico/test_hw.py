@@ -3,15 +3,15 @@ MACROBRUTE — Hardware Test Script
 Run: mpremote run test_hw.py
 
 Tests each peripheral independently via serial output.
-No OLED dependency — diagnose wiring issues before full firmware.
+Only the OLED test needs other files (display.py, config.py) on the Pico;
+the rest diagnose wiring before the full firmware is copied.
 
 Breadboard Wiring Quick Reference:
   Main OLED 1.3" 7-pin SPI (chip SSD1306 or SH1106, UNVERIFIED; pin order UNVERIFIED):
     VCC  → 3V3 (pin 36)        GND → GND
     D0   → GP2 (pin 4, SCK)    D1  → GP3 (pin 5, MOSI)
-    DC   → GP4 (pin 6)         RES → GP5 (pin 7)        CS → GP11 (pin 15)
-  The OLED test below is a legacy I2C check and is not valid until the SPI
-  driver lands (firmware follow-up).
+    DC   → GP4 (pin 6)         RES → GP5 (pin 7)        CS → GND (strapped, BT-14)
+  The OLED test drives the module through display.OLED_SPI.
 
   Encoder HW040:
     CLK → GP14 (pin 19)        DT  → GP15 (pin 20)
@@ -33,7 +33,7 @@ Breadboard Wiring Quick Reference:
 """
 
 import time
-from machine import Pin, I2C, UART, PWM
+from machine import Pin, UART, PWM
 
 
 def wait_press(pin, name, timeout_s=10):
@@ -101,58 +101,29 @@ def test_encoder():
 
 
 def test_oled():
-    print("\n[4/6] OLED TEST (I2C, legacy)")
-    print("  NOTE — the main OLED is now SPI (GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS);")
-    print("  this I2C check is for the old module and does not apply until the SPI driver lands")
+    print("\n[4/6] OLED TEST (SPI)")
+    print("  Uses display.py + config.py from the Pico filesystem (copy them first).")
+    print("  Wiring: GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, module CS strapped to GND.")
     try:
-        i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400_000)
-        devices = i2c.scan()
-        print(f"  I2C devices found: {[hex(d) for d in devices]}")
-        if 0x3C not in devices and 0x3D not in devices:
-            print("  WARN — no OLED at 0x3C or 0x3D")
-            print("  Legacy I2C check only: the SPI OLED wiring is GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS")
-            return
+        import config
+        from display import OLED_SPI
 
-        addr = 0x3C if 0x3C in devices else 0x3D
+        oled = OLED_SPI()
+        oled.clear()
+        oled.text("MACROBRUTE", 24, 8)
+        oled.text("HW TEST", 36, 24)
+        oled.hline(0, 40, 128, 1)
+        oled.text("SPI " + config.OLED_CHIP, 24, 48)
+        oled.show()
 
-        def cmd(c):
-            i2c.writeto(addr, bytearray([0x00, c]))
-
-        def data(buf):
-            i2c.writeto(addr, b'\x40' + buf)
-
-        # SH1106-tuned init (also works on SSD1306 for this test draw)
-        for c in [0xAE, 0xD5, 0x80, 0xA8, 0x3F, 0xD3, 0x00, 0x40,
-                  0xAD, 0x8B, 0xA1, 0xC8, 0xDA, 0x12,
-                  0x81, 0x80, 0xD9, 0x22, 0xDB, 0x35,
-                  0xA4, 0xA6, 0xAF]:
-            cmd(c)
-
-        import framebuf
-        buf = bytearray(128 * 8)
-        fb = framebuf.FrameBuffer(buf, 128, 64, framebuf.MONO_VLSB)
-        fb.fill(0)
-        fb.text("MACROBRUTE", 24, 8)
-        fb.text("HW TEST", 36, 24)
-        fb.hline(0, 40, 128, 1)
-        fb.text("I2C OK", 36, 48)
-
-        # SH1106 uses 2-col offset. Set to 0 if testing SSD1306.
-        col_offset = 2
-        col_lo = col_offset & 0x0F
-        col_hi = 0x10 | ((col_offset >> 4) & 0x0F)
-        for page in range(8):
-            cmd(0xB0 + page)
-            cmd(col_lo)
-            cmd(col_hi)
-            data(buf[page * 128:(page + 1) * 128])
-
-        print("  Display should show: MACROBRUTE / HW TEST / I2C OK")
-        print("  OK — I2C OLED initialized")
+        print(f"  Sent init + frame for OLED_CHIP={config.OLED_CHIP}, COL_OFFSET={config.OLED_COL_OFFSET}")
+        print("  Display should show: MACROBRUTE / HW TEST / SPI <chip>")
+        print("  SPI is write-only, so only your eyes can confirm the OLED works.")
+        print("  Blank screen: check pin order (UNVERIFIED), RES, DC, then CS-to-GND (BT-14).")
+        print("  Shifted 2 columns or garbage edge: try OLED_CHIP=\"SH1106\", OLED_COL_OFFSET=2.")
 
     except Exception as e:
         print(f"  FAIL — {e}")
-        print("  Legacy I2C check only: the SPI OLED wiring is GP2 SCK, GP3 MOSI, GP4 DC, GP5 RES, GP11 CS")
 
 
 def test_lpc_bridge():

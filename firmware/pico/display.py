@@ -1,49 +1,73 @@
-# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
-# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11). This file still
-# !!! drives I2C on config.OLED_SDA / config.OLED_SCL, which are GP4 / GP5, i.e. the
-# !!! SPI DC and RES pins. Do not run it against the SPI wiring. The SPI driver is a
-# !!! firmware follow-up (see docs/firmware/MACROBRUTE_FIRMWARE_PROJECT.md).
-"""MACROBRUTE Pico WH — main OLED driver (128×64, I²C).
+"""MACROBRUTE Pico — main OLED driver (128×64, SPI, write-only).
 
-Primary target is the **0.96" SSD1306** (matches the strip OLED's chip family
-on the same bus, simpler driver story). The 1.3" SH1106 is supported as a
-fallback by switching the chip-specific init bytes — set
-`config.OLED_CHIP = "SH1106"` and `config.OLED_COL_OFFSET = 2` to use it.
+Targets the owner's 1.3" 7-pin SPI module on SPI0: SCK GP2, MOSI GP3,
+DC GP4, RES GP5 (pins from config.py). The module's CS pin is strapped to
+GND (one device on the bus), so config.OLED_CS is None and this driver never
+drives CS; if CS is moved back onto a GPIO, set config.OLED_CS to that GP and
+the driver toggles it around each transfer.
+
+The controller chip is UNVERIFIED (SSD1306 or SH1106: read the module
+marking). config.OLED_CHIP selects the init sequence; for SH1106 also set
+config.OLED_COL_OFFSET = 2. Module pin order and current draw are
+UNVERIFIED, and so is the module working with CS tied low (bench check BT-14).
 """
 
-from machine import Pin, I2C
+from machine import Pin, SPI
 import framebuf
 import time
 import config
 
+# 8 MHz: well inside the SSD1306/SH1106 write-clock limits and forgiving of
+# breadboard leads. Raise only after the bench check.
+SPI_BAUD = 8_000_000
 
-class OLED_I2C:
+
+class OLED_SPI:
     """128×64 OLED driver — works with both SSD1306 and SH1106 chips.
 
     The two chips share most registers; the differences are the charge-pump
-    command (0x8D vs 0xAD), the column-address scheme (horizontal mode vs
-    page mode), and a 2-column offset on SH1106. `config.OLED_CHIP` selects
-    which init sequence to send; `config.OLED_COL_OFFSET` handles the offset.
+    command (0x8D vs 0xAD) and a 2-column offset on SH1106. `config.OLED_CHIP`
+    selects which init sequence to send; `config.OLED_COL_OFFSET` handles the
+    offset. Pages are written in page-addressing mode, which both chips use.
     """
 
     def __init__(self):
         self.width = config.OLED_WIDTH
         self.height = config.OLED_HEIGHT
         self.pages = self.height // 8
-        self.addr = config.OLED_ADDR
         self.col_offset = config.OLED_COL_OFFSET
         self.chip = getattr(config, "OLED_CHIP", "SSD1306").upper()
 
-        self.i2c = I2C(
-            config.OLED_I2C_ID,
-            scl=Pin(config.OLED_SCL),
-            sda=Pin(config.OLED_SDA),
-            freq=400_000,
+        # Write-only: no MISO is wired. Whether the rp2 port muxes its default
+        # SPI0 MISO pin (GP16, a divider output here) at init is UNVERIFIED;
+        # ClockDivider is built after Display and claims GP16 as a GPIO output.
+        self.spi = SPI(
+            config.OLED_SPI_ID,
+            baudrate=SPI_BAUD,
+            polarity=0,
+            phase=0,
+            sck=Pin(config.OLED_SCK),
+            mosi=Pin(config.OLED_MOSI),
         )
+        self.dc = Pin(config.OLED_DC, Pin.OUT, value=0)
+        self.res = Pin(config.OLED_RES, Pin.OUT, value=1)
+        cs = getattr(config, "OLED_CS", None)
+        self.cs = None if cs is None else Pin(cs, Pin.OUT, value=1)
 
         self.buf = bytearray(self.width * self.pages)
         self.fb = framebuf.FrameBuffer(self.buf, self.width, self.height, framebuf.MONO_VLSB)
+        self._reset()
         self._init_display()
+
+    def _reset(self):
+        # RES is active low: hold high, pulse low, release, then let the
+        # controller settle before the first command.
+        self.res(1)
+        time.sleep_ms(1)
+        self.res(0)
+        time.sleep_ms(10)
+        self.res(1)
+        time.sleep_ms(10)
 
     def _init_display(self):
         # Chip-specific charge-pump command differs between SSD1306 and SH1106.
@@ -72,15 +96,19 @@ class OLED_I2C:
         for cmd in init_cmds:
             self._cmd(cmd)
 
-
-# Backwards-compatible alias — older code imports SH1106_I2C.
-SH1106_I2C = OLED_I2C
+    def _write(self, dc, buf):
+        self.dc(dc)
+        if self.cs is not None:
+            self.cs(0)
+        self.spi.write(buf)
+        if self.cs is not None:
+            self.cs(1)
 
     def _cmd(self, cmd):
-        self.i2c.writeto(self.addr, bytearray([0x00, cmd]))
+        self._write(0, bytearray([cmd]))
 
     def _data(self, buf):
-        self.i2c.writeto(self.addr, b'\x40' + buf)
+        self._write(1, buf)
 
     def show(self):
         col_lo = self.col_offset & 0x0F
@@ -131,7 +159,7 @@ class Display:
     """High-level display manager with dirty-flag rendering."""
 
     def __init__(self):
-        self.oled = SH1106_I2C()
+        self.oled = OLED_SPI()
         self._dirty = True
         self._last_render = 0
         self._frame_interval_ms = 1000 // config.DISPLAY_FPS

@@ -5,14 +5,14 @@ independently — the Pico runs UI/clock and the LPC2361 runs the synth engine.
 They communicate over UART0 at 115 200 baud through a small framed protocol
 (see `firmware/lpc2361/src/ui/pico_comm.{c,h}` and `firmware/pico/main.py`).
 
-## firmware/pico/ — Raspberry Pi Pico WH (MicroPython)
+## firmware/pico/ — Raspberry Pi Pico (MicroPython)
 
 ```
 firmware/pico/
 ├── main.py             # Entry point: init, run loop, message dispatch
 ├── config.py           # GPIO pin map (mirrors schematics/pico_pinout.md)
-├── display.py          # SSD1306/SH1106 main OLED driver, I²C only so far; the baseline module is the 1.3" 7-pin SPI (chip UNVERIFIED), so an SPI driver is a follow-up
-├── strip_display.py    # SSD1306 0x3D strip OLED driver (dropped, to be removed)
+├── display.py          # SSD1306/SH1106 main OLED driver over SPI0 (1.3" 7-pin module, chip UNVERIFIED)
+├── strip_display.py    # SSD1306 0x3D strip OLED driver (dropped, to be removed; main.py no longer builds it)
 ├── encoder.py          # KY-040 rotary encoder + button debounce
 ├── leds.py             # RGB status LED PWM
 ├── menu.py             # On-device UI state machine
@@ -21,7 +21,7 @@ firmware/pico/
 ├── midi.py             # 5-pin DIN MIDI (LPC bridge side)
 ├── usbmidi.py          # USB-MIDI class device (TinyUSB)
 ├── aux_outputs.py      # PWM CV / gate outputs to expander
-├── effigy_bridge.py    # SHELVED: inter-module bridge to EFFIGY/Norns; its I2C1 pins GP2/GP3/GP11 are now the SPI OLED
+├── effigy_bridge.py    # SHELVED: inter-module bridge to EFFIGY/Norns (to be removed; main.py no longer builds it); its I2C1 pins GP2/GP3 are now the SPI OLED and GP11 the gate input
 ├── _effigy_constants.py
 └── test_hw.py          # Per-peripheral self-test harness
 ```
@@ -29,21 +29,30 @@ firmware/pico/
 Flash by mounting the Pico's `RPI-RP2` storage and copying the `.py` files
 into the MicroPython filesystem; `main.py` runs at boot.
 
-### Main OLED driver notes (follow-up)
+### Main OLED driver
 
 The baseline main display is the owner's 1.3" 7-pin SPI module (owner ruling,
 2026-10-17), write-only on SPI0: `OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4,
-`OLED_RES` GP5, `OLED_CS` GP11 (`config.py`). `display.py` only has the I²C
-driver `OLED_I2C` today, so the display stays dark until an SPI driver is
-written. That driver should:
+`OLED_RES` GP5 (`config.py`). The module's CS pin is strapped to GND (one
+device on the bus), so `OLED_CS = None`; that the module works with CS tied
+low is UNVERIFIED (bench check BT-14). GP11 is the gate input instead.
 
-- send commands with DC low and pixel data with DC high, CS low around each
-  transfer, and pulse RES low once at start-up;
-- keep the chip choice in `OLED_CHIP`: the controller is UNVERIFIED (SSD1306 or
-  SH1106, read the module). SH1106 needs `OLED_COL_OFFSET = 2` and page-mode
-  writes; SSD1306 uses offset 0;
-- replace the I²C code path and the legacy `OLED_I2C_ID`, `OLED_SDA`,
-  `OLED_SCL` and `OLED_ADDR` values in `config.py` (GP4/GP5 are DC/RES now).
+`display.py` (`OLED_SPI`, wrapped by `Display`) drives it at 8 MHz:
+
+- RES is pulsed low once at start-up; commands go out with DC low and pixel
+  data with DC high; CS is toggled around each transfer only if `OLED_CS` is
+  set to a GP (the BT-14 fallback);
+- the chip choice is `OLED_CHIP`: the controller is UNVERIFIED (SSD1306 or
+  SH1106, read the module). The two differ in the charge-pump bytes
+  (`0x8D 0x14` vs `0xAD 0x8B`); SH1106 also needs `OLED_COL_OFFSET = 2`.
+  Both are written in page mode;
+- `tools/tests/test_display_driver.py` checks this with `machine`/`framebuf`
+  stubbed (no hardware). `test_hw.py` draws a test frame through `OLED_SPI`.
+
+Still pending: removing `strip_display.py`, `effigy_bridge.py`,
+`_effigy_constants.py` and the legacy `OLED_I2C_ID`, `OLED_SDA`, `OLED_SCL`,
+`OLED_ADDR`, `STRIP_OLED_*` and `DAISY_*` values in `config.py`
+(`main.py` no longer builds the strip OLED or the EFFIGY bridge).
 
 The module pin order is UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI,
 RES, DC, CS); read the silkscreen before wiring.

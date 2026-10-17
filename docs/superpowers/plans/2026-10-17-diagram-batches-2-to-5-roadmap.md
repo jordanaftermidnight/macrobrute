@@ -167,10 +167,9 @@ BF defines BT-1 to BT-13 (UART edges, UART back-feed, CV back-feed, CV depth, ga
 
 ## Firmware follow-ups (not diagrams)
 
-- Add the SPI driver for the main OLED (SPI0 write-only: `OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4, `OLED_RES` GP5, `OLED_CS` GP11 in `config.py`) and remove the I2C display code (`OLED_I2C` in `display.py`, the legacy `OLED_I2C_ID`/`OLED_SDA`/`OLED_SCL`/`OLED_ADDR` values, the I2C scan in `test_hw.py`). Set `OLED_CHIP` and `OLED_COL_OFFSET` (2 for SH1106, 0 for SSD1306) once the owner has read the module (Q22; chip UNVERIFIED).
-- Fix the `firmware/pico/display.py` docstring: it still says the primary target is the 0.96 inch SSD1306 and refers to the strip OLED.
-- Remove the dropped code: `firmware/pico/strip_display.py` (0.91 inch strip OLED, dropped), and the shelved EFFIGY and DAISY code (`firmware/pico/effigy_bridge.py`, `DAISY_*` entries in `config.py`, `tools/check_effigy_bridge_sync.py`, `tools/sync_effigy_constants.py`). Archive rather than delete if the owner wants the idea kept for another project.
-- `firmware/pico/test_hw.py`: remove the strip OLED references and update the primary OLED wording to the baseline module.
-- I2C speed: moot, the main OLED is SPI (no I2C on the expander). Pick and bench-check an SPI clock with the actual module.
+- DONE (2026-10-17): SPI driver for the main OLED. `display.py` is now `OLED_SPI` on SPI0 (`OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4, `OLED_RES` GP5; CS strapped to GND, `OLED_CS = None`), with a hardware-free test in `tools/tests/test_display_driver.py`; its docstring says the chip is UNVERIFIED. `test_hw.py`'s OLED check now draws through `OLED_SPI`. `main.py` no longer builds `StripDisplay` or `EffigyBridge` (inert stand-ins). Set `OLED_CHIP` and `OLED_COL_OFFSET` (2 for SH1106, 0 for SSD1306) once the owner has read the module (Q22; chip UNVERIFIED).
+- Pending: remove the dropped code: `firmware/pico/strip_display.py` (0.91 inch strip OLED, dropped), and the shelved EFFIGY and DAISY code (`firmware/pico/effigy_bridge.py`, `_effigy_constants.py`, `DAISY_*` entries in `config.py`, `tools/check_effigy_bridge_sync.py`, `tools/sync_effigy_constants.py`) plus the legacy `OLED_I2C_ID`/`OLED_SDA`/`OLED_SCL`/`OLED_ADDR` and `STRIP_OLED_*` values. Archive rather than delete if the owner wants the idea kept for another project.
+- Pending: `firmware/pico/test_hw.py` bench run of the SPI OLED check (BT-14).
+- I2C speed: moot, the main OLED is SPI (no I2C on the expander). The driver uses 8 MHz; bench-check it with the actual module.
 - GP2, GP3, GP11: done in docs, `FIRMWARE_ROLES` and the cards (now OLED SCK, MOSI, CS). `config.py` still carries the shelved `DAISY_*` values on those pins because `effigy_bridge.py` reads them; remove both with the EFFIGY archive task.
 - Pin counts: 23 of 26 header GPIOs are allocated; free are GP26-28 only. The gate input (BF 3.5) needs a fault-tolerant pin and none is free: OPEN.

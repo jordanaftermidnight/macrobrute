@@ -1,17 +1,14 @@
-# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
-# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11). This file still
-# !!! builds Display / StripDisplay (I2C on GP4 / GP5, now OLED DC / RES) and
-# !!! EffigyBridge (I2C1 on GP2 / GP3, now OLED SCK / MOSI, INT on GP11, now OLED CS).
-# !!! Running it on the SPI wiring makes the I2C peripherals fight the OLED pins.
-# !!! The SPI driver and the EFFIGY removal are firmware follow-ups.
+# Note (owner rulings, 2026-10-17): the main OLED is the 1.3" 7-pin SPI module on
+# SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5; CS strapped to GND). The strip OLED is
+# dropped and the EFFIGY pairing is shelved; their I2C drivers would fight the SPI
+# pins, so `strip` and `effigy` below are inert stand-ins (_Shelved).
 """
-MACROBRUTE — Pico WH Firmware
+MACROBRUTE — Raspberry Pi Pico Firmware
 Arturia MicroBrute Expansion Controller
 
-Handles: main + strip OLED, encoder navigation, clock generation/detection,
+Handles: main SPI OLED, encoder navigation, clock generation/detection,
 firmware clock divider, programmable aux outputs, tap tempo + manual gate,
-RGB LED indicators, MIDI SysEx bridge to MicroBrute (LPC2361), USB-MIDI,
-EFFIGY peer-pair bus.
+RGB LED indicators, MIDI SysEx bridge to MicroBrute (LPC2361), USB-MIDI.
 """
 
 import time
@@ -19,7 +16,6 @@ from machine import Pin
 
 import config
 from display import Display
-from strip_display import StripDisplay
 from encoder import Encoder
 from clock import Clock
 from menu import Menu, MenuItem, MenuSystem
@@ -27,20 +23,32 @@ from midi import LPCBridge, PARAM_BEND_RANGE, PARAM_GATE_LENGTH, PARAM_STEP_SIZE
 from leds import LEDManager
 from clock_divider import ClockDivider
 from aux_outputs import AuxOutputs
-from effigy_bridge import EffigyBridge
 from usbmidi import USBMidi
+
+
+
+class _Shelved:
+    """Inert stand-in for the dropped strip OLED and the shelved EFFIGY bridge."""
+    engine_name = None
+    def is_paired(self): return False
+    def probe(self): return False
+    def set_paired(self, paired): pass
+    def send_clock_tick(self): pass
+    def poll(self): pass
+    def render_status(self, **kwargs): pass
+
 
 # ---- Global State ----
 
 VERSION = "0.2.0"
 
 display = Display()
-strip   = StripDisplay()
+strip   = _Shelved()   # strip OLED dropped
 midi    = LPCBridge()
 leds    = LEDManager()
 divider = ClockDivider()
 aux     = AuxOutputs()
-effigy  = EffigyBridge()
+effigy  = _Shelved()   # EFFIGY pairing shelved
 usbmidi = USBMidi()
 
 btn_tap = Pin(config.BTN_TAP, Pin.IN, Pin.PULL_UP)
@@ -117,7 +125,7 @@ def build_menus():
     info_menu = Menu("INFO", [
         MenuItem("MACROBRUTE"),
         MenuItem("FW v" + VERSION),
-        MenuItem("Pico WH RP2040"),
+        MenuItem("Pico RP2040"),
         MenuItem("USB-MIDI " + ("ON" if usbmidi.is_available() else "—")),
     ])
 
