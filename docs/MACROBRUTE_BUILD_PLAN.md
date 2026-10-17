@@ -271,7 +271,7 @@ saw and square. Trivial mod (one resistor swap), full details in
 - [ ] Verify keyboard and wheels still move freely
 
 ### 2.3 Wire DB-9 A (outputs) — loose, not mounted yet
-Buffer outputs → series R → DB-9 A pins per `docs/MACROBRUTE_CONNECTION_MAP.md` section 2 (`schematics/wiring_diagram.md` is STALE: it still routes ±12 V over DB-9 B pins 7/8, audit B03)
+Buffer outputs → series R → DB-9 A pins per `docs/MACROBRUTE_CONNECTION_MAP.md` section 2 (`schematics/wiring_diagram.md` follows the same map: B:7 and B:8 are ground, no supply on the cable; audit B03 fixed)
 
 ### 2.4 Build Vactrol
 LED + LDR in sealed heat shrink. Test on breadboard first. Wire to TL072 C driver. LDR parallels RP13.
