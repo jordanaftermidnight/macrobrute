@@ -129,7 +129,7 @@ def test_spi_bus_and_reset_pulse(monkeypatch):
     mod.OLED_SPI()
     init = [e for e in log if e[0] == "spi_init"]
     assert init == [("spi_init", cfg.OLED_SPI_ID, init[0][2], cfg.OLED_SCK, cfg.OLED_MOSI, None)]
-    assert 0 < init[0][2] <= 10_000_000
+    assert 0 < init[0][2] <= 4_000_000
     res = [e[2] for e in log if e[0] == "pin" and e[1] == cfg.OLED_RES]
     edges = [v for i, v in enumerate(res) if i == 0 or v != res[i - 1]]
     assert edges == [1, 0, 1], "RES must pulse high, low, high"
@@ -203,3 +203,12 @@ def test_display_manager_api(monkeypatch):
         assert hasattr(d.oled, name)
     d.render_now(lambda o: o.text("X", 0, 0))
     assert any(e[0] == "spi" for e in log)
+
+
+@pytest.mark.parametrize("chip", ["SSD1306", "SH1106"])
+def test_spi_clock_within_the_slower_chip_limit(monkeypatch, chip):
+    # SH1106 write clock is about 4 MHz (datasheet memory, UNVERIFIED): stay at or below it
+    mod, cfg, log = _load_display(monkeypatch, OLED_CHIP=chip)
+    mod.OLED_SPI()
+    baud = [e for e in log if e[0] == "spi_init"][0][2]
+    assert baud == 4_000_000

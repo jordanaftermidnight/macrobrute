@@ -37,7 +37,7 @@ The baseline main display is the owner's 1.3" 7-pin SPI module (owner ruling,
 device on the bus), so `OLED_CS = None`; that the module works with CS tied
 low is UNVERIFIED (bench check BT-14). GP11 is the gate input instead.
 
-`display.py` (`OLED_SPI`, wrapped by `Display`) drives it at 8 MHz:
+`display.py` (`OLED_SPI`, wrapped by `Display`) drives it at 4 MHz (SH1106 write-clock limit about 4 MHz, SSD1306 about 10 MHz, both from datasheet memory and UNVERIFIED; a full frame takes about 2 ms):
 
 - RES is pulsed low once at start-up; commands go out with DC low and pixel
   data with DC high; CS is toggled around each transfer only if `OLED_CS` is

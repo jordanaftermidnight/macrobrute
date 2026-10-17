@@ -17,9 +17,10 @@ import framebuf
 import time
 import config
 
-# 8 MHz: well inside the SSD1306/SH1106 write-clock limits and forgiving of
-# breadboard leads. Raise only after the bench check.
-SPI_BAUD = 8_000_000
+# 4 MHz for both chips. Write-clock limits from datasheet memory, UNVERIFIED:
+# SSD1306 about 10 MHz, SH1106 about 4 MHz, so 4 MHz suits either chip and is
+# forgiving of breadboard leads. A full 1 KB frame at 4 MHz takes about 2 ms.
+SPI_BAUD = 4_000_000
 
 
 class OLED_SPI:
@@ -38,9 +39,9 @@ class OLED_SPI:
         self.col_offset = config.OLED_COL_OFFSET
         self.chip = getattr(config, "OLED_CHIP", "SSD1306").upper()
 
-        # Write-only: no MISO is wired. Whether the rp2 port muxes its default
-        # SPI0 MISO pin (GP16, a divider output here) at init is UNVERIFIED;
-        # ClockDivider is built after Display and claims GP16 as a GPIO output.
+        # Write-only: no MISO is wired. SPI0 default MISO GP16 may be claimed at
+        # init; ClockDivider re-claims GP16 as GPIO afterwards; do not re-init
+        # the SPI later (UNVERIFIED, from the rp2 port source).
         self.spi = SPI(
             config.OLED_SPI_ID,
             baudrate=SPI_BAUD,
