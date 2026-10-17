@@ -77,6 +77,7 @@ Compiled 2026-04-09 from web research + binary analysis.
 ### 8. No Live UART Communication Reports
 - Nobody has documented communicating with LPC2361 via UART while synth is running
 - This remains unexplored territory
+- Stock UART use (audit r1 disassembly): MIDI on UART3 (0xE007C000, P4.28 / P4.29, 31250 baud); UART0 only a dummy read; UART1 / UART2 unreferenced
 
 ---
 
@@ -85,7 +86,7 @@ Compiled 2026-04-09 from web research + binary analysis.
 1. **DONE:** Decrypt .mbf using `tools/mbf_decrypt.py`
 2. **Next:** Load .bin into Ghidra (`ARM:LE:32:v4t`, base `0x2000`, SVD-Loader for peripherals)
 3. **Next:** Map MIDI SysEx handlers, DAC output code, sequencer, parameter tables
-4. **Optional:** Connect PL2303HX to UART0, check for debug output while running
+4. **Optional:** Connect PL2303HX to UART0 (ISP port: P0.2/TXD0 LQFP pin 98, P0.3/RXD0 pin 99), check for debug output while running. The stock application never initialises UART0 (only a one-off read; audit r1), so debug output there is not expected (UNVERIFIED)
 5. **Optional:** PicoEMP for EMFI — only needed for bootloader area or factory calibration
 6. **Optional:** Capture live SysEx during firmware update to map protocol details
 

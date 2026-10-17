@@ -146,7 +146,7 @@ The CRP (Code Read Protection) word lives at absolute address **0x1FC** — insi
 
 1. The .mbf update **cannot change CRP** — it only writes to 0x2000+
 2. CRP was set at **factory** and persists across firmware updates
-3. The only way to determine CRP level is to **physically probe** UART0 (P0.2/P0.3) with ISP
+3. The only way to determine CRP level is to **physically probe** the ISP port, UART0: P0.2/TXD0 (LQFP pin 98) and P0.3/RXD0 (LQFP pin 99) (LPC2361 data sheet Rev. 03, Table 3, p5)
 4. If CRP is set, the firmware dump we have from .mbf decryption is already the application code — we don't need to bypass CRP for application analysis
 
 **The .mbf decryption makes CRP bypass unnecessary for firmware analysis.** CRP bypass is only needed if we want to modify the bootloader area or read factory-specific calibration data.
@@ -195,7 +195,8 @@ From literal pool analysis — addresses referencing LPC2361 peripheral register
 | System Control | 0xE01FC000 | 0x2170, 0xA39C | PLL, clocking, power |
 | PINSEL | 0xE002C000 | 0x2C44, 0x3EB4, 0x4350, 0x6CAC, 0x752C | Pin mux config |
 | VIC | 0xFFFFF000 | 0x2C64, 0x3250, 0x3F7C, 0x4340, 0x6114 | Interrupt setup (5 refs) |
-| UART0 | 0xE000C000 | 0x3EA8 | MIDI or debug serial |
+| UART0 | 0xE000C000 | literal at 0x3EA8, loaded once at 0x3CDA | One-off read of U0RBR inside the UART3 RX error path; no UART0 init, LCR, divisor or PINSEL write anywhere (audit r1). 0x3EA8 is a literal-pool word, not a "UART0_Init" function. |
+| UART3 | 0xE007C000 | literal at 0x3EA4; init FUN_00003d88 | **MIDI**, 31250 baud; PINSEL9 = 0x0F000000 muxes P4.28 / TXD3 (LQFP pin 82) and P4.29 / RXD3 (LQFP pin 85) (audit r1) |
 | Timer0 | 0xE0004000 | 0x3F70, 0x6750 | Tempo/timing |
 | Timer1 | 0xE0008000 | 0x9C5C | Secondary timing |
 | SPI | 0xE0028000 | 0x4348, 0x6B78 | External device comm |
@@ -207,7 +208,7 @@ From literal pool analysis — addresses referencing LPC2361 peripheral register
 - I2C0 (0xE0044000) — for MCP4728 DAC
 - DAC (0xE006C000) — on-chip 10-bit DAC
 - ADC (0xE004C000)
-- UART1 (0xE0010000) — MIDI?
+- UART1 (0xE0010000) and UART2 (0xE0078000): no literal or PC-relative reference found (audit r1; not exhaustive, since a base built at run time would not show). Not the MIDI UART: MIDI is UART3 (table above).
 
 ### Code Statistics
 
@@ -442,7 +443,10 @@ After the switch, if return mode == 0x12:
 +0x96: Status/busy flag (checked before I2C write)
 ```
 
-**FUN_00003d88 — MIDI UART Init (at 0xE007C000, NOT UART0):**
+**UART summary (audit r1, 2026-10-16):** stock MIDI is UART3 (0xE007C000, P4.28 / P4.29, 31250 baud). UART0 appears only as a dummy read; UART1 and UART2 are unreferenced. The ISP UART0 sits on P0.2 / P0.3, LQFP pins 98 / 99, and is reserved for ISP (not the link port below).
+The planned bridge port is UART1, P0.15 / TXD1 (LQFP pin 62) and P0.16 / RXD1 (LQFP pin 63), UNVERIFIED until the Phase 0 continuity gate G1 (`docs/hardware/MACROBRUTE_PHASE0_BOM.md`). LQFP pins 96 / 97 are VDD(3V3) / VSS, not UART pins (data sheet p12).
+
+**FUN_00003d88 — MIDI UART3 Init (at 0xE007C000, NOT UART0):**
 ```
 Divisor = 0x1E (30) → PCLK 15MHz / (16 × 30) = 31,250 baud (MIDI)
 LCR = 0x83 (DLAB + 8N1), then 0x03 (clear DLAB)
