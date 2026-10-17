@@ -38,7 +38,7 @@ NETS = {
     "3V3": [("PICO", "3V3"), ("V3V3_LOADS", "3V3")],
     "GND": [("HDR", "3"), ("HDR", "4"), ("HDR", "5"), ("HDR", "6"), ("HDR", "7"),
             ("HDR", "8"), ("ANALOG", "GND"), ("PICO", "GND"), ("V3V3_LOADS", "GND"),
-            ("STAR_EXP", "1")],
+            ("VSYS_FILTER", "GND"), ("STAR_EXP", "1")],
     # MicroBrute side: powered only from TP70 / TP71 / TP72
     "TP70": [("TP70", "+12V"), ("D_BRK_P12", "A")],
     "P12_BRK": [("D_BRK_P12", "K"), ("C_P12", "+"), ("OPAMPS", "V+"), ("REG78L05", "IN")],
@@ -56,6 +56,13 @@ NETS = {
     "CABLE_UART_RX": [("PICO", f"GP{R['LPC_RX']}"), ("R", "1K_EXP_RX"), ("DB9_B", "6"),
                       ("R", "1K_MB_RX")],
 }
+
+
+def _b_pin(net):
+    """DB-9 B pin of a cable net, from NETS."""
+    return [q for pt, q in NETS[net] if pt == "DB9_B"][0]
+
+
 RAILS = {"P12_RACK": 12.0, "N12_RACK": -12.0, "P5_RACK": 5.0, "3V3": 3.3,
          "TP70": 12.0, "TP71": -12.0, "P5_LOCAL": 5.0}
 
@@ -131,7 +138,7 @@ def _expander(card):
     card.add(bar_v(BUS_E["N12"], yn12, a_n, C_N12, "-12V"))
     card.add(bar_v(BUS_E["GND"], ygnd, STAR_Y, C_GND, "GND"))
     card.add(bar_v(BUS_E["P12"], yp12, a_v, C_P12, "+12V"))
-    card.add(bar_v(BUS_E["P5"], yp5, f_y, C_5V, "+5V"))
+    card.add(bar_v(BUS_E["P5"], yp5, f_y - 6, C_5V, "+5V"))
 
     # analog utilities
     card.add(wire([(XCOL, a_v), (BUS_E["P12"], a_v)], C_P12, junctions=[(BUS_E["P12"], a_v)]))
@@ -150,9 +157,11 @@ def _expander(card):
     card.add(tag(XCOL, 642, "UNVERIFIED", "UNVERIFIED load"))
 
     # VSYS filter and Pico
-    card.add(wire([(470, f_y), (BUS_E["P5"], f_y)], C_5V, junctions=[(BUS_E["P5"], f_y)]))
+    card.add(wire([(470, f_y - 6), (BUS_E["P5"], f_y - 6)], C_5V, junctions=[(BUS_E["P5"], f_y - 6)]))
     card.add(box(470, 690, 130, 40, ["VSYS filter"], ["D+bulk+100nF"],
-                 left=[("IN", f_y)], right=[("OUT", f_y)]))
+                 left=[("IN", f_y - 6), ("GND", f_y + 10)], right=[("OUT", f_y)]))
+    card.add(wire([(470, f_y + 10), (BUS_E["GND"], f_y + 10)], C_GND,
+                  junctions=[(BUS_E["GND"], f_y + 10)]))
     card.add(wire([(600, f_y), (620, f_y)], C_5V))
     card.add(box(620, 690, 110, 80, ["Raspberry Pi Pico"], [],
                  left=[("VSYS 39", f_y), ("GND 38", p_gnd)], right=[("3V3 36", f_y)]))
@@ -228,6 +237,7 @@ def _mb(card):
     card.add(wire([(XMC, yc), (bg, yc)], C_GND, junctions=[(bg, yc)]))
     card.add(box(XMC, 330, 210, 100, ["U1 TL074, U2 TL072"], ["buffers, envelope, LFO"],
                  left=[("V+", ya), ("V-", yb), ("GND", yc)]))
+    card.add(tag(XMC, 436, "OPEN", "OPEN U2 part (audit S17, C10)"))
 
     # 78L05 and CD40106
     card.add(wire([(XMC, y78i), (bp, y78i)], C_P12, junctions=[(bp, y78i)]))
@@ -280,13 +290,16 @@ def _cable(card):
     card.add(wire([(xl + 10, ya_s), (xr + 10, ya_s)], C_SIG))
     card.add(label_box(560, ya_s - 7, "A:1 Gate  A:2 Pitch  A:3 Env  A:4 LFO  A:5 Mix  A:6 VCF  A:7 Saw  A:8 Square"))
     card.add(wire([(xl + 10, yb_s), (xr + 10, yb_s)], C_SIG))
-    card.add(label_box(640, yb_s - 7, "B:1 UART TX  B:6 UART RX  B:3 VCA CV  B:5 Filter CV"))
+    card.add(label_box(640, yb_s - 7, f"B:{_b_pin('CABLE_UART_TX')} UART TX  B:{_b_pin('CABLE_UART_RX')} "
+                                      "UART RX  B:3 VCA CV  B:5 Filter CV"))
     # grounds from star to star
     card.add(wire([(gl, ya_g), (gr, ya_g)], C_GND, junctions=[(gl, ya_g), (gr, ya_g)]))
-    card.add(label_box(740, ya_g - 7, "A:9 GND"))
+    a_g = [q for pt, q in NETS["GND_TIE"] if pt == "DB9_A"]
+    card.add(label_box(740, ya_g - 7, "  ".join(f"A:{g}" for g in a_g) + " GND"))
     for y in yb_g:
         card.add(wire([(gl, y), (gr, y)], C_GND, junctions=[(gl, y), (gr, y)]))
-    card.add(label_box(700, 1011, "B:2  B:4  B:7  B:8  B:9 GND, ground tie"))
+    b_g = [q for pt, q in NETS["GND_TIE"] if pt == "DB9_B"]
+    card.add(label_box(700, 1011, "  ".join(f"B:{g}" for g in b_g) + " GND, ground tie"))
     card.add(f'<rect x="{gl - 4}" y="{STAR_Y}" width="8" height="{yb_g[-1] + 6 - STAR_Y}" rx="3" fill="{C_GND}"/>')
     # TP72 star bar is drawn to y=1090 by the GND bus
     # shield: braid bonded to the MicroBrute shell only, cut back at the expander end

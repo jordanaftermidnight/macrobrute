@@ -104,3 +104,19 @@ def test_review_fixes_pinned():
 
 def test_committed_svg_matches_generator():
     assert SVG.read_text() == pc.render()
+
+
+def test_vsys_filter_has_a_ground_return_and_u2_is_open():
+    gnd = [n for n, ends in pc.NETS.items() if ("VSYS_FILTER", "GND") in ends]
+    assert gnd and ("PICO", "GND") in pc.NETS[gnd[0]]
+    t = " ".join(_texts(_svg()))
+    assert "OPEN U2 part (audit S17, C10)" in t
+
+
+def test_cable_labels_follow_the_nets():
+    t = " ".join(_texts(_svg()))
+    tx = [q for p, q in pc.NETS["CABLE_UART_TX"] if p == "DB9_B"][0]
+    rx = [q for p, q in pc.NETS["CABLE_UART_RX"] if p == "DB9_B"][0]
+    assert f"B:{tx} UART TX" in t and f"B:{rx} UART RX" in t
+    gnds = [q for p, q in pc.NETS["GND_TIE"] if p == "DB9_B"]
+    assert "  ".join(f"B:{g}" for g in gnds) + " GND" in t
