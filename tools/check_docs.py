@@ -78,6 +78,39 @@ def check_connection_map(text):
     return problems
 
 
+# lines that describe history or say a pin is NOT spare are fine
+_ALLOW_SPARE = re.compile(
+    r"historical|superseded|stale|legacy|archiv|shelved|\bwas\b|\bwere\b|went to|"
+    r"\b(not|no|none|never)\b[^.;:]{0,60}\b(free|spare|available|unused)\b|"
+    r"\b(free|spare|available|unused)\b[^.;]{0,12}\b(not|no)\b", re.I)
+
+
+def check_spare_claims(docs):
+    """docs: {filename: text}. Flag prose lines that call an allocated GP free or spare."""
+    fw = _flat_firmware_gps()
+    problems = []
+    for f, t in docs.items():
+        for n, line in enumerate(t.splitlines(), 1):
+            if line.lstrip().startswith("|") or not SPARE_WORDS.search(line):
+                continue
+            if _ALLOW_SPARE.search(line):
+                continue
+            for gp in sorted(gp_numbers(line) & fw):
+                problems.append(f"{f}:{n}: GP{gp} is allocated in firmware but the line calls "
+                                f"it spare/free: {line.strip()[:80]}")
+    return problems
+
+
+def doc_files(root):
+    """Current docs: docs/**/*.md (not legacy, not superpowers), schematics/*.md, README.md."""
+    out = [p for p in sorted(root.glob("docs/**/*.md"))
+           if not ({"superpowers", "legacy"} & set(p.relative_to(root).parts))]
+    out += sorted(root.glob("schematics/*.md"))
+    if (root / "README.md").exists():
+        out.append(root / "README.md")
+    return out
+
+
 _CONTEXT = re.compile(r"bridge|Pico|\bGP[01]\b|DB-9", re.I)
 _UART1 = re.compile(r"P0\.1[56]\b")
 _UART0 = re.compile(r"P0\.[23]\b")
@@ -116,6 +149,7 @@ def main():
     # docs/legacy carries a DEPRECATED banner and keeps the old pin claims on purpose
     current = {k: v for k, v in docs.items() if not k.startswith("docs/legacy/")}
     problems += check_lpc_uart_claims(current)
+    problems += check_spare_claims({str(f.relative_to(root)): f.read_text() for f in doc_files(root)})
     for p in problems:
         print("PROBLEM:", p)
     return 1 if problems else 0
