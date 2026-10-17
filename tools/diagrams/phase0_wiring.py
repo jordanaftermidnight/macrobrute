@@ -11,13 +11,13 @@ import sys
 from pathlib import Path
 
 from tools.check_diagrams import validate_nets
-from tools.diagram_kit import (CHAR_W, PALETTE, Card, _dot, _line, _n, _t, jack, jack_pins,
+from tools.diagram_kit import (PALETTE, Card, _dot, _line, _n, _t, jack, jack_pins,
                                label_box, pico_header, pico_header_pins, resistor,
                                resistor_pins, wire)
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
-from tools.diagrams.phase0_nets import (CLOCK_IN_NOTE, MISSING_PARTS, NETS, RAILS, RGB_ORDER,  # noqa: F401
-                                        gp)
+from tools.diagrams.phase0_nets import (CLOCK_IN_NOTE, CS_NOTE, MISSING_PARTS, NETS, RAILS,  # noqa: F401
+                                        RGB_ORDER, gp)
 from tools.diagrams.power_common import box
 
 OUT = Path(__file__).resolve().parents[2] / "schematics" / "phase0_wiring_schematic.svg"
@@ -104,7 +104,6 @@ def build():
     # OLED box pins sit level with their header pins, so the SPI wires run straight
     spi = ("OLED_SCK", "OLED_MOSI", "OLED_DC", "OLED_RES")
     spi_y = {role: pp(role)[1] for role in spi}
-    cs_y = 236
     led_y = {"LED_CLOCK": 292, "LED_GATE": 344, "LED_MODE": 396}
     btn_y = 468
     enc_y = {"ENC_SW": 515, "ENC_CLK": 555, "ENC_DT": 595}
@@ -121,17 +120,15 @@ def build():
         px, py = pp(role)
         wires.append(wire([(px, py), (jog[role], py), (jog[role], ty), (XR, ty)], col))
 
-    # ---- OLED, 7-pin SPI module; CS is joined by net flags so it does not cross the LED wires
+    # ---- OLED, 7-pin SPI module; CS is strapped to the GND bus (no GPIO)
     pin_name = {"OLED_SCK": "D0 SCK", "OLED_MOSI": "D1 MOSI", "OLED_DC": "DC", "OLED_RES": "RES"}
     card.add(box(XL, 148, XR - XL, 96,
                   ["1.3in OLED, 7-pin SPI,", "chip per marking"], ["SPI0"],
-                  left=[("VCC", 168), ("GND", 228)],
-                  right=[(pin_name[r], spi_y[r]) for r in spi] + [("CS", cs_y)]))
+                  left=[("VCC", 168), ("GND", 208), ("CS", 228)],
+                  right=[(pin_name[r], spi_y[r]) for r in spi]))
     wires.append(wire([(XL, 168), (BUS_3V3, 168)], C_3V3))
+    wires.append(wire([(XL, 208), (BUS_GND, 208)], C_GND))
     wires.append(wire([(XL, 228), (BUS_GND, 228)], C_GND))
-    wires.append(wire([(XR, cs_y), (XR + 10, cs_y)], C_SPI))
-    cs_px, cs_py = pp("OLED_CS")
-    wires.append(wire([(cs_px, cs_py), (420, cs_py)], C_SPI))
     card.add(_tag(XL, 96, "UNVERIFIED: OLED pin order")
              + _tag(XL + 170, 96, "UNVERIFIED: OLED chip"))
 
@@ -141,7 +138,7 @@ def build():
              + _t(205, 258, "RGB LED, common cathode", 11, "start", PALETTE["title"], True))
     chan = {"LED_CLOCK": ("R", C_LED), "LED_GATE": ("G", PALETTE["gate"]),
             "LED_MODE": ("B", PALETTE["audio"])}
-    gnd_junc = [(BUS_GND, 228)]
+    gnd_junc = [(BUS_GND, 208), (BUS_GND, 228)]
     for role, y in led_y.items():
         name, lc = chan[role]
         card.add(resistor(XR, y, "220Ω", anchor="b"))
@@ -169,7 +166,7 @@ def build():
     # ---- power buses
     wires.append(wire([(BUS_3V3, RAIL_TOP + 18), (BUS_3V3, 525)], C_3V3,
                       junctions=[(BUS_3V3, 168), (BUS_3V3, 525)]))
-    wires.append(wire([(BUS_GND, 228), (BUS_GND, RAIL_BOT)], C_GND,
+    wires.append(wire([(BUS_GND, 208), (BUS_GND, RAIL_BOT)], C_GND,
                       junctions=gnd_junc + [(BUS_GND, RAIL_BOT)]))
 
     # ---- right side: 3V3 and GND from the Pico, clock block
@@ -203,9 +200,7 @@ def build():
 
     # order: wires over header, then tags, then glyphs on top of wire ends
     card.add("".join(wires))
-    card.add(label_box(XR + 10, cs_y - 7, f"to GP{R['OLED_CS']}")
-             + label_box(420 - (len("OLED CS") * CHAR_W + 6), cs_py - 7, "OLED CS"))
-    for role in spi + ("OLED_CS", "LED_CLOCK", "LED_GATE", "LED_MODE",
+    for role in spi + ("LED_CLOCK", "LED_GATE", "LED_MODE",
                        "BTN_TAP", "ENC_SW", "ENC_CLK", "ENC_DT"):
         x, y = pp(role)
         card.add(_gp_tag(x, y, f"GP{R[role]}", "L"))
@@ -229,13 +224,14 @@ def build():
     for i, line in enumerate(MISSING_PARTS):
         card.add(_missing(600, cy + 46 + 18 * i, line))
     card.add(_tag(600, cy + 46 + 18 * len(MISSING_PARTS), RGB_ORDER))
+    card.add(_tag(600, cy + 64 + 18 * len(MISSING_PARTS), CS_NOTE))
 
     # note box
     card.add(f'<rect x="30" y="676" width="560" height="52" rx="4" fill="#fff" '
              f'stroke="{PALETTE["stroke"]}" stroke-width="1"/>'
              + _t(40, 692, "Phase 0 bench validation, 3V3 logic only. Run firmware/pico/test_hw.py per-peripheral.",
                   10, "start", PALETTE["text"])
-             + _t(40, 720, "test_hw.py's OLED test is not valid until the SPI driver lands (firmware follow-up).",
+             + _t(40, 720, "test_hw.py's OLED test draws through display.OLED_SPI. GP11 (gate input) is unused here.",
                   10, "start", PALETTE["muted"])
              + _t(40, 706, "OLED chip (SSD1306 or SH1106) and pin order are UNVERIFIED: read the module first.",
                   10, "start", PALETTE["muted"]))

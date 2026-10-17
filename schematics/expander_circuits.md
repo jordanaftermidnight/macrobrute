@@ -244,7 +244,7 @@ breakout's CD40106 gate (0 / 5 V through 1kΩ on the MB side).
 
 ```
   DB-9 A:1 ──┬── GATE jack (tapped before the divider)
-             └── 22kΩ ──┬── Pico GPIO, fault-tolerant pin (pin OPEN, see CM 12G; no firmware change yet)
+             └── 22kΩ ──┬── Pico GP11 (GATE_IN, fault tolerant; PROVISIONAL (BT-14), CM 12G)
                         │
                        33kΩ
                         │
@@ -255,6 +255,10 @@ High level 5 V × 33k / (1k + 22k + 33k) = 2.95 V: above RP2040 VIH 2.0 V and be
 net reaches a GPIO; no pull-up on the expander side. With the expander off and the synth on, the
 pin sees 2.95 V through 13.6 kΩ (relies on the RP2040 fault-tolerant pad, BF 3.5, bench check BT-5).
 The CD4049UBE is not used on this path.
+
+Pin: GP11, DECIDED-PROVISIONAL (owner ruling 2026-10-17): the OLED module's CS pin is tied to GND
+so GP11 can take this input (bench check BT-14). Fallback if BT-14 fails: CS back on GP11 and this input on GP27 or
+GP28, with the BT-5 leakage check or a series diode / 3V3 buffer (CM 12G).
 
 ---
 

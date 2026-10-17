@@ -47,8 +47,8 @@ EFFIGY does not change. MACROBRUTE absorbs the translator role.
 
 RP2040 has only **two** hardware I²C peripherals:
 
-> Update (owner ruling, 2026-10-17): the main OLED is now SPI (SCK GP2, MOSI GP3, DC GP4, RES GP5,
-> CS GP11), so neither I²C peripheral is in use, but their usual pins are taken and only GP26-28
+> Update (owner rulings, 2026-10-17): the main OLED is now SPI (SCK GP2, MOSI GP3, DC GP4, RES GP5,
+> CS tied to GND) and GP11 is the gate input, so neither I²C peripheral is in use, but their usual pins are taken and only GP26-28
 > are free. The table below is the older plan.
 
 | Peripheral | Currently used for |
@@ -110,11 +110,11 @@ Avoid stacking pull-ups when MACROBRUTE sits in the middle of both buses.
 
 ## Power notes (informational)
 
-- Pi 3B+ peak draw is ~700 mA on +5V. Add Pico WH (~100 mA) and Daisy
+- Pi 3B+ peak draw is ~700 mA on +5V. Add the Pico (~100 mA) and Daisy
   (~150 mA) and you're at ~950 mA on the +5V rail before any other
   modules. CP1A delivers 1 A on +5V — comfortable but tight if you stack
   more digital modules.
-- Pi 3B+, Pico WH, and Daisy Seed all run 3.3V I²C. No level shifting
+- Pi 3B+, Pico, and Daisy Seed all run 3.3V I²C. No level shifting
   needed for ii bus interop.
 
 ## Reference

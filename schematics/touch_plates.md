@@ -3,8 +3,8 @@
 ## Overview
 
 > **Status (2026-10-17): idea notes, not part of the current build.** Several pin choices below
-> predate `firmware/pico/config.py`: GP2, GP3 and GP11 are the main OLED's SPI SCK, MOSI and CS
-> (owner ruling, 2026-10-17), so the MPR121 on GP2 / GP3 and the CD4051 line on GP11 below are not
+> predate `firmware/pico/config.py`: GP2 and GP3 are the main OLED's SPI SCK and MOSI and GP11 is the gate input
+> (owner rulings, 2026-10-17), so the MPR121 on GP2 / GP3 and the CD4051 line on GP11 below are not
 > available; GP6 / GP7 are aux outputs 3 / 4 and are not available for a mux; GP26-28 are the only
 > free pins and the only ADC pins (not fault tolerant). The MCP4728 and MPR121 are not on the owned list. Pin choices for
 > any touch circuit: OPEN (owner).
@@ -230,7 +230,7 @@ a single ADC channel on the Pico.
   
   CD4051 A ── Pico GP6
   CD4051 B ── Pico GP7
-  CD4051 C ── Pico GP11   (stale: GP11 is OLED CS; GP6/GP7 are aux outputs)
+  CD4051 C ── Pico GP11   (stale: GP11 is the gate input; GP6/GP7 are aux outputs)
   
   CD4051 VDD = +3.3V
   CD4051 VEE = GND

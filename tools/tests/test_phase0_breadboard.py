@@ -269,3 +269,16 @@ def test_clock_in_is_loop_back_only_and_unowned_parts_are_flagged():
     for tag in ("MISSING: RGB LED", "MISSING: tactile button", "MISSING: half-size breadboard",
                 "UNVERIFIED: RGB lead order R-K-G-B"):
         assert tag in s, tag
+
+
+def test_oled_cs_lead_goes_to_the_gnd_rail():
+    cs = [j for j in bb.JUMPERS if ("OLED", "CS") in (j["a_end"], j["b_end"])]
+    assert len(cs) == 1
+    j = cs[0]
+    assert j["net"] == "GND" and j["color"] == bb.C_GND
+    assert j["b_end"] == ("RAIL", "GND") and j["b_hole"].startswith("-T")
+    # GP11 (gate input) is not used in Phase 0: nothing sits on its strip
+    gp11_col = bb.pico_hole(PICO_PHYSICAL_PIN[11])[1:]
+    holes = {h for jj in bb.JUMPERS for h in (jj["a_hole"], jj["b_hole"]) if h}
+    assert not any(h[0] in "abcde" and h[1:] == gp11_col for h in holes)
+    assert "CS to GND: PROVISIONAL (BT-14)" in _svg()

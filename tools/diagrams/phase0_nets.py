@@ -14,14 +14,15 @@ def gp(role):
 # Part names: PICO, OLED, LED, R (series resistors), BTN, ENC, JACK_*, JUMPER.
 NETS = {
     "3V3": [("PICO", "3V3"), ("OLED", "VCC"), ("ENC", "+")],
-    "GND": [("PICO", "GND"), ("OLED", "GND"), ("LED", "K"), ("BTN", "2"),
+    # OLED CS is strapped to GND (single SPI device; PROVISIONAL, bench check BT-14)
+    "GND": [("PICO", "GND"), ("OLED", "GND"), ("OLED", "CS"), ("LED", "K"), ("BTN", "2"),
             ("ENC", "GND"), ("JACK_OUT", "S"), ("JACK_IN", "S")],
-    # main OLED, 7-pin SPI module on SPI0 (module pin names D0 = SCK, D1 = MOSI)
+    # main OLED, 7-pin SPI module on SPI0 (module pin names D0 = SCK, D1 = MOSI).
+    # GP11 is the gate input; the gate stage is not part of Phase 0, so it is unwired.
     "OLED_SCK": [("PICO", gp("OLED_SCK")), ("OLED", "D0")],
     "OLED_MOSI": [("PICO", gp("OLED_MOSI")), ("OLED", "D1")],
     "OLED_DC": [("PICO", gp("OLED_DC")), ("OLED", "DC")],
     "OLED_RES": [("PICO", gp("OLED_RES")), ("OLED", "RES")],
-    "OLED_CS": [("PICO", gp("OLED_CS")), ("OLED", "CS")],
     "LED_R": [("PICO", gp("LED_CLOCK")), ("R", "220_R.a")],
     "LED_R_A": [("R", "220_R.b"), ("LED", "R_A")],
     "LED_G": [("PICO", gp("LED_GATE")), ("R", "220_G.a")],
@@ -44,3 +45,4 @@ CLOCK_IN_NOTE = ("CLOCK IN: loop-back only, no external signals", "(no CD4049UB 
 MISSING_PARTS = ("MISSING: RGB LED (Q12)", "MISSING: tactile button (Q12)",
                  "MISSING: half-size breadboard")
 RGB_ORDER = "UNVERIFIED: RGB lead order R-K-G-B"
+CS_NOTE = "CS to GND: PROVISIONAL (BT-14)"

@@ -20,7 +20,7 @@ ROLE_HINTS = {
     0: "UART0 TX", 1: "UART0 RX", 2: "OLED SCK", 3: "OLED MOSI",
     4: "OLED DC", 5: "OLED RES",
     19: "Aux output 1", 20: "Aux output 2", 6: "Aux output 3", 7: "Aux output 4",
-    8: "RGB LED R", 9: "RGB LED G", 10: "RGB LED B", 11: "OLED CS",
+    8: "RGB LED R", 9: "RGB LED G", 10: "RGB LED B", 11: "Gate input",
     12: "Tap button", 13: "Encoder switch", 14: "Encoder CLK",
     15: "Encoder DT", 16: "Clock divider out 1", 17: "Clock divider out 2",
     18: "Clock divider out 3",

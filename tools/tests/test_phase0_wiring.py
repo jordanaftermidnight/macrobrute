@@ -43,7 +43,7 @@ def test_wired_gpios_match_config():
     wired = {n: e[1] for n, ends in p0.NETS.items() for e in ends
              if e[0] == "PICO" and e[1].startswith("GP")}
     expect = {"OLED_SCK": cfg["OLED_SCK"], "OLED_MOSI": cfg["OLED_MOSI"],
-              "OLED_DC": cfg["OLED_DC"], "OLED_RES": cfg["OLED_RES"], "OLED_CS": cfg["OLED_CS"],
+              "OLED_DC": cfg["OLED_DC"], "OLED_RES": cfg["OLED_RES"],
               "LED_R": cfg["LED_CLOCK"], "LED_G": cfg["LED_GATE"], "LED_B": cfg["LED_MODE"],
               "BTN_TAP": cfg["BTN_TAP"], "ENC_SW": cfg["ENC_SW"], "ENC_CLK": cfg["ENC_CLK"],
               "ENC_DT": cfg["ENC_DT"], "CLOCK_IN": cfg["CLOCK_IN"], "CLOCK_OUT": cfg["CLOCK_OUT"]}
@@ -75,4 +75,16 @@ def test_clock_in_is_loop_back_only_and_unowned_parts_are_flagged():
     for tag in ("MISSING: RGB LED", "MISSING: tactile button", "MISSING: half-size breadboard",
                 "UNVERIFIED: RGB lead order R-K-G-B"):
         assert tag in s, tag
-    assert "not valid until the SPI driver" in s
+    assert "not valid until the SPI driver" not in s
+    assert "OLED_SPI" in s
+
+
+def test_oled_cs_strapped_to_gnd_and_gp11_unused_in_phase0():
+    # ruling 2026-10-17: CS tied to GND (BT-14); GP11 is the gate input, not drawn in Phase 0
+    assert ("OLED", "CS") in p0.NETS["GND"]
+    assert "OLED_CS" not in p0.NETS
+    gps = {e[1] for ends in p0.NETS.values() for e in ends if e[0] == "PICO"}
+    assert "GP11" not in gps
+    s = _svg_text()
+    assert "CS to GND: PROVISIONAL (BT-14)" in s
+    assert "to GP11" not in s and "OLED CS" not in s

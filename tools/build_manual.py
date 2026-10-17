@@ -153,22 +153,23 @@ SVG_DESCRIPTIONS = {
 
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
-        "**Flat schematic, power-rail style.** Pico (variant to confirm, Q21) centre-right, +3V3 rail along the top, "
+        "**Flat schematic, power-rail style.** Pico centre-right, +3V3 rail along the top, "
         "GND rail along the bottom. One 1.3\" 7-pin SPI OLED sits on SPI0, write-only "
-        "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES, `GP11` CS). **UNVERIFIED:** the chip "
+        "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES); its CS pin goes to the GND bus, "
+        "PROVISIONAL (BT-14), and `GP11` (the gate input) is unused in Phase 0. **UNVERIFIED:** the chip "
         "(SSD1306 or SH1106) and the module pin order, so read the module first. Most Pico "
         "signal pins have their Y aligned with the matching peripheral pin so signal wires are "
-        "straight horizontal lines; CS is joined by two net labels so it does not cross the LED "
-        "wires. CLOCK IN is loop-back only, no external signals (no CD4049UB on the bench). "
+        "straight horizontal lines. CLOCK IN is loop-back only, no external signals (no CD4049UB on the bench). "
         "**MISSING** (not owned, Q12): the RGB LED and the tactile button, and the half-size "
         "breadboard. **UNVERIFIED:** the RGB lead order R-K-G-B. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors "
         "are drawn on their wires. Read this diagram to understand *what connects to what* "
         "before looking at the breadboard view.",
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
-        "physically sits on a half-size breadboard. The Pico (variant to confirm, Q21) straddles the centre channel; the "
+        "physically sits on a half-size breadboard. The Pico straddles the centre channel; the "
         "single 1.3\" 7-pin SPI OLED sits off the board, drawn flipped with its header toward "
-        "the board, and is wired down to it with seven leads; +3V3 and GND rails run along the "
+        "the board, and is wired down to it with seven leads, its CS lead to the top GND rail "
+        "(PROVISIONAL (BT-14)); +3V3 and GND rails run along the "
         "top and bottom; jumper paths are colour-coded by net, with a jumper table and part-lead "
         "holes below. **UNVERIFIED:** the OLED chip (SSD1306 or SH1106) and its pin order, so "
         "check the module before powering it, and the RGB lead order R-K-G-B. CLOCK IN is "
@@ -177,9 +178,11 @@ SVG_DESCRIPTIONS = {
 
     # Pinout / pin reference diagrams
     "schematics/pico_pinout_diagram.svg":
-        "Pico (variant to confirm, Q21) 40-pin header and GPIO allocation table, colour-coded by role (UART0 bridge, "
-        "SPI0 main OLED, RGB LED, tap button, encoder, clock dividers, aux outs, clock in/out, "
-        "free, power). The OLED takes `GP2`, `GP3`, `GP4`, `GP5` and `GP11`; only `GP26`-`GP28` "
+        "Raspberry Pi Pico (any variant with the standard 40-pin layout) 40-pin header and GPIO "
+        "allocation table, colour-coded by role (UART0 bridge, "
+        "SPI0 main OLED, RGB LED, gate input, tap button, encoder, clock dividers, aux outs, clock in/out, "
+        "free, power). The OLED takes `GP2`, `GP3`, `GP4` and `GP5`, with its CS pin tied to GND; "
+        "`GP11` is the gate input, PROVISIONAL (BT-14); only `GP26`-`GP28` "
         "are free. The UART0 bridge on "
         "`GP0`/`GP1` is UNVERIFIED. Checked against the connection map section 1.",
     "schematics/lpc2361_pinout_diagram.svg":

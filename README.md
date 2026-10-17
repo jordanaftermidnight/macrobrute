@@ -23,7 +23,7 @@ Transform an Arturia MicroBrute into a fully semi-modular instrument through int
 - **CV injection** — Filter and VCA via DB-9 B; Resonance via new MB panel jack
 - **DB-9 interconnect** — 2× shielded DB-9 on the MB rear panel (left of Pitch/Gate; dimensions UNVERIFIED). DB-9 A carries 8 audio/CV/gate outputs + GND. DB-9 B carries UART TX, UART RX, Filter CV, VCA CV and grounds only. **No supply rail and no I²C cross the cable.**
 - **Pico firmware** — main OLED, encoder, clock gen/detect/divide, programmable aux outputs, tap tempo + manual gate, RGB LED, LPC2361 UART bridge, USB-MIDI (not used while the DB-9 cables are connected)
-- **EFFIGY peer pair — SHELVED.** Kept as an idea for another project; nothing is designed around it. GP2, GP3 and GP11, which it used, are now the main OLED's SPI pins.
+- **EFFIGY peer pair — SHELVED.** Kept as an idea for another project; nothing is designed around it. GP2 and GP3, which it used, are now the main OLED's SCK and MOSI; GP11 is the gate input.
 - **Norns Shield (anticipated, not designed)** — see `docs/MACROBRUTE_NORNS_BRIDGE.md`; its EFFIGY half is shelved.
 - **LPC2361 firmware RE** — ~98% complete via .mbf decryption. 43 SysEx commands mapped. Pico↔LPC UART bridge framed as `0xAA · type · counter · len · payload · xor_checksum`.
 - **Power** — split. The expander runs only from the Behringer CP1A rack supply (Pico VSYS from rack +5 V through a Schottky OR diode + bulk + 100 nF; CP1A +5 V is 0.5 A shared). The MB-side breakout runs only from the synth (TP70 +12 V, TP71 -12 V, TP72 GND). Only ground is shared across the cable. MicroBrute stock power untouched.
@@ -63,7 +63,7 @@ macrobrute/
 ## Hardware
 
 ### Already Have
-MicroBrute, Raspberry Pi Pico (variant: owner to confirm, Pico / Pico H / Pico WH; package says no W), Arduino Nano (parked, no role), PL2303HX USB-TTL, 1.3" 7-pin SPI OLED (main; chip SSD1306 or SH1106, UNVERIFIED), 1.3" 4-pin I²C OLED (wired into a TD-3, not available), 0.96" SSD1306 (owner to confirm it has arrived; alternative only), 0.91" 128×32 SSD1306 (spare, strip OLED dropped), 16×2 1602 I²C LCD (fallback), HW040 encoder, DB-9 connectors ("several", count and gender UNVERIFIED), some vactrols, LED/LDR kit, IC kit and IC assortment, resistor kit, 6U 84HP Eurorack case, Behringer CP1A PSU. The full Have/Missing list is in `docs/hardware/MACROBRUTE_BOM.md`. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
+MicroBrute, Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350), Arduino Nano (parked, no role), PL2303HX USB-TTL, 1.3" 7-pin SPI OLED (main; chip SSD1306 or SH1106, UNVERIFIED), 1.3" 4-pin I²C OLED (wired into a TD-3, not available), 0.96" SSD1306 (owner to confirm it has arrived; alternative only), 0.91" 128×32 SSD1306 (spare, strip OLED dropped), 16×2 1602 I²C LCD (fallback), HW040 encoder, DB-9 connectors ("several", count and gender UNVERIFIED), some vactrols, LED/LDR kit, IC kit and IC assortment, resistor kit, 6U 84HP Eurorack case, Behringer CP1A PSU. The full Have/Missing list is in `docs/hardware/MACROBRUTE_BOM.md`. (Spinoff parts — PT2399 + distortion ICs for JF-33 DIY, DSO138 kit for desktop scope — see `spinoffs/`.)
 
 ### Key Decisions
 | Decision | Choice |
@@ -71,7 +71,7 @@ MicroBrute, Raspberry Pi Pico (variant: owner to confirm, Pico / Pico H / Pico W
 | Expander HP | **OPEN: 17 HP or about 20 HP** — the repo panel file is 87×128.5 mm, UNVERIFIED against the A-100 spec; owner measures the blank, both layouts are planned |
 | Connector | 2× DB-9 shielded on the MB rear panel, left of Pitch/Gate (CONFIRMED by the owner; HD-15/VGA rejected). DB-9 B = UART TX/RX, Filter CV, VCA CV, grounds |
 | Pico location | Inside the expander (not the MicroBrute case) |
-| Main OLED | **1.3" 7-pin SPI** on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11), write-only, on the expander panel (owner ruling, 2026-10-17); chip SSD1306 or SH1106 and module pin order UNVERIFIED (read the module). Firmware: an SPI driver is a follow-up (for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`). Larger than the 0.96" cutout, bears on the open expander width. |
+| Main OLED | **1.3" 7-pin SPI** on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND, PROVISIONAL (BT-14)), write-only, on the expander panel (owner ruling, 2026-10-17); chip SSD1306 or SH1106 and module pin order UNVERIFIED (read the module). Firmware: `display.py` (`OLED_SPI`); for SH1106 set `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. Larger than the 0.96" cutout, bears on the open expander width. |
 | Strip OLED | **Dropped.** No I²C is used on the expander or crosses the DB-9 cable |
 | MIDI path | Pico ↔ LPC2361 UART bridge @ 115200 baud (XOR checksum), LPC UART1 P0.15/P0.16 UNVERIFIED pending the continuity check; USB-MIDI on the Pico micro-USB, not used while the DB-9 cables are connected |
 | EFFIGY pair | **Shelved** |

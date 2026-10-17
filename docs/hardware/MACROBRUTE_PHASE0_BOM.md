@@ -17,8 +17,8 @@ this is mounted inside the synth.
 
 | Qty | Part | Have? | Notes | ≈ USD |
 |---|---|---|---|---|
-| 1 | Raspberry Pi Pico (Pico / Pico H / Pico WH) | Have; **variant owner to confirm** (BF Q21) | "WH" = wireless + headers pre-soldered; nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
-| 1 | 1.3″ OLED, SPI, 7-pin (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Have (owner ruling, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5, CS GP11, power from the Pico 3V3. Needs an SPI driver (firmware follow-up); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The 4-pin I²C 1.3″ module is in a TD-3 (not available); the 0.96″ SSD1306 may not have arrived and is an alternative only (I²C would need re-pinning). | $4 |
+| 1 | Raspberry Pi Pico | Have | Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350); nothing here uses wireless. A Pico without soldered headers needs headers soldered for the breadboard. | $7 |
+| 1 | 1.3″ OLED, SPI, 7-pin (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Have (owner ruling, 2026-10-17, BF Q22) | The "main" display, SPI0 write-only: SCK GP2 (D0), MOSI GP3 (D1), DC GP4, RES GP5; the CS lead goes to the GND rail (PROVISIONAL, BT-14); power from the Pico 3V3. GP11 (gate input) is not used in Phase 0. Driver: `display.py` (`OLED_SPI`); for SH1106 also `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`. The 4-pin I²C 1.3″ module is in a TD-3 (not available); the 0.96″ SSD1306 may not have arrived and is an alternative only (I²C would need re-pinning). | $4 |
 | 1 | KY-040 rotary encoder module | Have | 5 pins (CLK, DT, SW, +, GND). On-board 10 kΩ pull-ups. | $2 |
 | 1 | Tactile push button, 6 mm | Missing (BF Q12) | Single-pole momentary. | $0.10 |
 | 1 | Common-cathode RGB LED, 5 mm | Missing (BF Q12) | Used as the status LED. | $0.50 |
@@ -67,10 +67,11 @@ weekend's worth of parts.
 After wiring the breadboard per `schematics/phase0_breadboard.svg`:
 
 - [ ] Pico powered from USB; on-board green LED is solid.
-- [ ] The main OLED powers up and draws its splash frame (needs the SPI
-      driver, a firmware follow-up; `test_hw.py` still checks the old I²C
-      module). If it stays blank, check the module pin order (UNVERIFIED),
-      D0/D1 (SCK/MOSI), DC, RES and CS, then VCC/GND (BF Q22).
+- [ ] The main OLED powers up and draws its splash frame (`test_hw.py`'s
+      OLED test draws through `display.OLED_SPI`; with CS on the GND rail this
+      is bench check BT-14). If it stays blank, check the module pin order
+      (UNVERIFIED), D0/D1 (SCK/MOSI), DC, RES and CS on GND, then VCC/GND
+      (BF Q22).
 - [ ] Encoder rotation increments / decrements a counter on the OLED.
 - [ ] Encoder push button toggles the on-screen indicator.
 - [ ] Tap button (GP12) registers as a separate input.

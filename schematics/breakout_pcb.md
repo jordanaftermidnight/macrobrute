@@ -123,7 +123,7 @@ source impedance. The old 10kΩ pull-up to +5V is removed: with TP83 low it held
 ```
 
 Expander side of A:1 (BF 3.5, Provisional): A:1 → gate jack (tapped here) → 22kΩ → node →
-33kΩ to GND; node → a fault-tolerant Pico GPIO (OPEN: GP11, the earlier example, is now OLED CS and no FT pin is free; no firmware change yet). High
+33kΩ to GND; node → Pico GP11, a fault-tolerant GPIO (`GATE_IN`; PROVISIONAL (BT-14): the OLED CS pin is tied to GND so GP11 can take this input, CM 12G). High
 level 5 V × 33k / (1k + 22k + 33k) = 2.95 V. No 5 V net reaches a Pico GPIO. The CD4049UBE is not
 on the gate path: it sits on the expander as the clock buffer (BF 3.7).
 

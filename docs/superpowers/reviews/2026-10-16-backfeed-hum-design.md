@@ -27,8 +27,8 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 
 | Part | Used for | Status (qty) | Owned alternative or owner question |
 |---|---|---|---|
-| Raspberry Pi Pico (variant UNVERIFIED) | Expander controller | Have (1) | The docs say Pico WH; the package says "Raspberry Pi Pico" (no W); another owner description says "Pico H". Nothing in this design uses wireless, so any variant works electrically; docs may need renaming (Q21). |
-| Main OLED: 1.3 inch 7-pin SPI module (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Expander main display, SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 | Have (owner, 2026-10-17) | Baseline per the later owner ruling (2026-10-17). Needs an SPI driver (firmware follow-up); SH1106 would also need `OLED_COL_OFFSET=2`. The module is larger than the 0.96 inch panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). Q22. |
+| Raspberry Pi Pico | Expander controller | Have (1) | Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350). The owner says the variant does not matter (2026-10-17). |
+| Main OLED: 1.3 inch 7-pin SPI module (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Expander main display, SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND (PROVISIONAL, BT-14) | Have (owner, 2026-10-17) | Baseline per the later owner ruling (2026-10-17). Driver: `display.py` (`OLED_SPI`); SH1106 would also need `OLED_COL_OFFSET=2`. The module is larger than the 0.96 inch panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). Q22. |
 | 1.3 inch 4-pin I2C OLED | Was the baseline | Have, not available | Wired into a TD-3. |
 | 0.96" SSD1306 OLED | Was the baseline main display | Owner to confirm (it may not have arrived) | Alternative only: as an I2C module it needs GP4/GP5 (now OLED DC/RES), so re-pinning. |
 | 0.91" SSD1306 128x32 | Was the strip OLED | Have (1), no longer used | Dropped (decision c); spare. |
@@ -190,7 +190,7 @@ Connector face (insert numbering):
 
 | Pin | Signal (MB source) | Direction | Series R | Protection | Wire colour |
 |---|---|---|---|---|---|
-| 1 | Gate (TP83 via 2x CD40106) | MB to expander | 1k at the CD40106 output (MB board) | Expander: 22k / 33k divider into a Pico fault-tolerant GPIO (section 3.5; pin OPEN, CM 12G); gate jack tapped before the divider. Provisional. | White |
+| 1 | Gate (TP83 via 2x CD40106) | MB to expander | 1k at the CD40106 output (MB board) | Expander: 22k / 33k divider into Pico GP11, a fault-tolerant GPIO (section 3.5; PROVISIONAL (BT-14), CM 12G); gate jack tapped before the divider. Provisional. | White |
 | 2 | Pitch CV (stock rear Pitch buffer) | MB to expander | 220 ohm at the MB board (new; was "direct") | Low-impedance source UNVERIFIED (E-16) | Yellow |
 | 3 | Envelope (TL07x follower) | MB to expander | 1k after the feedback tap (audit S36, R3-15) | - | Orange |
 | 4 | LFO (TL07x follower) | MB to expander | 1k after the feedback tap | Source TP21 meaning UNVERIFIED (E-17) | Green |
@@ -266,7 +266,7 @@ Provisional (audit recommendation, owner has not confirmed):
 
 Provisional (audit recommendation, owner has not confirmed), with one justified change: the audit recommends a CD4049UBE on Pico 3V3 as the level shifter. Because the CD4049UB datasheet itself says its inputs have clamp diodes to VCC (p17), a 5 V input to a 3.3 V-powered 4049 would push current into the Pico 3V3 rail, and in S2 into the unpowered rail. A resistive divider into a fault-tolerant RP2040 GPIO avoids both:
 
-A:1 -> (gate panel jack tapped here) -> 22k -> node -> 33k to GND; node -> Pico GPIO (an FT pin; GP11 was the example, but it is now OLED CS (owner ruling, 2026-10-17), so no FT pin is free and the pin is OPEN; no firmware change in this task).
+A:1 -> (gate panel jack tapped here) -> 22k -> node -> 33k to GND; node -> Pico GP11 (FT; `GATE_IN` in config.py). DECIDED-PROVISIONAL (owner ruling, 2026-10-17): the OLED CS pin is tied to GND to free GP11; PROVISIONAL until BT-14 (section 5).
 
 - High level: 5 V x 33k / (1k + 22k + 33k) = 2.95 V at a 5.0 V CD40106 supply; above RP2040 VIH 2.0 V and below 3.63 V (FT limit) and IOVDD + 0.5 V = 3.8 V. The 78L05 output tolerance was not read for this note; a +/-5 % supply would give 2.80-3.09 V (UNVERIFIED margin, BT-5).
 - No 5 V net touches a GPIO: the highest node voltage is the divided value. The validator rule (plan Task 8) sees a `DIV` endpoint.
@@ -303,7 +303,7 @@ Both clock jacks and the Pico are in the rack domain; no clock wire crosses to t
 | B:6 UART RX | LPC P0.15 TXD1 (pin 62) | Pico GP1 | 1k MB + 1k expander | GP1 fault tolerant; pull-down | LPC may drive while Pico is off: exceeds Table 622 abs max, relies on Table 614 FT, provisional (BT-2) |
 | B:5 Filter CV | Expander op-amp | TP26 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
 | B:3 VCA CV | Expander op-amp | TP10 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
-| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO (pin OPEN, CM 12G) | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
+| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico GP11 (FT; PROVISIONAL (BT-14), CM 12G) | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
 | A:2 Pitch | Stock pitch buffer | Jack | 220 ohm MB | - | - |
 | A:3-A:8 | MB followers | Jacks | 1k MB | >= 100k into any expander circuit | Synth may drive while rack is off |
 | Clock IN | Rack jack | GP21 | 100k | 2x CD4049UB on 3V3, 100k pull-down | Rack domain only |
@@ -387,7 +387,7 @@ Do each step only if hum or noise is still measured after the previous one (BT-9
 
 ## 5. GPIO note
 
-With I2C off the cable and EFFIGY shelved, GP2, GP3 and GP11 were free when this note was written. Update (owner ruling, 2026-10-17): they are now the SPI main OLED's SCK, MOSI and CS, so only these Pico pins are free:
+With I2C off the cable and EFFIGY shelved, GP2, GP3 and GP11 were free when this note was written. Update (owner rulings, 2026-10-17): GP2 and GP3 are now the SPI main OLED's SCK and MOSI, and GP11 is the gate input (OLED CS tied to GND), so only these Pico pins are free:
 
 | GPIO | Physical pin | Type (RP2040 datasheet) | Note |
 |---|---|---|---|
@@ -397,11 +397,7 @@ With I2C off the cable and EFFIGY shelved, GP2, GP3 and GP11 were free when this
 
 Rule: any input that can see a signal from the cable or a jack while the Pico may be unpowered goes on an FT pin (GP0-22), not on GP26-28.
 
-Update (owner ruling, 2026-10-17): no FT pin is free, so the gate mirror of A:1 (section 3.5) has no pin under this rule. Options for the owner, none chosen here:
-
-1. Tie the OLED CS input permanently low, if the module allows it; that frees GP11 (FT). UNVERIFIED and module-dependent.
-2. Use GP27 or GP28 and accept the clamp current in S2: about 0.17 mA worst case by the section 3.5 arithmetic ((2.95 - 0.6) V / 13.6k). Bench-test with BT-5.
-3. Add a series diode or a 3V3-powered buffer in front of a GP26-28 pin; needs a part decision.
+Gate input pin: DECIDED-PROVISIONAL (owner said "whichever is better"; ruling 2026-10-17). The OLED module's CS pin is strapped permanently to GND (single device on the SPI bus, common practice), which frees GP11 (fault tolerant) for the gate mirror of A:1 (section 3.5; `GATE_IN = 11`, direction IN). The module's behaviour with CS tied low is UNVERIFIED: bench check BT-14. Fallback if BT-14 fails: CS back on a GPIO, and the gate input on GP27 or GP28, either accepting the S2 clamp current (about 0.17 mA worst case by the section 3.5 arithmetic, (2.95 - 0.6) V / 13.6k; check with BT-5) or behind a series diode or a 3V3-powered buffer.
 
 ## 6. Open items and bench checks
 
@@ -429,8 +425,7 @@ Update (owner ruling, 2026-10-17): no FT pin is free, so the gate mirror of A:1 
 | Q18 | List the further components not in the 2026-10-17 photo, and send close-ups of the assortment kit's insert card (transistor, diode, LED and trim-pot types; resistor values). |
 | Q19 | Firmware mute of the CV outputs until the synth is seen powered (section 3.3): wanted? |
 | Q20 | PC817-isolated UART (section 3.9): accept a bridge baud of 4800-9600 (115200 and 38400 do not work) in exchange for zero UART back-feed? If yes, which MB-side collector supply: a +3V3ARM tap (against audit B09) or the Provisional 78L05 (power-up sequencing UNVERIFIED)? |
-| Q21 | Pico variant: the package says "Raspberry Pi Pico" (no W), the docs say Pico WH, another description says "Pico H". Which is it? Nothing here uses wireless; docs may need renaming once confirmed. |
-| Q22 | Main OLED: the baseline is now the owner's 1.3 inch 7-pin SPI module (owner ruling, 2026-10-17; the 4-pin I2C module is in a TD-3). Owner to read its chip marking (SSD1306 or SH1106, UNVERIFIED) and pin order, and to confirm whether the 0.96 inch SSD1306 has arrived. Pins: SPI0 SCK = GP2, MOSI = GP3, DC = GP4, RES = GP5, CS = GP11; free pins are GP26-28 only. |
+| Q22 | Main OLED: the baseline is now the owner's 1.3 inch 7-pin SPI module (owner ruling, 2026-10-17; the 4-pin I2C module is in a TD-3). Owner to read its chip marking (SSD1306 or SH1106, UNVERIFIED) and pin order, and to confirm whether the 0.96 inch SSD1306 has arrived. Pins: SPI0 SCK = GP2, MOSI = GP3, DC = GP4, RES = GP5, CS tied to GND (BT-14); GP11 is the gate input; free pins are GP26-28 only. |
 | Q23 | Connector: RESOLVED (owner, 2026-10-17): CONFIRMED as 2x DB-9. The VGA / HD-15 line in a pasted inventory was an error (HD-15 rejected because the cable shorts pins 6-8 to ground). |
 | Q24 | The owner's earlier IC list could not be found in local history and a shared chat link was not readable. Re-send it if it differs from the 2026-10-17 photo. |
 
@@ -453,3 +448,4 @@ Other open items carried from the audit: LPC bridge UART choice (B01, E-01); CV 
 | BT-11 | Clock IN: feed +/-10 V through the 100k into the 4049 stage. | GP21 stays within 0-3.3 V; 3V3 rail unchanged. | Clock IN protection |
 | BT-12 | Meter the CP1A bus slot pins 11-12 for +5 V. | Present. | E-14 |
 | BT-13 | Only if the PC817 alternative (3.9) is considered: build one direction with an owned PC817, 560 ohm and 4.7k on the real cable; send a repeating 0x55 pattern at 4800, 9600 and 19200 baud; scope the receiver pin and run a loop-back byte-error count. Also read the part's rank mark. | Edges at most about 25 % of a bit and no byte errors over a long run at the chosen baud. | PC817 baud, CTR rank |
+| BT-14 | OLED with CS tied low: wire the 1.3 inch module with its CS pin to GND (no GPIO) and run `test_hw.py`'s OLED test (draws through `display.OLED_SPI`). | The test frame shows; init and redraws work after a power cycle. Fallback if not: CS back on a GPIO (GP11, `OLED_CS = 11`) and the gate input on GP27/GP28 with the BT-5 leakage check, or a series diode / 3V3 buffer. | CS-to-GND ruling, gate input on GP11 |

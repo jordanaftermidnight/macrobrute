@@ -15,13 +15,14 @@ they go deeper on the analog circuits.
 ### The OLED shows nothing
 
 The main display is the 1.3″ 7-pin SPI OLED on SPI0, write-only: SCK GP2 (module D0),
-MOSI GP3 (D1), DC GP4, RES GP5, CS GP11. SPI has no address and no scan, and the
-firmware has no SPI driver yet (follow-up), so a blank screen before that driver lands
-is expected.
+MOSI GP3 (D1), DC GP4, RES GP5; the module's CS pin is tied to GND (PROVISIONAL,
+BT-14). SPI has no address and no scan; the driver is `display.py` (`OLED_SPI`), and
+`test_hw.py`'s OLED test draws a test frame through it.
 
 **Fix:** check the module pin order against its silkscreen (UNVERIFIED; the common order
 is GND, VCC, D0, D1, RES, DC, CS), that D0/D1 are not swapped, that RES is driven high
-after reset and CS low while writing, then VCC and GND. If the picture is shifted by two
+after reset and CS really is on GND, then VCC and GND. If CS on GND does not work
+(BT-14 fails), move CS back to a GPIO and set `OLED_CS` to it (connection map 12G). If the picture is shifted by two
 columns or shows a stripe at the edge, the chip is probably SH1106 (UNVERIFIED): set
 `OLED_CHIP="SH1106"` and `OLED_COL_OFFSET=2` (BF Q22).
 

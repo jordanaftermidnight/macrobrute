@@ -16,6 +16,7 @@ KEYWORD = {
     "uart0": "UART0", "oled": "OLED", "led": "RGB LED", "button": "Tap button",
     "encoder": "Encoder", "clkdiv": "Clock divider", "aux": "Aux output",
     "clock_in": "Clock input", "clock_out": "Clock output", "free": "Free",
+    "gate_in": "Gate input",
 }
 
 
@@ -63,8 +64,19 @@ def test_unverified_items_tagged_on_card():
     s = pp.render()
     assert s.count("UNVERIFIED") >= 3
     assert "pin order: UNVERIFIED" in s
-    assert "PROVISIONAL" not in s and "I2C0" not in s
+    assert "I2C0" not in s
     assert "slice 5A" in s
+
+
+def test_gate_input_on_gp11_and_cs_strapped():
+    r = pp.ROLES[11]
+    assert r["cat"] == "gate_in" and r["dir"] == "IN" and r["status"] == "Used"
+    s = pp.render()
+    assert "PROVISIONAL (BT-14)" in s
+    assert "CS strapped to GND" in s
+    assert all("CS" not in r["func"] for r in pp.ROLES.values())
+    assert "OPEN" not in s
+    assert pp.NETS["GATE_IN"] == [("PICO", "GP11"), ("DIV", "22K_33K"), ("DB9", "A:1")]
 
 
 def test_committed_svg_matches_generator():

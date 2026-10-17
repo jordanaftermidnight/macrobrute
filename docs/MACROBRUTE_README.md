@@ -134,7 +134,7 @@ Locked (don't propose changes here without strong reason):
   see Key Decisions in the Master Index for why).
 - **Pico GPIO assignments** — `firmware/pico/config.py` is canonical; see
   `schematics/pico_pinout.md` and the connection map. 3 pins are free
-  (GP26-28); GP2, GP3 and GP11 went to the SPI main OLED.
+  (GP26-28); GP2 and GP3 are the SPI main OLED, GP11 the gate input.
 - **Power scheme** — split: the expander runs from the rack only, the
   breakout from the synth only; only ground is shared over the DB-9.
   No supply rail and no I²C cross the cable.
@@ -143,8 +143,11 @@ Still in flux (your input welcome):
 
 - **Expander size** — 17 HP or about 20 HP, open until the owner measures
   the blank.
-- Pico variant (Pico / Pico H / Pico WH), the main OLED chip marking and pin order (1.3" 7-pin SPI baseline, SSD1306 or SH1106)
-  and the DB-9 count are for the owner to confirm (BF Q21, Q22, Q9).
+- The main OLED chip marking and pin order (1.3" 7-pin SPI baseline, SSD1306 or SH1106)
+  and the DB-9 count are for the owner to confirm (BF Q22, Q9). The board is a
+  Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical
+  facts quoted here come from the RP2040 datasheet and were not checked against
+  Pico 2/RP2350).
 - LPC bridge UART (UART1 is the working assumption, UNVERIFIED until the
   Phase 0 continuity check).
 - Resonance vactrol — owned, but the part number and LED rating are unread.

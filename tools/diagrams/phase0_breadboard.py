@@ -16,7 +16,8 @@ from tools.check_diagrams import validate_nets
 from tools.diagram_kit import (BB_PITCH, PALETTE, PICO_NAMES, Card, _dot, _line, _n, _t,
                                breadboard, breadboard_pins, jack, jack_pins, label_box,
                                wire)
-from tools.diagrams.phase0_nets import CLOCK_IN_NOTE, MISSING_PARTS, NETS, RAILS, RGB_ORDER
+from tools.diagrams.phase0_nets import (CLOCK_IN_NOTE, CS_NOTE, MISSING_PARTS, NETS, RAILS,  # noqa: F401
+                                        RGB_ORDER)
 from tools.hwdata.pico import FIRMWARE_ROLES as R
 from tools.hwdata.pico import PICO_PHYSICAL_PIN
 
@@ -86,7 +87,6 @@ def _top_signal(role, net, dest_end, dest_hole, lane, color):
 
 
 # routing channel between the OLED module and the top lanes
-JOG_CS_Y = 146                                  # above the highest top lane
 JOG_RES_Y2, JOG_DC_Y, JOG_RES_Y = 188, 206, 226  # DC and RES swap columns here
 JOG_RES_X = colx(24) + BB_PITCH / 2
 
@@ -112,7 +112,8 @@ JUMPERS = [
     _oled("OLED_DC", "DC", via=[(colx(25), JOG_DC_Y), (colx(24), JOG_DC_Y)]),
     _oled("OLED_RES", "RES", via=[(colx(24), JOG_RES_Y), (JOG_RES_X, JOG_RES_Y),
                                   (JOG_RES_X, JOG_RES_Y2), (colx(25), JOG_RES_Y2)]),
-    _oled("OLED_CS", "CS", via=[(colx(16), JOG_CS_Y), (colx(23), JOG_CS_Y)]),
+    # CS strapped to GND: straight down to the top GND rail (PROVISIONAL, BT-14)
+    _jumper("module", "GND", ("OLED", "CS"), None, ("RAIL", "GND"), "-T23", C_GND),
     _jumper("module", "3V3", ("OLED", "VCC"), None, ("RAIL", "3V3"), "+T28", C_3V3),
     _jumper("module", "GND", ("OLED", "GND"), None, ("RAIL", "GND"), "-T29", C_GND),
     # power taps
@@ -429,6 +430,7 @@ def build():
     # tags for anything not verified
     card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 70, "UNVERIFIED: OLED chip"))
     card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 88, "UNVERIFIED: OLED pin order"))
+    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 106, CS_NOTE))
     card.add(_tag(colx(6) - 10, hxy("b6")[1] - 7, "UNVERIFIED: KY-040 header order, read silkscreen"))
 
     _tables(card)

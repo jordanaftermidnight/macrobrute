@@ -98,9 +98,11 @@ def test_spi_oled_rows_pass_and_old_i2c_row_is_flagged():
         "| GP3 | 5 | OLED MOSI (SPI0 TX) | OUT | x |",
         "| GP4 | 6 | OLED DC | OUT | x |",
         "| GP5 | 7 | OLED RES | OUT | x |",
-        "| GP11 | 15 | OLED CS | OUT | x |",
+        "| GP11 | 15 | Gate input (Pico mirror of DB-9 A:1) | IN | x |",
     ])
     assert check_connection_map(ok) == []
+    # ruling 2026-10-17: OLED CS is strapped to GND, GP11 is the gate input
+    assert any("GP11" in p for p in check_connection_map("| GP11 | 15 | OLED CS | OUT | x |"))
     assert any("GP4" in p for p in check_connection_map("| GP4 | 6 | I²C0 SDA | I/O | x |"))
 
 

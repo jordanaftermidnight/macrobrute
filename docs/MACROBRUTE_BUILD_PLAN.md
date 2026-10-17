@@ -15,12 +15,12 @@ Source: audit sections 1a and 1b, BF, and `docs/MACROBRUTE_CONNECTION_MAP.md` (t
 | Expander HP | **OPEN: 17 HP or about 20 HP.** The repo panel file `panel/expander_17hp.svg` is 87 mm wide with mounting holes 79 mm apart, both UNVERIFIED against the A-100 spec (audit S53, E-22). The owner measures the blank first; plan both layouts. Depth behind the panel UNVERIFIED (E-23). |
 | Connector | **2× shielded DB-9** (HD-15/VGA rejected: the cable shorts pins 6-8 to GND; no DB-25). Both mount on the **MicroBrute rear panel, left of the Pitch/Gate section** (owner decision a). Panel dimensions, free area and depth UNVERIFIED until the owner measures (audit E-20, E-21). DB-9 A = outputs; DB-9 B = UART TX, UART RX, Filter CV, VCA CV and grounds only. Pin maps: CM sections 2 and 3 (from BF 2.2 and 2.3). |
 | Power | **Split.** The expander is powered only from the rack (CP1A); the MicroBrute-side breakout only from the synth (TP70 +12 V, TP71 -12 V, TP72 GND). **No supply rail crosses the DB-9 cable; only ground is shared.** |
-| Pico location | Inside the expander (not the MicroBrute case). Pico variant: owner to confirm (Pico / Pico H / Pico WH; the package says "Raspberry Pi Pico"), UNVERIFIED (BF Q21). Nothing here uses wireless. |
-| OLED (primary) | **1.3" 7-pin SPI** (owner ruling, 2026-10-17; chip SSD1306 or SH1106 UNVERIFIED: read the module; module pin order UNVERIFIED) on SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 — on the expander panel, powered from the Pico 3V3 (draw UNVERIFIED). Driver: none yet for SPI; `firmware/pico/display.py` holds only the I²C driver `OLED_I2C`, so an SPI driver is a firmware follow-up (for SH1106: `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`). A 1.3" module is larger than the 0.96" cutout, which bears on the open expander width. BF Q22. |
+| Pico location | Inside the expander (not the MicroBrute case). Board: Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350). Nothing here uses wireless. |
+| OLED (primary) | **1.3" 7-pin SPI** (owner ruling, 2026-10-17; chip SSD1306 or SH1106 UNVERIFIED: read the module; module pin order UNVERIFIED) on SPI0, write-only: SCK GP2, MOSI GP3, DC GP4, RES GP5; CS tied to GND, no GPIO (PROVISIONAL, BT-14) — on the expander panel, powered from the Pico 3V3 (draw UNVERIFIED). Driver: `firmware/pico/display.py` (`OLED_SPI`; for SH1106: `OLED_CHIP="SH1106"`, `OLED_COL_OFFSET=2`). A 1.3" module is larger than the 0.96" cutout, which bears on the open expander width. BF Q22. |
 | OLED (strip) | **DROPPED** (owner decision c). No I²C is used on the expander, and **no I²C crosses the DB-9 cable.** |
 | OLED (alternatives) | The owner's 1.3" 4-pin I²C module is wired into a TD-3: not available. The 0.96" SSD1306 (owner to confirm it has arrived) and the 16×2 1602 I²C LCD (separate driver) are alternatives only: an I²C display needs GP4/GP5, which are OLED DC/RES, so it requires re-pinning, not a drop-in. |
 | MIDI paths | (a) Pico ↔ LPC2361 UART bridge over DB-9 B pins 1 and 6 @ 115200 baud, XOR-checksummed frame; LPC-side UART is **UART1 (P0.15/P0.16, pins 62/63), UNVERIFIED** until the Phase 0 continuity check; (b) Pico USB-MIDI via micro-USB (TinyUSB MIDI class), not used while the DB-9 cables are connected (BF 4.3). |
-| EFFIGY pair bus | **SHELVED** (owner decision b): kept as an idea for another project; nothing is designed around it. GP2, GP3, GP11 are now the main OLED's SCK, MOSI and CS. |
+| EFFIGY pair bus | **SHELVED** (owner decision b): kept as an idea for another project; nothing is designed around it. GP2 and GP3 are now the main OLED's SCK and MOSI; GP11 is the gate input. |
 | Hardware utilities | **Slew limiter, LFO, Sample & Hold** (standalone rack utilities, rack power only, no synth cabling). Noise, mult and attenuverter stay out. S&H uses an LF398 (not owned) and a film hold capacitor (not owned). |
 | Firmware utilities | Clock divider (3 outputs, GP16/17/18), 4 programmable aux outputs (GP19/20/6/7) — replaces the dropped CD4024. Clock I/O on the expander only. |
 | RGB LED | Common-cathode on GP8/9/10 — R=clock tick, G=gate, B=mode (the old "pair" meaning is shelved). On the expander. |
@@ -53,11 +53,11 @@ The breadboard layout for Phase 0 lives in `schematics/pico_pinout.md` and is re
 - **`phase0_wiring_schematic.svg`** — flat schematic, elbow-routed nets, useful for understanding what connects to what.
 - **`phase0_breadboard.svg`** — top-down breadboard view, jumper paths colour-coded by net (amber=+3V3, green=GND, blue=SPI0 OLED, red=RGB drive, orange=button and encoder, violet=clock).
 
-Both match `firmware/pico/config.py`. Pin map covered: **one OLED on SPI0** — the main display is the 1.3″ 7-pin SPI OLED (chip SSD1306 or SH1106 and pin order UNVERIFIED), SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 (later mounted on the expander panel). KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
+Both match `firmware/pico/config.py`. Pin map covered: **one OLED on SPI0** — the main display is the 1.3″ 7-pin SPI OLED (chip SSD1306 or SH1106 and pin order UNVERIFIED), SCK GP2, MOSI GP3, DC GP4, RES GP5, CS lead to the GND rail (PROVISIONAL, BT-14; later mounted on the expander panel). GP11 (gate input) is not used in Phase 0. KY-040 encoder on GP14/GP15/GP13 (firmware enables `Pin.PULL_UP` on all three), tap button on GP12 (active-LOW, `Pin.PULL_UP`), RGB LED (common cathode) R/G/B on GP8/GP9/GP10 via 220 Ω, clock OUT on GP22, clock IN on GP21 (`Pin.PULL_DOWN`, IRQ on rising edge).
 
 ### Tasks
-- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics. Its OLED check is an I²C scan for the old module and does not apply to the SPI display until the SPI driver lands (firmware follow-up).
-- [ ] Confirm the main OLED draws its boot splash (needs the SPI driver first). If the display is blank: check the module pin order against its silkscreen (UNVERIFIED), SCK/MOSI not swapped (D0 = SCK, D1 = MOSI), then VCC vs GND polarity; if the image is shifted by two columns, the chip is probably SH1106 (`OLED_COL_OFFSET=2`).
+- [ ] Flash Pico firmware (`tools/flash_pico.sh`). Run `test_hw.py` first for per-peripheral diagnostics. Its OLED check draws a test frame through `display.OLED_SPI` (copy `display.py` and `config.py` first); a working frame with CS on GND passes BT-14.
+- [ ] Confirm the main OLED draws its boot splash. If the display is blank: check the module pin order against its silkscreen (UNVERIFIED), SCK/MOSI not swapped (D0 = SCK, D1 = MOSI), then VCC vs GND polarity; if the image is shifted by two columns, the chip is probably SH1106 (`OLED_COL_OFFSET=2`).
 - [ ] Breadboard integration per the diagrams above: OLED + KY-040 encoder + tap button + RGB LED + clock IN/OUT
 - [ ] Self-loopback test: jumper GP22 → 1 kΩ → GP21 to confirm the firmware clock generator and IRQ-driven clock-in count match
 - [ ] MicroBrute inspection: locate TPs, measure panel gaps, photograph PCBs — **DONE** (teardown photos taken)
@@ -450,7 +450,7 @@ on every mod; no regressions to Phase 1/3 baseline.
 
 ### 7A: EFFIGY DSP module pair-up — SHELVED
 Owner decision b (2026-10-17): the EFFIGY I²C pairing is shelved as an idea for
-another project. No rear JST-XH header is fitted, GP2/GP3/GP11 are now the main OLED's SPI pins, and
+another project. No rear JST-XH header is fitted, GP2/GP3 are now the main OLED's SCK/MOSI and GP11 the gate input, and
 nothing is designed around it. `docs/MACROBRUTE_EFFIGY_BRIDGE.md`,
 `firmware/pico/effigy_bridge.py` and `tools/sync_effigy_constants.py` are
 archived as they are.

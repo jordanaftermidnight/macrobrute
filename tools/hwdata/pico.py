@@ -1,4 +1,4 @@
-"""Canonical Pico WH pin data. Firmware config.py is the source of truth for roles."""
+"""Canonical Raspberry Pi Pico pin data. Firmware config.py is the source of truth for roles."""
 import ast
 from pathlib import Path
 
@@ -7,6 +7,8 @@ PICO_PHYSICAL_PIN = {
     10: 14, 11: 15, 12: 16, 13: 17, 14: 19, 15: 20, 16: 21, 17: 22,
     18: 24, 19: 25, 20: 26, 21: 27, 22: 29, 26: 31, 27: 32, 28: 34,
 }
+# GPIOs brought out on the 40-pin header (GP23-25 and GP29 are board-internal).
+# "Usable" means exposed, not free: free = PICO_USABLE_GP minus FIRMWARE_ROLES.
 PICO_USABLE_GP = frozenset(PICO_PHYSICAL_PIN)
 
 FIRMWARE_ROLES = {
@@ -15,7 +17,7 @@ FIRMWARE_ROLES = {
     "OLED_DC": 4, "OLED_RES": 5,
     "AUX_OUT_PINS": (19, 20, 6, 7),
     "LED_CLOCK": 8, "LED_GATE": 9, "LED_MODE": 10,
-    "OLED_CS": 11, "BTN_TAP": 12,
+    "GATE_IN": 11, "BTN_TAP": 12,   # OLED CS is strapped to GND (BT-14)
     "ENC_SW": 13, "ENC_CLK": 14, "ENC_DT": 15,
     "CLK_DIV_PINS": (16, 17, 18),
     "CLOCK_IN": 21, "CLOCK_OUT": 22,

@@ -76,13 +76,13 @@ the rest of the manual leans on these without re-defining them.
 
 | Term | What it means |
 |---|---|
-| **Pico WH** | Raspberry Pi Pico W with pre-soldered headers: the variant the docs assume. The owned variant is UNVERIFIED: owner to confirm (Pico / Pico H / Pico WH; BF Q21); nothing here uses wireless. RP2040, 133 MHz, 264 KB SRAM, 2 MB Flash. Runs MicroPython in this project. |
+| **Pico** | Raspberry Pi Pico (any variant with the standard 40-pin layout; RP2040 electrical facts quoted here come from the RP2040 datasheet and were not checked against Pico 2/RP2350). The owner says the variant does not matter (Pico, Pico H, WH, 2, 2H, 2WH share the 40-pin layout); nothing here uses wireless. RP2040 (Pico 1 family): 133 MHz, 264 KB SRAM, 2 MB Flash. Runs MicroPython in this project. |
 | **LPC2361** | The MicroBrute's stock CPU. ARM7TDMI core, 72 MHz, 128 KB Flash, 34 KB SRAM. Custom firmware build is optional. |
 | **RP2040** | The chip on the Pico (used interchangeably with "Pico" when context is clear). |
 | **MicroPython** | Subset of Python that runs on microcontrollers. Used for all Pico firmware in this project. |
 | **UART** | Asynchronous serial protocol. Used for Pico ↔ LPC2361 bridge (115 200 baud) and for MIDI (31 250 baud). |
 | **I²C** | Two-wire synchronous serial bus (SDA + SCL). Not used in this build: the main OLED is SPI, no I²C crosses the DB-9, and the rear Daisy Seed (EFFIGY) expansion is shelved. |
-| **SPI** | Synchronous serial bus with a clock (SCK), data out (MOSI), optional data in (MISO) and a chip select (CS). The main OLED uses Pico SPI0 write-only (SCK GP2, MOSI GP3) plus DC GP4, RES GP5 and CS GP11. |
+| **SPI** | Synchronous serial bus with a clock (SCK), data out (MOSI), optional data in (MISO) and a chip select (CS). The main OLED uses Pico SPI0 write-only (SCK GP2, MOSI GP3) plus DC GP4 and RES GP5; the module's CS pin is tied to GND (PROVISIONAL, BT-14). |
 | **PIO** | RP2040's Programmable I/O — small state machines that handle precise timing-critical I/O without the CPU. Used for the clock-out generator. |
 | **PWM** | Pulse-width modulation. Used for LED brightness and for low-resolution analog CV output (filtered to DC). |
 | **ADC** | Analog-to-digital converter. Pico has 4 channels @ 12-bit. |

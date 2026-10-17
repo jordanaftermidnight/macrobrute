@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico WH — Hardware configuration and pin assignments.
+"""MACROBRUTE Raspberry Pi Pico — Hardware configuration and pin assignments.
 
 Authoritative source for pin allocation. The connection map (docs/
 MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
@@ -6,7 +6,12 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 
 # ---------------------------------------------------------------------------
 # Main OLED — baseline (owner ruling, 2026-10-17): the owner's 1.3" 7-pin SPI
-#   module, 128×64, write-only on SPI0 (no MISO). Chip UNVERIFIED (SSD1306 or
+#   module, 128×64, write-only on SPI0 (no MISO), driven by display.py
+#   (OLED_SPI). The module's CS pin is strapped to GND (single device on the
+#   bus; that the module works with CS tied low is UNVERIFIED, bench check
+#   BT-14). Fallback if it does not: CS back on a GPIO (set OLED_CS to it) and
+#   the gate input moves to GP27/GP28 with the BT-5 leakage check or a series
+#   diode / 3V3 buffer. Chip UNVERIFIED (SSD1306 or
 #   SH1106: read the marking; for SH1106 set OLED_CHIP="SH1106" and
 #   OLED_COL_OFFSET=2). Module pin order UNVERIFIED (common order GND, VCC,
 #   D0=SCK, D1=MOSI, RES, DC, CS: read the silkscreen). Powered from the Pico
@@ -28,11 +33,11 @@ OLED_SCK         = 2       # GP2  — SPI0 SCK  → module D0
 OLED_MOSI        = 3       # GP3  — SPI0 TX   → module D1
 OLED_DC          = 4       # GP4  — data/command select
 OLED_RES         = 5       # GP5  — reset (active low)
-OLED_CS          = 11      # GP11 — chip select (active low)
+OLED_CS          = None    # CS strapped to GND, no GPIO (PROVISIONAL, BT-14)
 
-# Legacy I²C driver values. display.py (OLED_I2C) and strip_display.py still
-#   read these; the SPI driver is a firmware follow-up that removes them. They
-#   are not pin roles: GP4/GP5 are OLED DC/RES above.
+# Legacy I²C driver values. strip_display.py (dropped, no longer built by
+#   main.py) still reads these; a firmware follow-up removes them. They are
+#   not pin roles: GP4/GP5 are OLED DC/RES above.
 OLED_I2C_ID      = 0       # legacy (I²C driver), not wired
 OLED_SDA         = 4       # legacy (I²C driver); GP4 is OLED_DC in this design
 OLED_SCL         = 5       # legacy (I²C driver); GP5 is OLED_RES in this design
@@ -82,6 +87,16 @@ LED_GATE   = 9             # GP9  — RGB G channel (gate activity)
 LED_MODE   = 10            # GP10 — RGB B channel (mode indicator; the old "pair status" meaning is shelved)
 
 # ---------------------------------------------------------------------------
+# Gate input — Pico mirror of the MicroBrute gate (DB-9 A:1), PROVISIONAL
+#   (owner ruling 2026-10-17, BT-14). Direction IN. Fed from the MicroBrute
+#   CD40106 stage output through the 22k/33k divider (backfeed/hum note,
+#   section 3.5). GP11 is a fault-tolerant pin (GPIO0-25, RP2040 datasheet),
+#   which is what the unpowered-Pico case needs; that case stays provisional
+#   until BT-5. No firmware module reads it yet.
+# ---------------------------------------------------------------------------
+GATE_IN    = 11            # GP11 — gate input (IN), PROVISIONAL (BT-14)
+
+# ---------------------------------------------------------------------------
 # Clock I/O (3.3 V logic on expander panel jacks)
 # ---------------------------------------------------------------------------
 CLOCK_OUT  = 22            # GP22 — Master clock out (plain GPIO, Timer-driven)
@@ -120,22 +135,22 @@ ADC_2      = 28            # GP28 — ADC2
 # ---------------------------------------------------------------------------
 # I²C1 — EFFIGY peer-pair bus — SHELVED (owner decision, 2026-10-17)
 #   Kept as an idea for another project; not part of this build. No rear
-#   header is fitted. GP2, GP3 and GP11 are now the main OLED's SCK, MOSI and
-#   CS (above), so these values must not be used: they remain only because
+#   header is fitted. GP2 and GP3 are now the main OLED's SCK and MOSI and
+#   GP11 is the gate input (above), so these values must not be used: they remain only because
 #   effigy_bridge.py still reads them (a firmware follow-up removes them).
 #   See docs/MACROBRUTE_EFFIGY_BRIDGE.md (archived) for the register map.
 # ---------------------------------------------------------------------------
 DAISY_I2C_ID = 1
 DAISY_SDA    = 2           # SHELVED; GP2 is OLED_SCK
 DAISY_SCL    = 3           # SHELVED; GP3 is OLED_MOSI
-DAISY_INT    = 11          # SHELVED; GP11 is OLED_CS
+DAISY_INT    = 11          # SHELVED; GP11 is GATE_IN
 DAISY_ADDR   = 0x42        # Shared contract — see bridge spec
 DAISY_FREQ   = 100_000     # SHELVED, n/a: no rear cable is fitted (EFFIGY pairing shelved)
 
 # ---------------------------------------------------------------------------
 # Free GPIO inventory
-#   3 free pins: GP26, GP27, GP28 (ADC-capable, not fault tolerant). GP2, GP3
-#   and GP11 are the main OLED (SPI). GP26 PWM is slice 5A, the same channel
+#   3 free pins: GP26, GP27, GP28 (ADC-capable, not fault tolerant). GP2 and
+#   GP3 are the main OLED (SPI); GP11 is the gate input. GP26 PWM is slice 5A, the same channel
 #   as GP10 (LED_MODE).
 #   GP23, GP24, GP25, GP29 are RP2040-internal — not exposed.
 # ---------------------------------------------------------------------------

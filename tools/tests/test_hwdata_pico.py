@@ -28,7 +28,21 @@ def test_no_gpio_assigned_twice():
 def test_main_oled_is_spi0_on_the_decided_pins():
     # owner ruling 2026-10-17: 7-pin SPI 1.3" OLED is the baseline main display
     assert FIRMWARE_ROLES["OLED_SCK"] == 2 and FIRMWARE_ROLES["OLED_MOSI"] == 3
-    assert FIRMWARE_ROLES["OLED_CS"] == 11
+    # ruling 2026-10-17: OLED CS strapped to GND (BT-14), GP11 is the gate input
+    assert "OLED_CS" not in FIRMWARE_ROLES
+    assert load_firmware_gpio(CONFIG).get("OLED_CS") is None
+    assert "OLED_CS = None" in " ".join(CONFIG.read_text().split())
     assert FIRMWARE_ROLES["OLED_DC"] == 4 and FIRMWARE_ROLES["OLED_RES"] == 5
     assert not any(k.startswith("DAISY") or k in ("OLED_SDA", "OLED_SCL")
                    for k in FIRMWARE_ROLES)
+
+
+def test_gp11_is_the_gate_input():
+    assert FIRMWARE_ROLES["GATE_IN"] == 11
+
+
+def test_free_pins_are_gp26_to_28_only():
+    used = set()
+    for gp in FIRMWARE_ROLES.values():
+        used.update(gp if isinstance(gp, tuple) else (gp,))
+    assert PICO_USABLE_GP - used == {26, 27, 28}

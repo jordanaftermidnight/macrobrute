@@ -23,7 +23,7 @@ COL = {
     "button": PALETTE["cv"], "encoder": "#e0a458", "clkdiv": PALETTE["gate"],
     "aux": PALETTE["n12"], "clock_in": PALETTE["clock"], "clock_out": "#b57edc",
     "free": "#d9d9cc", "3v3": PALETTE["p3v3"], "5v": "#7a4b1e",
-    "gnd": PALETTE["gnd"], "other": "#bdbdb0",
+    "gnd": PALETTE["gnd"], "other": "#bdbdb0", "gate_in": "#b03a6f",
 }
 DARK_TEXT = {"free", "3v3", "encoder", "other", "clock_out", "gnd"}
 
@@ -40,14 +40,15 @@ ROLES[R["LPC_RX"]] = _role(R["LPC_RX"], "uart0", "UART0 RX from LPC2361", "IN",
                            "DB-9 B:6 from LPC TXD1 (UNVERIFIED)", "UART0 RX")
 for _k, _f, _pin in (("OLED_SCK", "OLED SCK (SPI0 SCK)", "D0"),
                      ("OLED_MOSI", "OLED MOSI (SPI0 TX)", "D1"),
-                     ("OLED_DC", "OLED DC", "DC"), ("OLED_RES", "OLED RES", "RES"),
-                     ("OLED_CS", "OLED CS", "CS")):
+                     ("OLED_DC", "OLED DC", "DC"), ("OLED_RES", "OLED RES", "RES")):
     g = R[_k]
     ROLES[g] = _role(g, "oled", _f, "OUT", f"Main OLED {_pin} (expander)", _f.split(" (")[0])
 for _n_, _c in (("LED_CLOCK", "R"), ("LED_GATE", "G"), ("LED_MODE", "B")):
     g = R[_n_]
     ROLES[g] = _role(g, "led", f"RGB LED {_c}", "OUT", f"RGB LED {_c} (expander panel)",
                      f"RGB LED {_c}")
+ROLES[R["GATE_IN"]] = _role(R["GATE_IN"], "gate_in", "Gate input (PROVISIONAL)", "IN",
+                            "DB-9 A:1 via 22k/33k divider", "Gate in")
 ROLES[R["BTN_TAP"]] = _role(R["BTN_TAP"], "button", "Tap button", "IN", "Tap button (expander panel)",
                             "Tap button")
 for _k, _lab in (("ENC_SW", "switch"), ("ENC_CLK", "CLK (A)"), ("ENC_DT", "DT (B)")):
@@ -89,11 +90,13 @@ NETS = {
     "CABLE_UART_RX": [("PICO", f"GP{R['LPC_RX']}"), ("R", "1K_EXP"), ("DB9", "B:6")],
 }
 for _g_, _r in ROLES.items():
-    if _r["status"] == "Used" and _r["cat"] != "uart0":
+    if _r["status"] == "Used" and _r["cat"] not in ("uart0", "gate_in"):
         NETS[f"GP{_g_}"] = [("PICO", f"GP{_g_}"), ("DEST", _r["dest"])]
+# The gate mirror reaches the pin only through the 22k/33k divider (BF 3.5).
+NETS["GATE_IN"] = [("PICO", f"GP{R['GATE_IN']}"), ("DIV", "22K_33K"), ("DB9", "A:1")]
 RAILS = {"3V3": 3.3}
 
-W, H = 1290, 700
+W, H = 1290, 724
 OX, OY = 300, 96
 TX = 656            # table left edge
 ROW_H = 17
@@ -196,11 +199,12 @@ def build():
         ("Main OLED, 7-pin SPI on SPI0", [
             "Write-only (no MISO), 3V3 logic, powered from the 3V3 pin.",
             "Chip (SSD1306 or SH1106) and module pin order: UNVERIFIED.",
-            "No I2C on the expander, so no pull-ups. SPI driver: follow-up."]),
+            "CS strapped to GND (no GPIO): PROVISIONAL (BT-14).",
+            "No I2C on the expander, so no pull-ups. Driver: display.py."]),
         ("Not usable", [
             "GP23, GP24, GP25, GP29 are RP2040 internal: not on the header.",
-            "Free: GP26-GP28 only (not fault tolerant). An input that sees a",
-            "jack signal needs GP0-GP22; none of those is free now."]),
+            "Free: GP26-GP28 only (not fault tolerant). GP11 (fault tolerant)",
+            "is the gate input, PROVISIONAL (BT-14): fallback GP27/GP28 + BT-5."]),
     ]
     y = ny0
     for title, lines in notes:
@@ -216,7 +220,8 @@ def build():
                  (COL["led"], "RGB LED"), (COL["button"], "Tap button"),
                  (COL["encoder"], "Encoder"), (COL["clkdiv"], "Clock divider out"),
                  (COL["aux"], "Aux out"), (COL["clock_in"], "Clock in"),
-                 (COL["clock_out"], "Clock out"), (COL["free"], "Free"),
+                 (COL["clock_out"], "Clock out"), (COL["gate_in"], "Gate in"),
+                 (COL["free"], "Free"),
                  (COL["3v3"], "3V3"), (COL["5v"], "5 V (VSYS, VBUS)"),
                  (COL["gnd"], "GND"), (COL["other"], "Not used")])
     return card

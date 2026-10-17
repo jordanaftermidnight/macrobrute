@@ -71,3 +71,17 @@ def test_phase0_captions_flag_loop_back_and_missing_parts():
     for k in ("schematics/phase0_wiring_schematic.svg", "schematics/phase0_breadboard.svg"):
         cap = SVG_DESCRIPTIONS[k]
         assert "loop-back only" in cap and "MISSING" in cap and "R-K-G-B" in cap, k
+
+
+def test_captions_follow_cs_to_gnd_and_pico_naming_rulings():
+    from tools.build_manual import SVG_DESCRIPTIONS
+    keys = ["schematics/phase0_wiring_schematic.svg", "schematics/phase0_breadboard.svg",
+            "schematics/pico_pinout_diagram.svg"]
+    for k in keys:
+        cap = SVG_DESCRIPTIONS[k]
+        for bad in ("Q21", "variant to confirm", "Pico WH", "`GP11` CS", "OPEN"):
+            assert bad not in cap, f"{k} caption still contains {bad!r}"
+        assert "PROVISIONAL (BT-14)" in cap, k
+    pin = SVG_DESCRIPTIONS["schematics/pico_pinout_diagram.svg"]
+    assert "gate input" in pin and "`GP11`" in pin
+    assert "any variant with the standard 40-pin layout" in pin
