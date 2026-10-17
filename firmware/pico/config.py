@@ -6,7 +6,7 @@ MACROBRUTE_CONNECTION_MAP.md §1) and this file must be kept in sync.
 
 # ---------------------------------------------------------------------------
 # Main OLED — baseline (owner ruling, 2026-10-17): the owner's Keyestudio-clone
-#   IIC/SPI 1.3" V2.0 module (used in SPI mode; SPI-mode selection UNVERIFIED), 128×64, write-only on SPI0 (no MISO), driven by display.py
+#   IIC/SPI 1.3" V2.0 module (used in SPI mode), 128×64, write-only on SPI0 (no MISO), driven by display.py
 #   (OLED_SPI). The module's CS pin is strapped to GND (single device on the
 #   bus; that the module works with CS tied low is UNVERIFIED, bench check
 #   BT-14). Fallback if it does not: CS back on a GPIO (set OLED_CS to it) and

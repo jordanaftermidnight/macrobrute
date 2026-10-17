@@ -7,7 +7,7 @@ Only the OLED test needs other files (display.py, config.py) on the Pico;
 the rest diagnose wiring before the full firmware is copied.
 
 Breadboard Wiring Quick Reference:
-  Main OLED Keyestudio-clone IIC/SPI 1.3" V2.0 in SPI mode (chip SSD1306 or SH1106, SPI-mode selection and pin order UNVERIFIED):
+  Main OLED Keyestudio-clone IIC/SPI 1.3" V2.0 in SPI mode (7 pins (owner confirmed); chip SSD1306 or SH1106 and the order of the 7 pins UNVERIFIED):
     VCC  → 3V3 (pin 36)        GND → GND
     D0   → GP2 (pin 4, SCK)    D1  → GP3 (pin 5, MOSI)
     DC   → GP4 (pin 6)         RES → GP5 (pin 7)        CS → GND (strapped, BT-14)
