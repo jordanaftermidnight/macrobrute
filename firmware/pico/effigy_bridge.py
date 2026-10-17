@@ -1,3 +1,8 @@
+# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
+# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11). EffigyBridge
+# !!! opens I2C1 on config.DAISY_SDA / DAISY_SCL = GP2 / GP3 (now OLED SCK / MOSI)
+# !!! and reads GP11 (now OLED CS) as INT. EFFIGY is SHELVED: do not instantiate it
+# !!! on the SPI wiring. Removal is a firmware follow-up.
 """EFFIGY ↔ MACROBRUTE I²C peer-pair bridge (Pico controller side).
 
 Implements the register-file protocol defined in docs/MACROBRUTE_EFFIGY_BRIDGE.md.

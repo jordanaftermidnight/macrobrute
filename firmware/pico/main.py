@@ -1,3 +1,9 @@
+# !!! WARNING (owner ruling, 2026-10-17): the main OLED is now the 1.3" 7-pin SPI
+# !!! module on SPI0 (SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11). This file still
+# !!! builds Display / StripDisplay (I2C on GP4 / GP5, now OLED DC / RES) and
+# !!! EffigyBridge (I2C1 on GP2 / GP3, now OLED SCK / MOSI, INT on GP11, now OLED CS).
+# !!! Running it on the SPI wiring makes the I2C peripherals fight the OLED pins.
+# !!! The SPI driver and the EFFIGY removal are firmware follow-ups.
 """
 MACROBRUTE — Pico WH Firmware
 Arturia MicroBrute Expansion Controller

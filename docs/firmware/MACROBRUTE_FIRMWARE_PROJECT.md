@@ -21,7 +21,7 @@ firmware/pico/
 ├── midi.py             # 5-pin DIN MIDI (LPC bridge side)
 ├── usbmidi.py          # USB-MIDI class device (TinyUSB)
 ├── aux_outputs.py      # PWM CV / gate outputs to expander
-├── effigy_bridge.py    # Inter-module ii bridge to EFFIGY/Norns
+├── effigy_bridge.py    # SHELVED: inter-module bridge to EFFIGY/Norns; its I2C1 pins GP2/GP3/GP11 are now the SPI OLED
 ├── _effigy_constants.py
 └── test_hw.py          # Per-peripheral self-test harness
 ```

@@ -6,9 +6,12 @@ Tests each peripheral independently via serial output.
 No OLED dependency — diagnose wiring issues before full firmware.
 
 Breadboard Wiring Quick Reference:
-  OLED SH1106 1.3" (I2C0) — primary. 0.96" SSD1306 works with same pins.
+  Main OLED 1.3" 7-pin SPI (chip SSD1306 or SH1106, UNVERIFIED; pin order UNVERIFIED):
     VCC  → 3V3 (pin 36)        GND → GND
-    SDA  → GP4 (pin 6)         SCL → GP5 (pin 7)
+    D0   → GP2 (pin 4, SCK)    D1  → GP3 (pin 5, MOSI)
+    DC   → GP4 (pin 6)         RES → GP5 (pin 7)        CS → GP11 (pin 15)
+  The OLED test below is a legacy I2C check and is not valid until the SPI
+  driver lands (firmware follow-up).
 
   Encoder HW040:
     CLK → GP14 (pin 19)        DT  → GP15 (pin 20)
