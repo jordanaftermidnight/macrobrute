@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- ARCHIVED (2026-10-17): superseded by docs/MACROBRUTE_CONNECTION_MAP.md; kept for reference -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
 <style>
   .title { font: bold 16px "SF Mono", Consolas, monospace; fill: #1a1a1a; }

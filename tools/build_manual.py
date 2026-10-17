@@ -69,21 +69,21 @@ SVG_MAP = {
         "schematics/breakout_layout.svg",
     ],
     "schematics/expander_circuits.md": [
-        "schematics/noise_generator_schematic.svg",
+        "schematics/archive/noise_generator_schematic.svg",
         "schematics/lfo_schematic.svg",
         "schematics/sah_schematic.svg",
-        "schematics/clock_divider_schematic.svg",
+        "schematics/archive/clock_divider_schematic.svg",
         "schematics/slew_limiter_schematic.svg",
-        "schematics/attenuverter_schematic.svg",
+        "schematics/archive/attenuverter_schematic.svg",
         "schematics/dip_pinout_reference.svg",
     ],
     "schematics/expander_stripboard.md": [
-        "schematics/expander_noise.svg",
+        "schematics/archive/expander_noise.svg",
         "schematics/expander_lfo.svg",
-        "schematics/expander_clockdiv.svg",
+        "schematics/archive/expander_clockdiv.svg",
         "schematics/expander_sah.svg",
         "schematics/expander_slew.svg",
-        "schematics/expander_attenuverter.svg",
+        "schematics/archive/expander_attenuverter.svg",
         "schematics/expander_power_distribution.svg",
     ],
     "schematics/CIRCUIT_REVIEW.md": [
@@ -92,8 +92,8 @@ SVG_MAP = {
         "schematics/esd_protection_schematic.svg",
         "schematics/cv_input_protection_diagram.svg",
         "schematics/cd4051_multiplexer.svg",
-        "schematics/buffered_multiple_schematic.svg",
-        "schematics/manual_gate_button_schematic.svg",
+        "schematics/archive/buffered_multiple_schematic.svg",
+        "schematics/archive/manual_gate_button_schematic.svg",
     ],
     "schematics/touch_plates.md": [
         "schematics/touch_plate_schematic.svg",
@@ -252,7 +252,7 @@ SVG_DESCRIPTIONS = {
         "where each channel sits relative to power rails and connectors.",
 
     # Expander circuits (analogue utility modules)
-    "schematics/noise_generator_schematic.svg":
+    "schematics/archive/noise_generator_schematic.svg":
         "Thomas Henry / Yusynth white-noise generator: 2 N3904 base–emitter junction in avalanche "
         "breakdown drives a TL072 ~47× amplifier; output is ~5–8 Vpp white noise.",
     "schematics/lfo_schematic.svg":
@@ -261,25 +261,25 @@ SVG_DESCRIPTIONS = {
     "schematics/sah_schematic.svg":
         "Sample & hold using LF398N (8-pin SOIC). External clock at the trigger input grabs the "
         "noise input on each rising edge.",
-    "schematics/clock_divider_schematic.svg":
+    "schematics/archive/clock_divider_schematic.svg":
         "CD4024 7-stage binary counter wired for /2, /4, /8 outputs with LED indicators per stage.",
     "schematics/slew_limiter_schematic.svg":
         "Voltage-controlled slew limiter using a TL072 integrator with steering diodes; rise and "
         "fall times set independently by two pots.",
-    "schematics/attenuverter_schematic.svg":
+    "schematics/archive/attenuverter_schematic.svg":
         "Bipolar attenuverter (–1 to +1 gain) per channel using a TL074 quad with a centre-detent pot.",
-    "schematics/expander_noise.svg":
+    "schematics/archive/expander_noise.svg":
         "Stripboard layout for the noise generator module — IC + transistor placement, ground "
         "topology, and trim adjustment for output level.",
     "schematics/expander_lfo.svg":
         "Stripboard layout for the LFO — integrator + Schmitt cells, rate pot, square output divider.",
-    "schematics/expander_clockdiv.svg":
+    "schematics/archive/expander_clockdiv.svg":
         "Stripboard layout for the clock divider — CD4024, 78L05 local regulator, three LED indicator strings.",
     "schematics/expander_sah.svg":
         "Stripboard layout for the sample & hold — LF398, hold cap, trigger input conditioning.",
     "schematics/expander_slew.svg":
         "Stripboard layout for the slew limiter — TL072, steering diodes, two rate pots.",
-    "schematics/expander_attenuverter.svg":
+    "schematics/archive/expander_attenuverter.svg":
         "Stripboard layout for the four-channel attenuverter array — TL074 + four centre-detent pots.",
 
     # Touch & body-contact bends
@@ -310,10 +310,10 @@ SVG_DESCRIPTIONS = {
     "schematics/cd4051_multiplexer.svg":
         "CD4051 8-channel analog multiplexer wiring: address pins, common Z, eight Y channels, "
         "VEE tied to GND for unipolar operation. Used to multiplex touch plates and any spare CV inputs.",
-    "schematics/buffered_multiple_schematic.svg":
+    "schematics/archive/buffered_multiple_schematic.svg":
         "Buffered 1×3 multiple: TL072 unity-gain followed by three 1 kΩ output isolators. Useful "
         "for splitting one CV/clock to multiple destinations without loading the source.",
-    "schematics/manual_gate_button_schematic.svg":
+    "schematics/archive/manual_gate_button_schematic.svg":
         "Front-panel manual gate button — momentary SPST, debounced through a CD40106 Schmitt "
         "trigger so the gate output is clean even under fast taps.",
 

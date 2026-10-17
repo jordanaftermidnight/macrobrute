@@ -1,3 +1,5 @@
+> **SHELVED (2026-10-17): kept as an idea for another project; not part of this build.**
+
 # MACROBRUTE ↔ Norns Shield Bridge — design placeholder
 
 > **Status:** anticipated, not implemented. This file is a stub that

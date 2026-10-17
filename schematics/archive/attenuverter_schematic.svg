@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- ARCHIVED (2026-10-17): superseded by docs/MACROBRUTE_CONNECTION_MAP.md; kept for reference -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 400" width="550" height="400">
 <defs>
   <filter id="textshadow" x="-20%" y="-20%" width="140%" height="140%">
