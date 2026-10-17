@@ -143,7 +143,7 @@ only two, overlapping in column 7 (audit S34).
 The output 1kΩ sits after the feedback tap (audit S36, R3-15); LAY has none.
 
 **Triangle 2× gain and vactrol driver:** U2 has two sections and four jobs (env, LFO, triangle,
-vactrol). The IC choice (2× TL072 or 2× TL074) is OPEN (owner), audit S17 / conflict C10. Triangle
+vactrol). U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and split chosen at breakout layout (audit S17 / C10). Triangle
 circuit (to a body jack, not the DB-9): TP124 → 1kΩ → +IN; 100kΩ from OUT to -IN; 100kΩ from -IN
 to GND; 1MΩ bias on +IN; OUT → 1kΩ → body jack (Gain = 1 + 100k/100k = 2×). Position TO DESIGN.
 
@@ -252,7 +252,7 @@ through the MB-side 1kΩ resistors to the LPC (connection map section 5.4).
 | DIP-14 socket | 2 | U1 TL074, U3 CD40106 (Q13) |
 | DIP-8 socket | 1-2 | U2 TL072 (×1 or ×2) (Q13) |
 | TL074CN | 1 | Waveform buffers (Have) |
-| TL072CP | 1-2 | Aux buffers, triangle, vactrol (Have; count OPEN, C10) |
+| TL072CP | 1-2 | Aux buffers, triangle, vactrol (Have; count chosen at breakout layout, C10) |
 | CD40106BE | 1 | Gate Schmitt trigger, two gates in series (Have) |
 | 78L05 | 1 | +5V_LOC for U3 (Have; Provisional) |
 | BAT85 | 6 | 2 rail protection (C12 OPEN), 4 CV clamps (Have) |

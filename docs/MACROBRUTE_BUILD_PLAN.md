@@ -258,7 +258,7 @@ saw and square. Trivial mod (one resistor swap), full details in
 | TP93 (Square) | 1kΩ | TL074B +in |
 | TP30_MIXER_OUT (VCO Mix) | 1kΩ | TL074C +in |
 | TP19 (VCF Out) | 1kΩ | TL074D +in |
-| TP124 (Triangle) | 1kΩ | TL072 +in (2x gain) → body jack, not the DB-9 (a TL072 has two sections: IC choice open, audit S17) |
+| TP124 (Triangle) | 1kΩ | TL072 +in (2x gain) → body jack, not the DB-9 (a TL072 has two sections; U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and split chosen at breakout layout, audit S17) |
 | TP83 (Gate) | 10kΩ, 1 nF to GND, no pull-up | CD40106 pin 1 |
 | Env (mod matrix) | 10kΩ | TL072 A +in |
 | LFO (mod matrix) | 10kΩ | TL072 B +in |

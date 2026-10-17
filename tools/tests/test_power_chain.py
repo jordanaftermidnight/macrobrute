@@ -106,11 +106,14 @@ def test_committed_svg_matches_generator():
     assert SVG.read_text() == pc.render()
 
 
-def test_vsys_filter_has_a_ground_return_and_u2_is_open():
+def test_vsys_filter_has_a_ground_return_and_u2_note_is_neutral():
     gnd = [n for n, ends in pc.NETS.items() if ("VSYS_FILTER", "GND") in ends]
     assert gnd and ("PICO", "GND") in pc.NETS[gnd[0]]
     t = " ".join(_texts(_svg()))
-    assert "OPEN U2 part (audit S17, C10)" in t
+    # owner has both op-amps in stock: U2 is a layout choice, not an open question
+    assert "OPEN U2" not in t
+    assert ("U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and "
+            "split chosen at breakout layout") in t
 
 
 def test_cable_labels_follow_the_nets():

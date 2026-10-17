@@ -34,7 +34,7 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 | 0.91" SSD1306 128x32 | Was the strip OLED | Have (1), no longer used | Dropped (decision c); spare. |
 | KY-040 / HW-040 encoder | Expander encoder | Have (1) (owner, 2026-10-17) | - |
 | TL074C | MB breakout U1 buffers; expander aux outs | Have (4) | - |
-| TL072IP | Breakout U2 (env/LFO), vactrol V-to-I, slew, LFO, S&H buffer, clock conditioning | Have (6) | Section count for U2 is audit conflict C10; 6 owned cover r3's 2x TL072 plan. |
+| TL072IP | Breakout U2 (env/LFO), vactrol V-to-I, slew, LFO, S&H buffer, clock conditioning | Have (6) | U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and split chosen at breakout layout (audit C10); 6 owned cover r3's 2x TL072 plan. |
 | CD40106 | Breakout gate conditioner; expander LFO Schmitt | Have (3) | - |
 | CD4049UBE | Expander Clock IN and Clock OUT buffers (section 3) | Have (3) | Not used on the gate path (section 3.5). |
 | CD4051 | Not used by the decided design | Have (2) | Only as the unproven S&H alternative below (owned-parts option; charge injection UNVERIFIED; its supply is TO DESIGN, CD4051 abs max 20 V). |

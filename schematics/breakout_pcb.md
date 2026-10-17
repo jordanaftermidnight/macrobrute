@@ -166,7 +166,7 @@ body jack: DB-9 A has no free pin (connection map section 5.1; audit S35).
 ```
 
 Op-amp sections: U2 (TL072) has two sections but four jobs (env, LFO, triangle, vactrol driver).
-The IC choice (2× TL072 or 2× TL074) is OPEN (owner), audit S17 / conflict C10.
+U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and split chosen at breakout layout (audit S17 / C10).
 
 ## LED Drivers — removed
 
@@ -198,7 +198,7 @@ Constraints (r3 R3-12, BF 1.1, Q2):
   to ±12V_BRK as for the B CV lines (below); values TO DESIGN.
 - Negative CV must not reverse-bias the LED: an anti-parallel diode across the LED (r3 suggested a
   BAT85, all 10 of which are allocated, BF 1.2; an owned 1N4148 (owner, kit card contents UNVERIFIED) can serve).
-- Op-amp section: depends on the U2 decision above (C10).
+- Op-amp section: assigned with the op-amp split at breakout layout (C10).
 - LDR side: the vactrol LDR in parallel with RP13 (resonance JFET path), as in the old docs;
   UNVERIFIED against the synth schematic.
 
@@ -250,7 +250,7 @@ the kit are still to confirm (BF Q5).
 | Component | Qty | Package | Status |
 |-----------|-----|---------|--------|
 | TL074CN | 1 | DIP-14 | Have |
-| TL072CP | 1-2 (count OPEN, C10) | DIP-8 | Have (6) |
+| TL072CP | 1-2 (count chosen at breakout layout, C10) | DIP-8 | Have (6) |
 | CD40106 | 1 | DIP-14 | Have |
 | 78L05 | 1 (Provisional) | TO-92 | Have |
 | BAT85 | 6 (2 rails, 4 CV clamps) | DO-34 axial | Have (10, budget BF 1.2) |

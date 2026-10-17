@@ -237,7 +237,6 @@ def _mb(card):
     card.add(wire([(XMC, yc), (bg, yc)], C_GND, junctions=[(bg, yc)]))
     card.add(box(XMC, 330, 210, 100, ["U1 TL074, U2 TL072"], ["buffers, envelope, LFO"],
                  left=[("V+", ya), ("V-", yb), ("GND", yc)]))
-    card.add(tag(XMC, 436, "OPEN", "OPEN U2 part (audit S17, C10)"))
 
     # 78L05 and CD40106
     card.add(wire([(XMC, y78i), (bp, y78i)], C_P12, junctions=[(bp, y78i)]))
@@ -257,6 +256,8 @@ def _mb(card):
         ("Rail protection is open (audit C12): BAT85 shown; owned 1N5819 or "
          "a 4.7-10 ohm series resistor also allowed.", "OPEN"),
         "-12 V diode: cathode to TP71, anode to the breakout rail (CM 5.3).",
+        ("U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and "
+         "split chosen at breakout layout"),
         "Bulk: 2-4x owned 10uF/63V per rail in parallel (BF 1.4).",
         "78L05: 3.8 mA quiescent, about 27 mW (BF 3.4).",
         ("CD40106 at 5 V needs TP83 above 3.6 V.", "UNVERIFIED"),

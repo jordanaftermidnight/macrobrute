@@ -360,7 +360,7 @@ from the breakout (audit S12, S13).
 | IC | Package | Function | Power |
 |----|---------|----------|-------|
 | U1 TL074 | DIP-14 | 4× waveform buffer (Saw, Sqr, Mix, VCF) | ±12V_BRK |
-| U2 TL072 | DIP-8 | Env/LFO follower, triangle 2× gain, vactrol V-to-I driver. Four jobs on a two-section part: IC choice open (audit S17, conflict C10) | ±12V_BRK |
+| U2 TL072 | DIP-8 | Env/LFO follower, triangle 2× gain, vactrol V-to-I driver. Four jobs on a two-section part. U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and split chosen at breakout layout (audit S17, C10) | ±12V_BRK |
 | U3 CD40106 | DIP-14 | Gate Schmitt trigger, 2 gates in series so A:1 follows TP83 polarity; unused inputs tied to GND (Provisional, BF 3.4) | +5V local |
 | 78L05 | TO-92 | Local +5V for U3 only (Provisional, BF 3.4) | from +12V_BRK |
 

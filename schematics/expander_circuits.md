@@ -335,7 +335,7 @@ not included.
 
 | Component | Qty | Purpose | Status |
 |-----------|-----|---------|--------|
-| TL072CP | 2+ | LFO (2 sections), slew (1), spare | Have (6; allocation with the breakout OPEN, C10) |
+| TL072CP | 2+ | LFO (2 sections), slew (1), spare | Have (6; split with the breakout chosen at breakout layout, C10) |
 | CD4049UBE | 1 | Clock IN / OUT buffers | Have (3) |
 | LF398N | 1 | Sample & hold (default) | Missing (BF Q1); owned alternative CD4051 + TL072, section 2b |
 | 10 nF polystyrene / polypropylene | 1 | S&H hold cap | Missing (BF Q1) |
