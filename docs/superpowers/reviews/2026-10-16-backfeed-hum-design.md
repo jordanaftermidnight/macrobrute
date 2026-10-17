@@ -190,7 +190,7 @@ Connector face (insert numbering):
 
 | Pin | Signal (MB source) | Direction | Series R | Protection | Wire colour |
 |---|---|---|---|---|---|
-| 1 | Gate (TP83 via 2x CD40106) | MB to expander | 1k at the CD40106 output (MB board) | Expander: 22k / 33k divider into a Pico fault-tolerant GPIO (section 3.5); gate jack tapped before the divider. Provisional. | White |
+| 1 | Gate (TP83 via 2x CD40106) | MB to expander | 1k at the CD40106 output (MB board) | Expander: 22k / 33k divider into a Pico fault-tolerant GPIO (section 3.5; pin OPEN, CM 12G); gate jack tapped before the divider. Provisional. | White |
 | 2 | Pitch CV (stock rear Pitch buffer) | MB to expander | 220 ohm at the MB board (new; was "direct") | Low-impedance source UNVERIFIED (E-16) | Yellow |
 | 3 | Envelope (TL07x follower) | MB to expander | 1k after the feedback tap (audit S36, R3-15) | - | Orange |
 | 4 | LFO (TL07x follower) | MB to expander | 1k after the feedback tap | Source TP21 meaning UNVERIFIED (E-17) | Green |
@@ -303,7 +303,7 @@ Both clock jacks and the Pico are in the rack domain; no clock wire crosses to t
 | B:6 UART RX | LPC P0.15 TXD1 (pin 62) | Pico GP1 | 1k MB + 1k expander | GP1 fault tolerant; pull-down | LPC may drive while Pico is off: exceeds Table 622 abs max, relies on Table 614 FT, provisional (BT-2) |
 | B:5 Filter CV | Expander op-amp | TP26 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
 | B:3 VCA CV | Expander op-amp | TP10 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
-| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
+| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO (pin OPEN, CM 12G) | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
 | A:2 Pitch | Stock pitch buffer | Jack | 220 ohm MB | - | - |
 | A:3-A:8 | MB followers | Jacks | 1k MB | >= 100k into any expander circuit | Synth may drive while rack is off |
 | Clock IN | Rack jack | GP21 | 100k | 2x CD4049UB on 3V3, 100k pull-down | Rack domain only |
@@ -396,6 +396,12 @@ With I2C off the cable and EFFIGY shelved, GP2, GP3 and GP11 were free when this
 | GP28 | 34 | Digital IO / ADC2, not FT | - |
 
 Rule: any input that can see a signal from the cable or a jack while the Pico may be unpowered goes on an FT pin (GP0-22), not on GP26-28.
+
+Update (owner ruling, 2026-10-17): no FT pin is free, so the gate mirror of A:1 (section 3.5) has no pin under this rule. Options for the owner, none chosen here:
+
+1. Tie the OLED CS input permanently low, if the module allows it; that frees GP11 (FT). UNVERIFIED and module-dependent.
+2. Use GP27 or GP28 and accept the clamp current in S2: about 0.17 mA worst case by the section 3.5 arithmetic ((2.95 - 0.6) V / 13.6k). Bench-test with BT-5.
+3. Add a series diode or a 3V3-powered buffer in front of a GP26-28 pin; needs a part decision.
 
 ## 6. Open items and bench checks
 

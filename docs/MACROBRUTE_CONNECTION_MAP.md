@@ -95,7 +95,7 @@ Connector face (insert numbering; neighbour geometry UNVERIFIED until BF BT-7):
 
 | Pin | Signal | MB Source | Buffer | Series R (MB board) | Protection / Notes | Wire Color |
 |-----|--------|-----------|--------|----------|----------|------------|
-| 1 | Gate Out | TP83 | 2× CD40106 in series (keeps TP83 polarity) | 1kΩ at the CD40106 output | Expander: 22k / 33k divider into a Pico fault-tolerant GPIO; gate jack tapped before the divider. Provisional (BF 3.4, 3.5) | White |
+| 1 | Gate Out | TP83 | 2× CD40106 in series (keeps TP83 polarity) | 1kΩ at the CD40106 output | Expander: 22k / 33k divider into a Pico fault-tolerant GPIO (pin OPEN, 12G); gate jack tapped before the divider. Provisional (BF 3.4, 3.5) | White |
 | 2 | Pitch CV Out | Rear panel jack | Stock pitch buffer | 220Ω (new; was "direct") | Low-impedance source UNVERIFIED (E-16) | Yellow |
 | 3 | Envelope Out | Mod matrix / TP5 | TL07x follower | 1kΩ after the feedback tap | Source choice UNVERIFIED (audit N23) | Orange |
 | 4 | LFO Out | Mod matrix | TL07x follower | 1kΩ after the feedback tap | Source TP21 meaning UNVERIFIED (E-17) | Green |
@@ -183,7 +183,7 @@ The expander (rack) and the synth can be powered at different times. Power state
 | B:6 UART RX | LPC P0.15 TXD1 (pin 62) | Pico GP1 | 1k MB + 1k expander | GP1 fault tolerant; pull-down | LPC may drive while Pico is off: exceeds Table 622 abs max, relies on Table 614 FT, provisional (BT-2) |
 | B:5 Filter CV | Expander op-amp | TP26 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
 | B:3 VCA CV | Expander op-amp | TP10 | 10k expander + 100k MB | 2x BAT85 to +/-12V_BRK, 1 nF | Either side may be off |
-| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
+| A:1 Gate | MB CD40106 (5 V) | Gate jack; Pico FT GPIO (pin OPEN, 12G) | 1k MB; 22k / 33k divider expander | Divider; no expander pull-up | Either side may be off |
 | A:2 Pitch | Stock pitch buffer | Jack | 220 ohm MB | - | - |
 | A:3-A:8 | MB followers | Jacks | 1k MB | >= 100k into any expander circuit | Synth may drive while rack is off |
 | Clock IN | Rack jack | GP21 | 100k | 2x CD4049UB on 3V3, 100k pull-down | Rack domain only |
@@ -570,6 +570,12 @@ Each expansion below must fit in those 3 pins; they do not all fit at once, and 
 | I2C peripherals | 2 (SDA/SCL) | Would take 2 of the 3 free pins. DAC, sensors, etc. |
 | Second encoder | 3 digital | Expander-side control |
 
+**Gate input options (owner to choose; none is chosen here).** The rule above (BF 5) puts a jack-fed input on GP0-GP22, and none of those is free, so the gate mirror of A:1 has no legal pin today:
+
+1. Tie the OLED CS input permanently low, if the module allows it. That frees GP11, a fault-tolerant pin. UNVERIFIED and module-dependent: read the module first.
+2. Use GP27 or GP28 and accept the clamp current when the Pico is unpowered: about 0.17 mA worst case by the BF 3.5 arithmetic ((2.95 - 0.6) V / 13.6k). Bench-test it with BT-5.
+3. Add a series diode or a 3V3-powered buffer in front of a GP26-GP28 pin. This needs a part decision.
+
 ---
 
 ## 13. Signal Flow (Post-Mod)
@@ -596,7 +602,7 @@ VCO ──┬── Saw ──────── [1kΩ] ── TL074 A ── [1
           ◄── B3 VCA CV jack (TP10)
           ◄── B6 Drone toggle (+12V → 100kΩ → TP10)
            │
-      Gate (TP83) ── [10kΩ] ── CD40106 ×2 ── [1kΩ] ── DB-9 A:1 ── Expander: gate jack + 22k/33k divider → Pico FT GPIO
+      Gate (TP83) ── [10kΩ] ── CD40106 ×2 ── [1kΩ] ── DB-9 A:1 ── Expander: gate jack + 22k/33k divider → Pico FT GPIO (pin OPEN, 12G)
            │
       Envelope ── [B4 Bypass toggle] ── TL072 A ── [1kΩ] ── DB-9 A:3
       LFO ── TL072 B ── [1kΩ] ── DB-9 A:4

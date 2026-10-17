@@ -244,7 +244,7 @@ breakout's CD40106 gate (0 / 5 V through 1kΩ on the MB side).
 
 ```
   DB-9 A:1 ──┬── GATE jack (tapped before the divider)
-             └── 22kΩ ──┬── Pico GPIO, fault-tolerant pin (for example GP11; no firmware change yet)
+             └── 22kΩ ──┬── Pico GPIO, fault-tolerant pin (pin OPEN, see CM 12G; no firmware change yet)
                         │
                        33kΩ
                         │
