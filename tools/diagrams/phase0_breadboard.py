@@ -415,7 +415,6 @@ def build():
         card.add(_missing(640, ty + 40 + 18 * i, line))
     card.add(_tag(640, ty + 40 + 18 * len(MISSING_PARTS), RGB_ORDER))
     card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 1), "SPI-only 7-pin header (owner confirmed)"))
-    card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 2), "UNVERIFIED: IIC/SPI pads, if any, in SPI position"))
 
     # wires on top
     for j in JUMPERS:

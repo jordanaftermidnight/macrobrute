@@ -210,7 +210,7 @@ def test_card_content_and_exclusions():
     assert "spi" in low
     assert "Pin order: owner-stated" in s and "Chip SH1106: owner-stated" in s
     assert "UNVERIFIED: OLED" not in s
-    assert "UNVERIFIED: IIC/SPI pads, if any, in SPI position" in s
+    assert "IIC/SPI pads" not in s
     assert "SPI-only 7-pin header (owner confirmed)" in s
     for lab in ("USB", "pin 1", "UNVERIFIED", "test jumper", "Legend"):
         assert lab in s

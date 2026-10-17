@@ -63,7 +63,7 @@ def test_oled_owner_stated_items_tagged():
     assert "Pin order: owner-stated" in s
     assert "Chip SH1106: owner-stated" in s
     assert "UNVERIFIED: OLED" not in s
-    assert "UNVERIFIED: IIC/SPI pads, if any, in SPI position" in s
+    assert "IIC/SPI pads" not in s
     assert "SPI-only 7-pin header (owner confirmed)" in s
     assert "V2.0, SH1106 (owner)" in s
 

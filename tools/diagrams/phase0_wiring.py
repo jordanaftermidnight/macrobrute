@@ -226,7 +226,6 @@ def build():
     card.add(_tag(600, cy + 46 + 18 * len(MISSING_PARTS), RGB_ORDER))
     card.add(_tag(600, cy + 64 + 18 * len(MISSING_PARTS), CS_NOTE))
     card.add(_tag(410, 430, "SPI-only 7-pin header (owner confirmed)"))
-    card.add(_tag(410, 447, "UNVERIFIED: IIC/SPI pads, if any, in SPI position"))
 
     # note box
     card.add(f'<rect x="30" y="676" width="560" height="52" rx="4" fill="#fff" '

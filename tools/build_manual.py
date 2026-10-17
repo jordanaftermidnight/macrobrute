@@ -158,7 +158,7 @@ SVG_DESCRIPTIONS = {
         "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES); its CS pin goes to the GND bus, "
         "PROVISIONAL (BT-14), and `GP11` (the gate input) is unused in Phase 0. The chip (SH1106) and the "
         "7-pin header pin order (GND, VCC, CLK, MOSI, RES, DC, CS) are owner-stated, not bench-verified; "
-        "**UNVERIFIED:** CS working when strapped low (BT-14) and any IIC/SPI selection pads sitting in the SPI position. Most Pico "
+        "**UNVERIFIED:** CS working when strapped low (PROVISIONAL, bench check BT-14, procedure in the Phase 0 BOM). Most Pico "
         "signal pins have their Y aligned with the matching peripheral pin so signal wires are "
         "straight horizontal lines. CLOCK IN is loop-back only, no external signals (no CD4049UB on the bench). "
         "**MISSING** (not owned, Q12): the RGB LED and the tactile button, and the half-size "
@@ -173,7 +173,7 @@ SVG_DESCRIPTIONS = {
         "(PROVISIONAL (BT-14)); +3V3 and GND rails run along the "
         "top and bottom; jumper paths are colour-coded by net, with a jumper table and part-lead "
         "holes below. The OLED chip (SH1106) and its pin order are owner-stated, not bench-verified. "
-        "**UNVERIFIED:** any IIC/SPI selection pads sitting in the SPI position, and the RGB lead order R-K-G-B. CLOCK IN is "
+        "**UNVERIFIED:** the RGB lead order R-K-G-B. CLOCK IN is "
         "loop-back only, no external signals (no CD4049UB on the bench). **MISSING** (not owned): "
         "the RGB LED and tactile button (Q12) and the half-size breadboard itself.",
 
