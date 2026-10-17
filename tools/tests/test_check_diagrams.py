@@ -97,3 +97,24 @@ def test_malformed_endpoint_reported_not_raised():
 def test_same_gpio_twice_on_same_net_allowed():
     nets = {"a": [("PICO", "GP4"), ("X", "1"), ("PICO", "GP4"), ("Y", "1")]}
     assert validate_nets(nets, {}) == []
+
+
+def test_check_all_is_clean_on_committed_cards():
+    from tools.check_diagrams import check_all
+    assert check_all() == []
+
+
+def test_check_all_reports_a_bad_net_set(monkeypatch):
+    import tools.diagrams.pico_pinout as m
+    from tools.check_diagrams import check_all
+    monkeypatch.setattr(m, "NETS", {"bad": [("PICO", "GP23"), ("X", "1")]})
+    assert any("pico_pinout" in p and "GP23" in p for p in check_all())
+
+
+def test_runs_standalone():
+    import subprocess
+    import sys
+    from pathlib import Path
+    script = Path(__file__).resolve().parents[1] / "check_diagrams.py"
+    r = subprocess.run([sys.executable, str(script)], cwd="/", capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr

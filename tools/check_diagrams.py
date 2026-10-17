@@ -1,4 +1,12 @@
-"""Net validator for diagram netlists."""
+"""Net validator for diagram netlists. Run: python3 tools/check_diagrams.py"""
+import importlib
+import pkgutil
+import sys
+from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from tools.hwdata.pico import PICO_USABLE_GP
 
 CABLE_DIGITAL_PREFIXES = ("CABLE_UART", "CABLE_I2C", "CABLE_CLK")
@@ -35,3 +43,25 @@ def validate_nets(nets, rails):
             if not any(part in ("SHIFT", "DIV") for part, _ in ends):
                 problems.append(f"net {name} is {rails[name]} V into a Pico GPIO with no shifter")
     return problems
+
+
+def check_all():
+    """Validate every tools.diagrams.* module that exposes NETS and RAILS."""
+    import tools.diagrams as pkg
+    problems = []
+    for info in pkgutil.iter_modules(pkg.__path__):
+        mod = importlib.import_module(f"tools.diagrams.{info.name}")
+        if hasattr(mod, "NETS") and hasattr(mod, "RAILS"):
+            problems += [f"{info.name}: {p}" for p in validate_nets(mod.NETS, mod.RAILS)]
+    return problems
+
+
+def main():
+    problems = check_all()
+    for p in problems:
+        print("PROBLEM:", p)
+    return 1 if problems else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
