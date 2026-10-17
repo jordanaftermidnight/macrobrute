@@ -94,7 +94,7 @@ Full per-mod detail (parts, wiring, panel position, schematic refs) is in
 
 Combined parts cost: ~€15–20. Combined panel area: 4 new jacks + 3 pots + 6 toggles + 2 brass bolts.
 
-## BUILD — Expander (17HP Eurorack — 87 × 128.5 mm)
+## BUILD — Expander (17HP Eurorack — 87 × 128.5 mm; width open: 17 or about 20 HP)
 
 The expander is now minimal. Most utilities have been moved off it because
 the user already has equivalent modules in the rack. See
