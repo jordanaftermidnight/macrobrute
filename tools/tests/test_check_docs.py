@@ -171,3 +171,23 @@ def test_main_scans_schematics_and_readme(tmp_path, monkeypatch):
     names = {str(f) for f in files}
     assert any(n.endswith("README.md") and "/docs/" not in n for n in names)
     assert any("/schematics/" in n for n in names)
+
+
+def test_shelved_alone_does_not_excuse_a_free_claim():
+    from tools.check_docs import check_spare_claims
+    problems = check_spare_claims({"a.md": "GP11 is free now that EFFIGY is shelved."})
+    assert any("a.md:1: GP11 is" in p for p in problems)
+
+
+def test_negation_only_covers_the_gp_in_its_own_clause():
+    from tools.check_docs import check_spare_claims
+    problems = check_spare_claims({"a.md": "GP2 is free; GP27 is not free."})
+    assert any("a.md:1: GP2 is" in p for p in problems)
+    problems = check_spare_claims({"a.md": "GP27 is free; GP2 is not free."})
+    assert problems == []
+
+
+def test_table_negation_only_covers_its_own_cell():
+    from tools.check_docs import check_spare_claims
+    problems = check_spare_claims({"a.md": "| GP4 | free | GP27 is not free |"})
+    assert any("a.md:1: GP4 is" in p for p in problems)

@@ -78,14 +78,29 @@ def check_connection_map(text):
     return problems
 
 
-# Only explicit historical markers or an explicit "not free" excuse a line. Bare
-# "was"/"were" do not: "GP2 was busy but is free now" is still a free claim.
+# Only explicit historical markers or an explicit "not free" excuse a GP, and
+# only within its own clause: "GP2 is free; GP27 is not free" still flags GP2.
+# Bare "was"/"were" and "shelved" excuse nothing.
 _ALLOW_SPARE = re.compile(
-    r"historical|superseded|\bstale\b|legacy|archived|\bshelved\b|no longer|formerly|"
+    r"historical|superseded|\bstale\b|legacy|archived|no longer|formerly|"
     r"\bnot (free|spare|available|unused)\b|\bno (free|spare)\b", re.I)
+_CLAUSE = re.compile(r"[.;!?](?:\s+|$)|\s[\u2014\u2013]\s")
 _TABLE_SEP = re.compile(r"^\s*\|?\s*:?-{2,}")
 _FREE_HEADER = re.compile(r"\b(free|spare|available)\b", re.I)
 _STATUS_HEADER = re.compile(r"\bstatus\b", re.I)
+
+
+def _unexcused_gps(text, fw):
+    """If some clause makes an unexcused free/spare claim, return the allocated
+    GPs whose own clause has no historical marker or negation."""
+    clauses = _CLAUSE.split(text)
+    if not any(SPARE_WORDS.search(c) and not _ALLOW_SPARE.search(c) for c in clauses):
+        return set()
+    bad = set()
+    for clause in clauses:
+        if not _ALLOW_SPARE.search(clause):
+            bad |= gp_numbers(clause) & fw
+    return bad
 
 
 def _cells(line):
@@ -95,21 +110,22 @@ def _cells(line):
 def _table_problems(f, n, line, header, fw):
     """A table row is a free claim when its subject GP (first cell) is allocated
     and another cell calls it free/spare, or when a Free/Spare column names an
-    allocated GP, or a Status column calls the row's allocated GP free."""
-    if _ALLOW_SPARE.search(line):
-        return []
+    allocated GP, or a Status column calls the row's allocated GP free. A marker
+    or negation only excuses the cell it is in."""
     cells = _cells(line)
     subject = gp_numbers(cells[0]) & fw if cells else set()
     bad = set()
-    if subject and any(SPARE_WORDS.search(c) for c in cells[1:]):
+    if subject and any(SPARE_WORDS.search(c) and not _ALLOW_SPARE.search(c) for c in cells[1:]):
         bad |= subject
     for i, head in enumerate(header or []):
         if i >= len(cells) or i == 0:
             continue
+        cell = cells[i]
         if _FREE_HEADER.search(head):
-            bad |= gp_numbers(cells[i]) & fw
-        elif _STATUS_HEADER.search(head) and SPARE_WORDS.search(cells[i]):
-            bad |= (gp_numbers(cells[i]) & fw) | subject
+            # the column header already says "free": any unexcused allocated GP counts
+            bad |= {g for g in gp_numbers(cell) & fw if not _ALLOW_SPARE.search(cell)}
+        elif _STATUS_HEADER.search(head) and SPARE_WORDS.search(cell) and not _ALLOW_SPARE.search(cell):
+            bad |= (gp_numbers(cell) & fw) | subject
     return [f"{f}:{n}: GP{gp} is allocated in firmware but the table row calls it "
             f"spare/free: {line.strip()[:80]}" for gp in sorted(bad)]
 
@@ -132,9 +148,9 @@ def check_spare_claims(docs):
                 problems += _table_problems(f, n, line, header, fw)
                 continue
             header = None
-            if not SPARE_WORDS.search(line) or _ALLOW_SPARE.search(line):
+            if not SPARE_WORDS.search(line):
                 continue
-            for gp in sorted(gp_numbers(line) & fw):
+            for gp in sorted(_unexcused_gps(line, fw)):
                 problems.append(f"{f}:{n}: GP{gp} is allocated in firmware but the line calls "
                                 f"it spare/free: {line.strip()[:80]}")
     return problems
