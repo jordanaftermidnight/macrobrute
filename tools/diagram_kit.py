@@ -13,6 +13,8 @@ pin is then placed at (x, y) instead of the part's default origin.
 from dataclasses import dataclass
 from html import escape as _esc
 
+from tools.hwdata.pico import PICO_PHYSICAL_PIN
+
 FONT = '"SF Mono", Consolas, "Liberation Mono", monospace'
 CHAR_W = 6.2        # label width per character at 10px
 MIN_FONT = 9
@@ -266,41 +268,77 @@ def dip(x, y, name, pins, anchor=None):
 DB9_PITCH = 22
 
 
-def _db9_off():
+DB9_W = 4 * DB9_PITCH
+DB9_FACES = {
+    # face -> (mirrored relative to the male front view, caption)
+    "male-front": (False, "front view, male (pins)"),
+    "female-front": (True, "front view, female (sockets)"),
+    "male-solder": (True, "solder-cup side, male"),
+    "female-solder": (False, "solder-cup side, female"),
+}
+
+
+def _db9_off(face="male-front"):
+    if face not in DB9_FACES:
+        raise ValueError(f"unknown DB-9 face {face!r}")
+    mirror = DB9_FACES[face][0]
     off = []
     for i in range(5):
         off.append((str(i + 1), (i * DB9_PITCH, 0)))
     for i in range(4):
         off.append((str(i + 6), (DB9_PITCH / 2 + i * DB9_PITCH, 26)))
+    if mirror:
+        off = [(n, (DB9_W - dx, dy)) for n, (dx, dy) in off]
     return off
 
 
-def db9_pins(x, y, anchor=None):
-    return _place(_db9_off(), x, y, anchor)[2]
+def db9_pins(x, y, anchor=None, face="male-front"):
+    return _place(_db9_off(face), x, y, anchor)[2]
 
 
-def db9(x, y, title, anchor=None):
-    """Face view. Pins 1-5 top row, 6-9 bottom row, title above."""
-    ox, oy, p = _place(_db9_off(), x, y, anchor)
-    w = 4 * DB9_PITCH
-    out = [f'<path d="M{_n(ox - 16)},{_n(oy - 12)} L{_n(ox + w + 16)},{_n(oy - 12)} '
-           f'L{_n(ox + w + 8)},{_n(oy + 38)} L{_n(ox - 8)},{_n(oy + 38)} Z" '
+def db9(x, y, title, anchor=None, face="male-front"):
+    """Pins 1-5 in the top row, 6-9 in the bottom row, title above, and a
+    caption below naming the face drawn. Default face is "male-front".
+
+    D-sub numbering is mirrored between faces: the female front view and the
+    male solder-cup view show pin 1 at top right; the male front view and
+    the female solder-cup view show pin 1 at top left.
+    """
+    ox, oy, p = _place(_db9_off(face), x, y, anchor)
+    # body is placed from the unmirrored origin so the shape never moves
+    w = DB9_W
+    left = min(px for _, (px, _) in p.points)
+    out = [f'<path d="M{_n(left - 16)},{_n(oy - 12)} L{_n(left + w + 16)},{_n(oy - 12)} '
+           f'L{_n(left + w + 8)},{_n(oy + 38)} L{_n(left - 8)},{_n(oy + 38)} Z" '
            f'fill="#e4e4dc" stroke="#555" stroke-width="1.5" stroke-linejoin="round"/>']
     for name, (px, py) in p.points:
         out.append(f'<circle cx="{_n(px)}" cy="{_n(py)}" r="8" fill="#fff" '
                    f'stroke="#444" stroke-width="1"/>')
         out.append(_t(px, py + 3.2, name, 9, "middle", PALETTE["title"], bold=True))
-    out.append(_t(ox + w / 2, oy - 20, title, 11, "middle", PALETTE["title"], bold=True))
+    out.append(_t(left + w / 2, oy - 20, title, 11, "middle", PALETTE["title"], bold=True))
+    out.append(_t(left + w / 2, oy + 54, DB9_FACES[face][1], 9, "middle", PALETTE["muted"]))
     return "".join(out)
 
 
 # ------------------------------------------------------------- Pico header
-PICO_NAMES = [
-    "GP0", "GP1", "GND", "GP2", "GP3", "GP4", "GP5", "GND", "GP6", "GP7",
-    "GP8", "GP9", "GND", "GP10", "GP11", "GP12", "GP13", "GND", "GP14", "GP15",
-    "GP16", "GP17", "GND", "GP18", "GP19", "GP20", "GP21", "GND", "GP22", "RUN",
-    "GP26", "GP27", "AGND", "GP28", "ADC_VREF", "3V3", "3V3_EN", "GND", "VSYS", "VBUS",
-]
+_PICO_FIXED = {
+    3: "GND", 8: "GND", 13: "GND", 18: "GND", 23: "GND", 28: "GND", 38: "GND",
+    30: "RUN", 33: "AGND", 35: "ADC_VREF", 36: "3V3", 37: "3V3_EN",
+    39: "VSYS", 40: "VBUS",
+}
+
+
+def _pico_names():
+    """Physical pin 1..40 -> label. GPn comes from the canonical pin map."""
+    names = {phys: f"GP{gp}" for gp, phys in PICO_PHYSICAL_PIN.items()}
+    overlap = set(names) & set(_PICO_FIXED)
+    if overlap or len(names) + len(_PICO_FIXED) != 40:
+        raise ValueError(f"Pico pin map inconsistent: {sorted(overlap)}")
+    names.update(_PICO_FIXED)
+    return [names[i] for i in range(1, 41)]
+
+
+PICO_NAMES = _pico_names()
 PICO_PITCH = 14
 PICO_W = 64
 

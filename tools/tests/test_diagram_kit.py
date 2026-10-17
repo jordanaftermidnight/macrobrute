@@ -1,7 +1,10 @@
 import re
+from pathlib import Path
 import xml.etree.ElementTree as ET
 
+from tools.hwdata.pico import PICO_PHYSICAL_PIN
 from tools.diagram_kit import (
+    PICO_NAMES,
     Card, PALETTE, resistor, led, diode, capacitor, jack, dip, db9,
     pico_header, header_block, wire, label_box,
     resistor_pins, led_pins, diode_pins, capacitor_pins, jack_pins,
@@ -65,7 +68,7 @@ def test_anchor_places_named_pin_at_xy():
     assert p.xy("a") == (100, 50)
     q = resistor_pins(100, 50, anchor="b")
     assert q.xy("b") == (100, 50)
-    assert q.xy("a") != p.xy("b") or True
+    assert q.xy("a") == (100 - 40, 50)
     assert (q.xy("b")[0] - q.xy("a")[0], q.xy("b")[1] - q.xy("a")[1]) == \
         (p.xy("b")[0] - p.xy("a")[0], p.xy("b")[1] - p.xy("a")[1])
     # drawing with the same anchor puts a pin dot on the anchor point
@@ -140,4 +143,30 @@ def test_no_style_font_size_below_9_and_no_genre_words():
         fs = el.get("font-size")
         if fs:
             assert float(fs) >= 9
-    assert not re.search(r"synth|music|techno|rave", open("tools/diagram_kit.py").read(), re.I)
+    assert not re.search(r"synth|music|techno|rave", (Path(__file__).resolve().parents[1] / "diagram_kit.py").read_text(), re.I)
+
+
+def test_pico_gp_labels_match_canonical_pin_map():
+    for gp, phys in PICO_PHYSICAL_PIN.items():
+        assert PICO_NAMES[phys - 1] == f"GP{gp}"
+    mapped = set(PICO_PHYSICAL_PIN.values())
+    for phys in range(1, 41):
+        if phys not in mapped:
+            assert not re.fullmatch(r"GP\d+", PICO_NAMES[phys - 1])
+    svg = pico_header(0, 0, "Pico")
+    assert f">GP{max(PICO_PHYSICAL_PIN)}</text>" in svg
+
+
+def test_db9_faces_mirror_pin_positions_and_caption():
+    m = db9_pins(0, 0, face="male-front")
+    f = db9_pins(0, 0, face="female-front")
+    assert m.xy("1")[0] < m.xy("5")[0]
+    assert f.xy("1")[0] > f.xy("5")[0]
+    for n in "123456789":
+        assert m.xy(n)[1] == f.xy(n)[1]
+        assert m.xy(n)[0] + f.xy(n)[0] == 4 * 22
+    assert db9_pins(0, 0, face="male-solder").as_dict() == f.as_dict()
+    assert db9_pins(0, 0, face="female-solder").as_dict() == m.as_dict()
+    assert "female" in db9(0, 0, "DB-9 A", face="female-front")
+    assert "solder" in db9(0, 0, "DB-9 A", face="male-solder")
+    assert db9_pins(10, 10, anchor="1", face="female-front").xy("1") == (10, 10)
