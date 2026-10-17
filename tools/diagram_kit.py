@@ -404,6 +404,78 @@ def header_block(x, y, label, pins, anchor=None):
     return "".join(out)
 
 
+# ------------------------------------------------------------- breadboard
+# Half-size solderless board, top view: 30 columns, rows a-e above a centre
+# channel and f-j below it, two rails along the top (+T outer, -T inner) and
+# two along the bottom (-B inner, +B outer). Hole names: "c12", "+T5", "-B30".
+BB_PITCH = 26
+BB_COLS = 30
+BB_ROWS = "abcdefghij"
+_BB_RAIL_Y = {"+T": -2.8, "-T": -1.7, "-B": 12.7, "+B": 13.8}   # in pitch units
+
+
+def _bb_row_units(row):
+    i = BB_ROWS.index(row)
+    return i if i < 5 else i + 2          # channel is 3 pitches e -> f
+
+
+def _bb_off():
+    off = []
+    for row in BB_ROWS:
+        for c in range(1, BB_COLS + 1):
+            off.append((f"{row}{c}", ((c - 1) * BB_PITCH, _bb_row_units(row) * BB_PITCH)))
+    for rail, u in _BB_RAIL_Y.items():
+        for c in range(1, BB_COLS + 1):
+            off.append((f"{rail}{c}", ((c - 1) * BB_PITCH, u * BB_PITCH)))
+    return off
+
+
+def bb_strip(name):
+    """Electrical strip id of a hole: a-e of a column and f-j of a column are
+    separate strips; each rail is one strip along its whole length."""
+    name = str(name)
+    if name[0] in "+-":
+        return name[:2]
+    return ("T" if name[0] in "abcde" else "B") + name[1:]
+
+
+def breadboard_pins(x, y, anchor=None):
+    return _place(_bb_off(), x, y, anchor)[2]
+
+
+def breadboard(x, y, anchor=None):
+    """Board body, rail bars, holes, row letters and column numbers.
+    Parts and jumpers are drawn on top by the caller."""
+    ox, oy, p = _place(_bb_off(), x, y, anchor)
+    left, right = ox - 34, ox + (BB_COLS - 1) * BB_PITCH + 22
+    top = oy + _BB_RAIL_Y["-T"] * BB_PITCH - 20
+    bot = oy + _BB_RAIL_Y["-B"] * BB_PITCH + 20
+    out = [f'<rect x="{_n(left)}" y="{_n(top)}" width="{_n(right - left)}" '
+           f'height="{_n(bot - top)}" rx="8" fill="#ece6d2" stroke="#8d8672" stroke-width="1.5"/>']
+    ch_y = (oy + 4 * BB_PITCH + 14, oy + 7 * BB_PITCH - 14)
+    out.append(f'<rect x="{_n(left + 8)}" y="{_n(ch_y[0])}" width="{_n(right - left - 16)}" '
+               f'height="{_n(ch_y[1] - ch_y[0])}" fill="#d6cfb8"/>')
+    rail_col = {"+": PALETTE["p3v3"], "-": PALETTE["gnd"]}
+    for rail in _BB_RAIL_Y:
+        ry = p.xy(f"{rail}1")[1]
+        out.append(f'<rect x="{_n(left + 10)}" y="{_n(ry - 8)}" width="{_n(right - left - 20)}" '
+                   f'height="16" rx="4" fill="{rail_col[rail[0]]}" opacity="0.85"/>')
+        out.append(_t(left + 15, ry + 4, rail[0], 12, "middle", "#222", True))
+    for name, (px, py) in p.points:
+        out.append(f'<rect x="{_n(px - 4)}" y="{_n(py - 4)}" width="8" height="8" rx="1.5" '
+                   f'fill="#4a463a"/>')
+    for row in BB_ROWS:
+        out.append(_t(ox - 20, p.xy(f"{row}1")[1] + 3.5, row, 10, "middle", PALETTE["muted"], True))
+    cy = (ch_y[0] + ch_y[1]) / 2 + 3.5
+    for c in range(1, BB_COLS + 1):
+        px = p.xy(f"a{c}")[0]
+        # white halo first so a lead crossing the channel never hides the number
+        out.append(f'<text x="{_n(px)}" y="{_n(cy)}" font-size="10" text-anchor="middle" '
+                   f'fill="none" stroke="#d6cfb8" stroke-width="3">{c}</text>')
+        out.append(_t(px, cy, c, 10, "middle", PALETTE["muted"], True))
+    return "".join(out)
+
+
 # --------------------------------------------------------------------- Card
 class Card:
     def __init__(self, width, height, title, subtitle=""):

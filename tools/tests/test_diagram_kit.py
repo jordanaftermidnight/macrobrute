@@ -170,3 +170,35 @@ def test_db9_faces_mirror_pin_positions_and_caption():
     assert "female" in db9(0, 0, "DB-9 A", face="female-front")
     assert "solder" in db9(0, 0, "DB-9 A", face="male-solder")
     assert db9_pins(10, 10, anchor="1", face="female-front").xy("1") == (10, 10)
+
+
+# ------------------------------------------------------------- breadboard
+def test_breadboard_hole_grid_and_names():
+    from tools.diagram_kit import BB_PITCH, breadboard, breadboard_pins, bb_strip
+    p = breadboard_pins(0, 0)
+    assert len(p.names) == 30 * 10 + 4 * 30
+    assert p.xy("a1") == (0, 0)
+    assert p.xy("a2")[0] - p.xy("a1")[0] == BB_PITCH
+    assert p.xy("b1")[1] - p.xy("a1")[1] == BB_PITCH
+    # rows a-e and f-j are split by a centre channel wider than one pitch
+    assert p.xy("f1")[1] - p.xy("e1")[1] > BB_PITCH
+    assert p.xy("e1")[1] - p.xy("a1")[1] == p.xy("j1")[1] - p.xy("f1")[1]
+    # top rails above row a, bottom rails below row j
+    assert p.xy("+T1")[1] < p.xy("a1")[1] and p.xy("-T1")[1] < p.xy("a1")[1]
+    assert p.xy("+B1")[1] > p.xy("j1")[1] and p.xy("-B1")[1] > p.xy("j1")[1]
+    assert breadboard_pins(40, 50, anchor="c5").xy("c5") == (40, 50)
+    svg = breadboard(0, 0)
+    ET.fromstring(f'<svg xmlns="http://www.w3.org/2000/svg">{svg}</svg>')
+    assert svg == breadboard(0, 0)
+    for ch in "abcdefghij":
+        assert f">{ch}</text>" in svg
+    for n in ("1", "30"):
+        assert f">{n}</text>" in svg
+
+
+def test_breadboard_strips_connect_like_a_real_board():
+    from tools.diagram_kit import bb_strip
+    assert bb_strip("a7") == bb_strip("e7") != bb_strip("f7") == bb_strip("j7")
+    assert bb_strip("a7") != bb_strip("a8")
+    assert bb_strip("+T1") == bb_strip("+T30") != bb_strip("-T1")
+    assert bb_strip("+T1") != bb_strip("+B1")
