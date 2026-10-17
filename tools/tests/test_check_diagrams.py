@@ -58,3 +58,42 @@ def test_cable_rule_ignores_other_nets(name):
 
 def test_floating_net_rejected():
     assert validate_nets({"a": [("X", "1")]}, {})
+
+
+@pytest.mark.parametrize("part,pin", [("PICO", "gp23"), ("pico", "GP23"), ("Pico", "GP 23")])
+def test_pico_endpoint_spelling_is_normalised_for_exposure(part, pin):
+    nets = {"n": [(part, pin), ("LED", "A")]}
+    assert any("GP23" in p for p in validate_nets(nets, {}))
+
+
+def test_lowercase_gpio_on_two_nets_rejected():
+    nets = {"a": [("PICO", "gp4"), ("X", "1")], "b": [("pico", "GP4"), ("Y", "1")]}
+    assert any("GP4" in p for p in validate_nets(nets, {}))
+
+
+def test_spaced_gpio_on_two_nets_rejected():
+    nets = {"a": [("PICO", "GP 4"), ("X", "1")], "b": [("PICO", "GP4"), ("Y", "1")]}
+    assert any("GP4" in p for p in validate_nets(nets, {}))
+
+
+def test_lowercase_pico_five_volt_rejected_and_lowercase_div_ok():
+    bad = {"gate": [("pico", "gp12"), ("U3", "out")]}
+    assert validate_nets(bad, {"gate": 5.0})
+    ok = {"gate": [("pico", "gp12"), ("U3", "out"), ("div", "R1/R2")]}
+    assert validate_nets(ok, {"gate": 5.0}) == []
+
+
+def test_rail_key_matching_no_net_reported():
+    nets = {"gate": [("PICO", "GP12"), ("U3", "out")]}
+    problems = validate_nets(nets, {"GATE_5V": 5.0})
+    assert any("GATE_5V" in p for p in problems)
+
+
+def test_malformed_endpoint_reported_not_raised():
+    nets = {"a": [("PICO", "GP4", "extra"), ("X", "1")]}
+    assert any("(part, pin)" in p for p in validate_nets(nets, {}))
+
+
+def test_same_gpio_twice_on_same_net_allowed():
+    nets = {"a": [("PICO", "GP4"), ("X", "1"), ("PICO", "GP4"), ("Y", "1")]}
+    assert validate_nets(nets, {}) == []
