@@ -235,7 +235,7 @@ def _mb(card):
     card.add(wire([(XMC, ya), (bp, ya)], C_P12, junctions=[(bp, ya)]))
     card.add(wire([(XMC, yb), (bn, yb)], C_N12, junctions=[(bn, yb)]))
     card.add(wire([(XMC, yc), (bg, yc)], C_GND, junctions=[(bg, yc)]))
-    card.add(box(XMC, 330, 210, 100, ["U1 TL074, U2 TL072"], ["buffers, envelope, LFO"],
+    card.add(box(XMC, 330, 210, 100, ["U1/U2 op-amps", "(TL074C / TL072IP, owned)"], ["buffers, envelope, LFO"],
                  left=[("V+", ya), ("V-", yb), ("GND", yc)]))
 
     # 78L05 and CD40106

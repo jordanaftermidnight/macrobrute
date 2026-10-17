@@ -182,7 +182,7 @@ brew install arm-none-eabi-gcc    # installed: 15.2.0
 **Layout:** `schematics/breakout_layout.svg` (generated from `tools/generate_layouts.py`). **STALE:** this layout and `schematics/breakout_stripboard.md` still hold the old Pico/J_PICO/VSYS/Q1-Q3 design and have template defects (audit B16, S34); do not build from them until regenerated. The IC list and headers in CM section 9 are the reference.
 
 ### Tasks
-- [ ] Cut tracks, solder DIP sockets (U1 TL074, U2 TL072, U3 CD40106)
+- [ ] Cut tracks, solder DIP sockets (U1 TL074, U2 TL072 (draft: op-amp split chosen at breakout layout), U3 CD40106)
 - [ ] Power section, fed only from TP70/TP71/TP72 (no Pico, no VSYS): rail protection per CM 5.3 (open choice, audit C12: an owned BAT85 per rail or a 4.7-10 Ω series resistor), bulk from 2-4× owned 10 µF/63 V in parallel per rail, no ferrite beads. If a diode is used on -12 V its **cathode goes to the TP71 / -12 V side and its anode to the breakout rail** (audit B15). Test rails under load.
 - [ ] Insert ICs, decoupling caps, feedback jumpers, bias resistors
 - [ ] Test each buffer channel with audio source (4× TL074 unity-gain followers)

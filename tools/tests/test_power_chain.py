@@ -112,6 +112,7 @@ def test_vsys_filter_has_a_ground_return_and_u2_note_is_neutral():
     t = " ".join(_texts(_svg()))
     # owner has both op-amps in stock: U2 is a layout choice, not an open question
     assert "OPEN U2" not in t
+    assert "U1/U2 op-amps (TL074C / TL072IP, owned)" in t and "U1 TL074, U2 TL072" not in t
     assert ("U1/U2: TL074C or TL072IP, both owned (×4 / ×6); final op-amp count and "
             "split chosen at breakout layout") in t
 
