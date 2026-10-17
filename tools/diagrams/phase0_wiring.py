@@ -120,10 +120,10 @@ def build():
         px, py = pp(role)
         wires.append(wire([(px, py), (jog[role], py), (jog[role], ty), (XR, ty)], col))
 
-    # ---- OLED, 7-pin SPI module; CS is strapped to the GND bus (no GPIO)
+    # ---- OLED, Keyestudio-clone IIC/SPI module in SPI mode; CS is strapped to the GND bus (no GPIO)
     pin_name = {"OLED_SCK": "D0 SCK", "OLED_MOSI": "D1 MOSI", "OLED_DC": "DC", "OLED_RES": "RES"}
     card.add(box(XL, 148, XR - XL, 96,
-                  ["1.3in OLED, 7-pin SPI,", "chip per marking"], ["SPI0"],
+                  ["1.3in OLED, Keyestudio", "IIC/SPI V2.0, SPI mode"], ["SPI0"],
                   left=[("VCC", 168), ("GND", 208), ("CS", 228)],
                   right=[(pin_name[r], spi_y[r]) for r in spi]))
     wires.append(wire([(XL, 168), (BUS_3V3, 168)], C_3V3))
@@ -225,6 +225,7 @@ def build():
         card.add(_missing(600, cy + 46 + 18 * i, line))
     card.add(_tag(600, cy + 46 + 18 * len(MISSING_PARTS), RGB_ORDER))
     card.add(_tag(600, cy + 64 + 18 * len(MISSING_PARTS), CS_NOTE))
+    card.add(_tag(600, cy + 82 + 18 * len(MISSING_PARTS), "UNVERIFIED: SPI mode set on board"))
 
     # note box
     card.add(f'<rect x="30" y="676" width="560" height="52" rx="4" fill="#fff" '
@@ -233,7 +234,7 @@ def build():
                   10, "start", PALETTE["text"])
              + _t(40, 720, "test_hw.py's OLED test draws through display.OLED_SPI. GP11 (gate input) is unused here.",
                   10, "start", PALETTE["muted"])
-             + _t(40, 706, "OLED chip (SSD1306 or SH1106) and pin order are UNVERIFIED: read the module first.",
+             + _t(40, 706, "OLED chip, SPI mode set on board and pin order are UNVERIFIED: read the board first.",
                   10, "start", PALETTE["muted"]))
 
     card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_SPI, "SPI0 main OLED"),

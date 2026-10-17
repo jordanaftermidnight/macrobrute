@@ -106,7 +106,7 @@ JUMPERS = [
     _top_signal("ENC_SW", "ENC_SW", ("ENC", "SW"), "a8", 3, C_GPIO),
     _top_signal("ENC_DT", "ENC_DT", ("ENC", "DT"), "a9", 2, C_GPIO),
     _top_signal("ENC_CLK", "ENC_CLK", ("ENC", "CLK"), "a10", 1, C_GPIO),
-    # 7-pin SPI OLED module (off the board) wired down to the board
+    # Keyestudio-clone IIC/SPI OLED module (SPI mode) (off the board) wired down to the board
     _oled("OLED_SCK", "D0"),
     _oled("OLED_MOSI", "D1"),
     _oled("OLED_DC", "DC", via=[(colx(25), JOG_DC_Y), (colx(24), JOG_DC_Y)]),
@@ -355,7 +355,7 @@ def _oled_svg():
     out = [f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="{_n(h)}" rx="4" fill="#e4e4dc" '
            f'stroke="#555" stroke-width="1.2"/>',
            _t(x + w / 2, y + 17, "1.3in OLED module", 11, "middle", PALETTE["title"], True),
-           _t(x + w / 2, y + 30, "7-pin SPI, chip per marking", 9, "middle", PALETTE["muted"]),
+           _t(x + w / 2, y + 30, "Keyestudio IIC/SPI V2.0, SPI mode", 9, "middle", PALETTE["muted"]),
            _t(x + w / 2, y + 42, "flipped: header toward board", 9, "middle", PALETTE["muted"])]
     for name, px in OLED_X.items():
         out.append(_t(px, y + h - 5, name, 9, "middle", PALETTE["title"], True))
@@ -414,6 +414,7 @@ def build():
     for i, line in enumerate(MISSING_PARTS):
         card.add(_missing(640, ty + 40 + 18 * i, line))
     card.add(_tag(640, ty + 40 + 18 * len(MISSING_PARTS), RGB_ORDER))
+    card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 1), "UNVERIFIED: SPI mode set on board"))
 
     # wires on top
     for j in JUMPERS:

@@ -26,7 +26,7 @@ def test_no_gpio_assigned_twice():
 
 
 def test_main_oled_is_spi0_on_the_decided_pins():
-    # owner ruling 2026-10-17: 7-pin SPI 1.3" OLED is the baseline main display
+    # owner ruling 2026-10-17: Keyestudio-clone IIC/SPI 1.3" OLED (SPI mode) is the baseline main display
     assert FIRMWARE_ROLES["OLED_SCK"] == 2 and FIRMWARE_ROLES["OLED_MOSI"] == 3
     # ruling 2026-10-17: OLED CS strapped to GND (BT-14), GP11 is the gate input
     assert "OLED_CS" not in FIRMWARE_ROLES

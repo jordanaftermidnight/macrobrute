@@ -17,7 +17,7 @@ NETS = {
     # OLED CS is strapped to GND (single SPI device; PROVISIONAL, bench check BT-14)
     "GND": [("PICO", "GND"), ("OLED", "GND"), ("OLED", "CS"), ("LED", "K"), ("BTN", "2"),
             ("ENC", "GND"), ("JACK_OUT", "S"), ("JACK_IN", "S")],
-    # main OLED, 7-pin SPI module on SPI0 (module pin names D0 = SCK, D1 = MOSI).
+    # main OLED, Keyestudio-clone IIC/SPI 1.3in V2.0 module in SPI mode on SPI0 (module pin names D0 = SCK, D1 = MOSI).
     # GP11 is the gate input; the gate stage is not part of Phase 0, so it is unwired.
     "OLED_SCK": [("PICO", gp("OLED_SCK")), ("OLED", "D0")],
     "OLED_MOSI": [("PICO", gp("OLED_MOSI")), ("OLED", "D1")],

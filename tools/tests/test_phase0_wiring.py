@@ -62,6 +62,8 @@ def test_oled_unverified_items_tagged():
     s = _svg_text()
     assert "UNVERIFIED: OLED pin order" in s
     assert "UNVERIFIED: OLED chip" in s
+    assert "UNVERIFIED: SPI mode set on board" in s
+    assert "IIC/SPI V2.0, SPI mode" in s
 
 
 def test_committed_svg_matches_generator():

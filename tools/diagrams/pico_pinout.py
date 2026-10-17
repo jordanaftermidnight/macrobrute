@@ -196,9 +196,9 @@ def build():
             "GP26 shares PWM slice 5A with GP10 (RGB blue, 1 kHz):",
             "do not use GP26 as a PWM DAC while GP10 drives the LED.",
             "GP27 is slice 5B and follows GP10's 1 kHz slice frequency."]),
-        ("Main OLED, 7-pin SPI on SPI0", [
+        ("Main OLED, Keyestudio IIC/SPI V2.0, SPI mode", [
             "Write-only (no MISO), 3V3 logic, powered from the 3V3 pin.",
-            "Chip (SSD1306 or SH1106) and module pin order: UNVERIFIED.",
+            "Chip (SSD1306 or SH1106), SPI mode set on board, pin order: UNVERIFIED.",
             "CS strapped to GND (no GPIO): PROVISIONAL (BT-14).",
             "No I2C on the expander, so no pull-ups. Driver: display.py."]),
         ("Not usable", [

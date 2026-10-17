@@ -152,7 +152,7 @@ def _expander(card):
     # 3V3 loads
     card.add(wire([(XCOL, l_g), (BUS_E["GND"], l_g)], C_GND, junctions=[(BUS_E["GND"], l_g)]))
     card.add(box(XCOL, 556, XW, 80, ["3V3 loads (Pico 3V3 OUT)"],
-                 ["OLED 1.3in 7-pin SPI", "(SPI: no pull-ups)", "encoder +", "CD4049UB clock buffers"],
+                 ["OLED 1.3in SPI mode", "(SPI: no pull-ups)", "encoder +", "CD4049UB clock buffers"],
                  left=[("GND", l_g)], right=[("3V3", l_3 + 0)]))
     card.add(tag(XCOL, 642, "UNVERIFIED", "UNVERIFIED load"))
 

@@ -209,6 +209,7 @@ def test_card_content_and_exclusions():
         assert bad not in low
     assert "spi" in low
     assert "UNVERIFIED: OLED pin order" in s and "UNVERIFIED: OLED chip" in s
+    assert "UNVERIFIED: SPI mode set on board" in s
     for lab in ("USB", "pin 1", "UNVERIFIED", "test jumper", "Legend"):
         assert lab in s
     for n in range(1, 41):
