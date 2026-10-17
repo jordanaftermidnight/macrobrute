@@ -1,7 +1,7 @@
 # What You're Building
 
 Two mockups of the finished hardware, so you have a target image in your
-head before you read another 1900 KB of detail. The 17 HP expander
+head before you read another 1900 KB of detail. The expander (17 or about 20 HP, open)
 (panel) and the modified MicroBrute (additions in their final positions)
 — rendered as they'd look assembled.
 
@@ -10,7 +10,7 @@ guides, see `panel/expander_17hp.svg` and `panel/microbrute_panel_template.svg`.
 
 ---
 
-## The 17 HP expander module
+## The expander module (17 or about 20 HP, open)
 
 The expander is a self-contained Eurorack module that pairs to the
 modified MicroBrute over a 2× DB-9 cable. It hosts the main 1.3″ 7-pin SPI OLED (chip UNVERIFIED),
@@ -19,7 +19,7 @@ the analogue slew limiter, a standalone LFO, a standalone Sample & Hold,
 the firmware clock dividers and the four firmware-assignable aux outputs.
 Its width is open (17 HP or about 20 HP) until the blank is measured.
 
-Power comes from the Eurorack bus (CP1A or any standard ±12 V supply) —
+Power comes from the Eurorack bus (the CP1A; it needs ±12 V and +5 V from the rack, since the Pico runs from bus +5 V) —
 the synth's stock power is untouched, and no supply rail crosses the
 DB-9 cable; only ground is shared.
 

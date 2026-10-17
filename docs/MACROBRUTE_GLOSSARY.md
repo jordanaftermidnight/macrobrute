@@ -10,10 +10,10 @@ the rest of the manual leans on these without re-defining them.
 
 | Term | What it means |
 |---|---|
-| **MACROBRUTE** | This whole project — modified MicroBrute *plus* its 17 HP expander, treated as one instrument. |
+| **MACROBRUTE** | This whole project — modified MicroBrute *plus* its expander (17 or about 20 HP, open), treated as one instrument. |
 | **MicroBrute (MB)** | The stock Arturia MicroBrute analog mono synth this project starts from. |
 | **Breakout (board)** | The small buffer-only stripboard mounted *inside* the MB that taps test points, buffers signals, and exposes them via 2× DB-9 connectors on the rear panel. Powered only from the synth (TP70/TP71/TP72). |
-| **Expander** | The 17 HP Eurorack module that pairs to the MB through the DB-9 cable. Self-contained — runs only from the rack's ±12 V / +5 V supply; nothing is powered over the DB-9. |
+| **Expander** | The Eurorack module (17 or about 20 HP, open) that pairs to the MB through the DB-9 cable. Self-contained — runs only from the rack's ±12 V / +5 V supply; nothing is powered over the DB-9. |
 | **Touch bolt** | An exposed brass bolt on the panel that, when touched, completes a circuit-bend (changes pitch / timbre / gating). The 6 selected ones are documented in `touch_bend_specs.md`. |
 | **Test point (TP)** | A pre-existing solder pad on the MB rear PCB. Numbered TP1–TP124 in Arturia's reference; this manual uses ~18 of them. See `MACROBRUTE_TEST_POINTS_VERIFIED.md`. |
 | **Mod ID (M01…M14)** | The 14 curated panel/electronic mods, indexed in `macrobrute_mod_catalog.md`. |
