@@ -58,12 +58,14 @@ def test_forbidden_text_absent():
     assert "spi" in s
 
 
-def test_oled_unverified_items_tagged():
+def test_oled_owner_stated_items_tagged():
     s = _svg_text()
-    assert "UNVERIFIED: OLED pin order" in s
-    assert "UNVERIFIED: OLED chip" in s
+    assert "Pin order: owner-stated" in s
+    assert "Chip SH1106: owner-stated" in s
+    assert "UNVERIFIED: OLED" not in s
+    assert "UNVERIFIED: IIC/SPI pads, if any, in SPI position" in s
     assert "SPI-only 7-pin header (owner confirmed)" in s
-    assert "IIC/SPI V2.0, SPI mode" in s
+    assert "V2.0, SH1106 (owner)" in s
 
 
 def test_committed_svg_matches_generator():

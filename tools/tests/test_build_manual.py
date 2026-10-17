@@ -29,7 +29,9 @@ def test_oled_captions_describe_the_spi_baseline():
             assert bad not in text, f"{k} caption still contains {bad!r}"
         assert "SPI" in text, k
     for k in keys[:2]:
-        assert "pin order" in SVG_DESCRIPTIONS[k] and "UNVERIFIED" in SVG_DESCRIPTIONS[k], k
+        d = SVG_DESCRIPTIONS[k]
+        assert "pin order" in d and "owner-stated" in d and "SH1106" in d and "UNVERIFIED" in d, k
+        assert "SSD1306 or SH1106" not in d, k
 
 
 # SVG text that shows the withdrawn design: supply or I2C on DB-9 B, or the dropped strip OLED

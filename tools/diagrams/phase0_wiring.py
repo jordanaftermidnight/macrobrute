@@ -121,16 +121,16 @@ def build():
         wires.append(wire([(px, py), (jog[role], py), (jog[role], ty), (XR, ty)], col))
 
     # ---- OLED, Keyestudio-clone IIC/SPI module in SPI mode; CS is strapped to the GND bus (no GPIO)
-    pin_name = {"OLED_SCK": "D0 SCK", "OLED_MOSI": "D1 MOSI", "OLED_DC": "DC", "OLED_RES": "RES"}
+    pin_name = {"OLED_SCK": "CLK", "OLED_MOSI": "MOSI", "OLED_DC": "DC", "OLED_RES": "RES"}
     card.add(box(XL, 148, XR - XL, 96,
-                  ["1.3in OLED, Keyestudio", "IIC/SPI V2.0, SPI mode"], ["SPI0"],
+                  ["1.3in OLED, Keyestudio", "V2.0, SH1106 (owner)"], ["SPI0"],
                   left=[("VCC", 168), ("GND", 208), ("CS", 228)],
                   right=[(pin_name[r], spi_y[r]) for r in spi]))
     wires.append(wire([(XL, 168), (BUS_3V3, 168)], C_3V3))
     wires.append(wire([(XL, 208), (BUS_GND, 208)], C_GND))
     wires.append(wire([(XL, 228), (BUS_GND, 228)], C_GND))
-    card.add(_tag(XL, 96, "UNVERIFIED: OLED pin order")
-             + _tag(XL + 170, 96, "UNVERIFIED: OLED chip"))
+    card.add(_tag(XL, 96, "Chip SH1106: owner-stated")
+             + _tag(XL + 170, 96, "Pin order: owner-stated"))
 
     # ---- RGB LED, common cathode, 220 ohm per channel
     card.add(f'<rect x="205" y="262" width="127" height="166" rx="6" fill="none" '
@@ -225,7 +225,8 @@ def build():
         card.add(_missing(600, cy + 46 + 18 * i, line))
     card.add(_tag(600, cy + 46 + 18 * len(MISSING_PARTS), RGB_ORDER))
     card.add(_tag(600, cy + 64 + 18 * len(MISSING_PARTS), CS_NOTE))
-    card.add(_tag(600, cy + 82 + 18 * len(MISSING_PARTS), "SPI-only 7-pin header (owner confirmed)"))
+    card.add(_tag(410, 430, "SPI-only 7-pin header (owner confirmed)"))
+    card.add(_tag(410, 447, "UNVERIFIED: IIC/SPI pads, if any, in SPI position"))
 
     # note box
     card.add(f'<rect x="30" y="676" width="560" height="52" rx="4" fill="#fff" '
@@ -234,7 +235,7 @@ def build():
                   10, "start", PALETTE["text"])
              + _t(40, 720, "test_hw.py's OLED test draws through display.OLED_SPI. GP11 (gate input) is unused here.",
                   10, "start", PALETTE["muted"])
-             + _t(40, 706, "OLED chip and the order of its 7 pins are UNVERIFIED: read the board first.",
+             + _t(40, 706, "OLED chip (SH1106) and 7-pin order (GND VCC CLK MOSI RES DC CS) are owner-stated.",
                   10, "start", PALETTE["muted"]))
 
     card.legend([(C_3V3, "3V3 supply"), (C_GND, "GND"), (C_SPI, "SPI0 main OLED"),

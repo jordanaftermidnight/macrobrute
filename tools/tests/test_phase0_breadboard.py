@@ -208,7 +208,9 @@ def test_card_content_and_exclusions():
     for bad in ("strip oled", "0x3d", "0x3c", "effigy", "i2c", "sda", "scl"):
         assert bad not in low
     assert "spi" in low
-    assert "UNVERIFIED: OLED pin order" in s and "UNVERIFIED: OLED chip" in s
+    assert "Pin order: owner-stated" in s and "Chip SH1106: owner-stated" in s
+    assert "UNVERIFIED: OLED" not in s
+    assert "UNVERIFIED: IIC/SPI pads, if any, in SPI position" in s
     assert "SPI-only 7-pin header (owner confirmed)" in s
     for lab in ("USB", "pin 1", "UNVERIFIED", "test jumper", "Legend"):
         assert lab in s
@@ -255,12 +257,12 @@ def test_each_resistor_is_drawn_between_its_own_two_leads():
 
 def test_oled_module_has_seven_leads_in_one_order():
     names = list(bb.OLED_X)
-    assert len(names) == 7 and set(names) == {"GND", "VCC", "D0", "D1", "RES", "DC", "CS"}
+    assert len(names) == 7 and set(names) == {"GND", "VCC", "CLK", "MOSI", "RES", "DC", "CS"}
     xs = [bb.OLED_X[n] for n in names]
     assert xs == sorted(xs)
-    # module drawn header-toward-the-board: the assumed order GND VCC D0 D1 RES DC CS
-    # (UNVERIFIED) reads right to left
-    assert names == ["CS", "DC", "RES", "D1", "D0", "VCC", "GND"]
+    # module drawn header-toward-the-board: the owner-stated header order GND VCC CLK MOSI RES DC CS
+    # reads right to left
+    assert names == ["CS", "DC", "RES", "MOSI", "CLK", "VCC", "GND"]
 
 
 def test_clock_in_is_loop_back_only_and_unowned_parts_are_flagged():

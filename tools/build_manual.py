@@ -154,10 +154,11 @@ SVG_DESCRIPTIONS = {
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
         "**Flat schematic, power-rail style.** Pico centre-right, +3V3 rail along the top, "
-        "GND rail along the bottom. One 1.3\" Keyestudio-clone IIC/SPI V2.0 OLED, used in SPI mode, sits on SPI0, write-only "
+        "GND rail along the bottom. One 1.3\" Keyestudio-clone IIC/SPI V2.0 OLED with a 7-pin SPI header sits on SPI0, write-only "
         "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES); its CS pin goes to the GND bus, "
-        "PROVISIONAL (BT-14), and `GP11` (the gate input) is unused in Phase 0. **UNVERIFIED:** the chip "
-        "(SSD1306 or SH1106) and the module pin order, so read the module first. Most Pico "
+        "PROVISIONAL (BT-14), and `GP11` (the gate input) is unused in Phase 0. The chip (SH1106) and the "
+        "7-pin header pin order (GND, VCC, CLK, MOSI, RES, DC, CS) are owner-stated, not bench-verified; "
+        "**UNVERIFIED:** CS working when strapped low (BT-14) and any IIC/SPI selection pads sitting in the SPI position. Most Pico "
         "signal pins have their Y aligned with the matching peripheral pin so signal wires are "
         "straight horizontal lines. CLOCK IN is loop-back only, no external signals (no CD4049UB on the bench). "
         "**MISSING** (not owned, Q12): the RGB LED and the tactile button, and the half-size "
@@ -167,12 +168,12 @@ SVG_DESCRIPTIONS = {
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
         "physically sits on a half-size breadboard. The Pico straddles the centre channel; the "
-        "single 1.3\" Keyestudio-clone IIC/SPI V2.0 OLED (SPI mode) sits off the board, drawn flipped with its header toward "
+        "single 1.3\" Keyestudio-clone IIC/SPI V2.0 OLED (7-pin SPI header) sits off the board, drawn flipped with its header toward "
         "the board, and is wired down to it with seven leads, its CS lead to the top GND rail "
         "(PROVISIONAL (BT-14)); +3V3 and GND rails run along the "
         "top and bottom; jumper paths are colour-coded by net, with a jumper table and part-lead "
-        "holes below. **UNVERIFIED:** the OLED chip (SSD1306 or SH1106) and its pin order, so "
-        "check the module before powering it, and the RGB lead order R-K-G-B. CLOCK IN is "
+        "holes below. The OLED chip (SH1106) and its pin order are owner-stated, not bench-verified. "
+        "**UNVERIFIED:** any IIC/SPI selection pads sitting in the SPI position, and the RGB lead order R-K-G-B. CLOCK IN is "
         "loop-back only, no external signals (no CD4049UB on the bench). **MISSING** (not owned): "
         "the RGB LED and tactile button (Q12) and the half-size breadboard itself.",
 

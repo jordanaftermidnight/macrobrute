@@ -38,8 +38,8 @@ ROLES[R["LPC_TX"]] = _role(R["LPC_TX"], "uart0", "UART0 TX to LPC2361", "OUT",
                            "DB-9 B:1 to LPC RXD1 (UNVERIFIED)", "UART0 TX")
 ROLES[R["LPC_RX"]] = _role(R["LPC_RX"], "uart0", "UART0 RX from LPC2361", "IN",
                            "DB-9 B:6 from LPC TXD1 (UNVERIFIED)", "UART0 RX")
-for _k, _f, _pin in (("OLED_SCK", "OLED SCK (SPI0 SCK)", "D0"),
-                     ("OLED_MOSI", "OLED MOSI (SPI0 TX)", "D1"),
+for _k, _f, _pin in (("OLED_SCK", "OLED SCK (SPI0 SCK)", "CLK"),
+                     ("OLED_MOSI", "OLED MOSI (SPI0 TX)", "MOSI"),
                      ("OLED_DC", "OLED DC", "DC"), ("OLED_RES", "OLED RES", "RES")):
     g = R[_k]
     ROLES[g] = _role(g, "oled", _f, "OUT", f"Main OLED {_pin} (expander)", _f.split(" (")[0])
@@ -198,7 +198,7 @@ def build():
             "GP27 is slice 5B and follows GP10's 1 kHz slice frequency."]),
         ("Main OLED, Keyestudio IIC/SPI V2.0, SPI mode", [
             "Write-only (no MISO), 3V3 logic, powered from the 3V3 pin.",
-            "7-pin SPI-only board; chip (SSD1306 or SH1106), pin order: UNVERIFIED.",
+            "7-pin SPI-only board; chip SH1106 and pin order owner-stated.",
             "CS strapped to GND (no GPIO): PROVISIONAL (BT-14).",
             "No I2C on the expander, so no pull-ups. Driver: display.py."]),
         ("Not usable", [

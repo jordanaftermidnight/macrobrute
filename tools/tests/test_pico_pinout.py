@@ -63,7 +63,7 @@ def test_svg_valid_and_fonts_ok():
 def test_unverified_items_tagged_on_card():
     s = pp.render()
     assert s.count("UNVERIFIED") >= 3
-    assert "pin order: UNVERIFIED" in s
+    assert "chip SH1106 and pin order owner-stated" in s
     assert "I2C0" not in s
     assert "slice 5A" in s
 

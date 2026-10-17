@@ -107,8 +107,8 @@ JUMPERS = [
     _top_signal("ENC_DT", "ENC_DT", ("ENC", "DT"), "a9", 2, C_GPIO),
     _top_signal("ENC_CLK", "ENC_CLK", ("ENC", "CLK"), "a10", 1, C_GPIO),
     # Keyestudio-clone IIC/SPI OLED module (SPI mode) (off the board) wired down to the board
-    _oled("OLED_SCK", "D0"),
-    _oled("OLED_MOSI", "D1"),
+    _oled("OLED_SCK", "CLK"),
+    _oled("OLED_MOSI", "MOSI"),
     _oled("OLED_DC", "DC", via=[(colx(25), JOG_DC_Y), (colx(24), JOG_DC_Y)]),
     _oled("OLED_RES", "RES", via=[(colx(24), JOG_RES_Y), (JOG_RES_X, JOG_RES_Y),
                                   (JOG_RES_X, JOG_RES_Y2), (colx(25), JOG_RES_Y2)]),
@@ -138,7 +138,7 @@ JUMPERS = [
 ]
 
 # ------------------------------------------------------- off-board geometry
-OLED_X = {"CS": colx(23), "DC": colx(24), "RES": colx(25), "D1": colx(26), "D0": colx(27),
+OLED_X = {"CS": colx(23), "DC": colx(24), "RES": colx(25), "MOSI": colx(26), "CLK": colx(27),
           "VCC": colx(28), "GND": colx(29)}
 OLED_BOX = (colx(23) - 18, 64, 6 * BB_PITCH + 36, 66)
 OLED_PIN_Y = OLED_BOX[1] + OLED_BOX[3]
@@ -355,7 +355,7 @@ def _oled_svg():
     out = [f'<rect x="{_n(x)}" y="{_n(y)}" width="{_n(w)}" height="{_n(h)}" rx="4" fill="#e4e4dc" '
            f'stroke="#555" stroke-width="1.2"/>',
            _t(x + w / 2, y + 17, "1.3in OLED module", 11, "middle", PALETTE["title"], True),
-           _t(x + w / 2, y + 30, "Keyestudio IIC/SPI V2.0, SPI mode", 9, "middle", PALETTE["muted"]),
+           _t(x + w / 2, y + 30, "Keyestudio V2.0, SH1106 (owner)", 9, "middle", PALETTE["muted"]),
            _t(x + w / 2, y + 42, "flipped: header toward board", 9, "middle", PALETTE["muted"])]
     for name, px in OLED_X.items():
         out.append(_t(px, y + h - 5, name, 9, "middle", PALETTE["title"], True))
@@ -415,6 +415,7 @@ def build():
         card.add(_missing(640, ty + 40 + 18 * i, line))
     card.add(_tag(640, ty + 40 + 18 * len(MISSING_PARTS), RGB_ORDER))
     card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 1), "SPI-only 7-pin header (owner confirmed)"))
+    card.add(_tag(640, ty + 40 + 18 * (len(MISSING_PARTS) + 2), "UNVERIFIED: IIC/SPI pads, if any, in SPI position"))
 
     # wires on top
     for j in JUMPERS:
@@ -429,8 +430,8 @@ def build():
     card.add(label_box(mx - 32, hxy(tj["a_hole"])[1] - 7, "test jumper"))
 
     # tags for anything not verified
-    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 70, "UNVERIFIED: OLED chip"))
-    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 88, "UNVERIFIED: OLED pin order"))
+    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 70, "Chip SH1106: owner-stated"))
+    card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 88, "Pin order: owner-stated"))
     card.add(_tag(OLED_BOX[0] + OLED_BOX[2] + 6, 106, CS_NOTE))
     card.add(_tag(colx(6) - 10, hxy("b6")[1] - 7, "UNVERIFIED: KY-040 header order, read silkscreen"))
 
