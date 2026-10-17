@@ -26,7 +26,7 @@ SCOPE
 
 This MIT License covers the software portions of the MACROBRUTE project:
 
-  - firmware/pico/                    (Pico WH MicroPython firmware)
+  - firmware/pico/                    (Raspberry Pi Pico MicroPython firmware)
   - firmware/lpc2361/                 (LPC2361 ARM7 C firmware skeleton)
   - tools/                            (build, flash, RE, and analysis scripts)
   - docs/                             (documentation, build plan, research)

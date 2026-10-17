@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico WH — Clock generator, tap tempo, and external clock detection."""
+"""MACROBRUTE Raspberry Pi Pico — Clock generator, tap tempo, and external clock detection."""
 
 from machine import Pin, Timer
 import time

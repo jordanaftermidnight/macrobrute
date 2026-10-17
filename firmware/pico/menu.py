@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico WH — Menu system for OLED + encoder navigation."""
+"""MACROBRUTE Raspberry Pi Pico — Menu system for OLED + encoder navigation."""
 
 import config
 

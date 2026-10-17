@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico WH — LPC2361 bridge for MicroBrute parameter control.
+"""MACROBRUTE Raspberry Pi Pico — LPC2361 bridge for MicroBrute parameter control.
 
 Pico sends commands to LPC2361 over UART0 (GP0/GP1 at 115200 baud) carried
 across DB-9 B pins 1/2 to the MicroBrute. LPC firmware translates these into

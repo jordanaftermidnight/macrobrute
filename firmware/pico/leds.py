@@ -1,4 +1,4 @@
-"""MACROBRUTE Pico WH — LED indicator driver."""
+"""MACROBRUTE Raspberry Pi Pico — LED indicator driver."""
 
 from machine import Pin, PWM
 import time

@@ -1,4 +1,4 @@
-"""USB-MIDI — Pico WH enumerates as a USB-MIDI class device over micro-USB.
+"""USB-MIDI — the Pico enumerates as a USB-MIDI class device over micro-USB.
 
 The Pico's RP2040 has a USB 2.0 PHY; MicroPython exposes it via a TinyUSB-
 based `machine.USBDevice` API on recent firmware builds. This module wraps
