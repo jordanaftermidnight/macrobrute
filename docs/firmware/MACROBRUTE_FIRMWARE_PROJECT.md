@@ -11,7 +11,7 @@ They communicate over UART0 at 115 200 baud through a small framed protocol
 firmware/pico/
 ├── main.py             # Entry point: init, run loop, message dispatch
 ├── config.py           # GPIO pin map (mirrors schematics/pico_pinout.md)
-├── display.py          # SSD1306/SH1106 0x3C main OLED driver (baseline module: 1.3" I²C, SH1106 likely, UNVERIFIED)
+├── display.py          # SSD1306/SH1106 main OLED driver, I²C only so far; the baseline module is the 1.3" 7-pin SPI (chip UNVERIFIED), so an SPI driver is a follow-up
 ├── strip_display.py    # SSD1306 0x3D strip OLED driver (dropped, to be removed)
 ├── encoder.py          # KY-040 rotary encoder + button debounce
 ├── leds.py             # RGB status LED PWM
@@ -28,6 +28,25 @@ firmware/pico/
 
 Flash by mounting the Pico's `RPI-RP2` storage and copying the `.py` files
 into the MicroPython filesystem; `main.py` runs at boot.
+
+### Main OLED driver notes (follow-up)
+
+The baseline main display is the owner's 1.3" 7-pin SPI module (owner ruling,
+2026-10-17), write-only on SPI0: `OLED_SCK` GP2, `OLED_MOSI` GP3, `OLED_DC` GP4,
+`OLED_RES` GP5, `OLED_CS` GP11 (`config.py`). `display.py` only has the I²C
+driver `OLED_I2C` today, so the display stays dark until an SPI driver is
+written. That driver should:
+
+- send commands with DC low and pixel data with DC high, CS low around each
+  transfer, and pulse RES low once at start-up;
+- keep the chip choice in `OLED_CHIP`: the controller is UNVERIFIED (SSD1306 or
+  SH1106, read the module). SH1106 needs `OLED_COL_OFFSET = 2` and page-mode
+  writes; SSD1306 uses offset 0;
+- replace the I²C code path and the legacy `OLED_I2C_ID`, `OLED_SDA`,
+  `OLED_SCL` and `OLED_ADDR` values in `config.py` (GP4/GP5 are DC/RES now).
+
+The module pin order is UNVERIFIED (common order GND, VCC, D0 = SCK, D1 = MOSI,
+RES, DC, CS); read the silkscreen before wiring.
 
 ## firmware/lpc2361/ — LPC2361 ARM7TDMI (bare-metal C)
 

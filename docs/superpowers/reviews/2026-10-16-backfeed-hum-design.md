@@ -28,9 +28,9 @@ Ownership source: CM section 14 "Component Inventory (Purchased)" (CM:481-511) i
 | Part | Used for | Status (qty) | Owned alternative or owner question |
 |---|---|---|---|
 | Raspberry Pi Pico (variant UNVERIFIED) | Expander controller | Have (1) | The docs say Pico WH; the package says "Raspberry Pi Pico" (no W); another owner description says "Pico H". Nothing in this design uses wireless, so any variant works electrically; docs may need renaming (Q21). |
-| Main OLED: 1.3 inch 4-pin I2C module (SH1106 likely, UNVERIFIED: read the marking) | Expander main display, I2C0 GP4/GP5 | Have (owner, 2026-10-17) | Baseline per the owner decision. The chip is probably SH1106 (UNVERIFIED); the firmware already has an SH1106 driver (`OLED_CHIP`, `OLED_COL_OFFSET=2`). The module is larger than the 0.96 inch panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). Q22. |
-| 1.3 inch 7-pin SPI OLED | Spare / dev | Have (owner, 2026-10-17) | Not the baseline. An SPI display would change the driver and GPIO plan (Q22). |
-| 0.96" SSD1306 OLED | Was the baseline main display | Owner to confirm (it may not have arrived) | Not the baseline any more. If it is on hand it is a spare. |
+| Main OLED: 1.3 inch 7-pin SPI module (chip SSD1306 or SH1106 and pin order UNVERIFIED: read the module) | Expander main display, SPI0: SCK GP2, MOSI GP3, DC GP4, RES GP5, CS GP11 | Have (owner, 2026-10-17) | Baseline per the later owner ruling (2026-10-17). Needs an SPI driver (firmware follow-up); SH1106 would also need `OLED_COL_OFFSET=2`. The module is larger than the 0.96 inch panel cutout, which bears on the open expander width (17 vs about 20 HP stays OPEN). Q22. |
+| 1.3 inch 4-pin I2C OLED | Was the baseline | Have, not available | Wired into a TD-3. |
+| 0.96" SSD1306 OLED | Was the baseline main display | Owner to confirm (it may not have arrived) | Alternative only: as an I2C module it needs GP4/GP5 (now OLED DC/RES), so re-pinning. |
 | 0.91" SSD1306 128x32 | Was the strip OLED | Have (1), no longer used | Dropped (decision c); spare. |
 | KY-040 / HW-040 encoder | Expander encoder | Have (1) (owner, 2026-10-17) | - |
 | TL074C | MB breakout U1 buffers; expander aux outs | Have (4) | - |
@@ -266,7 +266,7 @@ Provisional (audit recommendation, owner has not confirmed):
 
 Provisional (audit recommendation, owner has not confirmed), with one justified change: the audit recommends a CD4049UBE on Pico 3V3 as the level shifter. Because the CD4049UB datasheet itself says its inputs have clamp diodes to VCC (p17), a 5 V input to a 3.3 V-powered 4049 would push current into the Pico 3V3 rail, and in S2 into the unpowered rail. A resistive divider into a fault-tolerant RP2040 GPIO avoids both:
 
-A:1 -> (gate panel jack tapped here) -> 22k -> node -> 33k to GND; node -> Pico GPIO (an FT pin, for example GP11; no firmware change in this task).
+A:1 -> (gate panel jack tapped here) -> 22k -> node -> 33k to GND; node -> Pico GPIO (an FT pin; GP11 was the example, but it is now OLED CS (owner ruling, 2026-10-17), so no FT pin is free and the pin is OPEN; no firmware change in this task).
 
 - High level: 5 V x 33k / (1k + 22k + 33k) = 2.95 V at a 5.0 V CD40106 supply; above RP2040 VIH 2.0 V and below 3.63 V (FT limit) and IOVDD + 0.5 V = 3.8 V. The 78L05 output tolerance was not read for this note; a +/-5 % supply would give 2.80-3.09 V (UNVERIFIED margin, BT-5).
 - No 5 V net touches a GPIO: the highest node voltage is the divided value. The validator rule (plan Task 8) sees a `DIV` endpoint.
@@ -387,13 +387,10 @@ Do each step only if hum or noise is still measured after the previous one (BT-9
 
 ## 5. GPIO note
 
-With I2C off the cable and EFFIGY shelved, these Pico pins are free (no firmware change in this task):
+With I2C off the cable and EFFIGY shelved, GP2, GP3 and GP11 were free when this note was written. Update (owner ruling, 2026-10-17): they are now the SPI main OLED's SCK, MOSI and CS, so only these Pico pins are free:
 
 | GPIO | Physical pin | Type (RP2040 datasheet) | Note |
 |---|---|---|---|
-| GP2 | 4 | Digital IO (FT) | Was EFFIGY I2C1 SDA. |
-| GP3 | 5 | Digital IO (FT) | Was EFFIGY I2C1 SCL. |
-| GP11 | 15 | Digital IO (FT) | Was EFFIGY INT. Candidate for the gate input (section 3.5). |
 | GP26 | 31 | Digital IO / ADC0, not FT, diode to IOVDD (Pico p20) | PWM slice 5A is shared with GP10 (LED_MODE) (audit S02). |
 | GP27 | 32 | Digital IO / ADC1, not FT | - |
 | GP28 | 34 | Digital IO / ADC2, not FT | - |
@@ -427,7 +424,7 @@ Rule: any input that can see a signal from the cable or a jack while the Pico ma
 | Q19 | Firmware mute of the CV outputs until the synth is seen powered (section 3.3): wanted? |
 | Q20 | PC817-isolated UART (section 3.9): accept a bridge baud of 4800-9600 (115200 and 38400 do not work) in exchange for zero UART back-feed? If yes, which MB-side collector supply: a +3V3ARM tap (against audit B09) or the Provisional 78L05 (power-up sequencing UNVERIFIED)? |
 | Q21 | Pico variant: the package says "Raspberry Pi Pico" (no W), the docs say Pico WH, another description says "Pico H". Which is it? Nothing here uses wireless; docs may need renaming once confirmed. |
-| Q22 | Main OLED: the baseline is now the owner's 1.3 inch 4-pin I2C module. Owner to read its chip marking (SH1106 likely, UNVERIFIED) and to confirm whether the 0.96 inch SSD1306 has arrived. The 7-pin SPI module is spare/dev; if it were used instead, the display driver and GPIO plan change (free pins GP2, GP3, GP11, GP26-28; SPI0 SCK = GP2, MOSI = GP3, plus DC, RST and CS). |
+| Q22 | Main OLED: the baseline is now the owner's 1.3 inch 7-pin SPI module (owner ruling, 2026-10-17; the 4-pin I2C module is in a TD-3). Owner to read its chip marking (SSD1306 or SH1106, UNVERIFIED) and pin order, and to confirm whether the 0.96 inch SSD1306 has arrived. Pins: SPI0 SCK = GP2, MOSI = GP3, DC = GP4, RES = GP5, CS = GP11; free pins are GP26-28 only. |
 | Q23 | Connector: RESOLVED (owner, 2026-10-17): CONFIRMED as 2x DB-9. The VGA / HD-15 line in a pasted inventory was an error (HD-15 rejected because the cable shorts pins 6-8 to ground). |
 | Q24 | The owner's earlier IC list could not be found in local history and a shared chat link was not readable. Re-send it if it differs from the 2026-10-17 photo. |
 
