@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# !!! WARNING (legacy generator): re-running this script overwrites SVGs under
+# !!! schematics/ that the manual now captions as STALE or that were archived,
+# !!! and may undo hand fixes. Do not run it until its batch is redesigned (see
+# !!! docs/superpowers/plans/2026-10-17-diagram-batches-2-to-5-roadmap.md).
 """Generate high-quality SVG circuit schematics for MACROBRUTE.
 
 Features:
