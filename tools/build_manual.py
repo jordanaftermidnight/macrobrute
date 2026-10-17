@@ -149,26 +149,29 @@ SVG_DESCRIPTIONS = {
     # Phase 0 (the diagrams the user will reference while wiring the breadboard)
     "schematics/phase0_wiring_schematic.svg":
         "**Flat schematic, power-rail style.** Pico WH on the left, +3V3 rail along the top, "
-        "GND rail along the bottom. One 1.3\" I²C OLED at `0x3C` sits on the I²C0 bus "
-        "(`GP4` SDA, `GP5` SCL); the chip is likely an SH1106 but that is UNVERIFIED, so read "
-        "the marking first. `GP2`, `GP3` and `GP11` are free (EFFIGY shelved). Each Pico signal "
-        "pin has its Y aligned with the matching peripheral pin so signal wires are single "
-        "straight horizontal lines. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors "
+        "GND rail along the bottom. One 1.3\" 7-pin SPI OLED sits on SPI0, write-only "
+        "(`GP2` SCK, `GP3` MOSI, `GP4` DC, `GP5` RES, `GP11` CS). **UNVERIFIED:** the chip "
+        "(SSD1306 or SH1106) and the module pin order, so read the module first. Most Pico "
+        "signal pins have their Y aligned with the matching peripheral pin so signal wires are "
+        "straight horizontal lines; CS is joined by two net labels so it does not cross the LED "
+        "wires. Inline 220 Ω (RGB anodes) and 1 kΩ (clock series) resistors "
         "are drawn on their wires. Read this diagram to understand *what connects to what* "
         "before looking at the breadboard view.",
     "schematics/phase0_breadboard.svg":
         "**Top-down breadboard layout.** Same circuit as the schematic above, drawn the way it "
         "physically sits on a half-size breadboard. Pico WH straddles the centre channel; the "
-        "single 1.3\" I²C OLED (`0x3C`) sits off the board and is wired down to it; +3V3 and GND "
-        "rails run along the top and bottom; jumper paths are colour-coded by net, with a jumper "
-        "table and part-lead holes below. **UNVERIFIED:** the OLED chip (SH1106 likely) and its "
-        "pin order, so check the module marking before powering it.",
+        "single 1.3\" 7-pin SPI OLED sits off the board, drawn flipped with its header toward "
+        "the board, and is wired down to it with seven leads; +3V3 and GND rails run along the "
+        "top and bottom; jumper paths are colour-coded by net, with a jumper table and part-lead "
+        "holes below. **UNVERIFIED:** the OLED chip (SSD1306 or SH1106) and its pin order, so "
+        "check the module before powering it.",
 
     # Pinout / pin reference diagrams
     "schematics/pico_pinout_diagram.svg":
         "Pico WH 40-pin header and GPIO allocation table, colour-coded by role (UART0 bridge, "
-        "I²C0 OLED, RGB LED, tap button, encoder, clock dividers, aux outs, clock in/out, free, "
-        "power). `GP2`, `GP3`, `GP11` and `GP26`-`GP28` are shown as free. The UART0 bridge on "
+        "SPI0 main OLED, RGB LED, tap button, encoder, clock dividers, aux outs, clock in/out, "
+        "free, power). The OLED takes `GP2`, `GP3`, `GP4`, `GP5` and `GP11`; only `GP26`-`GP28` "
+        "are free. The UART0 bridge on "
         "`GP0`/`GP1` is UNVERIFIED. Checked against the connection map section 1.",
     "schematics/lpc2361_pinout_diagram.svg":
         "NXP LPC2361 (100-LQFP, ARM7TDMI-S) pinout focused on the pins MACROBRUTE actually "
